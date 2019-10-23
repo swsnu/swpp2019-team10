@@ -1,3 +1,0 @@
-[submodule "foodbook"]
-	path = foodbook
-	url = ./frontend/foodbook
