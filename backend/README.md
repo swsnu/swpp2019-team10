@@ -1,4 +1,6 @@
 ## Backend design
+Please update this document whenever design is editted
+
 This is Django API for our application.
 
 | Model | API | GET | POST | PUT | DELETE |
