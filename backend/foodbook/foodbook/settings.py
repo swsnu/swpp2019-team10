@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'location_field.apps.DefaultConfig',
     'foodbook_api.apps.FoodbookApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
