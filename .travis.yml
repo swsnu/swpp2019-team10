@@ -6,7 +6,7 @@ matrix:
     before_install:
     - cd frontend/foodbook
     install:
-    - yarn install
+    - npm install
     script:
     - ./node_modules/.bin/eslint src
     - yarn test --coverage --watchAll=false
@@ -22,4 +22,5 @@ matrix:
     install:
     - pip install -r requirements.txt
     script:
-    - pytest
+    - coverage run --branch --source='./foodbook_api' manage.py test
+    - coverage report -m
