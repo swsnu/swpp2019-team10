@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from .models import Profile, Review
+from .models import Profile, Review, Menu, Restaurant
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse
 from django.contrib.auth import logout, authenticate, login
 import json
