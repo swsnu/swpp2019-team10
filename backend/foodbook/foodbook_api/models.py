@@ -1,7 +1,7 @@
 '''
 module
 '''
-from django.contrib.gis.db import models
+from django.db import models
 from django.contrib.auth.models import User
 
 # from django.core.validators import RegexValidator
@@ -51,8 +51,8 @@ class Restaurant(models.Model):
         rating
     '''
     name = models.CharField(max_length=50)
-    location = models.PointField(
-        help_text="Represented as (longitude, latitude)")
+    longitude = models.FloatField()
+    latitude = models.FloatField()
     rating = models.FloatField()
 
 
@@ -63,6 +63,7 @@ class Menu(models.Model):
         name
     '''
     name = models.CharField(max_length=50)
+
 class Review(models.Model):
     '''
     save review information
@@ -74,21 +75,26 @@ class Review(models.Model):
         date
         comment
     '''
+    comment = models.CharField(max_length=120, default="")
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='review_list'
+        related_name='review_list',
+        null=True
     )
+    
     restaurant = models.ForeignKey(
         Restaurant,
         on_delete=models.CASCADE,
-        related_name='review_list'
+        related_name='review_list',
+        null=True
     )
+
     menu = models.ForeignKey(
         Menu,
         on_delete=models.CASCADE,
-        related_name='review_list'
+        related_name='review_list',
+        null=True
     )
     review_img = models.ImageField(upload_to='review/images/', blank=True)
     date = models.DateTimeField()
-    comment = models.CharField(max_length=120)
