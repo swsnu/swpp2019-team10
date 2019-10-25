@@ -1,12 +1,26 @@
-from django.db import models
-#from django_mysql.models import JSONField
+'''
+module
+'''
+from django.contrib.gis.db import models
 from django.contrib.auth.models import User
-from location_field.models.plain import PlainLocationField
-#from django.core.validators import RegexValidator
+
+# from django.core.validators import RegexValidator
 # Create your models here.
 
 
 class Profile(models.Model):
+    '''
+    save user's information
+    fields:
+        user
+        phone_number
+        age
+        gender
+        profile_pic
+        count_write
+        count_friend
+        friend: ManyToMany to self
+    '''
     GENDER_CHOICES = (
         ('M', 'Male'),
         ('F', 'Female'),
@@ -21,24 +35,60 @@ class Profile(models.Model):
     age = models.IntegerField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     #taste = JSONField()
-    profile_pic=models.ImageField(upload_to="user/profile_pic/")
+    profile_pic = models.ImageField(upload_to="user/profile_pic/", blank=True)
     count_write = models.IntegerField(default=0)
     count_friend = models.IntegerField(default=0)
     friend = models.ManyToManyField(
         'self',
         symmetrical=False
     )
-
 class Restaurant(models.Model):
-    name=models.CharField(max_length=100)
-    address = models.CharField(max_length=255)
-    location=PlainLocationField
+    '''
+    save restaurnt information
+    fields:
+        name
+        location: Point Field
+        rating
+    '''
+    name = models.CharField(max_length=50)
+    location = models.PointField(
+        help_text="Represented as (longitude, latitude)")
+    rating = models.FloatField()
+
+
+class Menu(models.Model):
+    '''
+    save Menu information
+    fields:
+        name
+    '''
+    name = models.CharField(max_length=50)
 class Review(models.Model):
+    '''
+    save review information
+    fields:
+        author: ForeignKey(User)
+        restaurant: ForeignKey(Restaurant)
+        menu: ForeignKey(Menu)
+        review_img
+        date
+        comment
+    '''
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='review_list'
     )
+    restaurant = models.ForeignKey(
+        Restaurant,
+        on_delete=models.CASCADE,
+        related_name='review_list'
+    )
+    menu = models.ForeignKey(
+        Menu,
+        on_delete=models.CASCADE,
+        related_name='review_list'
+    )
+    review_img = models.ImageField(upload_to='review/images/', blank=True)
     date = models.DateTimeField()
     comment = models.CharField(max_length=120)
-
