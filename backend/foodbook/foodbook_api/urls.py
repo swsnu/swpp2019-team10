@@ -8,5 +8,5 @@ urlpatterns = [
     path('signin/', user_views.signin, name='signin'),
     path('signout/', user_views.signout, name='signout'),
     path('review/', review_views.review_list, name='review_list'),
-    path('review/<int:id>', review_views.review_detail, name='review_detail'),
+    path('review/<int:review_id>', review_views.review_detail, name='review_detail'),
 ]
