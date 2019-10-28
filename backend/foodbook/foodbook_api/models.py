@@ -3,8 +3,6 @@ module
 '''
 from django.db import models
 from django.contrib.auth.models import User
-
-# from django.core.validators import RegexValidator
 # Create your models here.
 
 
@@ -17,6 +15,7 @@ class Profile(models.Model):
         age
         gender
         profile_pic
+        taste
         count_write
         count_friend
         friend: ManyToMany to self
@@ -28,13 +27,9 @@ class Profile(models.Model):
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=15)
-
-    #or...
-    #__phone_regex=RegexValidator(regex=r'^\d{3}-\d{4}-\d{4}$', message="")
-    #phone_number=models.CharField(validators=[phone_regex], max_length=17)
     age = models.IntegerField()
+    #taste=hasn't decide yet
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    #taste = JSONField()
     profile_pic = models.ImageField(upload_to="user/profile_pic/", blank=True)
     count_write = models.IntegerField(default=0)
     count_friend = models.IntegerField(default=0)
@@ -55,7 +50,6 @@ class Restaurant(models.Model):
     latitude = models.FloatField()
     rating = models.FloatField()
 
-
 class Menu(models.Model):
     '''
     save Menu information
@@ -74,27 +68,29 @@ class Review(models.Model):
         review_img
         date
         comment
+        tag
     '''
-    comment = models.CharField(max_length=120, default="")
+    comment = models.CharField(max_length=120)
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='review_list',
-        null=True
+        #null=True
     )
     
     restaurant = models.ForeignKey(
         Restaurant,
         on_delete=models.CASCADE,
         related_name='review_list',
-        null=True
+        #null=True
     )
 
     menu = models.ForeignKey(
         Menu,
         on_delete=models.CASCADE,
         related_name='review_list',
-        null=True
+        #null=True
     )
     review_img = models.ImageField(upload_to='review/images/', blank=True)
     date = models.DateTimeField()
+    #tag=hasn't decide yet!
