@@ -8,7 +8,10 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <Route path='/login' exact component={Login} />
+        <Switch>
+          <Route path='/login' exact component={Login} />
+          <Redirect exact from='/' to='/login' />
+        </Switch>
       </div>
     </BrowserRouter>
   );
