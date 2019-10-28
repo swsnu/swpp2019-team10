@@ -1,0 +1,5 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./src/"
+    } // this is for absolute path; refer to https://stackoverflow.com/questions/56437517/how-to-add-jsconfig-json-to-existing-vscode-project-w-o-breaking-it
+}
