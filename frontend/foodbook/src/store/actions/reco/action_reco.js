@@ -1,15 +1,17 @@
 import * as actionTypes from './actionTypes_reco';
 
 const initialState = {
-    // implement this!
-}
+  // implement this!
+};
 
 const reducer = (state = initialState, action) => {
-    switch(action.type) {
-        // implement this!
-    }
+  switch (action.type) {
+    default:
+      console.log('Implement This!');
+      console.log('actionTypes :', actionTypes);
+  }
 
-    return state;
-}
+  return state;
+};
 
 export default reducer;
