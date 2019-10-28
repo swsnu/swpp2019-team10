@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from .models import Profile, Review, Menu, Restaurant
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse, HttpResponseNotFound
 from django.contrib.auth import logout, authenticate, login
+from django.core.exceptions import ObjectDoesNotExist
 import json
 from json import JSONDecodeError
 # Create your views here.
@@ -153,4 +154,53 @@ def review_list(request):
 
 
 def review_detail(request):
-    return HttpResponse(status=404)
+    if request.method != 'GET' and request.method != 'PUT' and request.method != 'DELETE':
+        return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
+
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+
+    try:
+        review = Review.objects.get(pk=article_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound()
+
+    if request.method == 'GET':
+        review_dict = dict_new_review = {
+                'id': review.id,
+                'author': review.author.id,
+                'restaurant': review.restaurant.id,
+                'menu': review.menu.id,
+                'content': review.content
+            }
+        return JsonResponse(review_dict)
+    
+    else:
+        if request.user.pk == article.author.pk:
+            if request.method == 'PUT':
+                try:
+                    # editting restaurant or menu is non-sense
+                    req_data = json.loads(request.body.decode())
+                    review.content = req_data['content']
+                    review.save()
+
+                    review_dict = {
+                        'id': review.id,
+                        'author': review.author.id,
+                        'restaurant': review.restaurant.id,
+                        'menu': review.menu.id,
+                        'content': review.content
+                    }
+
+                    return JsonResponse(review_dict)
+
+                except:
+                    return HttpResponseBadRequest()
+
+            # request.method == 'DELETE'
+            else:
+                review.delete()
+                return HttpResponse(status=200)
+
+        else:
+            return HttpResponseForbidden()
