@@ -6,7 +6,7 @@ matrix:
     before_install:
     - cd frontend/foodbook
     install:
-    - npm install
+    - yarn install # use either npm or yarn
     script:
     - ./node_modules/.bin/eslint src
     - yarn test --coverage --watchAll=false
