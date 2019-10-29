@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from ..models import Profile, Review, Menu, Restaurant
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse, HttpResponseNotFound, HttpResponseForbidden
 from django.contrib.auth import logout, authenticate, login
 from django.core.exceptions import ObjectDoesNotExist
 import json
@@ -84,7 +84,6 @@ def user(request):
             'profile_pic': profile_of_user.profile_pic.path,
             'number_of_reviews': profile_of_user.count_write,
             'number_of_friends': profile_of_user.count_friend,
-            'friends': [friend.user.username for friend in profile_of_user.friend.all().values()]
         }
         return JsonResponse(info_of_user)
     elif request.method == 'PUT':
@@ -110,8 +109,66 @@ def user(request):
             'profile_pic': profile_of_user.profile_pic.path,
             'number_of_reviews': profile_of_user.count_write,
             'number_of_friends': profile_of_user.count_friend,
-            'friends': [friend.user.username for friend in profile_of_user.friend.all().values()]
         }
         return JsonResponse(info_of_user, status=200)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT'])
+
+def friend(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+    elif request.method == 'GET':
+        profile_of_user = request.user.profile
+        info_of_friends = {
+            'friends_list': [friend.user.username for friend in profile_of_user.friend.all()]
+        }
+        return JsonResponse(info_of_friends)
+    elif request.method == 'POST':
+        try:
+            req_data = json.loads(request.body.decode())
+            username = req_data['username']
+        except (KeyError, JSONDecodeError) as e:
+            return HttpResponseBadRequest(content=str(e))
+        request.user.profile.friend.append(Profile.objects.get(user.username==username))
+        request.user.profile.save()
+        info_of_friends = {
+            'friends_list': [friend.user.username for friend in profile_of_user.friend.all()]
+        }
+        return JsonResponse(info_of_friends, status=204)
+    else:
+        return HttpResponseNotAllowed(['GET', 'POST'])
+
+def friend_detail(request, friend_id):
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+    elif request.method == 'GET':
+        try:
+            friend = Profile.objects.get(id=friend_id)
+            if friend in request.user.profile.friend.all():
+                info_of_friend = {
+                    'username': friend.user.username,
+                    'phone_number': friend.phone_number,
+                    'age': friend.age,
+                    'gender': friend.gender,
+                    'profile_pic': friend.profile_pic.path,
+                    'number_of_reviews': friend.count_write,
+                    'number_of_friends': friend.count_friend,
+                }
+                return JsonResponse(info_of_user)
+            else:
+                return HttpResponseForbidden()
+        except Profile.DoesNotExist:
+            return HttpResponseNotFound()
+    elif request.method == 'DELETE':
+        try:
+            friend = Profile.objects.get(id=friend_id)
+            if friend in request.user.profile.friend.all():
+                request.user.profile.friend.remove(friend)
+                request.user.profile.save()
+                return HttpResponse(status=200)
+            else:
+                return HttpResponseForbidden()
+        except Profile.DoesNotExist:
+            return HttpResponseNotFound()
+    else:
+        return HttpResponseNotAllowed(['GET', 'DELETE'])
