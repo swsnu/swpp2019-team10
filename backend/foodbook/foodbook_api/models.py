@@ -20,16 +20,11 @@ class Profile(models.Model):
         count_friend
         friend: ManyToMany to self
     '''
-    GENDER_CHOICES = (
-        ('M', 'Male'),
-        ('F', 'Female'),
-        ('O', 'Other')
-    )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=15)
     age = models.IntegerField()
     #taste=hasn't decide yet
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    gender = models.CharField(max_length=1)
     profile_pic = models.ImageField(upload_to="user/profile_pic/", blank=True)
     count_write = models.IntegerField(default=0)
     count_friend = models.IntegerField(default=0)
@@ -37,6 +32,7 @@ class Profile(models.Model):
         'self',
         symmetrical=False
     )
+
 class Restaurant(models.Model):
     '''
     save restaurnt information
@@ -57,12 +53,19 @@ class Menu(models.Model):
         name
     '''
     name = models.CharField(max_length=50)
+    restaurant = models.ForeignKey(
+        Restaurant,
+        on_delete=models.CASCADE,
+        related_name='menu_list',
+        null=True
+    )
+    #taste=hasn't decide yet
 
 class Review(models.Model):
     '''
     save review information
     fields:
-        author: ForeignKey(User)
+        author: ForeignKey(Profile)
         restaurant: ForeignKey(Restaurant)
         menu: ForeignKey(Menu)
         review_img
@@ -72,12 +75,12 @@ class Review(models.Model):
     '''
     comment = models.CharField(max_length=120)
     author = models.ForeignKey(
-        User,
+        Profile,
         on_delete=models.CASCADE,
         related_name='review_list',
         #null=True
     )
-    
+
     restaurant = models.ForeignKey(
         Restaurant,
         on_delete=models.CASCADE,
