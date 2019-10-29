@@ -96,6 +96,7 @@ def user(request):
             profile_pic = req_data['profile_pic']
         except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest(content=str(e))
+        request.user.profile.phone_number = phone_number
         request.user.profile.age = age
         request.user.profile.gender = gender
         request.user.profile.profile_pic = profile_pic

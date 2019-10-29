@@ -57,7 +57,7 @@ class Menu(models.Model):
         Restaurant,
         on_delete=models.CASCADE,
         related_name='menu_list',
-        null=True
+        #null=True
     )
     #taste=hasn't decide yet
 
