@@ -73,7 +73,7 @@ class Review(models.Model):
         comment
         tag
     '''
-    comment = models.CharField(max_length=120)
+    content = models.CharField(max_length=120)
     author = models.ForeignKey(
         Profile,
         on_delete=models.CASCADE,
@@ -95,5 +95,5 @@ class Review(models.Model):
         #null=True
     )
     review_img = models.ImageField(upload_to='review/images/', blank=True)
-    date = models.DateTimeField()
+    date = models.DateTimeField(auto_now=True)
     #tag=hasn't decide yet!
