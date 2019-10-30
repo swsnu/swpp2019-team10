@@ -16,7 +16,8 @@ This is Django API for our application.
 | | ``` api/friend/:friend_id/review ``` | Get friend's review list | X | X | X |
 | | ``` api/friend/:friend_id/review/:review_id ``` | Get friend's specified review | X | X | X |
 | Restaurant | ``` api/restaurant ``` | Get restaurant recommendation list | X | X | X |
-
+### JSON format
+* review: `{'content': string, 'restaurant_name': string, 'menu_name': string, 'rating': int}`
 ## Model
 <p align="center">
 <img src="https://user-images.githubusercontent.com/32262002/67068534-59d4be80-f1b5-11e9-954a-e41476f7d11a.png" width="75%">
