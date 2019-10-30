@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAll
 from django.contrib.auth import logout, authenticate, login
 from django.core.exceptions import ObjectDoesNotExist
 import json
-from json import JSONDecodeError
+from json.decoder import JSONDecodeError
 # Create your views here.
 
 
