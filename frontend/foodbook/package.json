@@ -61,5 +61,13 @@
     "react-script": "^2.0.5",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js, jsx}",
+      "!src/**/index.js",
+      "!src/index.js",
+      "!src/serviceWorker.js"
+    ]
   }
 }
