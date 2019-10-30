@@ -5,7 +5,7 @@ import {
 
 import Login from 'containers/Login'; // because we exported Login.js at the index.js, importing just directory is OK.
 // also used the absolute path /src
-import Main from 'components/Main'
+import Main from 'components/Main';
 
 function App() {
   return (

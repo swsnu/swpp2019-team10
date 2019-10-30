@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import { Button, Card, Icon } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
@@ -11,7 +12,7 @@ const Login = (props) => (
         <Card.Header textAlign="center"> FoodBook </Card.Header>
         <Card.Meta textAlign="center"> Sprint 3 </Card.Meta>
         <Card.Description>
-          <center><Button content="Login" onClick={() => {props.history.push('/main')}} /></center>
+          <center><Button content="Login" id="login-button" onClick={() => { props.history.push('/main'); }} /></center>
           {/* this is mock */}
         </Card.Description>
       </Card.Content>
@@ -23,5 +24,9 @@ const Login = (props) => (
     </Card>
   </div>
 );
+
+Login.propTypes = {
+  history: propTypes.objectOf(Object).isRequired,
+};
 
 export default Login;
