@@ -4,7 +4,7 @@ from ..models import Profile, Review, Menu, Restaurant
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse
 from django.contrib.auth import logout, authenticate, login
 import json
-from json import JSONDecodeError
+from json.decoder import JSONDecodeError
 
 def review_list(request):
     if not request.user.is_authenticated:
