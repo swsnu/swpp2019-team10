@@ -66,7 +66,6 @@ def review_detail(request, review_id):
             'author': review.author.id,
             'restaurant': review.restaurant.id,
             'menu': review.menu.id,
-            'content': review.comment,
             'content': review.content,
             'rating': review.rating,
             'date': review.date,
@@ -121,7 +120,7 @@ def review_detail(request, review_id):
         return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
     
 
-def freind_review_list(request, friend_id):
+def friend_review_list(request, friend_id):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
     friend = Profile.objects.get(id=friend_id)
@@ -153,7 +152,6 @@ def friend_review_detail(request, friend_id, review_id):
             'author': review.author.id,
             'restaurant': review.restaurant.id,
             'menu': review.menu.id,
-            'content': review.comment,
             'content': review.content,
             'rating': review.rating,
             'date': review.date,
