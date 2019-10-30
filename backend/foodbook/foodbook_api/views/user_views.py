@@ -129,8 +129,10 @@ def friend(request):
             username = req_data['username']
         except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest(content=str(e))
-        request.user.profile.friend.append(Profile.objects.get(user.username==username))
+        user = User.objects.get(username=username)
+        request.user.profile.friend.add(user.profile)
         request.user.profile.save()
+        profile_of_user = request.user.profile
         info_of_friends = {
             'friends_list': [friend.user.username for friend in profile_of_user.friend.all()]
         }
@@ -154,7 +156,7 @@ def friend_detail(request, friend_id):
                     'number_of_reviews': friend.count_write,
                     'number_of_friends': friend.count_friend,
                 }
-                return JsonResponse(info_of_user)
+                return JsonResponse(info_of_friend)
             else:
                 return HttpResponseForbidden()
         except Profile.DoesNotExist:
