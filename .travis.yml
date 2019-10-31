@@ -21,6 +21,7 @@ matrix:
     install:
     - pip install -r requirements.txt
     script:
+    - pylint ./foodbook_api/*/models.py ./foodbook_api/*/views/*.py ./foodbook_api/*/tests/*.py
     - python manage.py makemigrations
     - python manage.py migrate
     - coverage run --branch --source='./foodbook_api' manage.py test
