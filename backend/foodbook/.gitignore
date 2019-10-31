@@ -2,6 +2,7 @@
 *.log
 *.pot
 *.pyc
+*/migrations/*
 */__pycache__/*
 __pycache__/
 local_settings.py
