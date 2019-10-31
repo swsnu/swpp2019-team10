@@ -6,6 +6,9 @@ import {
   Menu,
 } from 'semantic-ui-react';
 
+import FriendList from 'components/FriendList';
+import ReivewPreview from 'containers/ReviewPreview';
+
 const menuStyle = {
   border: 'none',
   borderRadius: 0,
@@ -31,7 +34,20 @@ export default class Main extends Component {
 
     switch (activeItem) {
       case 'feed':
-        mainRenderer = (<div className="main-feed-wrapper"> Feed </div>);
+        mainRenderer = (
+          <div className="main-feed-wrapper">
+            {' '}
+            <ReivewPreview
+              key="1"
+              imgUrl="https://www.yellowblissroad.com/wp-content/uploads/2015/07/lemon-chicken-fb.jpg"
+              name="chicken"
+              rating={3}
+              tag={
+          [{ name: 'crispy', positive: true }, { name: 'pricy', positive: false }]
+}
+            />
+          </div>
+        );
         break;
 
       case 'calendar':
@@ -80,7 +96,7 @@ export default class Main extends Component {
           <Grid columns={2} divided>
             <Grid.Row className="wrapper-friend">
               <Grid.Column width={3}>
-                Friend List View should rendered here
+                <FriendList />
                 {/* TODO:  Implement here the friends tab */}
               </Grid.Column>
               {/* Friend Region */}
