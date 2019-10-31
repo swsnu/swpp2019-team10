@@ -27,6 +27,8 @@ class AddReview extends Component {
 
     fd.append('image', file);
     axios.post({ data: fd });
+
+    this.history.push('/main');
   }
 
   imageHandler = (data) => {

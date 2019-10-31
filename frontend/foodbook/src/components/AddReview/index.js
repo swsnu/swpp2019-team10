@@ -1,1 +1,2 @@
-export { default } from './AddReview'; // automatically export AddReview.js
+export { default } from './AddReview';
+// automatically export AddReview.js
