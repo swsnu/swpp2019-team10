@@ -42,7 +42,7 @@ describe('main', () => {
     const component = mount(main);
     const instance = component.find('Main').instance();
     instance.setState({
-      activeItem: 'illegal'
+      activeItem: 'illegal',
     });
     expect(instance.state.activeItem).toEqual('illegal');
     component.update();
