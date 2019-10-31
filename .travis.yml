@@ -22,5 +22,7 @@ matrix:
     install:
     - pip install -r requirements.txt
     script:
+    - python manage.py makemigrations
+    - python manage.py migrate
     - coverage run --branch --source='./foodbook_api' manage.py test
     - coverage report -m
