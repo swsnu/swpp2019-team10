@@ -1,8 +1,9 @@
-import React from 'react';
-import { shallow } from 'enzyme';
-import { history } from 'store/store';
-import AddReview from './AddReview';
+// import React from 'react';
+// import { shallow } from 'enzyme';
+// import { history } from 'store/store';
+// import AddReview from './AddReview';
 
+/*
 describe('<AddReview />', () => {
   beforeEach(() => {
   });
@@ -12,3 +13,4 @@ describe('<AddReview />', () => {
     expect(wrapper.length).toBe(1);
   });
 });
+*/
