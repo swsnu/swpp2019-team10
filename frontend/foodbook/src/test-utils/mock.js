@@ -1,6 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 
-import { routerMiddleware } from 'connected-react-router';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 
 import thunk from 'redux-thunk';
@@ -26,6 +26,7 @@ export const getMockStore = (userState, reviewState, recommendationState) => {
     user: mockUserReducer,
     review: mockReviewReducer,
     reco: mockRecoReducer,
+    router: connectRouter(history),
   });
 
   const mockStore = createStore(rootReducer,
