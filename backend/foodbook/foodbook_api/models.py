@@ -108,5 +108,4 @@ class ReviewForm(ModelForm):
         Meta
         '''
         model = Review
-        fields = ['content', 'author', 'restaurant',
-                  'menu', 'review_img']
+        fields = ['review_img']

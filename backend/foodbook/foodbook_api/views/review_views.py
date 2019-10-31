@@ -172,9 +172,19 @@ def review_image(request, review_id):
     if request.method == 'POST':
         form = ReviewForm(request.POST, request.FILES, instance=review)
         if form.is_valid():
-            # file is saved
-            form.save()
+            review.image = request.FILES['image']
+            review.save()
             return HttpResponse(status=201)
     else:
-        form = ReviewForm()
-    return render(request, 'review_image.html', {'form': form})
+        return HttpResponseNotAllowed(['POST'])
+    dict_review = {
+        'id': review.id,
+        'author': review.author.id,
+        'restaurant': review.restaurant.id,
+        'menu': review.menu.id,
+        'content': review.content,
+        'rating': review.rating,
+        'date': review.date,
+        'image': review.review_img.url
+    }
+    return JsonResponse(dict_review)
