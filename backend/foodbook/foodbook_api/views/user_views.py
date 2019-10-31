@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from ..models import Profile, Review, Menu, Restaurant
+from ..models import Profile, Review, Menu, Restaurant, ProfileForm
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse, HttpResponseNotFound, HttpResponseForbidden
 from django.contrib.auth import logout, authenticate, login
 from django.core.exceptions import ObjectDoesNotExist
@@ -18,7 +18,6 @@ def signup(request):
             phone_number = req_data['phone_number']
             age = req_data['age']
             gender = req_data['gender']
-            profile_pic = req_data['profile_pic']
         except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest(content=str(e))
         user = User.objects.create_user(
@@ -28,7 +27,6 @@ def signup(request):
             phone_number=phone_number,
             age=age,
             gender=gender,
-            profile_pic=profile_pic,
         )
         profile_of_user = new_profile
         response_dict = {
@@ -41,6 +39,32 @@ def signup(request):
             'friends': []
         }
         return JsonResponse(response_dict, status=200)
+    else:
+        return HttpResponseNotAllowed(['POST'])
+
+def profile_image(request, profile_id):
+    try:
+        profile = Profile.objects.get(id=profile_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound()
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            profile.profile_pic = request.FILES['profile_pic']
+            profile.save()
+            dict_profile = {
+                'username': profile.user.username,
+                'phone_number': profile.phone_number,
+                'age': profile.age,
+                'gender': profile.gender,
+                'profile_pic': profile.profile_pic.path,
+                'number_of_reviews': profile.count_write,
+                'number_of_friends': profile.count_friend,
+                'friends': []
+            }
+            return JsonResponse(dict_profile, status=201)
+        else:
+            return HttpResponseBadRequest()
     else:
         return HttpResponseNotAllowed(['POST'])
 

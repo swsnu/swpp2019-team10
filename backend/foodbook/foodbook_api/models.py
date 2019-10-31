@@ -3,6 +3,7 @@ module
 '''
 from django.db import models
 from django.contrib.auth.models import User
+from django.forms import ModelForm
 # Create your models here.
 
 
@@ -97,3 +98,14 @@ class Review(models.Model):
     review_img = models.ImageField(upload_to='review/images/', blank=True)
     date = models.DateTimeField()
     #tag=hasn't decide yet!
+
+class ProfileForm(ModelForm):
+    '''
+    ModelForm to save image
+    '''
+    class Meta:
+        '''
+        Meta
+        '''
+        model = Profile
+        fields = ['profile_pic']
