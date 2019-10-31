@@ -9,9 +9,10 @@ describe('<AddReview />', () => {
   });
   it('should render without crashing', () => {
     const component = shallow(
-        <Provider store={store}>
-            <AddReview history={history} />
-        </Provider>);
+      <Provider store={store}>
+        <AddReview history={history} />
+      </Provider>,
+    );
     const wrapper = component.find('Connect(AddReview)');
     expect(wrapper.length).toBe(1);
   });

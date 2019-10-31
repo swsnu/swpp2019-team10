@@ -26,7 +26,7 @@
     "rules": {
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-        "linebreak-style": off
+        "linebreak-style": "off"
     },
     "settings": {
         "import/resolver": {
