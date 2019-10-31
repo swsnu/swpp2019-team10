@@ -1,0 +1,6 @@
+import * as actionTypes from './actionTypes_review';
+// import axios from 'axios'; TODO: API Required. Below is mock for test code.
+
+export const stubDeep = (id) => id * 2; // mock
+export const stub = (input) => ({ name: actionTypes.DELETE_REVIEW, value: stubDeep(input) });
+// indeed mock
