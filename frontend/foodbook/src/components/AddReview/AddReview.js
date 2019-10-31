@@ -31,14 +31,10 @@ class AddReview extends Component {
     this.history.push('/main');
   }
 
-  imageHandler = (data) => {
-    this.setState({ image: data.content });
-  }
-
   render() {
     const imgUpload = (
       <div>
-        <ImageSelectPreview onChange={(data) => this.imageHandler(data)} />
+        <ImageSelectPreview onChange={(data) => this.setState({ image: data.content })} />
       </div>
     );
 
