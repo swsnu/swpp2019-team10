@@ -5,6 +5,7 @@ import {
 
 import Login from 'containers/Login'; // because we exported Login.js at the index.js, importing just directory is OK.
 // also used the absolute path /src
+import Main from 'components/Main';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <div className="App">
         <Switch>
           <Route path="/login" exact component={Login} />
+          <Route path="/main" exact component={Main} />
           <Redirect exact from="/" to="/login" />
         </Switch>
       </div>
