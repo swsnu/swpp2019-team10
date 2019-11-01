@@ -1,5 +1,6 @@
 // from https://codepen.io/depy/details/EQoGeG/
 
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 function Star(props) {
@@ -18,6 +19,18 @@ function Star(props) {
     </div>
   );
 }
+
+Star.propTypes = {
+  onMouseEnter: PropTypes.func,
+  onMouseLeave: PropTypes.func,
+  onClick: PropTypes.func,
+};
+
+Star.defaultProps = {
+  onMouseEnter: () => {},
+  onMouseLeave: () => {},
+  onClick: () => {},
+};
 
 class StarRating extends Component {
   constructor(props) {
