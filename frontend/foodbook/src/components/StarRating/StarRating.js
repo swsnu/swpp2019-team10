@@ -1,10 +1,16 @@
 // from https://codepen.io/depy/details/EQoGeG/
 
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import {
+  Grid,
+} from 'semantic-ui-react';
 
 function Star(props) {
-  const { onMouseEnter, onMouseLeave, onClick } = props;
+  const {
+    onMouseEnter, onMouseLeave, onClick, value,
+  } = props;
   return (
     <div
       className="Star"
@@ -15,7 +21,11 @@ function Star(props) {
       role="button"
       tabIndex={0}
     >
-      <i className="fas fa-star" />
+      {/* eslint-disable global-require */
+      value === -1 ? <img src={require('images/empty_star.png')} width={50} alt="star" />
+        : <img src={require('images/star.png')} width={50} alt="star" />
+        /* eslint-enable global-require */
+      }
     </div>
   );
 }
@@ -24,12 +34,14 @@ Star.propTypes = {
   onMouseEnter: PropTypes.func,
   onMouseLeave: PropTypes.func,
   onClick: PropTypes.func,
+  value: PropTypes.number,
 };
 
 Star.defaultProps = {
   onMouseEnter: () => {},
   onMouseLeave: () => {},
   onClick: () => {},
+  value: 0,
 };
 
 class StarRating extends Component {
@@ -46,11 +58,11 @@ class StarRating extends Component {
 
     if (currentRating > 0) {
       const hoverRatedStars = stars.slice();
-      Array.fill(hoverRatedStars, 0, currentRating, i);
+      _.fill(hoverRatedStars, 0, currentRating, i + 1);
       this.setState({ stars: hoverRatedStars });
     } else {
       const hoverStars = Array(5).fill(-1);
-      Array.fill(hoverStars, 0, 0, (i + 1));
+      _.fill(hoverStars, 0, 0, i + 1);
       this.setState({ stars: hoverStars });
     }
   }
@@ -60,10 +72,10 @@ class StarRating extends Component {
     const resetStars = stars.slice();
 
     if (currentRating > 0) {
-      Array.fill(resetStars, -1, currentRating, resetStars.length);
+      _.fill(resetStars, -1, currentRating, resetStars.length);
       this.setState({ stars: resetStars });
     } else {
-      Array.fill(resetStars, -1, 0, resetStars.length);
+      _.fill(resetStars, -1, 0, resetStars.length);
       this.setState({ stars: resetStars });
     }
   }
@@ -72,13 +84,16 @@ class StarRating extends Component {
     const { stars } = this.state;
     const clickedStar = stars.slice();
 
-    Array.fill(clickedStar, 1, 0, i);
-    Array.fill(clickedStar, 1, i, clickedStar.length);
+    _.fill(clickedStar, 1, 0, i);
+    _.fill(clickedStar, 1, i, clickedStar.length);
 
     this.setState({
       stars: clickedStar,
-      rated: i,
+      rated: i + 1,
     });
+
+    const { onChange } = this.props;
+    onChange(i + 1);
   }
 
   renderStar(i) {
@@ -96,21 +111,28 @@ class StarRating extends Component {
   }
 
   render() {
-    const { rated } = this.state;
     return (
       <div className="star-rating">
         <div className="star-rating-stars">
-          {this.renderStar(1)}
-          {this.renderStar(2)}
-          {this.renderStar(3)}
-          {this.renderStar(4)}
-          {this.renderStar(5)}
+          <Grid columns={5} divided>
+            <Grid.Column>{this.renderStar(0)}</Grid.Column>
+            <Grid.Column>{this.renderStar(1)}</Grid.Column>
+            <Grid.Column>{this.renderStar(2)}</Grid.Column>
+            <Grid.Column>{this.renderStar(3)}</Grid.Column>
+            <Grid.Column>{this.renderStar(4)}</Grid.Column>
+          </Grid>
         </div>
-
-        {this.handleRating(rated)}
       </div>
     );
   }
 }
+
+StarRating.propTypes = {
+  onChange: PropTypes.func,
+};
+
+StarRating.defaultProps = {
+  onChange: () => {},
+};
 
 export default StarRating;
