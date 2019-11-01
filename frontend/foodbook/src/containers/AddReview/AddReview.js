@@ -12,27 +12,48 @@ class AddReview extends Component {
       // restauerant: '',
       // menu: '',
       // content: '',
-      // rating: null,
+      // rating: null, https://codepen.io/depy/pen/vEWWdw
+      // location: null,
       image: null,
     });
   }
 
+  mapLoaded = () => {
+
+  }
+
   addReviewHandler = () => {
+    this.postContentHandler();
+    this.postImageHandler();
+
+    this.history.push('/main');
+  }
+
+  postContentHandler = () => {
+    const reviewDict = {
+
+    };
+    axios.post('/api/review/', reviewDict);
+  }
+
+  postImageHandler = () => {
     const { image } = this.state;
 
     const fd = new FormData();
     const file = new File([image], 'img.jpg');
 
     fd.append('image', file);
-    axios.post({ data: fd });
-
-    this.history.push('/main');
+    axios.post('/api/review/', fd);
   }
 
   render() {
+    // https://www.npmjs.com/package/react-image-select-pv
     const imgUpload = (
       <div>
-        <ImageSelectPreview onChange={(data) => this.setState({ image: data.content })} />
+        <ImageSelectPreview
+          onChange={(data) => this.setState({ image: data.content })}
+          max={1}
+        />
       </div>
     );
 

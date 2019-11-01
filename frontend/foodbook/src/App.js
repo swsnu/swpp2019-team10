@@ -8,6 +8,7 @@ import propTypes from 'prop-types';
 import Login from 'containers/Login'; // because we exported Login.js at the index.js, importing just directory is OK.
 // also used the absolute path /src
 import Main from 'components/Main';
+import AddReview from 'containers/AddReview';
 
 function App(props) {
   const { history } = props;
@@ -18,6 +19,7 @@ function App(props) {
         <Switch>
           <Route path="/login" exact component={Login} />
           <Route path="/main" exact component={Main} />
+          <Route path="/main/upload" exact component={AddReview} />
           <Redirect exact from="/" to="/login" />
         </Switch>
       </div>
