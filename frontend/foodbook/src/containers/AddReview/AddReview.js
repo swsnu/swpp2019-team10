@@ -32,8 +32,8 @@ class AddReview extends Component {
   }
 
   addReviewHandler = () => {
-    this.postContentHandler();
-    this.postImageHandler();
+    const postID = this.postContentHandler();
+    this.postImageHandler(postID);
 
     this.history.push('/main');
   }
@@ -44,16 +44,18 @@ class AddReview extends Component {
       rating,
     };
     axios.post('/api/review/', reviewDict);
+
+    return 0;
   }
 
-  postImageHandler = () => {
+  postImageHandler = (postID) => {
     const { image } = this.state;
 
     const fd = new FormData();
     const file = new File([image], 'img.jpg');
 
     fd.append('image', file);
-    axios.post('/api/review/', fd);
+    axios.post(`/api/review/${postID}/image/`, fd);
   }
 
   render() {
@@ -67,6 +69,9 @@ class AddReview extends Component {
       </div>
     );
 
+    /* to be worked on */
+    const googleMap = (<div className="locationGoogle" />);
+
     return (
       <div className="addReview">
         <Container text>
@@ -74,6 +79,9 @@ class AddReview extends Component {
             <Grid.Row className="upload">
               <Grid.Column width={10}>
                 {imgUpload}
+              </Grid.Column>
+              <Grid.Column width={10}>
+                {googleMap}
               </Grid.Column>
             </Grid.Row>
             <StarRating onChange={(rating) => this.setState({ rating })} />
