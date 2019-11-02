@@ -103,6 +103,7 @@ class ProfileForm(ModelForm):
     '''
     ModelForm to save image
     '''
+    # pylint: disable=too-few-public-methods
     class Meta:
         '''
         Meta

@@ -1,15 +1,22 @@
-from django.shortcuts import render
-from django.contrib.auth.models import User
-from ..models import Profile, Review, Menu, Restaurant, ProfileForm
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse, HttpResponseNotFound, HttpResponseForbidden
-from django.contrib.auth import logout, authenticate, login
-from django.core.exceptions import ObjectDoesNotExist
+'''
+    views for user model
+'''
 import json
 from json.decoder import JSONDecodeError
+from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, \
+JsonResponse, HttpResponseNotFound
+from django.contrib.auth import logout, authenticate, login
+from django.core.exceptions import ObjectDoesNotExist
+# pylint: disable=relative-beyond-top-level
+from ..models import Profile, ProfileForm
 # Create your views here.
 
 
 def signup(request):
+    '''
+        method to sign up
+    '''
     if request.method == 'POST':
         try:
             req_data = json.loads(request.body.decode())
@@ -18,12 +25,12 @@ def signup(request):
             phone_number = req_data['phone_number']
             age = req_data['age']
             gender = req_data['gender']
-        except (KeyError, JSONDecodeError) as e:
-            return HttpResponseBadRequest(content=str(e))
-        user = User.objects.create_user(
+        except (KeyError, JSONDecodeError) as err:
+            return HttpResponseBadRequest(content=str(err))
+        new_user = User.objects.create_user(
             username=username, password=password)
         new_profile = Profile.objects.create(
-            user=user,
+            user=new_user,
             phone_number=phone_number,
             age=age,
             gender=gender,
@@ -39,10 +46,12 @@ def signup(request):
             'friends': []
         }
         return JsonResponse(response_dict, status=200)
-    else:
-        return HttpResponseNotAllowed(['POST'])
+    return HttpResponseNotAllowed(['POST'])
 
 def profile_image(request, profile_id):
+    '''
+        method to upload profile image
+    '''
     try:
         profile = Profile.objects.get(id=profile_id)
     except ObjectDoesNotExist:
@@ -50,7 +59,7 @@ def profile_image(request, profile_id):
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
-            profile.profile_pic = request.FILES['profile_pic']
+            profile.profile_pic = request.FILES.get('profile_pic')
             profile.save()
             dict_profile = {
                 'username': profile.user.username,
@@ -63,42 +72,45 @@ def profile_image(request, profile_id):
                 'friends': []
             }
             return JsonResponse(dict_profile, status=201)
-        else:
-            return HttpResponseBadRequest()
-    else:
-        return HttpResponseNotAllowed(['POST'])
-
+        return HttpResponseBadRequest()
+    return HttpResponseNotAllowed(['POST'])
 
 def signin(request):
+    '''
+        method to sign in
+    '''
     if request.method == 'POST':
         try:
             req_data = json.loads(request.body.decode())
             username = req_data['username']
             password = req_data['password']
-        except (KeyError, JSONDecodeError) as e:
-            return HttpResponseBadRequest(content=str(e))
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
+        except (KeyError, JSONDecodeError) as err:
+            return HttpResponseBadRequest(content=str(err))
+        curr_user = authenticate(request, username=username, password=password)
+        if curr_user is not None:
+            login(request, curr_user)
             return HttpResponse(status=204)
-        else:
-            return HttpResponse(status=401)
-    else:
-        return HttpResponseNotAllowed(['POST'])
+        return HttpResponse(status=401)
+    return HttpResponseNotAllowed(['POST'])
 
 def signout(request):
+    '''
+        method to sign out
+    '''
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
-    elif request.method == 'GET':
+    if request.method == 'GET':
         logout(request)
         return HttpResponse(status=204)
-    else:
-        return HttpResponseNotAllowed(['GET'])
+    return HttpResponseNotAllowed(['GET'])
 
 def user(request):
+    '''
+        method to manipulating user info
+    '''
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
-    elif request.method == 'GET':
+    if request.method == 'GET':
         profile_of_user = request.user.profile
         info_of_user = {
             'username': profile_of_user.user.username,
@@ -110,19 +122,17 @@ def user(request):
             'number_of_friends': profile_of_user.count_friend,
         }
         return JsonResponse(info_of_user)
-    elif request.method == 'PUT':
+    if request.method == 'PUT':
         try:
             req_data = json.loads(request.body.decode())
             phone_number = req_data['phone_number']
             age = req_data['age']
             gender = req_data['gender']
-            profile_pic = req_data['profile_pic']
-        except (KeyError, JSONDecodeError) as e:
-            return HttpResponseBadRequest(content=str(e))
+        except (KeyError, JSONDecodeError) as err:
+            return HttpResponseBadRequest(content=str(err))
         request.user.profile.phone_number = phone_number
         request.user.profile.age = age
         request.user.profile.gender = gender
-        request.user.profile.profile_pic = profile_pic
         request.user.profile.save()
         profile_of_user = request.user.profile
         info_of_user = {
@@ -135,66 +145,65 @@ def user(request):
             'number_of_friends': profile_of_user.count_friend,
         }
         return JsonResponse(info_of_user, status=200)
-    else:
-        return HttpResponseNotAllowed(['GET', 'PUT'])
+    return HttpResponseNotAllowed(['GET', 'PUT'])
 
 def friend(request):
+    '''
+        method to manage friend
+    '''
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
-    elif request.method == 'GET':
+    if request.method == 'GET':
         profile_of_user = request.user.profile
         info_of_friends = {
-            'friends_list': [friend.user.username for friend in profile_of_user.friend.all()]
+            'friends_list': [(friend.id, friend.user.username) for friend in profile_of_user.friend.all()]
         }
         return JsonResponse(info_of_friends)
-    elif request.method == 'POST':
+    if request.method == 'POST':
         try:
             req_data = json.loads(request.body.decode())
             username = req_data['username']
-        except (KeyError, JSONDecodeError) as e:
-            return HttpResponseBadRequest(content=str(e))
-        user = User.objects.get(username=username)
-        request.user.profile.friend.add(user.profile)
+        except (KeyError, JSONDecodeError) as err:
+            return HttpResponseBadRequest(content=str(err))
+        tmp_user = User.objects.get(username=username)
+        request.user.profile.friend.add(tmp_user.profile)
+        request.user.profile.count_friend += 1
         request.user.profile.save()
         profile_of_user = request.user.profile
         info_of_friends = {
             'friends_list': [friend.user.username for friend in profile_of_user.friend.all()]
         }
         return JsonResponse(info_of_friends, status=204)
-    else:
-        return HttpResponseNotAllowed(['GET', 'POST'])
+    return HttpResponseNotAllowed(['GET', 'POST'])
 
 def friend_detail(request, friend_id):
+    '''
+        method to show friends' detail
+    '''
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
-    elif request.method == 'GET':
+    if request.method == 'GET':
         try:
-            friend = Profile.objects.get(id=friend_id)
-            if friend in request.user.profile.friend.all():
-                info_of_friend = {
-                    'username': friend.user.username,
-                    'phone_number': friend.phone_number,
-                    'age': friend.age,
-                    'gender': friend.gender,
-                    'profile_pic': friend.profile_pic.path,
-                    'number_of_reviews': friend.count_write,
-                    'number_of_friends': friend.count_friend,
-                }
-                return JsonResponse(info_of_friend)
-            else:
-                return HttpResponseForbidden()
+            friend_info = Profile.objects.get(id=friend_id)
+            info_of_friend = {
+                'username': friend_info.user.username,
+                'phone_number': friend_info.phone_number,
+                'age': friend_info.age,
+                'gender': friend_info.gender,
+                'profile_pic': friend_info.profile_pic.path,
+                'number_of_reviews': friend_info.count_write,
+                'number_of_friends': friend_info.count_friend,
+            }
+            return JsonResponse(info_of_friend)
         except Profile.DoesNotExist:
             return HttpResponseNotFound()
     elif request.method == 'DELETE':
         try:
-            friend = Profile.objects.get(id=friend_id)
-            if friend in request.user.profile.friend.all():
-                request.user.profile.friend.remove(friend)
-                request.user.profile.save()
-                return HttpResponse(status=200)
-            else:
-                return HttpResponseForbidden()
+            friend_info = Profile.objects.get(id=friend_id)
+            request.user.profile.friend.remove(friend_info)
+            request.user.profile.count_friend -= 1
+            request.user.profile.save()
+            return HttpResponse(status=200)
         except Profile.DoesNotExist:
             return HttpResponseNotFound()
-    else:
-        return HttpResponseNotAllowed(['GET', 'DELETE'])
+    return HttpResponseNotAllowed(['GET', 'DELETE'])
