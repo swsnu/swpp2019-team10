@@ -8,7 +8,8 @@ import axios from 'axios';
 
 class ReviewDetail extends Component {
   componentDidMount() {
-    axios.get(`/api/review/${this.props.match.params.id}/`).then((res) => {
+    const { match } = this.props;
+    axios.get(`/api/review/${match.params.id}/`).then((res) => {
       this.setState({
         content: res.data.content,
         // eslint-disable-next-line react/no-unused-state
@@ -22,23 +23,34 @@ class ReviewDetail extends Component {
   }
 
   deleteHandler() {
-    axios.delete(`/api/review/${this.props.match.params.id}/`)
-    this.props.history.push('/articles');
+    const { history, match } = this.props;
+    axios.delete(`/api/review/${match.params.id}/`);
+    history.push('/articles');
   }
 
   render() {
-    let article_id = this.props.match.params.id;
-
     const { content } = this.state;
+    const { history, match } = this.props;
+
+    const reviewID = match.params.id;
 
     const isUserAuthor = true;
     const authorOnly = isUserAuthor ? (
       <div className="AuthorButtons">
-        <button id="edit-article-button"
-          onClick={() => this.props.history.push(
-            '/articles/' + this.props.match.params.id + '/edit')}> Edit </button>
-        <button id="delete-article-button"
-          onClick={() => this.deleteHandler()}> Delete </button>
+        <button
+          id="edit-article-button"
+          type="submit"
+          onClick={() => history.push(`/articles/${reviewID}/edit`)}
+        >
+          Edit
+        </button>
+        <button
+          id="delete-article-button"
+          type="submit"
+          onClick={() => this.deleteHandler()}
+        >
+          Delete
+        </button>
       </div>
     )
       : <div />;
@@ -62,8 +74,13 @@ class ReviewDetail extends Component {
           </div>
         </div>
         {authorOnly}
-        <button id="back-detail-article-button"
-          onClick={() => this.props.history.push('/articles')}> Back </button>    
+        <button
+          id="back-review-article-button"
+          type="button"
+          onClick={() => history.push('/articles')}
+        >
+          Back
+        </button>
       </div>
     );
   }
