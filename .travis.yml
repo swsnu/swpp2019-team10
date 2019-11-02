@@ -13,10 +13,13 @@ matrix:
     - cd frontend/foodbook
     install:
     - yarn install # use either npm or yarn
+    - yarn add coveralls
     script:
     - ./node_modules/.bin/eslint src
     - yarn test --coverage --watchAll=false
     - sonar-scanner
+    after_success:
+    - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
   - language: python
     python:
     - "3.5"
@@ -27,9 +30,12 @@ matrix:
     - cd backend/foodbook
     install:
     - pip install -r requirements.txt
+    - pip install coveralls
     script:
     - pylint */models.py */views/*.py */tests/*.py
     - python manage.py makemigrations
     - python manage.py migrate
     - coverage run --branch --source='./foodbook_api' manage.py test
     - coverage report -m
+    after_success:
+    - coveralls
