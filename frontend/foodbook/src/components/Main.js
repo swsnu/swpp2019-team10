@@ -4,7 +4,9 @@ import {
   Grid,
   Header,
   Menu,
+  Popup,
 } from 'semantic-ui-react';
+import { NavLink } from 'react-router-dom';
 
 import FriendList from 'containers/FriendList';
 import ReivewPreview from 'components/ReviewPreview';
@@ -30,6 +32,7 @@ export default class Main extends Component {
 
   render() {
     const { activeItem } = this.state;
+
     let mainRenderer = <div />;
 
     switch (activeItem) {
@@ -100,6 +103,17 @@ export default class Main extends Component {
             {/* Friend Region */}
 
             <Grid.Column width={12} className="wrapper-reviews">
+              <Grid.Row className="add-review">
+                <Popup
+                  trigger={(
+                    <NavLink to="/upload/" className="ui medium image">
+                      <i className="edit outline icon fluid massive center link" style={{ marginLeft: '85%' }} />
+                    </NavLink>
+                )}
+                  content="Add new review!"
+                />
+              </Grid.Row>
+              <br />
               {mainRenderer}
             </Grid.Column>
           </Grid.Row>
