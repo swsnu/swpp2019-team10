@@ -156,7 +156,8 @@ def friend(request):
     if request.method == 'GET':
         profile_of_user = request.user.profile
         info_of_friends = {
-            'friends_list': [(friend.id, friend.user.username) for friend in profile_of_user.friend.all()]
+            'friends_list': [(friend.id, friend.user.username) \
+                            for friend in profile_of_user.friend.all()]
         }
         return JsonResponse(info_of_friends)
     if request.method == 'POST':
