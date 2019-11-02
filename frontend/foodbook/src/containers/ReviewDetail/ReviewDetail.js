@@ -6,6 +6,21 @@ import { connect } from 'react-redux';
 
 import axios from 'axios';
 
+function stringRenderer(name, str) {
+  return (
+    <div className="row">
+      <div className="left">
+        <h3>
+          {name}
+        </h3>
+      </div>
+      <div className="right">
+        <p id={`review-${name}`}>{str}</p>
+      </div>
+    </div>
+  );
+}
+
 class ReviewDetail extends Component {
   constructor(props) {
     super(props);
@@ -16,9 +31,15 @@ class ReviewDetail extends Component {
 
   componentDidMount() {
     const { match } = this.props;
-    
+
     this.setState({
       content: '',
+      restaurant: 0,
+      author: 0,
+      menu: 0,
+      image: '',
+      rating: 0.0,
+      date: '',
       ready: false,
       error: null,
     });
@@ -50,7 +71,9 @@ class ReviewDetail extends Component {
   }
 
   render() {
-    const { ready, error, content } = this.state;
+    const {
+      ready, error, content, restaurant, author, menu, image, rating, date,
+    } = this.state;
     const { history, match } = this.props;
 
     if (!ready) {
@@ -94,22 +117,13 @@ class ReviewDetail extends Component {
 
     return (
       <div className="ReviewDetail">
-        <div className="row">
-          <div className="left">
-            <h3>Name:</h3>
-          </div>
-          <div className="right">
-            <p id="review-author">{/* author name */}</p>
-          </div>
-        </div>
-        <div className="row">
-          <div className="left">
-            <h3>Content:</h3>
-          </div>
-          <div className="right">
-            <p id="article-content">{content}</p>
-          </div>
-        </div>
+        {stringRenderer('Author', author)}
+        {stringRenderer('Restaurant', restaurant)}
+        {stringRenderer('Menu', menu)}
+        {stringRenderer('Image', image)}
+        {stringRenderer('Content', content)}
+        {stringRenderer('Rating', rating)}
+        {stringRenderer('Date', date)}
         {authorOnly}
         <button
           id="back-review-article-button"
