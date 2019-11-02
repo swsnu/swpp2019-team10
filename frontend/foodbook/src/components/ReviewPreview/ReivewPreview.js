@@ -21,7 +21,7 @@ const ReivewPreview = (props) => {
   } = props; // TODO: this is mock
 
   return (
-    <div className="review-preivew">
+    <div className="review-preview">
       <div className="ui special cards">
         <div className="card" style={{ width: '630px' }}>
           <div className="content">
