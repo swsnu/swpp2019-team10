@@ -1,7 +1,5 @@
-
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import ReviewDetail from './ReviewDetail';
 import axios from 'axios';
 
 import { Provider } from 'react-redux';
@@ -9,8 +7,8 @@ import { Provider } from 'react-redux';
 // import { Route, Redirect, Switch } from 'react-router-dom';
 
 import store, { history } from '../../store/store';
-
 import { getMockStore } from '../../test-utils/mock';
+import ReviewDetail from './ReviewDetail';
 
 // https://jestjs.io/docs/en/mock-functions.html
 jest.mock('axios');
@@ -62,4 +60,4 @@ describe('<ReviewDetail />', () => {
       wrapper.simulate('click');
     });
   });
-);
+});
