@@ -1,10 +1,27 @@
+"""
+test view functions of review model
+"""
 from django.test import TestCase, Client
 from foodbook_api.models import Profile, Review, Menu, Restaurant, ReviewForm
 from django.contrib.auth.models import User
+from io import BytesIO
+from PIL import Image
+from django.core.files import File
 #from django.core.urlresolvers import reverse
 import json
 # Create your tests here.
 
+
+def make_image_file():
+    '''
+        method that make fake image file
+    '''
+    file_obj = BytesIO()
+    img = Image.new('RGB', (60, 30), color='red')
+    img.save(file_obj, 'png')
+    file_obj.seek(0)
+    file = File(file_obj, name='test.png')
+    return (img, file)
 class ReviewTestCase(TestCase):
     def setUp(self):
         user1 = User.objects.create_user(
@@ -54,6 +71,10 @@ class ReviewTestCase(TestCase):
     test review_list
     """
     def test_get_review_list_success(self):
+        """
+        GET review list must success only in this case:
+        after login
+        """
         client = Client()
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
@@ -61,11 +82,18 @@ class ReviewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('TEST_CONTENT', response.content.decode())
     def test_get_review_list_fail(self):
+        """
+        GET review list must fail in this case:
+        before login
+        """
         client = Client()
         response = client.get('/api/review/')
         self.assertEqual(response.status_code, 401)
-    
     def test_post_review_list_success(self):
+        """
+        POST review list must success only in this case:
+        after login
+        """
         client = Client()
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
@@ -78,7 +106,12 @@ class ReviewTestCase(TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Review.objects.count(), 2)
     def test_post_review_list_fail(self):
-        client=Client()
+        """
+        POST review list must fail in this case:
+        before login
+        decode error
+        """
+        client = Client()
         response = client.post('/api/review/', {
             'content': 'TEST_NEW_CONTENT',
             'restaurant_name': 'TEST_REST',
@@ -94,14 +127,15 @@ class ReviewTestCase(TestCase):
         })
         self.assertEqual(response.status_code, 400)
     def test_review_list_other_method_not_allowed(self):
+        """
+        Other methods in review list are not allowed
+        """
         client = Client()
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
         response = client.put('/api/review/')
 
         self.assertEqual(response.status_code, 405)
-
-    
     """
     test review_detail
     """
@@ -111,18 +145,6 @@ class ReviewTestCase(TestCase):
                      email='TEST_EMAIL_1', password='TEST_PW_1')
         response = client.get('/api/review/1/')
         self.assertEqual(response.status_code, 200)
-        '''
-        {
-            'id': review.id,
-            'author': review.author.id,
-            'restaurant': review.restaurant.id,
-            'menu': review.menu.id,
-            'content': review.content,
-            'rating': review.rating,
-            'date': review.date,
-            'image': review.review_img.url
-        }
-        '''
         bodys = json.loads(response.content.decode())
         self.assertEqual(bodys['id'], 1)
         self.assertEqual(bodys['author'], 1)
@@ -211,12 +233,14 @@ class ReviewTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_review_detail_other_method_not_allowed(self):
+        """
+        Other methods in review list are not allowed
+        """
         client = Client()
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
         response = client.post('/api/review/1/')
         self.assertEqual(response.status_code, 405)
-
 
     """
     test friend_review_list
@@ -240,12 +264,15 @@ class ReviewTestCase(TestCase):
         response = client.get('/api/friend/7/review/')
         self.assertEqual(response.status_code, 404)
     def test_friend_list_other_method_not_allowed(self):
+        """
+        Other methods in review list are not allowed
+        """
         client = Client()
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
         response = client.put('/api/friend/3/review/')
         self.assertEqual(response.status_code, 405)
-    
+
     """
     test friend_review_detail
     """
@@ -279,9 +306,44 @@ class ReviewTestCase(TestCase):
                      email='TEST_EMAIL_1', password='TEST_PW_1')
         response = client.get('/api/friend/3/review/1/')
         self.assertEqual(response.status_code, 403)
-    '''
-    def test_image(self):
+    def test_friend_review_detail_other_method_not_allowed(self):
+        """
+        Other methods in review list are not allowed
+        """
+        client = Client()
+        client.login(username='TEST_USER_3',
+                     email='TEST_EMAIL_3', password='TEST_PW_3')
+        response = client.put('/api/friend/1/review/1/')
+        self.assertEqual(response.status_code, 405)
+    
+    def test_image_success(self):
         client = Client()
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
-    '''
+        img_and_file = make_image_file()
+
+        response = client.post('/api/review/1/image/',
+                               data={'image': img_and_file[1]})
+        self.assertEqual(response.status_code, 200)
+    
+    def test_image_fail(self):
+        client = Client()
+        img_and_file = make_image_file()
+        response = client.post('/api/review/1/image/',
+                               data={'image': img_and_file[1]})
+        self.assertEqual(response.status_code, 401)
+        client.login(username='TEST_USER_2',
+                     email='TEST_EMAIL_2', password='TEST_PW_2')
+        response = client.post('/api/review/1/image/',
+                               data={'image': img_and_file[1]})
+        self.assertEqual(response.status_code, 403)
+        response = client.post('/api/review/7/image/',
+                               data={'image': img_and_file[1]})
+        self.assertEqual(response.status_code, 404)
+        client.login(username='TEST_USER_1',
+                     email='TEST_EMAIL_1', password='TEST_PW_1')
+        response = client.get('/api/review/1/image/')
+        self.assertEqual(response.status_code, 405)
+        response = client.post('/api/review/1/image/',
+                               data={'image': img_and_file[0].tobytes()})
+        self.assertEqual(response.status_code, 400)
