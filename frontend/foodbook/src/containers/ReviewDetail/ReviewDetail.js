@@ -10,8 +10,8 @@ class ReviewDetail extends Component {
   componentDidMount() {
     axios.get(`/api/review/${this.props.match.params.id}/`).then((res) => {
       this.setState({
-        title: res.data.title,
         content: res.data.content,
+        // eslint-disable-next-line react/no-unused-state
         author_id: res.data.author_id,
       });
       /* requires user info api to get author name
@@ -40,7 +40,7 @@ class ReviewDetail extends Component {
         <button id="delete-article-button"
           onClick={() => this.deleteHandler()}> Delete </button>
       </div>
-      )
+    )
       : <div />;
 
     return (
@@ -67,6 +67,28 @@ class ReviewDetail extends Component {
       </div>
     );
   }
+}
+
+ReviewDetail.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.number,
+    }),
+  }),
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
+};
+
+ReviewDetail.defaultProps = {
+  match: {
+    params: {
+      id: 0,
+    },
+  },
+  history: {
+    push: () => {},
+  },
 };
 
 const mapDispatchToProps = (dispatch) => ({
