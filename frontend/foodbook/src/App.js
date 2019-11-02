@@ -9,6 +9,7 @@ import Login from 'containers/Login'; // because we exported Login.js at the ind
 // also used the absolute path /src
 import Main from 'components/Main';
 import AddReview from 'containers/AddReview';
+import ReviewDetail from 'containers/ReviewDetail';
 
 function App(props) {
   const { history } = props;
@@ -20,6 +21,7 @@ function App(props) {
           <Route path="/login" exact component={Login} />
           <Route path="/main" exact component={Main} />
           <Route path="/main/upload" exact component={AddReview} />
+          <Route path="/main/:id" exact render={(propsIn) => <ReviewDetail store={propsIn.store} history={propsIn.history} />} />
           <Redirect exact from="/" to="/login" />
         </Switch>
       </div>

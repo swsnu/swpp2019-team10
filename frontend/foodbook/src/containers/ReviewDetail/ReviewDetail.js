@@ -7,16 +7,37 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 class ReviewDetail extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ready: false,
+    };
+  }
+
   componentDidMount() {
     const { match } = this.props;
+    
+    this.setState({
+      content: '',
+      ready: false,
+      error: null,
+    });
+
     axios.get(`/api/review/${match.params.id}/`).then((res) => {
       this.setState({
         content: res.data.content,
-        // eslint-disable-next-line react/no-unused-state
-        author_id: res.data.author_id,
-      });
+        restaurant: res.data.restaurant,
+        author: res.data.author,
+        menu: res.data.menu,
+        image: res.data.image,
+        rating: res.data.rating,
+        date: res.data.date,
+        ready: true,
+      }).catch((error) => this.setState({
+        error,
+      }));
       /* requires user info api to get author name
-      axios.get('/api/user/' + res.data.author_id)
+      axios.get('/api/user/' + res.data.author)
         .then(res => {this.setState({ authorname: res.data.name })});
       */
     });
@@ -25,12 +46,28 @@ class ReviewDetail extends Component {
   deleteHandler() {
     const { history, match } = this.props;
     axios.delete(`/api/review/${match.params.id}/`);
-    history.push('/articles');
+    history.push('/main');
   }
 
   render() {
-    const { content } = this.state;
+    const { ready, error, content } = this.state;
     const { history, match } = this.props;
+
+    if (!ready) {
+      if (error != null) {
+        history.push('/main');
+        return (
+          <div className="ReviewDetailError">
+            <p>{error}</p>
+          </div>
+        );
+      }
+      return (
+        <div className="ReviewDetailLoading">
+          <p>Loading...</p>
+        </div>
+      );
+    }
 
     const reviewID = match.params.id;
 
