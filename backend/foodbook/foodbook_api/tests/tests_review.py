@@ -1,14 +1,15 @@
 """
 test view functions of review model
 """
-from django.test import TestCase, Client
-from foodbook_api.models import Profile, Review, Menu, Restaurant, ReviewForm
-from django.contrib.auth.models import User
+# pylint: disable=W0105, R0904
+import json
 from io import BytesIO
 from PIL import Image
 from django.core.files import File
+from django.test import TestCase, Client
+from django.contrib.auth.models import User
+from foodbook_api.models import Profile, Review, Menu, Restaurant
 #from django.core.urlresolvers import reverse
-import json
 # Create your tests here.
 
 
@@ -23,7 +24,39 @@ def make_image_file():
     file = File(file_obj, name='test.png')
     return (img, file)
 class ReviewTestCase(TestCase):
+    """
+    test review_view.py
+    methods:
+        setUp
+        test_get_review_list_success
+        test_get_review_list_fail
+        test_post_review_list_success
+        test_post_review_list_fail
+        test_review_list_other_method_not_allowed
+
+        test_get_review_detail_success
+        test_get_review_detail_fail
+        test_put_review_detail_success
+        test_put_review_detail_fail
+        test_delete_review_success
+        test_delete_review_fail
+        test_review_detail_other_method_not_allowed
+
+        test_get_friend_review_list_success
+        test_get_friend_review_list_fail
+        test_friend_list_other_method_not_allowed
+
+        test_get_friend_review_detail_success
+        test_get_friend_review_detail_fail
+        test_friend_review_detail_other_method_not_allowed
+
+        test_image_success
+        test_image_fail
+    """
     def setUp(self):
+        """
+        method for setUp
+        """
         user1 = User.objects.create_user(
             username='TEST_USER_1', email='TEST_EMAIL_1', password='TEST_PW_1')
         user2 = User.objects.create_user(
@@ -36,7 +69,7 @@ class ReviewTestCase(TestCase):
             age=10,
             gender='TEST_G_1',
         )
-        profile_user2 = Profile.objects.create(
+        Profile.objects.create(
             user=user2,
             phone_number='TEST_PHN_2',
             age=20,
@@ -60,7 +93,7 @@ class ReviewTestCase(TestCase):
             name='TEST_MENU',
             restaurant=restaurant
         )
-        review = Review.objects.create(
+        Review.objects.create(
             author=profile_user1,
             restaurant=restaurant,
             menu=menu,
@@ -140,6 +173,11 @@ class ReviewTestCase(TestCase):
     test review_detail
     """
     def test_get_review_detail_success(self):
+        """
+        GET review detail should only success in this case:
+        proper login
+        review should exist
+        """
         client = Client()
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
@@ -153,6 +191,9 @@ class ReviewTestCase(TestCase):
         self.assertEqual(bodys['menu'], 1)
         self.assertEqual(bodys['rating'], 5)
     def test_get_review_detail_fail(self):
+        """
+        GET review detail should fail in rest of the cases
+        """
         client = Client()
         response = client.get('/api/review/1/')
         self.assertEqual(response.status_code, 401)
@@ -161,6 +202,13 @@ class ReviewTestCase(TestCase):
         response = client.get('/api/review/7/')
         self.assertEqual(response.status_code, 404)
     def test_put_review_detail_success(self):
+        """
+        PUT review detail should only success in this case:
+        proper login
+        review should exist
+        review author should be current user
+        proper input
+        """
         client = Client()
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
@@ -179,6 +227,9 @@ class ReviewTestCase(TestCase):
         self.assertEqual(bodys['menu'], 1)
         self.assertEqual(bodys['rating'], 3)
     def test_put_review_detail_fail(self):
+        """
+        PUT review detail should fail in rest of the cases
+        """
         client = Client()
         response = client.put('/api/review/1/', {
             'content': 'TEST_PUT_CONTENT',
@@ -213,6 +264,12 @@ class ReviewTestCase(TestCase):
         }, 'application/json')
         self.assertEqual(response.status_code, 404)
     def test_delete_review_success(self):
+        """
+        DELETE review detail should only success in this case:
+        proper login
+        review should exist
+        review author should be current user
+        """
         client = Client()
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
@@ -220,6 +277,9 @@ class ReviewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Review.objects.count(), 0)
     def test_delete_review_fail(self):
+        """
+        DELETE review detail should fail in rest of the cases
+        """
         client = Client()
         response = client.delete('/api/review/1/')
         self.assertEqual(response.status_code, 401)
@@ -234,7 +294,7 @@ class ReviewTestCase(TestCase):
 
     def test_review_detail_other_method_not_allowed(self):
         """
-        Other methods in review list are not allowed
+        Other methods in review detail are not allowed
         """
         client = Client()
         client.login(username='TEST_USER_1',
@@ -245,8 +305,12 @@ class ReviewTestCase(TestCase):
     """
     test friend_review_list
     """
-
     def test_get_friend_review_list_success(self):
+        """
+        GET friend's review list should only be succes in this case:
+        proper login
+        friend with friend_id exist
+        """
         client = Client()
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
@@ -254,6 +318,9 @@ class ReviewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content.decode(), "[]")
     def test_get_friend_review_list_fail(self):
+        """
+        GET friend's review list should fail in rest of the cases
+        """
         client = Client()
         response = client.get('/api/friend/3/review/')
         self.assertEqual(response.status_code, 401)
@@ -265,7 +332,7 @@ class ReviewTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
     def test_friend_list_other_method_not_allowed(self):
         """
-        Other methods in review list are not allowed
+        Other methods in friend review list are not allowed
         """
         client = Client()
         client.login(username='TEST_USER_1',
@@ -278,6 +345,12 @@ class ReviewTestCase(TestCase):
     """
 
     def test_get_friend_review_detail_success(self):
+        """
+        GET friend's review detail should only be succes in this case:
+        proper login
+        friend with friend_id exist
+        review with review_id exist
+        """
         client = Client()
         client.login(username='TEST_USER_3',
                      email='TEST_EMAIL_3', password='TEST_PW_3')
@@ -291,6 +364,9 @@ class ReviewTestCase(TestCase):
         self.assertEqual(bodys['menu'], 1)
         self.assertEqual(bodys['rating'], 5)
     def test_get_friend_review_detail_fail(self):
+        """
+        GET friend's review detail should fail in rest of the cases
+        """
         client = Client()
         response = client.get('/api/friend/1/review/1/')
         self.assertEqual(response.status_code, 401)
@@ -308,15 +384,22 @@ class ReviewTestCase(TestCase):
         self.assertEqual(response.status_code, 403)
     def test_friend_review_detail_other_method_not_allowed(self):
         """
-        Other methods in review list are not allowed
+        Other methods in friend review detail are not allowed
         """
         client = Client()
         client.login(username='TEST_USER_3',
                      email='TEST_EMAIL_3', password='TEST_PW_3')
         response = client.put('/api/friend/1/review/1/')
         self.assertEqual(response.status_code, 405)
-    
+
     def test_image_success(self):
+        """
+        GET friend's review detail should only be succes in this case:
+        proper login
+        review with review_id exist
+        review author should be current user
+        proper input format: multipart/form-data
+        """
         client = Client()
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
@@ -325,8 +408,11 @@ class ReviewTestCase(TestCase):
         response = client.post('/api/review/1/image/',
                                data={'image': img_and_file[1]})
         self.assertEqual(response.status_code, 200)
-    
+
     def test_image_fail(self):
+        """
+        GET friend's review detail should fail in rest of the cases
+        """
         client = Client()
         img_and_file = make_image_file()
         response = client.post('/api/review/1/image/',
