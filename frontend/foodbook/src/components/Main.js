@@ -6,7 +6,7 @@ import {
   Menu,
 } from 'semantic-ui-react';
 
-import FriendList from 'components/FriendList';
+import FriendList from 'containers/FriendList';
 import ReivewPreview from 'components/ReviewPreview';
 
 const menuStyle = {
