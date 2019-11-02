@@ -7,7 +7,7 @@ import {
 } from 'semantic-ui-react';
 
 import FriendList from 'components/FriendList';
-import ReivewPreview from 'containers/ReviewPreview';
+import ReivewPreview from 'components/ReviewPreview';
 
 const menuStyle = {
   border: 'none',
