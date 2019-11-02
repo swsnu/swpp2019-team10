@@ -26,16 +26,16 @@ const Friend = (props) => {
                         <div className="value">
                           {friend}
                         </div>
-                        <div className="label">
-                          {friend === '0' ? 'Friend' : 'Friends'}
+                        <div className="friend label">
+                          <span className= "friendNumWrapper">{friend === '0' ? 'Friend' : 'Friends'}</span>
                         </div>
                       </div>
                       <div className="statistic mini">
                         <div className="value">
                           {review}
                         </div>
-                        <div className="label">
-                          {review === '0' ? 'Review' : 'Reviews'}
+                        <div className="review label">
+                        <span className= "reviewNumWrapper">{review === '0' ? 'Review' : 'Reviews'}</span>
                         </div>
                       </div>
                     </div>
