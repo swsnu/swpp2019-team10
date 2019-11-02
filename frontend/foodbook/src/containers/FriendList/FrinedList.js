@@ -6,7 +6,7 @@ const FrinedList = () => (
     <div className="ui special cards">
       <div className="card">
         <div className="content">
-          <div className="header" style={{ 'textAlign': 'center' }}> Friend </div>
+          <div className="header" style={{ textAlign: 'center' }}> Friend </div>
           {' '}
           <br />
           <div className="ui search">

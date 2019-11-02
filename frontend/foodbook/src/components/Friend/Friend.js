@@ -48,8 +48,6 @@ const Friend = (props) => {
           </div>
         </div>
       </div>
-
-
     </div>
   );
 };
