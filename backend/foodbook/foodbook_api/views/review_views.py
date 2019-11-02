@@ -26,7 +26,7 @@ def review_list(request):
             restaurant_name = req_data['restaurant_name']
             menu_name = req_data['menu_name']
             content = req_data['content']
-            #rating = req_data['rating']
+            rating = req_data['rating']
         except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest(content=str(e))
         restaurant = Restaurant.objects.get(name=restaurant_name)
@@ -36,7 +36,7 @@ def review_list(request):
             restaurant=restaurant,
             menu=menu,
             content=content,
-            #rating=rating,
+            rating=rating,
             )
         dict_new_review = {
             'id': new_review.id,
@@ -44,7 +44,7 @@ def review_list(request):
             'restaurant': new_review.restaurant.id,
             'menu': new_review.menu.id,
             'content': new_review.content,
-            #'rating': new_review.rating,
+            'rating': new_review.rating,
             'date': new_review.date
             }
         return JsonResponse(dict_new_review, status=201)
@@ -60,6 +60,9 @@ def review_detail(request, review_id):
             review = Review.objects.get(id=review_id)
         except ObjectDoesNotExist:
             return HttpResponseNotFound()
+        image_path=""
+        if review.review_img:
+            image_path = review.review_img.path
         review_dict = dict_new_review = {
             'id': review.id,
             'author': review.author.id,
@@ -68,7 +71,7 @@ def review_detail(request, review_id):
             'content': review.content,
             'rating': review.rating,
             'date': review.date,
-            'image': review.review_img.path
+            'image': image_path
         }
         return JsonResponse(review_dict)
     elif request.method == 'PUT':
@@ -84,7 +87,6 @@ def review_detail(request, review_id):
             menu_name = req_data['menu_name']
             content = req_data['content']
             rating = req_data['rating']
-            img = req_data['image']
         except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest(content=str(e))
         restaurant = Restaurant.objects.get(name=restaurant_name)
@@ -93,8 +95,10 @@ def review_detail(request, review_id):
         review.menu = menu
         review.content = content
         review.rating = rating
-        review.review_img = img
         review.save()
+        image_path = ""
+        if review.review_img:
+            image_path = review.review_img.path
         dict_review = {
             'id': review.id,
             'author': review.author.id,
@@ -103,9 +107,9 @@ def review_detail(request, review_id):
             'content': review.content,
             'rating': review.rating,
             'date': review.date,
-            'image': review.review_img.path
+            'image': image_path
         }
-        return JsonResponse(dict_review, status=201)
+        return JsonResponse(dict_review)
     elif request.method == 'DELETE':
         try:
             review = Review.objects.get(id=review_id)
@@ -121,12 +125,15 @@ def review_detail(request, review_id):
 def friend_review_list(request, friend_id):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
-    friend = Profile.objects.get(id=friend_id)
+    try:
+        friend = Profile.objects.get(id=friend_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound()
     if friend not in request.user.profile.friend.all():
         return HttpResponse(status=403)
     elif request.method == 'GET':
         review_all_list = [
-            review for review in Review.objects.filter(user=friend).values()]
+            review for review in Review.objects.filter(author=friend).values()]
         return JsonResponse(review_all_list, safe=False)
     else:
         return HttpResponseNotAllowed(['GET'])
@@ -135,7 +142,10 @@ def friend_review_list(request, friend_id):
 def friend_review_detail(request, friend_id, review_id):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
-    friend = Profile.objects.get(id=friend_id)
+    try:
+        friend = Profile.objects.get(id=friend_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound()
     if friend not in request.user.profile.friend.all():
         return HttpResponse(status=403)
     elif request.method == 'GET':
@@ -145,6 +155,9 @@ def friend_review_detail(request, friend_id, review_id):
             return HttpResponseNotFound()
         if review.author.id != friend_id:
             return HttpResponse(status=403)
+        image_path = ""
+        if review.review_img:
+            image_path = review.review_img.path
         review_dict = dict_new_review = {
             'id': review.id,
             'author': review.author.id,
@@ -153,7 +166,7 @@ def friend_review_detail(request, friend_id, review_id):
             'content': review.content,
             'rating': review.rating,
             'date': review.date,
-            'image': review.review_img.path
+            'image': image_path
         }
         return JsonResponse(review_dict)
     else:
@@ -174,17 +187,18 @@ def review_image(request, review_id):
         if form.is_valid():
             review.image = request.FILES['image']
             review.save()
-            return HttpResponse(status=201)
+            dict_review = {
+                'id': review.id,
+                'author': review.author.id,
+                'restaurant': review.restaurant.id,
+                'menu': review.menu.id,
+                'content': review.content,
+                'rating': review.rating,
+                'date': review.date,
+                'image': review.review_img.path
+            }
+            return JsonResponse(dict_review)
+        else:
+            return HttpResponseBadRequest(content="invalid form")
     else:
         return HttpResponseNotAllowed(['POST'])
-    dict_review = {
-        'id': review.id,
-        'author': review.author.id,
-        'restaurant': review.restaurant.id,
-        'menu': review.menu.id,
-        'content': review.content,
-        'rating': review.rating,
-        'date': review.date,
-        'image': review.review_img.url
-    }
-    return JsonResponse(dict_review)

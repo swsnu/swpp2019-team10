@@ -75,6 +75,7 @@ class Review(models.Model):
         tag
     '''
     content = models.CharField(max_length=120)
+    rating = models.FloatField(default=0)
     author = models.ForeignKey(
         Profile,
         on_delete=models.CASCADE,
