@@ -126,7 +126,7 @@ class ReviewDetail extends Component {
         {stringRenderer('Date', date)}
         {authorOnly}
         <button
-          id="back-review-article-button"
+          id="back-review-button"
           type="button"
           onClick={() => history.push('/articles')}
         >
