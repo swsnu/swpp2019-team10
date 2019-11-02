@@ -109,7 +109,7 @@ export default class Main extends Component {
                     <NavLink to="/upload/" className="ui medium image">
                       <i className="edit outline icon fluid massive center link" style={{ marginLeft: '85%' }} />
                     </NavLink>
-                )}
+                    )}
                   content="Add new review!"
                 />
               </Grid.Row>
