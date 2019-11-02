@@ -13,7 +13,7 @@ const mockStore = getMockStore({}, {}, {});
 describe('ReviewPreview', () => {
   let reviewPreview;
   const name = 'a';
-  const tag = [{name: '1', positive: true}];
+  const tag = [{ name: '1', positive: true }];
   const rating = 1;
   const imgUrl = '1';
 
@@ -33,7 +33,7 @@ describe('ReviewPreview', () => {
 
   it('should render without crash', () => {
     const component = mount(reviewPreview);
-    const wrapper = component.find('.review-preview')
+    const wrapper = component.find('.review-preview');
     expect(wrapper.length).toBe(1);
   });
 

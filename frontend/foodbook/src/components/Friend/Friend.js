@@ -27,7 +27,7 @@ const Friend = (props) => {
                           {friend}
                         </div>
                         <div className="friend label">
-                          <span className= "friendNumWrapper">{friend === '0' ? 'Friend' : 'Friends'}</span>
+                          <span className="friendNumWrapper">{friend === '0' ? 'Friend' : 'Friends'}</span>
                         </div>
                       </div>
                       <div className="statistic mini">
@@ -35,7 +35,7 @@ const Friend = (props) => {
                           {review}
                         </div>
                         <div className="review label">
-                        <span className= "reviewNumWrapper">{review === '0' ? 'Review' : 'Reviews'}</span>
+                          <span className="reviewNumWrapper">{review === '0' ? 'Review' : 'Reviews'}</span>
                         </div>
                       </div>
                     </div>

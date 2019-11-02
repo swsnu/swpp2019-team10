@@ -35,21 +35,24 @@ describe('friend', () => {
     const component = mount(friend);
     const wrapper = component.find('.Friend');
     expect(wrapper.length).toBe(1);
-    const friendWrapper = component.find(".friendNumWrapper");
-    const reviewWrapper = component.find(".reviewNumWrapper");
-    expect(friendWrapper.text()).toEqual("Friends");
-    expect(reviewWrapper.text()).toEqual("Reviews");
+    const friendWrapper = component.find('.friendNumWrapper');
+    const reviewWrapper = component.find('.reviewNumWrapper');
+    expect(friendWrapper.text()).toEqual('Friends');
+    expect(reviewWrapper.text()).toEqual('Reviews');
   });
 
   it('should handle zero reviews or friends', () => {
-    const component = mount(<Provider store={mockStore}>
-      <ConnectedRouter history={history}>
-        <Friend name={name} picture={picture} review={"0"} friend={"0"} />
-      </ConnectedRouter>
-    </Provider>)
-    const friendWrapper = component.find(".friendNumWrapper");
-    const reviewWrapper = component.find(".reviewNumWrapper");
-    expect(friendWrapper.text()).toEqual("Friend");
-    expect(reviewWrapper.text()).toEqual("Review");
-  })
+    const component = mount(
+      <Provider store={mockStore}>
+        <ConnectedRouter history={history}>
+          <Friend name={name} picture={picture} review="0" friend="0" />
+        </ConnectedRouter>
+      </Provider>,
+    );
+
+    const friendWrapper = component.find('.friendNumWrapper');
+    const reviewWrapper = component.find('.reviewNumWrapper');
+    expect(friendWrapper.text()).toEqual('Friend');
+    expect(reviewWrapper.text()).toEqual('Review');
+  });
 });
