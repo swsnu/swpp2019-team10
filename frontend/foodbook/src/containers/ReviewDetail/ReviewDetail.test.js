@@ -22,46 +22,23 @@ describe('<ReviewDetail />', () => {
     
   const store = getMockStore(initialState);
 
+  const resp = {
+    content: '',
+    restaurant: 0,
+    author: 0,
+    menu: 0,
+    image: '',
+    rating: 0.0,
+    date: '',
+  };
+
+  axios.get.mockResolvedValue(resp);
+
   describe('on author mode', () => {
-    axios.get = jest.fn(() => {
-      return new Promise(() => {
-        const result = {
-          status: 200, data: {title: 'asdf',
-            content: 'asd',
-            author_id: 1,
-            name: 'Software Lover'}
-        }
-      })
-    })
-
-        
-    axios.delete = jest.fn(url => {
-      return new Promise((resolve, reject) => {
-        const result = {
-          status: 200, data: {title: 'asdf',
-            content: 'asd',
-            author_id: 1,
-            name: 'Software Lover'}
-        }
-      })
-    })
-
-        
-    axios.post = jest.fn(url => {
-      return new Promise((resolve, reject) => {
-        const result = {
-          status: 200, data: {title: 'asdf',
-            content: 'asd',
-            author_id: 1,
-            name: 'Software Lover'}
-        }
-      })
-    })
-    
     it('should render without errors', () => {
       const component = mount(<Provider store={store}>
-                <ReviewDetail history={history} match={{params: {id: 1}}}/></Provider>);
-      let wrapper = component.find('Connect(ArticleDetail)');
+        <ReviewDetail history={history} match={{params: {id: 1}}}/></Provider>);
+      const wrapper = component.find('Connect(ArticleDetail)');
       expect(wrapper.length).toBe(1);
       const wrapper2 = component.find('#back-detail-article-button');
       wrapper2.simulate('click');
@@ -69,7 +46,7 @@ describe('<ReviewDetail />', () => {
 
     it('should be editable', () => {
       const component = mount(<Provider store={store}>
-                <ArticleDetail id='detail' history={history} match={{params: {id: 1}}}/></Provider>);
+        <ArticleDetail id='detail' history={history} match={{params: {id: 1}}}/></Provider>);
       const wrapAD = component.find('#detail').at(1);
       wrapAD.setState({title: 'asdf',
         content: 'asd',
@@ -81,7 +58,7 @@ describe('<ReviewDetail />', () => {
 
     it('should be deletable', () =>{
       const component = mount(<Provider store={store}>
-                <ArticleDetail id='detail' history={history} match={{params: {id: 1}}}/></Provider>);
+        <ArticleDetail id='detail' history={history} match={{params: {id: 1}}}/></Provider>);
       const wrapAD = component.find('#detail').at(1);
       wrapAD.setState({title: 'asdf',
         content: 'asd',
@@ -91,27 +68,4 @@ describe('<ReviewDetail />', () => {
       wrapper.simulate('click');
     });
   });
-
-  describe('on non-author mode', () =>{
-    axios.get = jest.fn(url => {
-      return new Promise((resolve, reject) => {
-        const result = {
-          status: 200, data: {title: 'asdf',
-            content: 'asd',
-            author_id: 2,
-            name: 'No u'}
-        }
-      })
-    })
-        
-    it('should render without errors', () => {
-      const component = mount(<Provider store={store}>
-                <ReviewDetail history={history} match={{params: {id: 1}}}/></Provider>);
-      let wrapper = component.find('Connect(ArticleDetail)');
-      expect(wrapper.length).toBe(1);
-      const wrapper2 = component.find('#back-detail-article-button');
-      wrapper2.simulate('click');
-    });
-  })
-    
-});
+);
