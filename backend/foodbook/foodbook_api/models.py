@@ -1,8 +1,10 @@
 '''
 module
 '''
+# pylint: disable=R0903
 from django.db import models
 from django.contrib.auth.models import User
+from django.forms import ModelForm
 # Create your models here.
 
 
@@ -73,7 +75,8 @@ class Review(models.Model):
         comment
         tag
     '''
-    comment = models.CharField(max_length=120)
+    content = models.CharField(max_length=120)
+    rating = models.FloatField(default=0)
     author = models.ForeignKey(
         Profile,
         on_delete=models.CASCADE,
@@ -95,5 +98,16 @@ class Review(models.Model):
         #null=True
     )
     review_img = models.ImageField(upload_to='review/images/', blank=True)
-    date = models.DateTimeField()
+    date = models.DateTimeField(auto_now=True)
     #tag=hasn't decide yet!
+
+class ReviewForm(ModelForm):
+    '''
+    ModelForm to save image
+    '''
+    class Meta:
+        '''
+        Meta
+        '''
+        model = Review
+        fields = ['review_img']
