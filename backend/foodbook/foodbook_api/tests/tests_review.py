@@ -3,9 +3,6 @@ test view functions of review model
 """
 # pylint: disable=W0105, R0904, R0801
 import json
-from io import BytesIO
-from PIL import Image
-from django.core.files import File
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from foodbook_api.models import Profile, Review, Menu, Restaurant
