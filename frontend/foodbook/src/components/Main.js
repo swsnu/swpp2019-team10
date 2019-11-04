@@ -9,8 +9,8 @@ import {
 import { NavLink } from 'react-router-dom';
 
 import FriendList from 'containers/FriendList';
-import ReivewPreview from 'components/ReviewPreview';
-import RawCalendar from './RawCalendar';
+import RawCalendar from 'components/RawCalendar';
+import ReviewList from 'containers/ReviewList';
 
 const menuStyle = {
   border: 'none',
@@ -40,13 +40,7 @@ export default class Main extends Component {
       case 'feed':
         mainRenderer = (
           <div className="main-feed-wrapper">
-            <ReivewPreview
-              key="1"
-              imgUrl="https://www.yellowblissroad.com/wp-content/uploads/2015/07/lemon-chicken-fb.jpg"
-              name="chicken"
-              rating={3}
-              tag={[{ name: 'crispy', positive: true }, { name: 'pricy', positive: false }]}
-            />
+            <ReviewList />
           </div>
         );
         break;
