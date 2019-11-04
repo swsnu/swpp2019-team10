@@ -64,7 +64,7 @@ export default class Main extends Component {
       case 'menu':
         mainRenderer = (<div className="main-menu-wrapper"> menu </div>);
         break;
-
+        
       default: // exceptional Case
         mainRenderer = (<div className="main-error-wrapper"> error </div>);
         break;
@@ -105,7 +105,7 @@ export default class Main extends Component {
                     <div className="content">
                       <Popup
                         trigger={(
-                          <NavLink to="/upload/" className="ui medium image">
+                          <NavLink to="/main/upload" className="ui medium image">
                             <i className="edit outline black icon fluid massive center link" style={{ marginLeft: '85%' }} />
                           </NavLink>
                         )}
