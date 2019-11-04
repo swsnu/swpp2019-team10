@@ -101,6 +101,18 @@ class Review(models.Model):
     date = models.DateTimeField(auto_now=True)
     #tag=hasn't decide yet!
 
+class ProfileForm(ModelForm):
+    '''
+    ModelForm to save image
+    '''
+    # pylint: disable=too-few-public-methods
+    class Meta:
+        '''
+        Meta
+        '''
+        model = Profile
+        fields = ['profile_pic']
+        
 class ReviewForm(ModelForm):
     '''
     ModelForm to save image

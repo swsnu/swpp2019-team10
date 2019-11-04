@@ -1,10 +1,12 @@
 from django.urls import path
 
-from .views import review_views, user_views
+from .views import review_views, user_views, token_views
 
 urlpatterns = [
     path('', user_views.user, name='user'),
+    path('token/', token_views.token, name='token'),
     path('signup/', user_views.signup, name='signup'),
+    path('signup/<int:profile_id>/image/', user_views.profile_image, name='profile_image'),
     path('signin/', user_views.signin, name='signin'),
     path('signout/', user_views.signout, name='signout'),
     path('friend/', user_views.friend, name='friend'),
