@@ -3,3 +3,4 @@ Django==2.0.13
 django-extensions==1.6.7
 pylint==2.4.3
 Pillow==6.2.1
+pylint-django==2.0.11
