@@ -26,19 +26,17 @@ const ReviewList = (props) => (
 );
 
 ReviewList.propTypes = {
-  dateString: propTypes.string
-}
+  dateString: propTypes.string,
+};
 
 const mapStateToProps = (state) => ({
-  
-})
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onGetAll: () => {
-      dispatch(actionCreators.GET_REVIEWS());
-    }
-  }
-}
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onGetAll: () => {
+    dispatch(actionCreators.GET_REVIEWS());
+  },
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ReviewList));

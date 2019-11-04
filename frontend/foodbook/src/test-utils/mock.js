@@ -17,6 +17,48 @@ const getMockReducer = jest.fn(
   },
 );
 
+export const getMockUserStore = (userState) => {
+  const mockUserReducer = getMockReducer(userState);
+
+  const rootReducer = combineReducers({
+    user: mockUserReducer,
+    router: connectRouter(history),
+  });
+
+  const mockStore = createStore(rootReducer,
+    applyMiddleware(thunk, routerMiddleware(history)));
+
+  return mockStore;
+};
+
+export const getMockReviewStore = (reviewState) => {
+  const mockReviewReducer = getMockReducer(reviewState);
+
+  const rootReducer = combineReducers({
+    review: mockReviewReducer,
+    router: connectRouter(history),
+  });
+
+  const mockStore = createStore(rootReducer,
+    applyMiddleware(thunk, routerMiddleware(history)));
+
+  return mockStore;
+};
+
+export const getMockRecoStore = (recoState) => {
+  const mockRecoReducer = getMockReducer(recoState);
+
+  const rootReducer = combineReducers({
+    reco: mockRecoReducer,
+    router: connectRouter(history),
+  });
+
+  const mockStore = createStore(rootReducer,
+    applyMiddleware(thunk, routerMiddleware(history)));
+
+  return mockStore;
+};
+
 export const getMockStore = (userState, reviewState, recommendationState) => {
   const mockUserReducer = getMockReducer(userState);
   const mockReviewReducer = getMockReducer(reviewState);
