@@ -9,20 +9,11 @@ from django.core.files import File
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from foodbook_api.models import Profile, Review, Menu, Restaurant
+from foodbook_api.tests.tests_user import make_image_file
 #from django.core.urlresolvers import reverse
 # Create your tests here.
 
 
-def make_image_file():
-    '''
-        method that make fake image file
-    '''
-    file_obj = BytesIO()
-    img = Image.new('RGB', (60, 30), color='red')
-    img.save(file_obj, 'png')
-    file_obj.seek(0)
-    file = File(file_obj, name='test.png')
-    return (img, file)
 class ReviewTestCase(TestCase):
     """
     test review_view.py
