@@ -7,7 +7,6 @@ const FrinedList = () => (
       <div className="card">
         <div className="content">
           <div className="header" style={{ textAlign: 'center' }}> Friend </div>
-          {' '}
           <br />
           <div className="ui search">
             <div className="ui icon input fluid">
