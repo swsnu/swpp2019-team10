@@ -18,7 +18,7 @@ export const GET_REVIEWS_DEEP = (data) => ({
 export const GET_REVIEWS = () => (dispatch) => {
   dispatch(GET_REVIEWS_PRE());
 
-  axios.get('/api/review/')
+  return axios.get('/api/review/')
     .then((res) => dispatch(GET_REVIEWS_DEEP(res.data)))
-    .catch();
+    .catch(dispatch(GET_REVIEWS_PRE()));
 };

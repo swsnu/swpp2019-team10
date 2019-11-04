@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getMockReviewStore } from 'test-utils/mock';
+import store from 'store/store';
 import * as actionCreators from './action_review';
 
 const stubReviews = [
@@ -27,27 +27,9 @@ const stubReviews = [
   },
 ];
 
-const initialState = {
-  reviewList: stubReviews,
-  reviewDetail: {
-    id: -1,
-    author: '',
-    restaurant: '',
-    menu: '',
-    content: '',
-    image: '',
-    rating: -1,
-    date: '0000-00-00',
-    tag: {},
-  },
-};
-
-let store = getMockReviewStore(initialState);
-
 describe('Review Action', () => {
   afterEach(() => {
     jest.clearAllMocks();
-    store = getMockReviewStore(initialState);
   });
 
   it('should clear all reviews before getting reviews', () => {
@@ -57,7 +39,7 @@ describe('Review Action', () => {
     expect(newState.review.reviewList.length).toBe(0);
   });
 
-  it('should get all reviews when no error', () => {
+  it('should get all reviews when no error', (done) => {
     const spy = jest.spyOn(axios, 'get')
       .mockImplementation(() => new Promise((res) => {
         const result = {
@@ -68,15 +50,16 @@ describe('Review Action', () => {
       }));
 
     store.dispatch(actionCreators.GET_REVIEWS())
-      .then((done) => {
+      .then(() => {
         const newState = store.getState();
-        expect(spy).hasBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalledTimes(1);
         expect(newState.review.reviewList.length).toBe(2);
         done();
-      });
+      })
+      .catch();
   });
 
-  it('should not get reviews when error', () => {
+  it('should not get reviews when error', (done) => {
     const spy = jest.spyOn(axios, 'get')
       .mockImplementation(() => new Promise((res, rej) => {
         const result = {
@@ -87,9 +70,9 @@ describe('Review Action', () => {
       }));
 
     store.dispatch(actionCreators.GET_REVIEWS())
-      .then((done) => {
+      .catch(() => {
         const newState = store.getState();
-        expect(spy).hasBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalledTimes(1);
         expect(newState.review.reviewList.length).toBe(0);
         done();
       });

@@ -3,6 +3,7 @@ import {
   Route, Redirect, Switch,
 } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
+import axios from 'axios';
 import propTypes from 'prop-types';
 
 import Login from 'containers/Login'; // because we exported Login.js at the index.js, importing just directory is OK.
@@ -10,6 +11,9 @@ import Login from 'containers/Login'; // because we exported Login.js at the ind
 import Main from 'components/Main';
 import AddReview from 'containers/AddReview';
 import ReviewDetail from 'containers/ReviewDetail';
+
+// axios.defaults.xsrfCookieName = 'csrftoken';
+// axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
 
 function App(props) {
   const { history } = props;

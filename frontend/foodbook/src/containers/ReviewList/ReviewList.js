@@ -12,6 +12,7 @@ const ReviewList = (props) => (
       <div className="card fluid" style={{ width: '630px' }}>
         <div className="content">
           <br />
+
           <ReviewPreview
             key="1"
             imgUrl="https://www.yellowblissroad.com/wp-content/uploads/2015/07/lemon-chicken-fb.jpg"
@@ -30,7 +31,7 @@ ReviewList.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-
+  Reviews: state.review.reviewList,
 });
 
 const mapDispatchToProps = (dispatch) => ({
