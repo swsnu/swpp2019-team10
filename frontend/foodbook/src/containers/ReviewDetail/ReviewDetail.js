@@ -83,7 +83,7 @@ class ReviewDetail extends Component {
 
     if (!ready) {
       if (error != null) {
-        history.push('/main');
+        // history.push('/main');
         return (
           <div className="ReviewDetailError">
             <p>{error}</p>
@@ -99,8 +99,8 @@ class ReviewDetail extends Component {
 
     const reviewID = match.params.id;
 
-    const isUserAuthor = true;
-    const authorOnly = isUserAuthor ? (
+    // const isUserAuthor = ;
+    const authorOnly = /* isUserAuthor ? */(
       <div className="AuthorButtons">
         <Button
           id="edit-review-button"
@@ -118,7 +118,7 @@ class ReviewDetail extends Component {
         </Button>
       </div>
     )
-      : <div />;
+    //  : <div />;
 
     const googleMap = (<div className="locationGoogle"> Map will be here </div>);
 
@@ -152,7 +152,6 @@ class ReviewDetail extends Component {
               type="text"
               value={content}
               readOnly
-              onChange={(event) => this.setState({ content: event.target.value })}
             />
             <div className="extra content">
               <NavLink to="/recommendation">
