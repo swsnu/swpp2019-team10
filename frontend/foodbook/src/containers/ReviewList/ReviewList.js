@@ -1,7 +1,12 @@
 import React from 'react';
-import ReviewPreview from 'components/ReviewPreview/';
+import propTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
-const ReviewList = () => (
+import ReviewPreview from 'components/ReviewPreview/';
+import * as actionCreators from 'store/actions/review/action_review';
+
+const ReviewList = (props) => (
   <div className="ReviewList">
     <div className="ui special cards fluid">
       <div className="card fluid" style={{ width: '630px' }}>
@@ -20,4 +25,20 @@ const ReviewList = () => (
   </div>
 );
 
-export default ReviewList;
+ReviewList.propTypes = {
+  dateString: propTypes.string
+}
+
+const mapStateToProps = (state) => ({
+  
+})
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onGetAll: () => {
+      dispatch(actionCreators.GET_REVIEWS());
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ReviewList));

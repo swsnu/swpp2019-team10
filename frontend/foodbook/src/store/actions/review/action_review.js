@@ -1,6 +1,17 @@
 import * as actionTypes from './actionTypes_review';
-// import axios from 'axios'; TODO: API Required. Below is mock for test code.
+import axios from 'axios';
 
-export const stubDeep = (id) => id * 2; // mock
-export const stub = (input) => ({ name: actionTypes.DELETE_REVIEW, value: stubDeep(input) });
-// indeed mock
+export const GET_REVIEWS_DEEP = (data) => {
+    return {
+        type: actionTypes.GET_REVIEWS,
+        data: data
+    };
+}
+
+export const GET_REVIEWS = () => {
+    return dispatch => {
+        return axios.get('/api/review/')
+        .then(res => dispatch(GET_REVIEWS_DEEP(res.data)))
+        .catch(res => console.log('Error: ', res));
+    }
+}
