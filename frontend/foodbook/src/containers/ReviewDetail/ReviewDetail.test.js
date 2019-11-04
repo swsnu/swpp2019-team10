@@ -15,9 +15,9 @@ jest.mock('axios');
 
 describe('<ReviewDetail />', () => {
   const initialState = {
-    
+
   };
-    
+
   const store = getMockStore(initialState);
 
   const resp = {
