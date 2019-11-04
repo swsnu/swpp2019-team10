@@ -1,24 +1,19 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
+
+import { history } from 'store/store';
+import { ConnectedRouter } from 'connected-react-router';
+import { getMockStore } from 'test-utils/mock';
+import { Provider } from 'react-redux';
 import axios from 'axios';
 
-import { Provider } from 'react-redux';
-// import { connectRouter, ConnectedRouter } from 'connected-react-router';
-// import { Route, Redirect, Switch } from 'react-router-dom';
-
-import store, { history } from '../../store/store';
-import { getMockStore } from '../../test-utils/mock';
 import ReviewDetail from './ReviewDetail';
 
 // https://jestjs.io/docs/en/mock-functions.html
 jest.mock('axios');
 
 describe('<ReviewDetail />', () => {
-  const initialState = {
-
-  };
-
-  const mockStore = getMockStore(initialState);
+  const mockStore = getMockStore({}, {}, {});
 
   const resp = {
     content: 'test',
