@@ -15,15 +15,15 @@ const ReviewList = (props) => {
   reviewsToRender = reviewsToRender.map((review) => (
     <ReviewPreview
       key={review.id}
-      id={-1}
-      author="React"
-      restaurant="302"
-      menu="GalbiTang"
-      content="ZMTGR"
-      image="http://recipe1.ezmember.co.kr/cache/recipe/2017/11/15/268859d03a5850821af32b009d8001731.jpg"
-      rating={3}
-      date="2019-11-04"
-      tag={[{ name: 'hot', positive: true }, { name: 'pricy', positive: false }]}
+      id={review.id}
+      author={review.author}
+      restaurant={review.restaurant}
+      menu={review.menu}
+      content={review.content}
+      image={review.image}
+      rating={review.rating}
+      date={review.date}
+      tag={review.tag}
       isMine
     />
   ));
