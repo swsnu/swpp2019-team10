@@ -4,7 +4,13 @@ import {
   Grid,
   Header,
   Menu,
+  Popup,
 } from 'semantic-ui-react';
+import { NavLink } from 'react-router-dom';
+
+import FriendList from 'containers/FriendList';
+import RawCalendar from 'components/RawCalendar';
+import ReviewList from 'containers/ReviewList';
 
 const menuStyle = {
   border: 'none',
@@ -27,15 +33,24 @@ export default class Main extends Component {
 
   render() {
     const { activeItem } = this.state;
+
     let mainRenderer = <div />;
 
     switch (activeItem) {
       case 'feed':
-        mainRenderer = (<div className="main-feed-wrapper"> Feed </div>);
+        mainRenderer = (
+          <div className="main-feed-wrapper">
+            <ReviewList />
+          </div>
+        );
         break;
 
       case 'calendar':
-        mainRenderer = (<div className="main-calendar-wrapper"> calendar </div>);
+        mainRenderer = (
+          <div className="main-calendar-wrapper">
+            <RawCalendar />
+          </div>
+        );
         break;
 
       case 'location':
@@ -76,22 +91,35 @@ export default class Main extends Component {
         </Menu>
         {/* view select region */}
 
-        <Container text>
-          <Grid columns={2} divided>
-            <Grid.Row className="wrapper-friend">
-              <Grid.Column width={3}>
-                Friend List View should rendered here
-                {/* TODO:  Implement here the friends tab */}
-              </Grid.Column>
-              {/* Friend Region */}
+        <Grid columns={2} divided container stackable>
+          <Grid.Row className="wrapper-friend">
+            <Grid.Column width={4}>
+              <FriendList />
+            </Grid.Column>
+            {/* Friend Region */}
 
-              <Grid.Column width={13} className="wrapper-reviews">
-                {mainRenderer}
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-          {/* Article Region */}
-        </Container>
+            <Grid.Column width={12} className="wrapper-reviews">
+              <Grid.Row className="add-review">
+                <div className="ui special cards">
+                  <div className="card" style={{ width: '630px' }}>
+                    <div className="content">
+                      <Popup
+                        trigger={(
+                          <NavLink to="/upload/" className="ui medium image">
+                            <i className="edit outline black icon fluid massive center link" style={{ marginLeft: '85%' }} />
+                          </NavLink>
+                        )}
+                        content="Add new review!"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Grid.Row>
+              <br />
+              {mainRenderer}
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </div>
     );
   }

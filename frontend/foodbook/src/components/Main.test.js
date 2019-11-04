@@ -35,7 +35,7 @@ describe('main', () => {
   it('should render article(review)s correctly', () => {
     const component = mount(main);
     const wrapper = component.find('.main-feed-wrapper');
-    expect(wrapper.length).toBe(1); // FIXME: should modified after implementing the reviewList.
+    expect(wrapper.length).toBe(1);
   });
 
   it('should handle unknown case', () => {
