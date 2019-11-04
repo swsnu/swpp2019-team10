@@ -40,6 +40,8 @@ def review_list(request):
             content=content,
             rating=rating,
             )
+        request.user.profile.count_write += 1
+        request.user.profile.save()
         dict_new_review = {
             'id': new_review.id,
             'author': new_review.author.id,

@@ -138,6 +138,7 @@ class ReviewTestCase(TestCase):
         }, 'application/json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Review.objects.count(), 2)
+        self.assertEqual(Profile.objects.get(id=1).count_write, 1)
     def test_post_review_list_fail(self):
         """
         POST review list must fail in this case:
