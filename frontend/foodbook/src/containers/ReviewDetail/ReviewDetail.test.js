@@ -18,7 +18,7 @@ describe('<ReviewDetail />', () => {
 
   };
 
-  const store = getMockStore(initialState);
+  const mockStore = getMockStore(initialState);
 
   const resp = {
     content: 'test',
@@ -34,30 +34,18 @@ describe('<ReviewDetail />', () => {
 
   describe('on author mode', () => {
     it('should render without errors', () => {
-      const component = mount(<Provider store={store}>
-        <ReviewDetail history={history} match={{params: {id: 1}}}/></Provider>);
+      const component = mount(
+        <Provider store={mockStore}>
+          <ReviewDetail
+            history={history}
+            match={{ params: { id: 1 } }}
+          />
+        </Provider>,
+      );
       const wrapper = component.find('Connect(ReviewDetail)');
       expect(wrapper.length).toBe(1);
       const wrapper2 = component.find('#back-review-button');
       wrapper2.simulate('click');
-    });
-
-    it('should be editable', () => {
-      const component = mount(<Provider store={store}>
-        <Review id='detail' history={history} match={{params: {id: 1}}}/></Provider>);
-      const wrapAD = component.find('#detail').at(1);
-      // set user to author of the article
-      const wrapper = component.find('#edit-article-button');
-      wrapper.simulate('click');
-    });
-
-    it('should be deletable', () =>{
-      const component = mount(<Provider store={store}>
-        <ArticleDetail id='detail' history={history} match={{params: {id: 1}}}/></Provider>);
-      const wrapAD = component.find('#detail').at(1);
-      // set user to author of the article
-      const wrapper = component.find('#delete-article-button');
-      wrapper.simulate('click');
     });
   });
 });
