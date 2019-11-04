@@ -12,8 +12,8 @@ import Main from 'components/Main';
 import AddReview from 'containers/AddReview';
 import ReviewDetail from 'containers/ReviewDetail';
 
-// axios.defaults.xsrfCookieName = 'csrftoken';
-// axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
 
 function App(props) {
   const { history } = props;
