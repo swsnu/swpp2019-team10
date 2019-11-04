@@ -51,13 +51,10 @@ describe('Review Action', () => {
   });
 
   it('should clear all reviews before getting reviews', () => {
-    store.dispatch(actionCreators.GET_REVIEWS_PRE)
-      .then((done) => {
-        const newState = store.getState();
-        expect(newState.review.reviewList.length).toBe(0);
-        done();
-      })
-      .catch();
+    store.dispatch(actionCreators.GET_REVIEWS_PRE());
+
+    const newState = store.getState();
+    expect(newState.review.reviewList.length).toBe(0);
   });
 
   it('should get all reviews when no error', () => {
@@ -70,7 +67,7 @@ describe('Review Action', () => {
         res(result);
       }));
 
-    store.dispatch(actionCreators.getArticles())
+    store.dispatch(actionCreators.GET_REVIEWS())
       .then((done) => {
         const newState = store.getState();
         expect(spy).hasBeenCalledTimes(1);
@@ -89,7 +86,7 @@ describe('Review Action', () => {
         rej(result);
       }));
 
-    store.dispatch(actionCreators.getArticles())
+    store.dispatch(actionCreators.GET_REVIEWS())
       .then((done) => {
         const newState = store.getState();
         expect(spy).hasBeenCalledTimes(1);
