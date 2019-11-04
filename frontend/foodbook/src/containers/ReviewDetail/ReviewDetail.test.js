@@ -58,10 +58,10 @@ describe('<ReviewDetail />', () => {
 
     it('error message should be shown up', () => {
       const component = mount(reviewDetail);
-      const wrapper = component.find('Connect(ReviewDetail)');
-      component.setState({ error: true });
-      component.render();
+      const wrapper = component.find('#ReviewDetail');
       expect(wrapper.length).toBe(1);
+      wrapper.dive().setState({ error: true });
+      wrapper.render();
       const backWrapper = component.find('#back-review-button').at(1);
 
       backWrapper.simulate('click');
