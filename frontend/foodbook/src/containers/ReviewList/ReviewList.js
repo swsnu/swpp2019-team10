@@ -1,7 +1,7 @@
 import React from 'react';
 import ReviewPreview from 'components/ReviewPreview/';
 
-export const ReviewList = () => (
+const ReviewList = () => (
   <div className="ReviewList">
     <div className="ui special cards fluid">
       <div className="card fluid" style={{ width: '630px' }}>
