@@ -1,7 +1,7 @@
 """
 test view functions of review model
 """
-# pylint: disable=W0105, R0904
+# pylint: disable=W0105, R0904, R0801
 import json
 from io import BytesIO
 from PIL import Image

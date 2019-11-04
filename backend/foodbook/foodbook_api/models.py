@@ -112,7 +112,7 @@ class ProfileForm(ModelForm):
         '''
         model = Profile
         fields = ['profile_pic']
-        
+
 class ReviewForm(ModelForm):
     '''
     ModelForm to save image
