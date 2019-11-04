@@ -130,14 +130,15 @@ class ReviewTestCase(TestCase):
         client = Client()
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
-        response = client.post('/api/review/', {
+        response = client.post('/api/review/', json.dumps({
             'content': 'TEST_NEW_CONTENT',
             'restaurant_name': 'TEST_REST',
             'menu_name': 'TEST_MENU',
             'rating': 5
-        }, 'application/json')
+        }), 'application/json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Review.objects.count(), 2)
+        self.assertEqual(Profile.objects.get(id=1).count_write, 1)
     def test_post_review_list_fail(self):
         """
         POST review list must fail in this case:
@@ -212,12 +213,12 @@ class ReviewTestCase(TestCase):
         client = Client()
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
-        response = client.put('/api/review/1/', {
+        response = client.put('/api/review/1/', json.dumps({
             'content': 'TEST_PUT_CONTENT',
             'restaurant_name': 'TEST_REST',
             'menu_name': 'TEST_MENU',
             'rating': 3
-        }, 'application/json')
+        }), 'application/json')
         self.assertEqual(response.status_code, 200)
         bodys = json.loads(response.content.decode())
         self.assertEqual(bodys['id'], 1)

@@ -2,7 +2,7 @@
 views for reviews
 '''
 # pylint: disable=line-too-long
-# pylint: disable=E0402, R0911
+# pylint: disable=E0402, R0911, R1721
 import json
 from json import JSONDecodeError
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse, HttpResponseNotFound
@@ -40,6 +40,8 @@ def review_list(request):
             content=content,
             rating=rating,
             )
+        request.user.profile.count_write += 1
+        request.user.profile.save()
         dict_new_review = {
             'id': new_review.id,
             'author': new_review.author.id,
