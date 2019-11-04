@@ -64,7 +64,7 @@ export default class Main extends Component {
       case 'menu':
         mainRenderer = (<div className="main-menu-wrapper"> menu </div>);
         break;
-        
+
       default: // exceptional Case
         mainRenderer = (<div className="main-error-wrapper"> error </div>);
         break;
