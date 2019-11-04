@@ -7,7 +7,6 @@ import 'semantic-ui-css/semantic.min.css';
 
 import * as actionCreators from 'store/actions/user/action_user';
 
-
 class Login extends Component {
   // some behavior or rendering should be added in sprint 4.
 
@@ -15,6 +14,7 @@ class Login extends Component {
     onLogin();
     history.push('/main'); // TODO: @ sprint 4, should handle real login system
   };
+
 
   render() {
     const { history, onLogin } = this.props;

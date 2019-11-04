@@ -6,6 +6,9 @@ import {
   Menu,
 } from 'semantic-ui-react';
 
+import FriendList from 'containers/FriendList';
+import ReivewPreview from 'components/ReviewPreview';
+
 const menuStyle = {
   border: 'none',
   borderRadius: 0,
@@ -31,7 +34,19 @@ export default class Main extends Component {
 
     switch (activeItem) {
       case 'feed':
-        mainRenderer = (<div className="main-feed-wrapper"> Feed </div>);
+        mainRenderer = (
+          <div className="main-feed-wrapper">
+            <ReivewPreview
+              key="1"
+              imgUrl="https://www.yellowblissroad.com/wp-content/uploads/2015/07/lemon-chicken-fb.jpg"
+              name="chicken"
+              rating={3}
+              tag={
+          [{ name: 'crispy', positive: true }, { name: 'pricy', positive: false }]
+}
+            />
+          </div>
+        );
         break;
 
       case 'calendar':
@@ -76,22 +91,19 @@ export default class Main extends Component {
         </Menu>
         {/* view select region */}
 
-        <Container text>
-          <Grid columns={2} divided>
-            <Grid.Row className="wrapper-friend">
-              <Grid.Column width={3}>
-                Friend List View should rendered here
-                {/* TODO:  Implement here the friends tab */}
-              </Grid.Column>
-              {/* Friend Region */}
+        <Grid columns={2} divided container stackable>
+          <Grid.Row className="wrapper-friend">
+            <Grid.Column width={4}>
+              <FriendList />
+              {/* TODO:  Implement here the friends tab */}
+            </Grid.Column>
+            {/* Friend Region */}
 
-              <Grid.Column width={13} className="wrapper-reviews">
-                {mainRenderer}
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-          {/* Article Region */}
-        </Container>
+            <Grid.Column width={12} className="wrapper-reviews">
+              {mainRenderer}
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </div>
     );
   }
