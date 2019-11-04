@@ -1,9 +1,7 @@
 import {
-  // Container,
-  // Grid,
   Rating,
-  // Header,
-  // Menu,
+  TextArea,
+  Button,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
@@ -13,11 +11,8 @@ import React, { Component } from 'react';
 import './AddReview.css';
 
 import { connect } from 'react-redux';
-import { axios } from 'axios';
+import axios from 'axios';
 import ImageSelectPreview from 'react-image-select-pv';
-
-// import for tag handling function, it'd be better to make tag js separately
-import ReivewPreview from '../../components/ReviewPreview';
 
 // import StarRating from '../../components/StarRating/StarRating';
 // import * as actionCreators from '../../Stores/Actions/index';
@@ -36,7 +31,6 @@ class AddReview extends Component {
       menu: '',
       content: '',
       rating: 0,
-      tag: [],
       // https://codepen.io/depy/pen/vEWWdw
       // location: null,
       image: null,
@@ -53,7 +47,9 @@ class AddReview extends Component {
     const postID = this.postContentHandler();
     this.postImageHandler(postID);
 
-    this.history.push('/main');
+    const { history } = this.props;
+
+    history.push('/main');
   }
 
   postContentHandler = () => {
@@ -132,7 +128,7 @@ class AddReview extends Component {
     );
     */
 
-    const confirmDisabled = false;
+    const confirmDisabled = content === '' || restaurant === '' || menu === '' || rating === 0;
 
     return (
       <div className="addReview">
@@ -145,7 +141,7 @@ class AddReview extends Component {
               <div className="meta">
                 <span className="rating">
                   Rating:
-                  <Rating defaultRating={rating} maxRating="5" icon="star" />
+                  <Rating defaultRating={rating} maxRating="5" icon="star" onRate={(rate) => this.setState({ rating: rate })} />
                 </span>
                 {tagArea}
               </div>
@@ -157,7 +153,7 @@ class AddReview extends Component {
               {googleMap}
             </div>
             Restaurant
-            <textarea
+            <TextArea
               id="review-restaurant-input"
               rows="1"
               type="text"
@@ -166,7 +162,7 @@ class AddReview extends Component {
             />
             <br />
             Menu
-            <textarea
+            <TextArea
               id="review-menu-input"
               rows="1"
               type="text"
@@ -175,7 +171,7 @@ class AddReview extends Component {
             />
             <br />
             Content
-            <textarea
+            <TextArea
               id="review-content-input"
               rows="4"
               type="text"
@@ -183,21 +179,21 @@ class AddReview extends Component {
               onChange={(event) => this.setState({ content: event.target.value })}
             />
             <br />
-            <button
+            <Button
               id="back-add-review-button"
               type="button"
-              onClick={() => history.push('/articles')}
+              onClick={() => history.push('/main')}
             >
               Back
-            </button>
-            <button
+            </Button>
+            <Button
               id="submit-review-button"
               type="button"
               disabled={confirmDisabled}
               onClick={() => { this.addReviewHandler(); }}
             >
               Submit
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -217,12 +213,8 @@ AddReview.defaultProps = {
   },
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  dispatch,
-});
+const mapDispatchToProps = (/* dispatch */) => ({});
 
-const mapStateToProps = (state) => ({
-  state,
-});
+const mapStateToProps = (/* state */) => ({});
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddReview);
