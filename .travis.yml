@@ -2,14 +2,25 @@ matrix:
   include:
   - language: node_js
     node_js:
+    - '12'
     - '10'
+    dist: bionic
+    addons:
+      sonarcloud:
+        organization: "swsnu"
+        token:
+          secure: "ZGLJWh1kCNSotQe8qGkj1JOHaHb4is7cfF3WnEbntb5DSqUjP6rfGxwhNXFxGE44FEwKMoZySyMvC/VDcsxqmsi9gm22fDIy6qVDYchdlEz10E8D2W+h/TcSjaX0wV38RChkDZhXFXEd96ozWXnhbtbYWhKoYmjlOHGjr9vROiHF/oq+tXCmy7aVCSUy3CmkEDfWW/1SoneVJ9/yeUu0rbCwP6dKd9H3h1ht3EMIehrBvAwQM+otLhwsMNuvcJb45Fn0YH8bhA7aa1RMp+SDNwwelQjQNy9TTrn0EZejDc727XYHeLvoDJtLvA588T9pGLsKFKCjbi83JRcwKDGagbvCcQRwjCtMYXKyqYJyNWrer5OHu8fisULIVz/iCTexEObySBTQKZL84My+OWKrcE96ORezHe/RP+S0Er9KsuhWmOeKz9TKxzWYv41pZLi9+Q7wTJp2EKsVRLB4F7QqnshkGfG6c/nHBqlPAwUsW3qsnKsmF/4jAFKctokFOBeX/bn/FZZttyF5Q09Tzac2iFRrG6M39blK77BQBA7IVLq5xZ7i2KnV7/H90dzTNF7OrRzLr0zR5q3YFn8TNKD54g1yjzxjoLciDTrb5c90gBGMsZYwwrsjZb55G3hHHKRIsTCeH/3EThxDp/AupdgW8g6nQQPHTcef7pOzwo8hSz0="
     before_install:
     - cd frontend/foodbook
     install:
     - yarn install # use either npm or yarn
+    - yarn add coveralls
     script:
     - ./node_modules/.bin/eslint src
     - yarn test --coverage --watchAll=false
+    - sonar-scanner
+    after_success:
+    - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
   - language: python
     python:
     - "3.5"
@@ -20,9 +31,12 @@ matrix:
     - cd backend/foodbook
     install:
     - pip install -r requirements.txt
+    - pip install coveralls
     script:
-    - pylint */models.py */views/*.py */tests/*.py
+    - pylint --load-plugins pylint_django */models.py */views/*.py */tests/*.py
     - python manage.py makemigrations
     - python manage.py migrate
-    - coverage run --branch --source='./foodbook_api' manage.py test
+    - coverage run --branch --source='./foodbook_api' manage.py test foodbook_api/tests/
     - coverage report -m
+    after_success:
+    - coveralls

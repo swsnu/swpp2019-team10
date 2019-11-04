@@ -35,6 +35,10 @@ describe('friend', () => {
     const component = mount(friend);
     const wrapper = component.find('.Friend');
     expect(wrapper.length).toBe(1);
+  });
+
+  it('should render correctly when reviews and friends are more than two', () => {
+    const component = mount(friend);
     const friendWrapper = component.find('.friendNumWrapper');
     const reviewWrapper = component.find('.reviewNumWrapper');
     expect(friendWrapper.text()).toEqual('Friends');

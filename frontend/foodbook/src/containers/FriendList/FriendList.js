@@ -1,13 +1,12 @@
 import React from 'react';
 import Friend from 'components/Friend';
 
-const FrinedList = () => (
-  <div className="friend-preivew">
+const FriendList = () => (
+  <div className="friend-preview">
     <div className="ui special cards">
       <div className="card">
         <div className="content">
           <div className="header" style={{ textAlign: 'center' }}> Friend </div>
-          {' '}
           <br />
           <div className="ui search">
             <div className="ui icon input fluid">
@@ -25,4 +24,4 @@ const FrinedList = () => (
   </div>
 );
 
-export default FrinedList;
+export default FriendList;

@@ -4,10 +4,13 @@ import {
   Grid,
   Header,
   Menu,
+  Popup,
 } from 'semantic-ui-react';
+import { NavLink } from 'react-router-dom';
 
 import FriendList from 'containers/FriendList';
-import ReivewPreview from 'components/ReviewPreview';
+import RawCalendar from 'components/RawCalendar';
+import ReviewList from 'containers/ReviewList';
 
 const menuStyle = {
   border: 'none',
@@ -30,27 +33,24 @@ export default class Main extends Component {
 
   render() {
     const { activeItem } = this.state;
+
     let mainRenderer = <div />;
 
     switch (activeItem) {
       case 'feed':
         mainRenderer = (
           <div className="main-feed-wrapper">
-            <ReivewPreview
-              key="1"
-              imgUrl="https://www.yellowblissroad.com/wp-content/uploads/2015/07/lemon-chicken-fb.jpg"
-              name="chicken"
-              rating={3}
-              tag={
-          [{ name: 'crispy', positive: true }, { name: 'pricy', positive: false }]
-}
-            />
+            <ReviewList />
           </div>
         );
         break;
 
       case 'calendar':
-        mainRenderer = (<div className="main-calendar-wrapper"> calendar </div>);
+        mainRenderer = (
+          <div className="main-calendar-wrapper">
+            <RawCalendar />
+          </div>
+        );
         break;
 
       case 'location':
@@ -95,11 +95,27 @@ export default class Main extends Component {
           <Grid.Row className="wrapper-friend">
             <Grid.Column width={4}>
               <FriendList />
-              {/* TODO:  Implement here the friends tab */}
             </Grid.Column>
             {/* Friend Region */}
 
             <Grid.Column width={12} className="wrapper-reviews">
+              <Grid.Row className="add-review">
+                <div className="ui special cards">
+                  <div className="card" style={{ width: '630px' }}>
+                    <div className="content">
+                      <Popup
+                        trigger={(
+                          <NavLink to="/upload/" className="ui medium image">
+                            <i className="edit outline black icon fluid massive center link" style={{ marginLeft: '85%' }} />
+                          </NavLink>
+                        )}
+                        content="Add new review!"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Grid.Row>
+              <br />
               {mainRenderer}
             </Grid.Column>
           </Grid.Row>
