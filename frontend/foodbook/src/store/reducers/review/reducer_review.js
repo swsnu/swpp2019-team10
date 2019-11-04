@@ -17,8 +17,11 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.POST_REVIEW:
-      break;
+    case actionTypes.GET_REVIEWS:
+      return { ...state, reviewList: action.data };
+
+    case actionTypes.CLEAR_REVIEWS:
+      return { ...state, reviewList: [] };
 
     default:
       break;
