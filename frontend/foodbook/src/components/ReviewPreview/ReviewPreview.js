@@ -6,7 +6,7 @@ import './ReviewPreview.css';
 import { Rating } from 'semantic-ui-react';
 import ClickToEdit from 'react-click-to-edit';
 
-const ReivewPreview = (props) => {
+const ReviewPreview = (props) => {
   const parseTagName = (tags) => tags.map((tag, i) => (
     <ClickToEdit key={tag.name} wrapperClass={tag.positive ? `pos ${i}` : `neg ${i}`} inputClass={tag.positive ? `pos ${i}` : `neg ${i}`} textClass={tag.positive ? `pos ${i}` : `neg ${i}`} value={tag.name} style={{ display: 'inline' }} endEditing={() => {}}>
       {/* FIXME */}
@@ -49,11 +49,11 @@ const ReivewPreview = (props) => {
   );
 };
 
-ReivewPreview.propTypes = {
+ReviewPreview.propTypes = {
   name: propTypes.string.isRequired,
   rating: propTypes.number.isRequired,
   tag: propTypes.arrayOf(Object).isRequired,
   imgUrl: propTypes.string.isRequired,
 };
 
-export default ReivewPreview;
+export default ReviewPreview;
