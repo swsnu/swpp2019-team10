@@ -2,8 +2,9 @@ matrix:
   include:
   - language: node_js
     node_js:
+    - '12'
     - '10'
-    dist: trusty
+    dist: bionic
     addons:
       sonarcloud:
         organization: "swsnu"
