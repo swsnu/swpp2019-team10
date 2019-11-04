@@ -1,9 +1,13 @@
+# Created by https://www.gitignore.io/api/vim,linux,macos,python,django,pycharm,windows,intellij
+# Edit at https://www.gitignore.io/?templates=vim,linux,macos,python,django,pycharm,windows,intellij
+
 ### Django ###
 *.log
 *.pot
 *.pyc
 */migrations/*
 */__pycache__/*
+*/__pycache__/
 __pycache__/
 local_settings.py
 db.sqlite3
