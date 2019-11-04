@@ -1,6 +1,7 @@
 '''
     test views/user_views.py
 '''
+# pylint: disable=W0105, R0904, R0801
 import json
 from io import BytesIO
 from PIL import Image
