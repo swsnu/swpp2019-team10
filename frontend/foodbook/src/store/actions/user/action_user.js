@@ -1,17 +1,10 @@
 import * as actionTypes from './actionTypes_user';
+// import axios from 'axios'; TODO: API Required. Below is mock for test code.
 
-const initialState = {
-  // implement this!
-};
+export const LOGIN_INNER = () => ({
+  type: actionTypes.LOGIN,
+  userInfo: {},
+}); // TODO: @ sprint 4
 
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    default:
-      console.log('Implement This!');
-      console.log('actionTypes :', actionTypes);
-  }
 
-  return state;
-};
-
-export default reducer;
+export const LOGIN = () => (dispatch) => (dispatch(LOGIN_INNER()));

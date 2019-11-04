@@ -1,13 +1,13 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 
-import { routerMiddleware } from 'connected-react-router';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 
 import thunk from 'redux-thunk';
 
-import userReducer from 'store/actions/user/action_user';
-import reviewReducer from 'store/actions/review/action_review';
-import recoReducer from 'store/actions/reco/action_reco';
+import userReducer from './reducers/user/reducer_user';
+import reviewReducer from './reducers/review/reducer_review';
+import recoReducer from './reducers/reco/reducer_reco';
 
 export const history = createBrowserHistory();
 
@@ -15,6 +15,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   review: reviewReducer,
   reco: recoReducer,
+  router: connectRouter(history),
 });
 
 const store = createStore(rootReducer,

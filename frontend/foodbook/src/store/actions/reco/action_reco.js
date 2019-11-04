@@ -1,17 +1,5 @@
 import * as actionTypes from './actionTypes_reco';
+// import axios from 'axios'; TODO: API Required. Below is mock for test code.
 
-const initialState = {
-  // implement this!
-};
-
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    default:
-      console.log('Implement This!');
-      console.log('actionTypes :', actionTypes);
-  }
-
-  return state;
-};
-
-export default reducer;
+export const stubDeep = (id) => id * 2; // mock
+export const stub = (input) => ({ name: actionTypes.stub, value: stubDeep(input) });
