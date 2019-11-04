@@ -1,7 +1,7 @@
 '''
 views for reviews
 '''
-# pylint: disable=line-too-long
+# pylint: disable=line-too-long, unnecessary-comprehension
 # pylint: disable=E0402, R0911
 import json
 from json import JSONDecodeError
