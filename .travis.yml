@@ -21,8 +21,8 @@ matrix:
     install:
     - pip install -r requirements.txt
     script:
-    - pylint */models.py */views/*.py */tests/*.py
+    - pylint --load-plugins pylint_django */models.py */views/*.py */tests/*.py
     - python manage.py makemigrations
     - python manage.py migrate
-    - coverage run --branch --source='./foodbook_api' manage.py test
+    - coverage run --branch --source='./foodbook_api' manage.py test foodbook_api/tests/
     - coverage report -m
