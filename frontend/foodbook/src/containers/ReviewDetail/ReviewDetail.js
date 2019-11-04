@@ -151,7 +151,7 @@ class ReviewDetail extends Component {
               rows="4"
               type="text"
               value={content}
-              readonly
+              readOnly
               onChange={(event) => this.setState({ content: event.target.value })}
             />
             <div className="extra content">

@@ -1,0 +1,1 @@
+yarn test -- --coverage --watchAll

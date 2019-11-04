@@ -27,20 +27,44 @@ describe('<ReviewDetail />', () => {
 
   axios.get.mockResolvedValue(resp);
 
-  describe('on author mode', () => {
-    it('should render without errors', () => {
-      const component = mount(
-        <Provider store={mockStore}>
+  let reviewDetail;
+
+  beforeEach(() => {
+    reviewDetail = (
+      <Provider store={mockStore}>
+        <ConnectedRouter history={history}>
           <ReviewDetail
             history={history}
             match={{ params: { id: 1 } }}
           />
-        </Provider>,
-      );
+        </ConnectedRouter>
+      </Provider>
+    );
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('on author mode', () => {
+    it('should render without errors', () => {
+      const component = mount(reviewDetail);
       const wrapper = component.find('Connect(ReviewDetail)');
       expect(wrapper.length).toBe(1);
-      const wrapper2 = component.find('#back-review-button');
-      wrapper2.simulate('click');
+      const backWrapper = component.find('#back-review-button').at(1);
+
+      backWrapper.simulate('click');
+    });
+
+    it('error message should be shown up', () => {
+      const component = mount(reviewDetail);
+      const wrapper = component.find('Connect(ReviewDetail)');
+      component.setState({ error: true });
+      component.render();
+      expect(wrapper.length).toBe(1);
+      const backWrapper = component.find('#back-review-button').at(1);
+
+      backWrapper.simulate('click');
     });
   });
 });
