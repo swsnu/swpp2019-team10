@@ -46,7 +46,7 @@ class Restaurant(models.Model):
     name = models.CharField(max_length=50)
     longitude = models.FloatField()
     latitude = models.FloatField()
-    rating = models.FloatField()
+    rating = models.FloatField(default=0)
 
 class Menu(models.Model):
     '''
