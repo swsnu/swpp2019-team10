@@ -1,13 +1,11 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
 import { history } from 'store/store';
 import { ConnectedRouter } from 'connected-react-router';
 import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
 import Main from './Main';
-// import ReviewList from 'containers/ReviewList/ReviewList';
-// import * as actionCreators from 'store/actions/user/action_user';
 
 const mockStore = getMockStore({}, {}, {});
 

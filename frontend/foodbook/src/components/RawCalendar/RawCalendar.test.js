@@ -12,6 +12,12 @@ import Calendar from './RawCalendar';
 
 const mockStore = getMockStore({}, {}, {});
 
+jest.mock('containers/ReviewList/ReviewList', () => jest.fn(() => (
+  <div className="mockReviewList">
+            this is mock
+  </div>
+)));
+
 describe('Calendar', () => {
   let calendar;
   beforeEach(() => {
