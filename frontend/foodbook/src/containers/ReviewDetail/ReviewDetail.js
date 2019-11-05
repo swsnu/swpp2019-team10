@@ -57,15 +57,17 @@ class ReviewDetail extends Component {
         rating: res.data.rating,
         date: res.data.date,
         ready: true,
-      }); /* .catch((error) => this.setState({
-        error,
-      })) */
+      }).catch((error) => this.setState({
+        error: error.response,
+      }));
     });
   }
 
   deleteHandler() {
     const { history, match } = this.props;
-    axios.delete(`/api/review/${match.params.id}/`);
+    axios.delete(`/api/review/${match.params.id}/`).catch((error) => this.setState({
+      error: error.response,
+    }));
     history.push('/main');
   }
 
