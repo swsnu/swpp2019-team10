@@ -180,7 +180,7 @@ class AddReview extends Component {
             />
             <br />
             <Button
-              id="back-add-review-button"
+              id="back-review-button"
               type="button"
               onClick={() => history.push('/main')}
             >

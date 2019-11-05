@@ -51,14 +51,20 @@ describe('<AddReview />', () => {
 
   it('should have submit button working', () => {
     const component = mount(addReview);
-    const wrapper = component.find('AddReview');
 
-    const submitButton = component.find('#submit-review-button').at(1);
+    const submitButton = component.find('#submit-review-button').at(0);
     submitButton.simulate('click');
-
-    // expect(wrapper.props.history)
+    component.update();
   });
-  
+
+  it('should have back button working', () => {
+    const component = mount(addReview);
+
+    const submitButton = component.find('#back-review-button').at(0);
+    submitButton.simulate('click');
+    component.update();
+  });
+
   it('should have textfields working', () => {
     const component = mount(addReview);
     const event = { target: { value: 'sometext' } };
