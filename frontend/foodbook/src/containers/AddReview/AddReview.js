@@ -64,7 +64,7 @@ class AddReview extends Component {
       latitude,
       // tag,
     };
-
+    
     axios.post('/api/review/', reviewDict).then((res) => {
       // console.log(res.data);
       this.postImageHandler(res.data.id);

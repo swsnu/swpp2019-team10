@@ -51,6 +51,7 @@ describe('<AddReview />', () => {
 
   it('should have submit button working', () => {
     const component = mount(addReview);
+    
     const event = { target: { value: 'sometext' } };
 
     // submit button should be enabled first
