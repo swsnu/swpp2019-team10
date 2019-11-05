@@ -73,7 +73,7 @@ export default class Main extends Component {
     return (
       <div className="main">
         <Container text style={{ marginTop: '2em' }}>
-          <Header as="h1">FoodBook</Header>
+          <Header as="h1"><NavLink to="/main">FoodBook</NavLink></Header>
         </Container>
         {/* Title Region */}
 
@@ -105,7 +105,7 @@ export default class Main extends Component {
                     <div className="content">
                       <Popup
                         trigger={(
-                          <NavLink to="/upload/" className="ui medium image">
+                          <NavLink to="/main/upload" className="ui medium image">
                             <i className="edit outline black icon fluid massive center link" style={{ marginLeft: '85%' }} />
                           </NavLink>
                         )}

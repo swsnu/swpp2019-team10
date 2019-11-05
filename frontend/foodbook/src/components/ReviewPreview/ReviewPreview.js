@@ -4,28 +4,33 @@ import propTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import './ReviewPreview.css';
 import { Rating } from 'semantic-ui-react';
-import ClickToEdit from 'react-click-to-edit';
 
 const ReviewPreview = (props) => {
-  const parseTagName = (tags) => tags.map((tag, i) => (
-    <ClickToEdit key={tag.name} wrapperClass={tag.positive ? `pos ${i}` : `neg ${i}`} inputClass={tag.positive ? `pos ${i}` : `neg ${i}`} textClass={tag.positive ? `pos ${i}` : `neg ${i}`} value={tag.name} style={{ display: 'inline' }} endEditing={() => {}}>
-      {/* FIXME */}
-      <span key={`${tag.name}Wrapper`} className={tag.positive ? `pos ${i}` : `neg ${i}`}>
-        {tag.name}
-      </span>
-    </ClickToEdit>
-  ));
-
   const {
-    name, rating, tag, imgUrl,
-  } = props; // TODO: this is mock
+    id, author, menu, image, rating, date, tag, isMine,
+  } = props;
+
+  const parseTagName = (tags) => {
+    const parsed = tags.map((t, i) => (
+      <span key={`${t.name}Wrapper`} className={t.positive ? `pos ${i}` : `neg ${i}`}>
+        {t.name}
+      </span>
+    ));
+
+    return (
+      <div className="tags-wrapper" style={{ display: 'inline' }}>
+        {parsed}
+      </div>
+    );
+  };
 
   return (
     <div className="review-preview">
       <div className="ui special cards">
         <div className="card" style={{ width: '630px' }}>
           <div className="content">
-            <span className="header">{ name }</span>
+            <span className="header">{ menu }</span>
+            <span className="date-wrapper">{ date }</span>
             <div className="meta">
               <span className="rating">
                 Rating:
@@ -35,13 +40,21 @@ const ReviewPreview = (props) => {
             </div>
           </div>
           <div className="blurring dimmable image">
-            <img src={imgUrl} alt="food img" />
+            <img src={image} alt="food img" />
           </div>
+
           <div className="extra content">
-            <NavLink to="/recommendation">
+            {isMine && (
+            <NavLink className="detail-wrapper" to={`/main/${id}`}>
                         Read Detail & Get Recommendation!
-              {/* FIXME: Not Yet Implemented */}
             </NavLink>
+            )}
+
+            {!isMine && (
+            <span className="author-wrapper">
+              {`Created by ${author}`}
+            </span>
+            )}
           </div>
         </div>
       </div>
@@ -50,10 +63,25 @@ const ReviewPreview = (props) => {
 };
 
 ReviewPreview.propTypes = {
-  name: propTypes.string.isRequired,
-  rating: propTypes.number.isRequired,
-  tag: propTypes.arrayOf(Object).isRequired,
-  imgUrl: propTypes.string.isRequired,
+  id: propTypes.number,
+  author: propTypes.string,
+  menu: propTypes.string,
+  image: propTypes.string,
+  rating: propTypes.number,
+  date: propTypes.string,
+  tag: propTypes.arrayOf(Object),
+  isMine: propTypes.bool,
+};
+
+ReviewPreview.defaultProps = {
+  id: -1,
+  author: 'cat',
+  menu: 'cat',
+  rating: 3,
+  date: '2019-11-05',
+  isMine: true,
+  image: 'https://i.pinimg.com/474x/91/ec/7e/91ec7ec701884e2959643bf4b31d8ee8--cat-food-food-networktrisha.jpg',
+  tag: [{ name: 'good', positive: true }, { name: 'bad', positive: false }],
 };
 
 export default ReviewPreview;

@@ -12,16 +12,21 @@ const mockStore = getMockStore({}, {}, {});
 
 describe('ReviewPreview', () => {
   let reviewPreview;
-  const name = 'a';
-  const tag = [{ name: '1', positive: true }];
-  const rating = 1;
-  const imgUrl = '1';
+  let reviewPreviewFriend;
 
   beforeEach(() => {
     reviewPreview = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <ReviewPreview name={name} tag={tag} rating={rating} imgUrl={imgUrl} />
+          <ReviewPreview id={0} isMine />
+        </ConnectedRouter>
+      </Provider>
+    );
+
+    reviewPreviewFriend = (
+      <Provider store={mockStore}>
+        <ConnectedRouter history={history}>
+          <ReviewPreview id={0} isMine={false} />
         </ConnectedRouter>
       </Provider>
     );
@@ -37,5 +42,15 @@ describe('ReviewPreview', () => {
     expect(wrapper.length).toBe(1);
   });
 
-  // FIXME: how to mock parseTagName.
+  it('should render detail link when author is me', () => {
+    const component = mount(reviewPreview);
+    const wrapper = component.find('NavLink');
+    expect(wrapper.length).toBe(1);
+  });
+
+  it('should render author name when author is friend', () => {
+    const component = mount(reviewPreviewFriend);
+    const wrapper = component.find('.author-wrapper');
+    expect(wrapper.length).toBe(1);
+  });
 });
