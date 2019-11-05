@@ -8,27 +8,25 @@ import * as actionCreators from 'store/actions/review/action_review';
 
 const ReviewList = (props) => {
   const { reviews, dateString } = props;
- 
+
   let reviewsToRender = reviews;
   if (dateString) {
-    reviewsToRender = reviewsToRender.filter((review) => {
-      return review.props.date === dateString
-    });
+    reviewsToRender = reviewsToRender.filter((review) => review.props.date === dateString);
   }
 
   reviewsToRender = reviewsToRender.map((review) => (
     <ReviewPreview
-      key={`${review.id}`}
-      id={review.id}
-      author={review.author}
-      restaurant={review.restaurant}
-      menu={review.menu}
-      content={review.content}
-      image={review.image}
-      rating={review.rating}
-      date={review.date}
-      tag={review.tag}
-      isMine
+      key={`${review.props.id}`}
+      id={review.props.id}
+      author={review.props.author}
+      restaurant={review.props.restaurant}
+      menu={review.props.menu}
+      content={review.props.content}
+      image={review.props.image}
+      rating={review.props.rating}
+      date={review.props.date}
+      tag={review.props.tag}
+      isMine={review.props.isMine}
     />
   ));
 
@@ -55,16 +53,17 @@ ReviewList.defaultProps = {
   dateString: undefined,
   reviews: [
     <ReviewPreview
-    id= {-1}
-    key= "99"
-    author= "cat"
-    menu= "cat"
-    rating= {3}
-    date= "2019-11-05"
-    image= 'https://i.pinimg.com/474x/91/ec/7e/91ec7ec701884e2959643bf4b31d8ee8--cat-food-food-networktrisha.jpg'
-    tag= {[{ name: 'good', positive: true }, { name: 'bad', positive: false }]}
-    isMine
-  />
+      key="0"
+      id={0}
+      isMine
+    />,
+
+    <ReviewPreview
+      key="1"
+      id={1}
+      menu="cat-review-by-some-friend"
+      isMine={false}
+    />,
   ],
 };
 

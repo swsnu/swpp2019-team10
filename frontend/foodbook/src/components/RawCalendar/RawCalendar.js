@@ -56,7 +56,7 @@ export class RawCalendar extends Component {
         <h3 style={{ marginLeft: '25%' }}>
           {`Your Food history of ${dateString}`}
         </h3>
-        {<ReviewList dateString={dateString} /> }
+        <ReviewList dateString={dateString} />
       </div>
     );
   }

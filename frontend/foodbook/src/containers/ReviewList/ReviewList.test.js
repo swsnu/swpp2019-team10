@@ -1,5 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import Axios from 'axios';
 
 import { history } from 'store/store';
 import { ConnectedRouter } from 'connected-react-router';
@@ -39,9 +40,15 @@ describe('ReviewList', () => {
     expect(wrapper.length).toBe(1);
   });
 
-  it('should render each Friend correctly', () => {
+  it('should render each review correctly', () => {
     const component = mount(reviewList);
     const wrapper = component.find('.spyReview');
-    expect(wrapper.length).toBe(1); // FIXME: should be modified after axios applyed
+    expect(wrapper.length).toBe(2);
+  });
+
+  it('should call onGetAll on loading', () => {
+    const spyAll = jest.spyOn(Axios, 'get')
+      .mockImplementation(() => {});
+    expect(spyAll).toHaveBeenCalledTimes(1);
   });
 });
