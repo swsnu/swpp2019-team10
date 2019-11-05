@@ -1,7 +1,7 @@
 '''
 views for reviews
 '''
-# pylint: disable=line-too-long, unnecessary-comprehension
+# pylint: disable=line-too-long, unnecessary-comprehension, pointless-string-statement
 # pylint: disable=E0402, R0911
 import json
 from json import JSONDecodeError
@@ -31,8 +31,40 @@ def review_list(request):
             rating = req_data['rating']
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
-        restaurant = Restaurant.objects.get(name=restaurant_name)
-        menu = Menu.objects.get(name=menu_name)
+        try:
+            longitude = req_data['longitude']
+            latitude = req_data['latiitude']
+            is_location_exist = True
+        except (KeyError, JSONDecodeError):
+            is_location_exist = False
+        try:
+            restaurant = Restaurant.objects.get(name=restaurant_name)
+        except ObjectDoesNotExist:
+            """
+            this is dummy!
+            """
+            if is_location_exist:
+                restaurant = Restaurant.objects.create(
+                    name=restaurant_name,
+                    longitude=longitude,
+                    latitude=latitude,
+                )
+            else:
+                restaurant = Restaurant.objects.create(
+                    name=restaurant_name,
+                    longitude=0,
+                    latitude=0,
+                )
+        try:
+            menu = Menu.objects.get(name=menu_name)
+        except ObjectDoesNotExist:
+            """
+            this is dummy!
+            """
+            menu = Menu.objects.create(
+                name=menu_name,
+                restaurant=restaurant
+            )
         new_review = Review.objects.create(
             author=request.user.profile,
             restaurant=restaurant,
@@ -126,6 +158,8 @@ def review_detail(request, review_id):
         if request.user.id != review.author.id:
             return HttpResponse(status=403)
         review.delete()
+        request.user.profile.count_write -= 1
+        request.user.profile.save()
         return HttpResponse(status=200)
     #else:
     return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
