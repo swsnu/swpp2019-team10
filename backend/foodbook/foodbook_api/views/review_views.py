@@ -44,9 +44,9 @@ def review_list(request):
         request.user.profile.save()
         dict_new_review = {
             'id': new_review.id,
-            'author': new_review.author.id,
-            'restaurant': new_review.restaurant.id,
-            'menu': new_review.menu.id,
+            'author': new_review.author.user.username,
+            'restaurant': new_review.restaurant.name,
+            'menu': new_review.menu.name,
             'content': new_review.content,
             'rating': new_review.rating,
             'date': new_review.date
@@ -73,9 +73,9 @@ def review_detail(request, review_id):
             image_path = review.review_img.path
         review_dict = {
             'id': review.id,
-            'author': review.author.id,
-            'restaurant': review.restaurant.id,
-            'menu': review.menu.id,
+            'author': review.author.user.username,
+            'restaurant': review.restaurant.name,
+            'menu': review.menu.name,
             'content': review.content,
             'rating': review.rating,
             'date': review.date,
@@ -109,9 +109,9 @@ def review_detail(request, review_id):
             image_path = review.review_img.path
         dict_review = {
             'id': review.id,
-            'author': review.author.id,
-            'restaurant': review.restaurant.id,
-            'menu': review.menu.id,
+            'author': review.author.user.username,
+            'restaurant': review.restaurant.name,
+            'menu': review.menu.name,
             'content': review.content,
             'rating': review.rating,
             'date': review.date,
@@ -176,9 +176,9 @@ def friend_review_detail(request, friend_id, review_id):
             image_path = review.review_img.path
         review_dict = {
             'id': review.id,
-            'author': review.author.id,
-            'restaurant': review.restaurant.id,
-            'menu': review.menu.id,
+            'author': review.author.user.username,
+            'restaurant': review.restaurant.name,
+            'menu': review.menu.name,
             'content': review.content,
             'rating': review.rating,
             'date': review.date,
@@ -209,9 +209,9 @@ def review_image(request, review_id):
             review.save()
             dict_review = {
                 'id': review.id,
-                'author': review.author.id,
-                'restaurant': review.restaurant.id,
-                'menu': review.menu.id,
+                'author': review.author.user.username,
+                'restaurant': review.restaurant.name,
+                'menu': review.menu.name,
                 'content': review.content,
                 'rating': review.rating,
                 'date': review.date,
