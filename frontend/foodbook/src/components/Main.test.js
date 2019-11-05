@@ -69,7 +69,7 @@ describe('main', () => {
 
   it('should change state when calendar is clicked', () => {
     const component = mount(main);
-    const wrapper = component.find('a').at(1);
+    const wrapper = component.find('a').at(2);
     wrapper.simulate('click');
     const instance = component.find('Main').instance();
     expect(instance.state.activeItem).toEqual('calendar');
@@ -77,7 +77,7 @@ describe('main', () => {
 
   it('should change state when location is clicked', () => {
     const component = mount(main);
-    const wrapper = component.find('a').at(2);
+    const wrapper = component.find('a').at(3);
     wrapper.simulate('click');
     const instance = component.find('Main').instance();
     expect(instance.state.activeItem).toEqual('location');
@@ -85,7 +85,7 @@ describe('main', () => {
 
   it('should change state when type is clicked', () => {
     const component = mount(main);
-    const wrapper = component.find('a').at(3);
+    const wrapper = component.find('a').at(4);
     wrapper.simulate('click');
     const instance = component.find('Main').instance();
     expect(instance.state.activeItem).toEqual('type');
@@ -93,7 +93,7 @@ describe('main', () => {
 
   it('should change state when menu is clicked', () => {
     const component = mount(main);
-    const wrapper = component.find('a').at(4);
+    const wrapper = component.find('a').at(5);
     wrapper.simulate('click');
     const instance = component.find('Main').instance();
     expect(instance.state.activeItem).toEqual('menu');

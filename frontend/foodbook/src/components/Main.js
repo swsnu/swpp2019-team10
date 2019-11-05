@@ -73,7 +73,7 @@ export default class Main extends Component {
     return (
       <div className="main">
         <Container text style={{ marginTop: '2em' }}>
-          <Header as="h1">FoodBook</Header>
+          <Header as="h1"><NavLink to="/main">FoodBook</NavLink></Header>
         </Container>
         {/* Title Region */}
 
