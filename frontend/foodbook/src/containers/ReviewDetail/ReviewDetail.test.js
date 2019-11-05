@@ -59,7 +59,6 @@ describe('<ReviewDetail />', () => {
     it('error message should be shown up', () => {
       const component = mount(reviewDetail);
       const wrapper = component.find('ReviewDetail');
-      expect(wrapper.length).toBe(1);
 
       wrapper.setState({ ready: false, error: 'Error' });
       component.update();
