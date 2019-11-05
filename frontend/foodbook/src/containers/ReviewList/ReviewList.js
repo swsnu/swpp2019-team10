@@ -22,17 +22,17 @@ class ReviewList extends Component {
 
     reviewsToRender = reviewsToRender.map((review) => (
       <ReviewPreview
-        key={`${review.props.id}`}
-        id={review.props.id}
-        author={review.props.author}
-        restaurant={review.props.restaurant}
-        menu={review.props.menu}
-        content={review.props.content}
-        image={review.props.image}
-        rating={review.props.rating}
-        date={review.props.date}
-        tag={review.props.tag}
-        isMine={review.props.isMine}
+        key={`${review.id}`}
+        id={review.id}
+        author={review.author}
+        restaurant={review.restaurant}
+        menu={review.menu}
+        content={review.content}
+        image={review.image}
+        rating={review.rating}
+        date={review.date}
+        tag={review.tag}
+        isMine={review.isMine}
       />
     ));
     return (
@@ -58,24 +58,11 @@ ReviewList.propTypes = {
 
 ReviewList.defaultProps = {
   dateString: undefined,
-  reviews: [
-    <ReviewPreview
-      key="0"
-      id={0}
-      isMine
-    />,
-
-    <ReviewPreview
-      key="1"
-      id={1}
-      menu="cat-review-by-some-friend"
-      isMine={false}
-    />,
-  ],
+  reviews: [{ id: 0, isMine: true }, { id: 1, isMine: false }],
 };
 
 const mapStateToProps = (state) => ({
-  Reviews: state.review.reviewList,
+  reviews: state.review.reviewList,
 });
 
 const mapDispatchToProps = (dispatch) => ({
