@@ -16,9 +16,14 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
+  let newState = state;
   switch (action.type) {
     case actionTypes.GET_REVIEWS:
-      return { ...state, reviewList: action.data };
+      newState = {
+        ...state,
+        reviewList: action.data,
+      };
+      return newState;
 
     case actionTypes.CLEAR_REVIEWS:
       return { ...state, reviewList: [] };

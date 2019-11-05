@@ -2,7 +2,7 @@
 views for reviews
 '''
 # pylint: disable=line-too-long, unnecessary-comprehension, pointless-string-statement
-# pylint: disable=E0402, R0911
+# pylint: disable=E0402, R0911, R0914
 import json
 from json import JSONDecodeError
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse, HttpResponseNotFound
@@ -19,8 +19,18 @@ def review_list(request):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
     if request.method == 'GET':
-        review_all_list = [
-            review for review in Review.objects.filter(author=request.user.profile).values()]
+        review_all_list = []
+        for review in Review.objects.filter(author=request.user.profile):
+            dict_review = {
+                'id': review.id,
+                'author': review.author.user.username,
+                'restaurant': review.restaurant.name,
+                'menu': review.menu.name,
+                'content': review.content,
+                'rating': review.rating,
+                'date': review.date.strftime("%Y-%m-%d")
+                }
+            review_all_list.append(dict_review)
         return JsonResponse(review_all_list, safe=False)
     if request.method == 'POST':
         try:
@@ -33,7 +43,7 @@ def review_list(request):
             return HttpResponseBadRequest(content=str(err))
         try:
             longitude = req_data['longitude']
-            latitude = req_data['latiitude']
+            latitude = req_data['latitude']
             is_location_exist = True
         except (KeyError, JSONDecodeError):
             is_location_exist = False
@@ -81,7 +91,7 @@ def review_list(request):
             'menu': new_review.menu.name,
             'content': new_review.content,
             'rating': new_review.rating,
-            'date': new_review.date
+            'date': new_review.date.strftime("%Y-%m-%d")
             }
         return JsonResponse(dict_new_review, status=201)
     #else:
@@ -110,7 +120,7 @@ def review_detail(request, review_id):
             'menu': review.menu.name,
             'content': review.content,
             'rating': review.rating,
-            'date': review.date,
+            'date': review.date.strftime("%Y-%m-%d"),
             'image': image_path
         }
         return JsonResponse(review_dict)
@@ -119,7 +129,7 @@ def review_detail(request, review_id):
             review = Review.objects.get(id=review_id)
         except ObjectDoesNotExist:
             return HttpResponseNotFound()
-        if request.user.id != review.author.id:
+        if request.user.profile.id != review.author.id:
             return HttpResponse(status=403)
         try:
             req_data = json.loads(request.body.decode())
@@ -146,7 +156,7 @@ def review_detail(request, review_id):
             'menu': review.menu.name,
             'content': review.content,
             'rating': review.rating,
-            'date': review.date,
+            'date': review.date.strftime("%Y-%m-%d"),
             'image': image_path
         }
         return JsonResponse(dict_review)
@@ -155,7 +165,7 @@ def review_detail(request, review_id):
             review = Review.objects.get(id=review_id)
         except ObjectDoesNotExist:
             return HttpResponseNotFound()
-        if request.user.id != review.author.id:
+        if request.user.profile.id != review.author.id:
             return HttpResponse(status=403)
         review.delete()
         request.user.profile.count_write -= 1
@@ -178,8 +188,18 @@ def friend_review_list(request, friend_id):
     if friend not in request.user.profile.friend.all():
         return HttpResponse(status=403)
     if request.method == 'GET':
-        review_all_list = [
-            review for review in Review.objects.filter(author=friend).values()]
+        review_all_list = []
+        for review in Review.objects.filter(author=friend):
+            dict_review = {
+                'id': review.id,
+                'author': review.author.user.username,
+                'restaurant': review.restaurant.name,
+                'menu': review.menu.name,
+                'content': review.content,
+                'rating': review.rating,
+                'date': review.date.strftime("%Y-%m-%d")
+                }
+            review_all_list.append(dict_review)
         return JsonResponse(review_all_list, safe=False)
     #else:
     return HttpResponseNotAllowed(['GET'])
@@ -215,7 +235,7 @@ def friend_review_detail(request, friend_id, review_id):
             'menu': review.menu.name,
             'content': review.content,
             'rating': review.rating,
-            'date': review.date,
+            'date': review.date.strftime("%Y-%m-%d"),
             'image': image_path
         }
         return JsonResponse(review_dict)
@@ -234,7 +254,7 @@ def review_image(request, review_id):
         review = Review.objects.get(id=review_id)
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
-    if request.user.id != review.author.id:
+    if request.user.profile.id != review.author.id:
         return HttpResponse(status=403)
     if request.method == 'POST':
         form = ReviewForm(request.POST, request.FILES, instance=review)
@@ -248,7 +268,7 @@ def review_image(request, review_id):
                 'menu': review.menu.name,
                 'content': review.content,
                 'rating': review.rating,
-                'date': review.date,
+                'date': review.date.strftime("%Y-%m-%d"),
                 'image': review.review_img.path
             }
             return JsonResponse(dict_review)
