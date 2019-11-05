@@ -72,6 +72,7 @@ class AddReview extends Component {
       latitude,
       // tag,
     };
+    console.log(rating);
 
     axios.post('/api/review/', reviewDict).then((res) => {
       this.postImageHandler(res.id);
@@ -145,7 +146,12 @@ class AddReview extends Component {
               <div className="meta">
                 <span className="rating">
                   Rating:
-                  <Rating defaultRating={rating} maxRating="5" icon="star" onRate={(rate) => this.setState({ rating: rate })} />
+                  <Rating
+                    defaultRating={rating}
+                    maxRating="5"
+                    icon="star"
+                    onRate={(e, { rating: rate }) => this.setState({ rating: rate })}
+                  />
                 </span>
                 {tagArea}
               </div>
