@@ -47,6 +47,9 @@ describe('ReviewList', () => {
   });
 
   it('should call onGetAll on loading', () => {
+    const component = mount(reviewList);
+    const listInstance = component.find(ReviewList.WrappedComponent).instance();
+    listInstance.componentDidMount();
     const spyAll = jest.spyOn(Axios, 'get')
       .mockImplementation(() => {});
     expect(spyAll).toHaveBeenCalledTimes(1);
