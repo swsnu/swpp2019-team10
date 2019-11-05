@@ -51,9 +51,6 @@ describe('<ReviewDetail />', () => {
       const component = mount(reviewDetail);
       const wrapper = component.find('Connect(ReviewDetail)');
       expect(wrapper.length).toBe(1);
-      const backWrapper = component.find('#back-review-button').at(1);
-
-      backWrapper.simulate('click');
     });
 
     it('error message should be shown up', () => {
@@ -69,14 +66,26 @@ describe('<ReviewDetail />', () => {
 
     it('delete button should work', () => {
       const component = mount(reviewDetail);
-      const wrapper = component.find('#delete-review-button').at(1);
-      wrapper.simulate('click');
+      const detailWrapper = component.find('ReviewDetail');
+
+      detailWrapper.setState({ ready: true });
+      component.update();
+      const backWrapper = component.find('#back-review-button').at(0);
+
+      backWrapper.simulate('click');
       component.update();
     });
 
+
     it('edit button should work', () => {
       const component = mount(reviewDetail);
-      const wrapper = component.find('#edit-review-button').at(1);
+      const detailWrapper = component.find('ReviewDetail');
+
+      detailWrapper.setState({ ready: true });
+      component.update();
+
+      const wrapper = component.find('#edit-review-button').at(0);
+
       wrapper.simulate('click');
       component.update();
     });

@@ -35,6 +35,7 @@ class ReviewDetail extends Component {
     const { match } = this.props;
 
     this.setState({
+      // dummy
       content: 'asdf',
       restaurant: 'Foodbook',
       author: 'Team10',
@@ -43,11 +44,10 @@ class ReviewDetail extends Component {
       rating: 5.0,
       date: '2019-11-04',
       tag: [{ name: 'crispy', positive: true }, { name: 'pricy', positive: false }],
-      ready: true,
       error: null,
     });
 
-    axios.get(`/api/review/${match.params.id}/`); /* .then((res) => {
+    axios.get(`/api/review/${match.params.id}/`).then((res) => {
       this.setState({
         content: res.data.content,
         restaurant: res.data.restaurant,
@@ -57,15 +57,10 @@ class ReviewDetail extends Component {
         rating: res.data.rating,
         date: res.data.date,
         ready: true,
-      }).catch((error) => this.setState({
+      }); /* .catch((error) => this.setState({
         error,
-      }));
-      */
-
-    /* requires user info api to get author name
-      axios.get('/api/user/' + res.data.author)
-        .then(res => {this.setState({ authorname: res.data.name })});
-    }) */
+      })) */
+    });
   }
 
   deleteHandler() {
@@ -117,7 +112,7 @@ class ReviewDetail extends Component {
           Delete
         </Button>
       </div>
-    )
+    );
     //  : <div />;
 
     const googleMap = (<div className="locationGoogle"> Map will be here </div>);
