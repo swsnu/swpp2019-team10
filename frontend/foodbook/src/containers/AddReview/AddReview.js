@@ -44,14 +44,6 @@ class AddReview extends Component {
 
   }
 
-  addReviewHandler = () => {
-    this.postContentHandler();
-
-    const { history } = this.props;
-
-    history.push('/main');
-  }
-
   postContentHandler = () => {
     const {
       restaurant,
@@ -72,21 +64,33 @@ class AddReview extends Component {
       latitude,
       // tag,
     };
-    console.log(rating);
 
     axios.post('/api/review/', reviewDict).then((res) => {
-      this.postImageHandler(res.id);
-    });
+      // console.log(res.data);
+      this.postImageHandler(res.data.id);
+    }).catch((error) => this.setState({
+      error: error.response,
+    }));
   }
 
   postImageHandler = (postID) => {
     const { image } = this.state;
 
-    const fd = new FormData();
-    const file = new File([image], 'img.jpg');
+    if (image != null) {
+      const fd = new FormData();
+      const file = new File([image], 'img.jpg');
 
-    fd.append('image', file);
-    axios.post(`/api/review/${postID}/image/`, fd);
+      fd.append('image', file);
+      axios.post(`/api/review/${postID}/image/`, fd)/* .then((res) => {
+        console.log(res.data);
+      }) */.catch((error) => this.setState({
+          error: error.response,
+        }));
+    }
+
+    const { history } = this.props;
+
+    history.push('/main');
   }
 
   render() {
@@ -94,7 +98,7 @@ class AddReview extends Component {
     const imgUpload = (
       <div>
         <ImageSelectPreview
-          onChange={(data) => this.setState({ image: data.content })}
+          onChange={(data) => this.setState({ image: data[0].content })}
           max={1}
         />
       </div>
@@ -106,15 +110,16 @@ class AddReview extends Component {
 
     const { history } = this.props;
 
+    if (error != null) {
+      history.push('/main');
+      return (
+        <div className="ReviewDetailError">
+          <p>{error}</p>
+        </div>
+      );
+    }
+
     if (!ready) {
-      if (error != null) {
-        history.push('/main');
-        return (
-          <div className="ReviewDetailError">
-            <p>{error}</p>
-          </div>
-        );
-      }
       return (
         <div className="ReviewDetailLoading">
           <p>Loading...</p>
@@ -200,7 +205,7 @@ class AddReview extends Component {
               id="submit-review-button"
               type="button"
               disabled={confirmDisabled}
-              onClick={() => { this.addReviewHandler(); }}
+              onClick={() => { this.postContentHandler(); }}
             >
               Submit
             </Button>

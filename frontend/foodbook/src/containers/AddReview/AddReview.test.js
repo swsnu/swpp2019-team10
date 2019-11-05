@@ -51,6 +51,12 @@ describe('<AddReview />', () => {
 
   it('should have submit button working', () => {
     const component = mount(addReview);
+    const event = { target: { value: 'sometext' } };
+
+    // submit button should be enabled first
+    component.find('#review-restaurant-input').at(1).simulate('change', event);
+    component.find('#review-menu-input').at(1).simulate('change', event);
+    component.find('#review-content-input').at(1).simulate('change', event);
 
     const submitButton = component.find('#submit-review-button').at(0);
     submitButton.simulate('click');

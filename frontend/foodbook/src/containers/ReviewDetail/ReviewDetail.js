@@ -57,10 +57,10 @@ class ReviewDetail extends Component {
         rating: res.data.rating,
         date: res.data.date,
         ready: true,
-      }).catch((error) => this.setState({
-        error: error.response,
-      }));
-    });
+      });
+    }).catch((error) => this.setState({
+      error: error.response,
+    }));
   }
 
   deleteHandler() {
@@ -78,15 +78,16 @@ class ReviewDetail extends Component {
 
     const { history, match } = this.props;
 
+    if (error != null) {
+      // history.push('/main');
+      return (
+        <div className="ReviewDetailError">
+          <p>{error}</p>
+        </div>
+      );
+    }
+
     if (!ready) {
-      if (error != null) {
-        // history.push('/main');
-        return (
-          <div className="ReviewDetailError">
-            <p>{error}</p>
-          </div>
-        );
-      }
       return (
         <div className="ReviewDetailLoading">
           <p>Loading...</p>
