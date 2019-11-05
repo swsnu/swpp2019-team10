@@ -174,10 +174,10 @@ class ReviewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         bodys = json.loads(response.content.decode())
         self.assertEqual(bodys['id'], 1)
-        self.assertEqual(bodys['author'], 1)
+        self.assertEqual(bodys['author'], 'TEST_USER_1')
         self.assertEqual(bodys['content'], 'TEST_CONTENT')
-        self.assertEqual(bodys['restaurant'], 1)
-        self.assertEqual(bodys['menu'], 1)
+        self.assertEqual(bodys['restaurant'], 'TEST_REST')
+        self.assertEqual(bodys['menu'], 'TEST_MENU')
         self.assertEqual(bodys['rating'], 5)
     def test_get_review_detail_fail(self):
         """
@@ -210,10 +210,10 @@ class ReviewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         bodys = json.loads(response.content.decode())
         self.assertEqual(bodys['id'], 1)
-        self.assertEqual(bodys['author'], 1)
+        self.assertEqual(bodys['author'], 'TEST_USER_1')
         self.assertEqual(bodys['content'], 'TEST_PUT_CONTENT')
-        self.assertEqual(bodys['restaurant'], 1)
-        self.assertEqual(bodys['menu'], 1)
+        self.assertEqual(bodys['restaurant'], 'TEST_REST')
+        self.assertEqual(bodys['menu'], 'TEST_MENU')
         self.assertEqual(bodys['rating'], 3)
     def test_put_review_detail_fail(self):
         """
@@ -347,10 +347,10 @@ class ReviewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         bodys = json.loads(response.content.decode())
         self.assertEqual(bodys['id'], 1)
-        self.assertEqual(bodys['author'], 1)
+        self.assertEqual(bodys['author'], 'TEST_USER_1')
         self.assertEqual(bodys['content'], 'TEST_CONTENT')
-        self.assertEqual(bodys['restaurant'], 1)
-        self.assertEqual(bodys['menu'], 1)
+        self.assertEqual(bodys['restaurant'], 'TEST_REST')
+        self.assertEqual(bodys['menu'], 'TEST_MENU')
         self.assertEqual(bodys['rating'], 5)
     def test_get_friend_review_detail_fail(self):
         """

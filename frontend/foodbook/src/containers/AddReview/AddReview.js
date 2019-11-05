@@ -32,7 +32,8 @@ class AddReview extends Component {
       content: '',
       rating: 0,
       // https://codepen.io/depy/pen/vEWWdw
-      // location: null,
+      longitude: 0.0,
+      latitude: 0.0,
       image: null,
       error: null,
       ready: true,
@@ -58,6 +59,8 @@ class AddReview extends Component {
       menu,
       content,
       rating,
+      longitude,
+      latitude,
       // tag,
     } = this.state;
 
@@ -66,6 +69,8 @@ class AddReview extends Component {
       menu_name: menu,
       content,
       rating,
+      longitude,
+      latitude,
       // tag,
     };
 
@@ -180,7 +185,7 @@ class AddReview extends Component {
             />
             <br />
             <Button
-              id="back-add-review-button"
+              id="back-review-button"
               type="button"
               onClick={() => history.push('/main')}
             >

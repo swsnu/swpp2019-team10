@@ -35,6 +35,7 @@ class ReviewDetail extends Component {
     const { match } = this.props;
 
     this.setState({
+      // dummy
       content: 'asdf',
       restaurant: 'Foodbook',
       author: 'Team10',
@@ -43,11 +44,10 @@ class ReviewDetail extends Component {
       rating: 5.0,
       date: '2019-11-04',
       tag: [{ name: 'crispy', positive: true }, { name: 'pricy', positive: false }],
-      ready: true,
       error: null,
     });
 
-    axios.get(`/api/review/${match.params.id}/`); /* .then((res) => {
+    axios.get(`/api/review/${match.params.id}/`).then((res) => {
       this.setState({
         content: res.data.content,
         restaurant: res.data.restaurant,
@@ -57,15 +57,10 @@ class ReviewDetail extends Component {
         rating: res.data.rating,
         date: res.data.date,
         ready: true,
-      }).catch((error) => this.setState({
+      }); /* .catch((error) => this.setState({
         error,
-      }));
-      */
-
-    /* requires user info api to get author name
-      axios.get('/api/user/' + res.data.author)
-        .then(res => {this.setState({ authorname: res.data.name })});
-    }) */
+      })) */
+    });
   }
 
   deleteHandler() {
@@ -83,7 +78,7 @@ class ReviewDetail extends Component {
 
     if (!ready) {
       if (error != null) {
-        history.push('/main');
+        // history.push('/main');
         return (
           <div className="ReviewDetailError">
             <p>{error}</p>
@@ -99,8 +94,8 @@ class ReviewDetail extends Component {
 
     const reviewID = match.params.id;
 
-    const isUserAuthor = true;
-    const authorOnly = isUserAuthor ? (
+    // const isUserAuthor = ;
+    const authorOnly = /* isUserAuthor ? */(
       <div className="AuthorButtons">
         <Button
           id="edit-review-button"
@@ -117,8 +112,8 @@ class ReviewDetail extends Component {
           Delete
         </Button>
       </div>
-    )
-      : <div />;
+    );
+    //  : <div />;
 
     const googleMap = (<div className="locationGoogle"> Map will be here </div>);
 
@@ -152,7 +147,6 @@ class ReviewDetail extends Component {
               type="text"
               value={content}
               readOnly
-              onChange={(event) => this.setState({ content: event.target.value })}
             />
             <div className="extra content">
               <NavLink to="/recommendation">

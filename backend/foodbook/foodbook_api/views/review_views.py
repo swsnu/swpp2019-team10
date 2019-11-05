@@ -1,7 +1,7 @@
 '''
 views for reviews
 '''
-# pylint: disable=line-too-long, unnecessary-comprehension
+# pylint: disable=line-too-long, unnecessary-comprehension, pointless-string-statement
 # pylint: disable=E0402, R0911
 import json
 from json import JSONDecodeError
@@ -31,8 +31,40 @@ def review_list(request):
             rating = req_data['rating']
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
-        restaurant = Restaurant.objects.get(name=restaurant_name)
-        menu = Menu.objects.get(name=menu_name)
+        try:
+            longitude = req_data['longitude']
+            latitude = req_data['latiitude']
+            is_location_exist = True
+        except (KeyError, JSONDecodeError):
+            is_location_exist = False
+        try:
+            restaurant = Restaurant.objects.get(name=restaurant_name)
+        except ObjectDoesNotExist:
+            """
+            this is dummy!
+            """
+            if is_location_exist:
+                restaurant = Restaurant.objects.create(
+                    name=restaurant_name,
+                    longitude=longitude,
+                    latitude=latitude,
+                )
+            else:
+                restaurant = Restaurant.objects.create(
+                    name=restaurant_name,
+                    longitude=0,
+                    latitude=0,
+                )
+        try:
+            menu = Menu.objects.get(name=menu_name)
+        except ObjectDoesNotExist:
+            """
+            this is dummy!
+            """
+            menu = Menu.objects.create(
+                name=menu_name,
+                restaurant=restaurant
+            )
         new_review = Review.objects.create(
             author=request.user.profile,
             restaurant=restaurant,
@@ -44,9 +76,9 @@ def review_list(request):
         request.user.profile.save()
         dict_new_review = {
             'id': new_review.id,
-            'author': new_review.author.id,
-            'restaurant': new_review.restaurant.id,
-            'menu': new_review.menu.id,
+            'author': new_review.author.user.username,
+            'restaurant': new_review.restaurant.name,
+            'menu': new_review.menu.name,
             'content': new_review.content,
             'rating': new_review.rating,
             'date': new_review.date
@@ -73,9 +105,9 @@ def review_detail(request, review_id):
             image_path = review.review_img.path
         review_dict = {
             'id': review.id,
-            'author': review.author.id,
-            'restaurant': review.restaurant.id,
-            'menu': review.menu.id,
+            'author': review.author.user.username,
+            'restaurant': review.restaurant.name,
+            'menu': review.menu.name,
             'content': review.content,
             'rating': review.rating,
             'date': review.date,
@@ -109,9 +141,9 @@ def review_detail(request, review_id):
             image_path = review.review_img.path
         dict_review = {
             'id': review.id,
-            'author': review.author.id,
-            'restaurant': review.restaurant.id,
-            'menu': review.menu.id,
+            'author': review.author.user.username,
+            'restaurant': review.restaurant.name,
+            'menu': review.menu.name,
             'content': review.content,
             'rating': review.rating,
             'date': review.date,
@@ -126,6 +158,8 @@ def review_detail(request, review_id):
         if request.user.id != review.author.id:
             return HttpResponse(status=403)
         review.delete()
+        request.user.profile.count_write -= 1
+        request.user.profile.save()
         return HttpResponse(status=200)
     #else:
     return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
@@ -176,9 +210,9 @@ def friend_review_detail(request, friend_id, review_id):
             image_path = review.review_img.path
         review_dict = {
             'id': review.id,
-            'author': review.author.id,
-            'restaurant': review.restaurant.id,
-            'menu': review.menu.id,
+            'author': review.author.user.username,
+            'restaurant': review.restaurant.name,
+            'menu': review.menu.name,
             'content': review.content,
             'rating': review.rating,
             'date': review.date,
@@ -209,9 +243,9 @@ def review_image(request, review_id):
             review.save()
             dict_review = {
                 'id': review.id,
-                'author': review.author.id,
-                'restaurant': review.restaurant.id,
-                'menu': review.menu.id,
+                'author': review.author.user.username,
+                'restaurant': review.restaurant.name,
+                'menu': review.menu.name,
                 'content': review.content,
                 'rating': review.rating,
                 'date': review.date,
