@@ -45,8 +45,7 @@ class AddReview extends Component {
   }
 
   addReviewHandler = () => {
-    const postID = this.postContentHandler();
-    this.postImageHandler(postID);
+    this.postContentHandler();
 
     const { history } = this.props;
 
@@ -74,9 +73,9 @@ class AddReview extends Component {
       // tag,
     };
 
-    axios.post('/api/review/', reviewDict);
-
-    return 0;
+    axios.post('/api/review/', reviewDict).then((res) => {
+      this.postImageHandler(res.id);
+    });
   }
 
   postImageHandler = (postID) => {

@@ -17,9 +17,9 @@ describe('<ReviewDetail />', () => {
 
   const resp = {
     content: 'test',
-    restaurant: 1,
-    author: 2,
-    menu: 3,
+    restaurant: 'rest',
+    author: 'author',
+    menu: 'menu',
     image: 'test.jpg',
     rating: 0.0,
     date: '1970-01-01',
@@ -55,9 +55,9 @@ describe('<ReviewDetail />', () => {
 
     it('error message should be shown up', () => {
       const component = mount(reviewDetail);
-      const wrapper = component.find('ReviewDetail');
+      const detailWrapper = component.find('ReviewDetail');
 
-      wrapper.setState({ ready: false, error: 'Error' });
+      detailWrapper.setState({ ready: false, error: 'Error' });
       component.update();
 
       const backWrapper = component.find('.ReviewDetailError');
@@ -71,6 +71,7 @@ describe('<ReviewDetail />', () => {
       detailWrapper.setState({ ready: true });
       component.update();
       const backWrapper = component.find('#back-review-button').at(0);
+      expect(backWrapper.length).toBe(1);
 
       backWrapper.simulate('click');
       component.update();
