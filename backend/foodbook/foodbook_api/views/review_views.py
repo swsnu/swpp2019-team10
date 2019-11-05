@@ -32,15 +32,28 @@ def review_list(request):
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
         try:
+            longitude = req_data['longitude']
+            latitude = req_data['latiitude']
+            is_location_exist = True
+        except (KeyError, JSONDecodeError):
+            is_location_exist = False
+        try:
             restaurant = Restaurant.objects.get(name=restaurant_name)
         except ObjectDoesNotExist:
             """
             this is dummy!
             """
-            restaurant = Restaurant.objects.create(
-                name=restaurant_name,
-                longitude=0,
-                latitude=0,
+            if is_location_exist:
+                restaurant = Restaurant.objects.create(
+                    name=restaurant_name,
+                    longitude=longitude,
+                    latitude=latitude,
+                )
+            else:
+                restaurant = Restaurant.objects.create(
+                    name=restaurant_name,
+                    longitude=0,
+                    latitude=0,
                 )
         try:
             menu = Menu.objects.get(name=menu_name)
