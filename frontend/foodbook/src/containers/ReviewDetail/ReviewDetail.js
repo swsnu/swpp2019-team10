@@ -40,7 +40,7 @@ class ReviewDetail extends Component {
       restaurant: 'Foodbook',
       author: 'Team10',
       menu: 'Logo',
-      imgUrl: 'https://www.yellowblissroad.com/wp-content/uploads/2015/07/lemon-chicken-fb.jpg',
+      image: 'https://www.yellowblissroad.com/wp-content/uploads/2015/07/lemon-chicken-fb.jpg',
       rating: 5.0,
       date: '2019-11-04',
       tag: [{ name: 'crispy', positive: true }, { name: 'pricy', positive: false }],
@@ -53,7 +53,7 @@ class ReviewDetail extends Component {
         restaurant: res.data.restaurant,
         author: res.data.author,
         menu: res.data.menu,
-        imgUrl: res.data.image,
+        image: res.data.image,
         rating: res.data.rating,
         date: res.data.date,
         ready: true,
@@ -71,7 +71,7 @@ class ReviewDetail extends Component {
 
   render() {
     const {
-      ready, error, content, restaurant, author, menu, imgUrl, rating, date, tag,
+      ready, error, content, restaurant, author, menu, image, rating, date, tag,
     } = this.state;
 
     const { history, match } = this.props;
@@ -132,7 +132,7 @@ class ReviewDetail extends Component {
               </div>
             </div>
             <div className="blurring dimmable image">
-              <img src={imgUrl} alt="food img" />
+              <img src={image} alt="food img" />
             </div>
             <div className="google map">
               {googleMap}
