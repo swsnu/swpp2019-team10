@@ -17,7 +17,7 @@ class ReviewList extends Component {
 
     let reviewsToRender = reviews;
     if (dateString) {
-      reviewsToRender = reviewsToRender.filter((review) => review.props.date === dateString);
+      reviewsToRender = reviewsToRender.filter((review) => review.date === dateString);
     }
 
     reviewsToRender = reviewsToRender.map((review) => (
