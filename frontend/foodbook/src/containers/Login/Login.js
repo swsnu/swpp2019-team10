@@ -10,14 +10,14 @@ import * as actionCreators from 'store/actions/user/action_user';
 class Login extends Component {
   // some behavior or rendering should be added in sprint 4.
 
-  loginHandler = (onLogin, history) => {
+  loginHandler = (onLogin) => {
+    const { history } = this.props;
     onLogin();
     history.push('/main'); // TODO: @ sprint 4, should handle real login system
   };
 
-
   render() {
-    const { history, onLogin } = this.props;
+    const { onSignup, onLogin } = this.props;
 
     return (
       <div className="login">
@@ -26,7 +26,8 @@ class Login extends Component {
             <Card.Header textAlign="center"> FoodBook </Card.Header>
             <Card.Meta textAlign="center"> Sprint 3 </Card.Meta>
             <Card.Description>
-              <center><Button content="Login" id="login-button" onClick={() => { this.loginHandler(onLogin, history); }} /></center>
+              <center><Button content="Login" id="login-button" onClick={() => { this.loginHandler(onLogin); }} /></center>
+              <center><Button content="Signup" id="signup-button" onClick={() => onSignup()} /></center>
               {/* this is mock */}
             </Card.Description>
           </Card.Content>
@@ -44,11 +45,16 @@ class Login extends Component {
 Login.propTypes = {
   history: propTypes.objectOf(Object).isRequired,
   onLogin: propTypes.func.isRequired,
+  onSignup: propTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   onLogin: () => {
     dispatch(actionCreators.LOGIN());
+  },
+
+  onSignup: () => {
+    dispatch(actionCreators.REGISTER());
   },
 });
 

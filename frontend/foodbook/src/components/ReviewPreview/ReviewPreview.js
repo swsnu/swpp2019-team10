@@ -74,6 +74,13 @@ ReviewPreview.propTypes = {
 };
 
 ReviewPreview.defaultProps = {
+  id: -1,
+  key: 99,
+  author: "cat",
+  menu: "cat",
+  rating: 3,
+  date: "2019-11-05",
+  isMine: true,
   image: 'https://i.pinimg.com/474x/91/ec/7e/91ec7ec701884e2959643bf4b31d8ee8--cat-food-food-networktrisha.jpg',
   tag: [{ name: 'good', positive: true }, { name: 'bad', positive: false }],
 };

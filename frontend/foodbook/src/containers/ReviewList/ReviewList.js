@@ -8,13 +8,17 @@ import * as actionCreators from 'store/actions/review/action_review';
 
 const ReviewList = (props) => {
   const { reviews, dateString } = props;
-
-  let reviewsToRender = reviews || [];
-  if (dateString) reviewsToRender = reviewsToRender.filter((review) => review.date === dateString);
+ 
+  let reviewsToRender = reviews;
+  if (dateString) {
+    reviewsToRender = reviewsToRender.filter((review) => {
+      return review.props.date === dateString
+    });
+  }
 
   reviewsToRender = reviewsToRender.map((review) => (
     <ReviewPreview
-      key={review.id}
+      key={`${review.id}`}
       id={review.id}
       author={review.author}
       restaurant={review.restaurant}
@@ -35,20 +39,6 @@ const ReviewList = (props) => {
           <div className="content">
             <br />
             {reviewsToRender}
-            <ReviewPreview
-              key="-1"
-              id={-1}
-              author="React"
-              restaurant="302"
-              menu="GalbiTang"
-              content="ZMTGR"
-              image="http://recipe1.ezmember.co.kr/cache/recipe/2017/11/15/268859d03a5850821af32b009d8001731.jpg"
-              rating={3}
-              date="2019-11-04"
-              tag={[{ name: 'hot', positive: true }, { name: 'pricy', positive: false }]}
-              isMine
-            />
-            {/* mock */}
           </div>
         </div>
       </div>
@@ -63,7 +53,19 @@ ReviewList.propTypes = {
 
 ReviewList.defaultProps = {
   dateString: undefined,
-  reviews: undefined,
+  reviews: [
+    <ReviewPreview
+    id= {-1}
+    key= "99"
+    author= "cat"
+    menu= "cat"
+    rating= {3}
+    date= "2019-11-05"
+    image= 'https://i.pinimg.com/474x/91/ec/7e/91ec7ec701884e2959643bf4b31d8ee8--cat-food-food-networktrisha.jpg'
+    tag= {[{ name: 'good', positive: true }, { name: 'bad', positive: false }]}
+    isMine
+  />
+  ],
 };
 
 const mapStateToProps = (state) => ({
