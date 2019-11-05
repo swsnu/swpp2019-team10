@@ -1,4 +1,4 @@
-import Axios from 'axios';
+import axios from 'axios';
 import * as actionTypes from './actionTypes_user';
 // import axios from 'axios'; TODO: API Required. Below is mock for test code.
 
@@ -7,7 +7,7 @@ export const GET_USER_INFO_DEEP = (data) => ({
   data,
 });
 
-export const GET_USER_INFO = () => (dispatch) => Axios.get('/api/user/')
+export const GET_USER_INFO = () => (dispatch) => axios.get('/api/user/')
   .then((res) => dispatch(GET_USER_INFO_DEEP(res.data)))
   .catch();
 
@@ -15,21 +15,23 @@ export const LOGIN_AFTER = () => GET_USER_INFO();
 
 export const LOGIN_DEEP = (data) => ({
   type: actionTypes.LOGIN,
-  userInfo: data,
+  data: data,
 }); // TODO: @ sprint 4
 
-export const LOGIN = () => (dispatch) => Axios.post('/api/signin/', {
+export const LOGIN = () => (dispatch) => {
+  return axios.post('/api/signin/', {
   username: 'swpp',
   password: '1234',
 }).then((res) => dispatch(LOGIN_DEEP(res.data)))
   .catch();
+}
 
 export const REGISTER_DEEP = (data) => ({
   type: actionTypes.REGISTER,
   data,
 });
 
-export const REGISTER = () => (dispatch) => Axios.post('/api/signup/', {
+export const REGISTER = () => (dispatch) => axios.post('/api/signup/', {
   username: 'swpp',
   password: '1234',
   phone_number: '010-1234-5678',
