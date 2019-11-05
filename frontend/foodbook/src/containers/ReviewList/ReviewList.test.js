@@ -71,7 +71,7 @@ describe('ReviewList', () => {
     const component = mount(reviewList);
     const instance = component.find(ReviewList.WrappedComponent).instance();
     instance.forceUpdate();
-    const wrapper = component.find('ReviewPreview');
+    const wrapper = component.find('ReviewList');
     expect(wrapper.length).toBe(1);
   });
 
