@@ -114,7 +114,7 @@ class AddReview extends Component {
       history.push('/main');
       return (
         <div className="ReviewDetailError">
-          <p>{error}</p>
+          <p>{error.content}</p>
         </div>
       );
     }
