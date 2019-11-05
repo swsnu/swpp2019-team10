@@ -50,6 +50,7 @@ def review_list(request):
             """
             menu = Menu.objects.create(
                 name=menu_name,
+                restaurant=restaurant
             )
         new_review = Review.objects.create(
             author=request.user.profile,
