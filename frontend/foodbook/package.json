@@ -77,7 +77,8 @@
       "!src/**/index.js",
       "!src/index.js",
       "!src/serviceWorker.js",
-      "!src/test-utils/*"
+      "!src/test-utils/*",
+      "!src/store/actions/actionTypes.js"
     ]
   }
 }
