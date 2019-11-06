@@ -2,7 +2,7 @@
 views for reviews
 '''
 # pylint: disable=line-too-long, unnecessary-comprehension, pointless-string-statement
-# pylint: disable=E0402, R0911, R0914, W0702
+# pylint: disable=E0402, R0911, R0912, R0914, W0702
 import json
 from json import JSONDecodeError
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse, HttpResponseNotFound
@@ -26,8 +26,8 @@ def review_list(request):
             if review.review_img:
                 image_path = 'http://127.0.0.1:8000'+review.review_img.url
             tag = []
-            for t in review.tag.all():
-                tag.append({'name':t.content, 'positive': t.polarity >= 0.3})
+            for tag_item in review.tag.all():
+                tag.append({'name':t.content, 'positive': tag_item.polarity >= 0.3})
             dict_review = {
                 'id': review.id,
                 'author': review.author.user.username,
@@ -126,8 +126,8 @@ def review_detail(request, review_id):
         if review.review_img:
             image_path = 'http://127.0.0.1:8000'+review.review_img.url
         tag = []
-        for t in review.tag.all():
-            tag.append({'name':t.content, 'positive': t.polarity >= 0.3})
+        for tag_item in review.tag.all():
+            tag.append({'name':t.content, 'positive': tag_item.polarity >= 0.3})
         review_dict = {
             'id': review.id,
             'author': review.author.user.username,
