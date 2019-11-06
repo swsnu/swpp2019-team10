@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import {
-  Button, Modal, Divider
+  Button, Modal, Divider,
 } from 'semantic-ui-react';
 import ReviewPreview from 'components/ReviewPreview';
 

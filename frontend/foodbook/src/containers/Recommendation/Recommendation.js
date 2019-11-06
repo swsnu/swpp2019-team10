@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import propTypes from 'prop-types';
 import {
   Button, Header, Modal, Icon,
 } from 'semantic-ui-react';
@@ -245,9 +244,8 @@ const preProcessingFriend = () => [
 */
 
 export class Recommendation extends Component {
-  constructor(props) {
-    super(props);
-
+  constructor() {
+    super();
     this.state = { open: false };
   }
 
@@ -257,12 +255,17 @@ export class Recommendation extends Component {
 
   render() {
     const { open } = this.state;
-    const { trigger } = this.props;
 
     return (
       <div className="Recommendation-wrapper">
-        <Button onClick={this.show()}> Trigger! </Button>
-        <Modal open={open} dimmer="blurring" trigger={trigger} onClose={this.close}>
+        <Modal
+          open={open}
+          dimmer="blurring"
+          trigger={
+            <Button color="facebook" onClick={this.show()}> Get Recommendation! </Button>
+          }
+          onClose={this.close}
+        >
           <Modal.Header>Get Recommendation!</Modal.Header>
           <Modal.Content>
             <Modal.Description>
@@ -293,9 +296,5 @@ export class Recommendation extends Component {
     );
   }
 }
-
-Recommendation.propTypes = {
-  trigger: propTypes.string.isRequired,
-};
 
 export default Recommendation;
