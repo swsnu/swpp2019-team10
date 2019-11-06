@@ -203,6 +203,7 @@ def friend_review_list(request, friend_id):
                 'menu': review.menu.name,
                 'content': review.content,
                 'rating': review.rating,
+                'image': image_path,
                 'date': review.date.strftime("%Y-%m-%d")
                 }
             review_all_list.append(dict_review)
