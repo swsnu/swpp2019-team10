@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom';
 import './ReviewDetail.css';
 import PropTypes from 'prop-types';
 import ClickToEdit from 'react-click-to-edit';
+import GoogleMap from 'components/GoogleMap';
 
 import { connect } from 'react-redux';
 // import * as actionCreators from '../../Stores/Actions/index';
@@ -118,7 +119,7 @@ class ReviewDetail extends Component {
     );
     //  : <div />;
 
-    const googleMap = (<div className="locationGoogle"> Map will be here </div>);
+    const googleMap = (<GoogleMap />);
 
     return (
       <div className="ReviewDetail">

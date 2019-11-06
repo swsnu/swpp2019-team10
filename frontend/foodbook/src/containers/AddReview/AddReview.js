@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import './AddReview.css';
+import GoogleMap from 'components/GoogleMap';
 
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -86,6 +87,8 @@ class AddReview extends Component {
       }).catch((error) => this.setState({
         error: error.response,
       }));
+    } else {
+      history.push('/main');
     }
   }
 
@@ -123,7 +126,7 @@ class AddReview extends Component {
       );
     }
 
-    const googleMap = (<div className="locationGoogle"> Map will be here </div>);
+    const googleMap = (<GoogleMap />);
 
     const tagArea = <div />;
     /*
@@ -142,7 +145,7 @@ class AddReview extends Component {
           <div className="card" style={{ width: '630px' }}>
             <div className="content">
               <span className="header">
-                Author: SWPP10
+                Author
               </span>
               <div className="meta">
                 <span className="rating">
