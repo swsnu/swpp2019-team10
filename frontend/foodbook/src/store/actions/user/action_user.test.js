@@ -29,15 +29,13 @@ describe('User', () => {
 
   it('should register properly', (done) => {
     const spy = jest.spyOn(axios, 'post')
-      .mockImplementation(() => {
-        return new Promise((resolve) => {
-          const result = {
-            status: 204,
-            data: newUser,
-          };
-          resolve(result);
-        });
-      });
+      .mockImplementation(() => new Promise((resolve) => {
+        const result = {
+          status: 204,
+          data: newUser,
+        };
+        resolve(result);
+      }));
 
     store.dispatch(actionCreators.REGISTER()).then(() => {
       expect(spy).toHaveBeenCalledTimes(1);
@@ -50,15 +48,13 @@ describe('User', () => {
 
   it('should login correctly', (done) => {
     const spy = jest.spyOn(axios, 'post')
-      .mockImplementation(() => {
-        return new Promise((resolve) => {
-          const result = {
-            status: 204,
-            data: newUser,
-          };
-          resolve(result);
-        });
-      });
+      .mockImplementation(() => new Promise((resolve) => {
+        const result = {
+          status: 204,
+          data: newUser,
+        };
+        resolve(result);
+      }));
 
     store.dispatch(actionCreators.LOGIN()).then(() => {
       expect(spy).toHaveBeenCalledTimes(1);
@@ -68,15 +64,13 @@ describe('User', () => {
 
   it('should fetch login information', (done) => {
     const spy = jest.spyOn(axios, 'get')
-      .mockImplementation(() => {
-        return new Promise((resolve) => {
-          const result = {
-            status: 200,
-            data: newUser,
-          };
-          resolve(result);
-        });
-      });
+      .mockImplementation(() => new Promise((resolve) => {
+        const result = {
+          status: 200,
+          data: newUser,
+        };
+        resolve(result);
+      }));
 
     store.dispatch(actionCreators.GET_USER_INFO()).then(() => {
       expect(spy).toHaveBeenCalledTimes(1);

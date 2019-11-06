@@ -12,7 +12,7 @@ class ReviewList extends Component {
     const { onGetAll } = this.props;
     onGetAll();
   }
-  
+
   render() {
     const { reviews, dateString } = this.props;
 
