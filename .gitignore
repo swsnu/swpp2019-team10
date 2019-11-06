@@ -11,5 +11,3 @@ backend/foodbook/foodbook/__pycache__/urls.cpython-37.pyc
 backend/foodbook/foodbook_api/migrations/__pycache__/__init__.cpython-37.pyc
 backend/foodbook/foodbook_api/migrations/__pycache__/0001_initial.cpython-37.pyc
 backend/foodbook/db.sqlite3
-frontend/foodbook/src/components/GoogleMapSelector/APIkey.js
-frontend/foodbook/src/ApiKey.js
