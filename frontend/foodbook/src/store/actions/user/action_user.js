@@ -13,15 +13,14 @@ export const GET_USER_INFO = () => (dispatch) => axios.get('/api/user/')
 
 export const LOGIN_AFTER = () => GET_USER_INFO();
 
-export const LOGIN_DEEP = (data) => ({
+export const LOGIN_DEEP = () => ({
   type: actionTypes.LOGIN,
-  data,
 }); // TODO: @ sprint 4
 
 export const LOGIN = () => (dispatch) => axios.post('/api/signin/', {
   username: 'swpp',
   password: '1234',
-}).then((res) => dispatch(LOGIN_DEEP(res.data)))
+}).then((res) => dispatch(LOGIN_DEEP(res)))
   .catch();
 
 export const REGISTER_DEEP = (data) => ({
