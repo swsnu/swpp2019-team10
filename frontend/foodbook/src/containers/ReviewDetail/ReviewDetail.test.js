@@ -20,7 +20,7 @@ describe('<ReviewDetail />', () => {
     restaurant: 'rest',
     author: 'author',
     menu: 'menu',
-    image: 'test.jpg',
+    image: '',
     rating: 0.0,
     date: '1970-01-01',
   };
