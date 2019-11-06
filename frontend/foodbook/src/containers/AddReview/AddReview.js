@@ -98,7 +98,7 @@ class AddReview extends Component {
     const imgUpload = (
       <div>
         <ImageSelectPreview
-          onChange={(data) => this.setState({ image: data[0].content })}
+          onChange={(data) => this.setState({ image: data[0].blob })}
           max={1}
         />
       </div>
