@@ -2,7 +2,7 @@
 views for reviews
 '''
 # pylint: disable=line-too-long, unnecessary-comprehension, pointless-string-statement
-# pylint: disable=E0402, R0911, R0914
+# pylint: disable=E0402, R0911, R0914, W0702
 import json
 from json import JSONDecodeError
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse, HttpResponseNotFound
