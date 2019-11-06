@@ -19,7 +19,7 @@ class ReviewList extends Component {
     if (dateString) {
       reviewsToRender = reviewsToRender.filter((review) => review.date === dateString);
     }
-
+    console.log('(before) reviewsToRender: ', reviewsToRender)
     reviewsToRender = reviewsToRender.map((review) => (
       <ReviewPreview
         key={`${review.id}`}
@@ -35,6 +35,7 @@ class ReviewList extends Component {
         isMine={review.isMine}
       />
     ));
+    console.log('(after) reviewsToRender: ', reviewsToRender)
     return (
       <div className="ReviewList">
         <div className="ui special cards fluid">
