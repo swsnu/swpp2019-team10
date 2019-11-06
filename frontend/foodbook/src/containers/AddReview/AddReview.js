@@ -152,6 +152,7 @@ class AddReview extends Component {
                 <span className="rating">
                   Rating:
                   <Rating
+                    id="add-review-rating"
                     defaultRating={rating}
                     maxRating="5"
                     icon="star"

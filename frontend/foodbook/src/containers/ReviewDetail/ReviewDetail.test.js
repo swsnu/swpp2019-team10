@@ -26,6 +26,7 @@ describe('<ReviewDetail />', () => {
   };
 
   axios.get.mockResolvedValue(resp);
+  axios.delete.mockResolvedValue(resp);
 
   let reviewDetail;
 
