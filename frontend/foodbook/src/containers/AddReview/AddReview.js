@@ -111,7 +111,7 @@ class AddReview extends Component {
     const { history } = this.props;
 
     if (error != null) {
-      history.push('/main');
+      // history.push('/main');
       return (
         <div className="ReviewDetailError">
           <p>{error.content}</p>

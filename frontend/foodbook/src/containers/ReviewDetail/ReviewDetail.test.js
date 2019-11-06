@@ -36,7 +36,7 @@ describe('<ReviewDetail />', () => {
         <ConnectedRouter history={history}>
           <ReviewDetail
             history={history}
-            match={{ params: { id: 1 } }}
+            match={{ params: { id: '1' } }}
           />
         </ConnectedRouter>
       </Provider>
@@ -58,7 +58,7 @@ describe('<ReviewDetail />', () => {
       const component = mount(reviewDetail);
       const detailWrapper = component.find('ReviewDetail');
 
-      detailWrapper.setState({ ready: false, error: 'Error' });
+      detailWrapper.setState({ ready: false, error: { response: 'Error' } });
       component.update();
 
       const backWrapper = component.find('.ReviewDetailError');

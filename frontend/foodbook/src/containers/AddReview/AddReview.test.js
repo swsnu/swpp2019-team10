@@ -59,8 +59,10 @@ describe('<AddReview />', () => {
     component.find('#review-menu-input').at(1).simulate('change', event);
     component.find('#review-content-input').at(1).simulate('change', event);
 
-    // const ratingEvent = { target: { value: 5.0 } };
-    console.log(component.find('#add-review-rating').at(0).debug()); // .stimulate('change', ratingEvent);
+
+    const addWrapper = component.find('AddReview');
+
+    addWrapper.setState({ rating: 5.0 });
 
     const submitButton = component.find('#submit-review-button').at(0);
     submitButton.simulate('click');
