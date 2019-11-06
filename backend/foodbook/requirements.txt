@@ -4,3 +4,6 @@ django-extensions==1.6.7
 pylint==2.4.3
 Pillow==6.2.1
 pylint-django==2.0.11
+textblob==0.15.3
+en-core-web-sm==2.2.0
+spacy==2.2.2

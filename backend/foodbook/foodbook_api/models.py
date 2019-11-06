@@ -5,6 +5,7 @@ module
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ModelForm
+from django.contrib.postgres.fields import ArrayField
 # Create your models here.
 
 
@@ -99,7 +100,14 @@ class Review(models.Model):
     )
     review_img = models.ImageField(upload_to='review/images/', blank=True)
     date = models.DateTimeField(auto_now=True)
+    tag = models.ManyToManyField(
+        'Tag',
+    )
     #tag=hasn't decide yet!
+
+class Tag(models.Model):
+    content = models.CharField(max_length=15)
+    polarity = models.FloatField()
 
 class ProfileForm(ModelForm):
     '''
