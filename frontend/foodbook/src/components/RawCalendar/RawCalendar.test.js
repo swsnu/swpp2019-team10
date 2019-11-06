@@ -6,11 +6,17 @@ import { ConnectedRouter } from 'connected-react-router';
 import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
 
-import RawCalendar from './RawCalendar';
+import Calendar from './RawCalendar';
 
 // import * as actionCreators from 'store/actions/user/action_user';
 
 const mockStore = getMockStore({}, {}, {});
+
+jest.mock('containers/ReviewList/ReviewList', () => jest.fn(() => (
+  <div className="mockReviewList">
+            this is mock
+  </div>
+)));
 
 describe('Calendar', () => {
   let calendar;
@@ -18,7 +24,7 @@ describe('Calendar', () => {
     calendar = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <RawCalendar />
+          <Calendar />
         </ConnectedRouter>
       </Provider>
     );
@@ -31,6 +37,13 @@ describe('Calendar', () => {
   it('should render without errors', () => {
     const component = mount(calendar);
     const wrapper = component.find('.RawCalendar');
+    expect(wrapper.length).toBe(1);
+  });
+
+  it('should change date when clicked', () => {
+    const component = mount(calendar);
+    const wrapper = component.find('.react-calendar__tile').at(0);
+    wrapper.simulate('click');
     expect(wrapper.length).toBe(1);
   });
 });

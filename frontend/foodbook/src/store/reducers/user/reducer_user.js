@@ -1,12 +1,14 @@
 import * as actionTypes from 'store/actions/user/actionTypes_user';
 
 const initialState = {
-  info: {
-    id: '',
+  user: {
     username: '',
-    login: false,
-    friendCount: 0,
-    writeCount: 0,
+    phone_number: '',
+    age: -1,
+    gender: '',
+    profile_pic: '',
+    number_of_reviews: -1,
+    number_of_friends: -1,
   }, // stores login information
 
   taste: {
@@ -15,16 +17,18 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
+  let newState = state;
+
   switch (action.type) {
-    case actionTypes.LOGIN:
-      // TODO: @ Sprint 4 Get user information
-      break;
+    case actionTypes.GET_USER_INFO:
+      newState = { ...state, user: action.data };
+      return newState;
 
     default:
       break;
   }
 
-  return state;
+  return newState;
 };
 
 export default reducer;

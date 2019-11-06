@@ -1,0 +1,15 @@
+.pos {
+    color: blue
+}
+
+.neg {
+    color: red
+}
+
+.CTE--wrapper {
+    display: inline !important
+}
+
+.CTE--text {
+    display: inline !important
+}
