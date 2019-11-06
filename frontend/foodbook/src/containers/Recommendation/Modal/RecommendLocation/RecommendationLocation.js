@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import propTypes from 'prop-types';
 import {
   Button, Modal, Image, Header, List,
 } from 'semantic-ui-react';
@@ -21,21 +22,23 @@ class RecommendationLocation extends Component {
     const reviews = data.reco_list;
 
     const parseReason = (reason) => {
-      if(reason) {
-      if (reason.includes("HATE")) {
-        if (reason.includes("MY")) return 'BLUE';
-        return 'PURPLE';
-      } else if (reason.includes("FAVORITE")) {
-        if (reason.includes("MY")) return "RED"
-        return "PINK"
+      if (reason) {
+        if (reason.includes('HATE')) {
+          if (reason.includes('MY')) return 'BLUE';
+          return 'PURPLE';
+        } if (reason.includes('FAVORITE')) {
+          if (reason.includes('MY')) return 'RED';
+          return 'PINK';
+        }
       }
-    }
-    }
+      return undefined;
+    };
 
     const parseScore = (score) => {
-      if(score >= 4) return "RED";
-      if(score < 3) return "BLUE"
-    }
+      if (score >= 4) return 'RED';
+      if (score < 3) return 'BLUE';
+      return undefined;
+    };
 
     let recommendList = reviews.map((e) => (
       <List.Item key={e.rank}>
@@ -46,10 +49,11 @@ class RecommendationLocation extends Component {
           </List.Header>
           <List.Description>
             <div className={parseReason(e.reason)}>{e.explain }</div>
-            <span className={parseScore(e.avgRating)}>{e.avgRating !== undefined && e.avgRating + "(Avg.) "}</span>
-            <b><span className={parseScore(e.myRating)}>{e.myRating !== undefined && e.myRating + "(Yours) "}</span></b>
-            <span className={parseScore(e.friendsRating)}>{e.friendsRating !== undefined && e.friendsRating + "(Friends)"}</span>
-            <br/><br/>
+            <span className={parseScore(e.avgRating)}>{e.avgRating !== undefined && `${e.avgRating}(Avg.) `}</span>
+            <b><span className={parseScore(e.myRating)}>{e.myRating !== undefined && `${e.myRating}(Yours) `}</span></b>
+            <span className={parseScore(e.friendsRating)}>{e.friendsRating !== undefined && `${e.friendsRating}(Friends)`}</span>
+            <br />
+            <br />
           </List.Description>
         </List.Content>
       </List.Item>
@@ -87,5 +91,9 @@ class RecommendationLocation extends Component {
     );
   }
 }
+
+RecommendationLocation.propTypes = {
+  data: propTypes.objectOf(Object).isRequired,
+};
 
 export default RecommendationLocation;

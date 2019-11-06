@@ -124,7 +124,7 @@ const preProcessingTag = () => {
           rating: 5,
           date: '2019-11-01',
           isMine: true,
-          image: 'http://127.0.0.1:8000/media/mocks/gukBab.jpeg',
+          image: 'http://127.0.0.1:8000/media/mocks/gukBab.jpg',
           tag: [{ name: 'cheap', sentimental: 1 }],
         },
         {
@@ -134,17 +134,13 @@ const preProcessingTag = () => {
           rating: 4,
           date: '2019-11-03',
           isMine: true,
-          image: 'http://127.0.0.1:8000/media/mocks/ramen.jpg',
+          image: 'http://127.0.0.1:8000/media/mocks/ramen.jpeg',
           tag: [{ name: 'cheap', sentimental: 1 }, { name: 'meaty', sentimental: 0 }, { name: 'watery', sentimental: -1 }],
         },
       ],
     },
   ];
-
-  return {
-    reason,
-    reviews,
-  };
+  return reviews;
 };
 
 /*
@@ -163,7 +159,7 @@ const preProcessingTag = () => {
   }
 */
 
-const preProcessingMenu = (reviewDetail) => {
+const preProcessingMenu = () => {
   const recentVisit = [
     {
       id: 105,
@@ -172,7 +168,7 @@ const preProcessingMenu = (reviewDetail) => {
       rating: 4,
       date: '2019-11-07',
       isMine: true,
-      image: 'http://127.0.0.1:8000/media/mocks/bbqChicken.jpg',
+      image: 'http://127.0.0.1:8000/media/mocks/bbqChicken.jpeg',
       tag: [{ name: 'satisfying', sentimental: 1 }, { name: 'oily', sentimental: 0 }],
     },
     {
@@ -272,6 +268,8 @@ export class Recommendation extends Component {
             <Modal.Description>
               <Header> Choose One:  </Header>
               <RecommendationLocation data={preProcessingLocation()} />
+              <RecommendationTag data={preProcessingTag()} />
+              <RecommendationMenu data={preProcessingMenu()} />
             </Modal.Description>
           </Modal.Content>
           <Modal.Actions>

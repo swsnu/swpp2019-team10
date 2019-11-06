@@ -1,109 +1,92 @@
 import React, { Component } from 'react';
+import propTypes from 'prop-types';
 import {
-  Button, Header, Image, Modal,
+  Button, Modal, Divider,
 } from 'semantic-ui-react';
+import ReviewPreview from 'components/ReviewPreview';
 
 class RecommendationMenu extends Component {
-    state = { open: false }
+  constructor(props) {
+    super(props);
+    this.state = { open: false };
+  }
 
-    show = (dimmer) => () => this.setState({ dimmer, open: true })
+  open = () => this.setState({ open: true })
 
-    close = () => this.setState({ open: false })
+  close = () => this.setState({ open: false })
 
-    render() {
-      const { open, dimmer } = this.state;
+  render() {
+    const { open } = this.state;
+    const { data } = this.props;
 
-      return (
-        <div>
-          <Button onClick={this.show('blurring')}>Show</Button>
+    const recentList = [];
+    const frequentList = [];
 
-          <Modal dimmer={dimmer} open={open} onClose={this.close}>
-            <Modal.Header>Select a Photo</Modal.Header>
-            <Modal.Content image scrolling>
-              <Image
-                wrapped
-                size="medium"
-                src="/images/avatar/large/rachel.png"
-              />
-              <Modal.Description>
-                <Header>Default Profile Image</Header>
-                <p>
-                  We have found the following gravatar image associated with your
-                  e-mail address.
-                </p>
-                <p>Is it okay to use this photo?</p>
-
-                <p>
-                  We have found the following gravatar image associated with your
-                  e-mail address.
-                </p>
-                <p>Is it okay to use this photo?</p>
-
-                <p>
-                  We have found the following gravatar image associated with your
-                  e-mail address.
-                </p>
-                <p>Is it okay to use this photo?</p>
-
-                <p>
-                  We have found the following gravatar image associated with your
-                  e-mail address.
-                </p>
-                <p>Is it okay to use this photo?</p>
-
-                <p>
-                  We have found the following gravatar image associated with your
-                  e-mail address.
-                </p>
-                <p>Is it okay to use this photo?</p>
-
-                <p>
-                  We have found the following gravatar image associated with your
-                  e-mail address.
-                </p>
-                <p>Is it okay to use this photo?</p>
-
-                <p>
-                  We have found the following gravatar image associated with your
-                  e-mail address.
-                </p>
-                <p>Is it okay to use this photo?</p>
-
-                <p>
-                  We have found the following gravatar image associated with your
-                  e-mail address.
-                </p>
-                <p>Is it okay to use this photo?</p>
-
-                <p>
-                  We have found the following gravatar image associated with your
-                  e-mail address.
-                </p>
-                <p>Is it okay to use this photo?</p>
-
-                <p>
-                  We have found the following gravatar image associated with your
-                  e-mail address.
-                </p>
-                <p>Is it okay to use this photo?</p>
-              </Modal.Description>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button color="black" onClick={this.close}>
-                Nope
-              </Button>
-              <Button
-                positive
-                icon="checkmark"
-                labelPosition="right"
-                content="Yep, that's me"
-                onClick={this.close}
-              />
-            </Modal.Actions>
-          </Modal>
-        </div>
+    data.recentVisit.forEach((review) => {
+      recentList.push(
+        <ReviewPreview
+          key={review.id}
+          id={review.id}
+          author={review.author}
+          menu={review.menu}
+          rating={review.rating}
+          date={review.date}
+          isMine={review.isMine}
+          image={review.image}
+          tag={review.tag}
+        />,
       );
-    }
+    });
+
+    data.frequentVisit.forEach((review) => {
+      frequentList.push(
+        <ReviewPreview
+          key={review.id}
+          id={review.id}
+          author={review.author}
+          menu={review.menu}
+          rating={review.rating}
+          date={review.date}
+          isMine={review.isMine}
+          image={review.image}
+          tag={review.tag}
+        />,
+      );
+    });
+
+    return (
+      <Modal
+        open={open}
+        onOpen={this.open}
+        onClose={this.close}
+        trigger={
+          <Button color="green" inverted> Recommend By Your Visit! </Button>
+        }
+      >
+        <Modal.Header>
+          Recommendation By Your Visit!
+        </Modal.Header>
+        <Modal.Content scrolling>
+          <div className="recommendation-menu-recent-wrapper">
+            <h2> You have recently visited here! </h2>
+            <div style={{ marginLeft: '12%' }}>{recentList}</div>
+          </div>
+          <Divider horizontal> or </Divider>
+          <div className="recommendation-menu-frequent-wrapper">
+            <h2> You frequently visited here! </h2>
+            <div style={{ marginLeft: '12%' }}>{frequentList}</div>
+          </div>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button icon="check" content="All Done" onClick={this.close} />
+        </Modal.Actions>
+      </Modal>
+    );
+  }
 }
+
+RecommendationMenu.propTypes = {
+  data: propTypes.objectOf(Object).isRequired,
+};
 
 export default RecommendationMenu;
