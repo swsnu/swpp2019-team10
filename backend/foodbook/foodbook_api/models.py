@@ -105,6 +105,12 @@ class Review(models.Model):
     #tag=hasn't decide yet!
 
 class Tag(models.Model):
+    '''
+    save tag information
+    fields:
+        content
+        polarity
+    '''
     content = models.CharField(max_length=15)
     polarity = models.FloatField()
 
