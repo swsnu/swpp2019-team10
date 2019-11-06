@@ -49,7 +49,7 @@ def review_list(request):
             is_location_exist = False
         try:
             restaurant = Restaurant.objects.get(name=restaurant_name)
-        except ObjectDoesNotExist:
+        except:
             """
             this is dummy!
             """
@@ -67,13 +67,12 @@ def review_list(request):
                 )
         try:
             menu = Menu.objects.get(name=menu_name)
-        except ObjectDoesNotExist:
+        except:
             """
             this is dummy!
             """
             menu = Menu.objects.create(
                 name=menu_name,
-                restaurant=restaurant
             )
         new_review = Review.objects.create(
             author=request.user.profile,
@@ -112,7 +111,7 @@ def review_detail(request, review_id):
             return HttpResponseNotFound()
         image_path = ""
         if review.review_img:
-            image_path = review.review_img.path
+            image_path = 'http://127.0.0.1:8000'+review.review_img.url
         review_dict = {
             'id': review.id,
             'author': review.author.user.username,
@@ -148,7 +147,7 @@ def review_detail(request, review_id):
         review.save()
         image_path = ""
         if review.review_img:
-            image_path = review.review_img.path
+            image_path = 'http://127.0.0.1:8000'+review.review_img.url
         dict_review = {
             'id': review.id,
             'author': review.author.user.username,
@@ -227,7 +226,7 @@ def friend_review_detail(request, friend_id, review_id):
             return HttpResponse(status=403)
         image_path = ""
         if review.review_img:
-            image_path = review.review_img.path
+            image_path = 'http://127.0.0.1:8000'+review.review_img.url
         review_dict = {
             'id': review.id,
             'author': review.author.user.username,
@@ -269,7 +268,7 @@ def review_image(request, review_id):
                 'content': review.content,
                 'rating': review.rating,
                 'date': review.date.strftime("%Y-%m-%d"),
-                'image': review.review_img.path
+                'image': 'http://127.0.0.1:8000'+review.review_img.url
             }
             return JsonResponse(dict_review)
         #else:
