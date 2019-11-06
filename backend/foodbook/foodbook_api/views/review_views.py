@@ -21,6 +21,9 @@ def review_list(request):
     if request.method == 'GET':
         review_all_list = []
         for review in Review.objects.filter(author=request.user.profile):
+            image_path = ""
+            if review.review_img:
+                image_path = 'http://127.0.0.1:8000'+review.review_img.url
             dict_review = {
                 'id': review.id,
                 'author': review.author.user.username,
@@ -28,6 +31,7 @@ def review_list(request):
                 'menu': review.menu.name,
                 'content': review.content,
                 'rating': review.rating,
+                'image': image_path,
                 'date': review.date.strftime("%Y-%m-%d")
                 }
             review_all_list.append(dict_review)
@@ -189,6 +193,9 @@ def friend_review_list(request, friend_id):
     if request.method == 'GET':
         review_all_list = []
         for review in Review.objects.filter(author=friend):
+            image_path = ""
+            if review.review_img:
+                image_path = 'http://127.0.0.1:8000'+review.review_img.url
             dict_review = {
                 'id': review.id,
                 'author': review.author.user.username,
