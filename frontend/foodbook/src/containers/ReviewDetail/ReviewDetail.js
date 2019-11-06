@@ -47,8 +47,6 @@ class ReviewDetail extends Component {
       error: null,
     });
 
-    console.log(match.params.id);
-
     axios.get(`/api/review/${match.params.id}/`).then((res) => {
       this.setState({
         content: res.data.content,
@@ -163,7 +161,7 @@ class ReviewDetail extends Component {
             <Button
               id="back-review-button"
               type="button"
-              onClick={() => history.push('/articles')}
+              onClick={() => history.push('/main')}
             >
               Back
             </Button>
