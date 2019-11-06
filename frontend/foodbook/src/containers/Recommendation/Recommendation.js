@@ -11,7 +11,7 @@ import RecommendationFriend from './Modal/RecommendFriend';
 
 const preProcessingLocation = () => ({
   name: '치킨',
-  map: '<div className="recommendation-location-map-wrapper"> <img src="http://127.0.0.1:8000/media/mocks/mockMap.png" /> </div>',
+  map: 'http://127.0.0.1:8000/media/mocks/mockMap.png',
   reco_list: [
     {
       rank: 1,
@@ -19,7 +19,7 @@ const preProcessingLocation = () => ({
       avgRating: 2.3,
       myRating: 4.5,
       friendsRating: undefined,
-      explain: `You rated here${4.5}!`,
+      explain: 'You rated here 4.5!',
       link: 'https://map.kakao.com/?q=서울대학교 제2공학관식당',
       reason: 'MYFAVORITE',
     },
@@ -29,7 +29,7 @@ const preProcessingLocation = () => ({
       avgRating: 4.2,
       myRating: 3.1,
       friendsRating: 4.7,
-      explain: `Your Friend rated here${4.7}!`,
+      explain: 'Your Friend rated here 4.7!',
       link: 'https://map.kakao.com/?q=텐카이핀 서울대지점',
       reason: 'FRIENDFAVORITE',
     },
@@ -59,7 +59,7 @@ const preProcessingLocation = () => ({
       avgRating: 2.3,
       myRating: 3.1,
       friendsRating: 1.6,
-      explain: `Your Friends rated here${1.6}!`,
+      explain: 'Your Friends rated here 1.6.',
       link: 'https://map.kakao.com/?q=서울대학교 제4식당',
       reason: 'FRIENDSHATE',
     },
@@ -69,7 +69,7 @@ const preProcessingLocation = () => ({
       avgRating: 3.9,
       myRating: 2.0,
       friendsRating: 3.2,
-      explain: `You rated here${2.0}!`,
+      explain: 'You rated here 2.0.',
       link: 'https://map.kakao.com/?q=서울대학교 제4식당',
       reason: 'MYHATE',
     },
