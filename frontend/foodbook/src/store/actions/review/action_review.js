@@ -22,3 +22,11 @@ export const GET_REVIEWS = () => (dispatch) => {
     .then((res) => dispatch(GET_REVIEWS_DEEP(res.data)))
     .catch(dispatch(GET_REVIEWS_PRE()));
 };
+
+/*
+export const POST_REVIEWS = (review) => (dispatch) => {
+  return axios.get('/api/review/')
+    .then((res) => dispatch(GET_REVIEWS_DEEP(res.data)))
+    .catch(dispatch(GET_REVIEWS_PRE()));
+};
+*/

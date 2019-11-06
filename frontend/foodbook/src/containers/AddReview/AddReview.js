@@ -66,7 +66,6 @@ class AddReview extends Component {
     };
 
     axios.post('/api/review/', reviewDict).then((res) => {
-      // console.log(res.data);
       this.postImageHandler(res.data.id);
     }).catch((error) => this.setState({
       error: error.response,
@@ -75,20 +74,18 @@ class AddReview extends Component {
 
   postImageHandler = (postID) => {
     const { image } = this.state;
+    const { history } = this.props;
 
     if (image != null) {
       const fd = new FormData();
       const file = new File([image], 'img.jpg');
 
       fd.append('image', file);
-      axios.post(`/api/review/${postID}/image/`, fd)/* .then((res) => {
-        console.log(res.data);
-      }) */.catch((error) => this.setState({
-          error: error.response,
-        }));
+      axios.post(`/api/review/${postID}/image/`, fd).then((/* res */) => {
+      }).catch((error) => this.setState({
+        error: error.response,
+      }));
     }
-
-    const { history } = this.props;
 
     history.push('/main');
   }
@@ -98,6 +95,7 @@ class AddReview extends Component {
     const imgUpload = (
       <div>
         <ImageSelectPreview
+          id="add-review-image-selector"
           onChange={(data) => this.setState({ image: data[0].blob })}
           max={1}
         />
