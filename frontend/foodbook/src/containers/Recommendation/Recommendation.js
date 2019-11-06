@@ -1,4 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
+import propTypes from 'prop-types';
+import {
+  Button, Header, Image, Modal, Icon,
+} from 'semantic-ui-react';
+
 import RecommendationLocation from './Modal/RecommendLocation';
 import RecommendationTag from './Modal/RecommendTag';
 import RecommendationMenu from './Modal/RecommendMenu';
@@ -243,8 +248,53 @@ const preProcessingFriend = () => [
     friendsReviews(array of review object): reviews for friend's favorite choice for given menu
 */
 
-const Recommendation = () => (
-  <RecommendationLocation menu="돈까스" map="" location="" /> // required props: menu,
-);
+export class Recommendation extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { open: false };
+  }
+
+  show = () => () => this.setState({ open: true })
+
+  close = () => this.setState({ open: false });
+
+  render() {
+    const { open } = this.state;
+    const { trigger } = this.props;
+
+    return (
+      <div className="Recommendation-wrapper">
+        <Button onClick={this.show()}> Trigger! </Button>
+        <Modal open={open} dimmer="blurring" trigger={trigger}>
+          <Modal.Header>Get Recommendation!</Modal.Header>
+          <Modal.Content>
+            <Modal.Description>
+              <Header> Choose One:  </Header>
+              <Button color="green" inverted>1</Button>
+              <br />
+              <Button color="green" inverted>2</Button>
+              <br />
+              <Button color="green" inverted>3</Button>
+              <br />
+              <Button color="green" inverted>4</Button>
+              <br />
+            </Modal.Description>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color="green" onClick={this.close} inverted>
+              <Icon name="checkmark" />
+              Close
+            </Button>
+          </Modal.Actions>
+        </Modal>
+      </div>
+    );
+  }
+}
+
+Recommendation.propTypes = {
+  trigger: propTypes.string.isRequired,
+};
 
 export default Recommendation;
