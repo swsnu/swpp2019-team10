@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import {
-  Button, Header, Image, Modal, Icon,
+  Button, Header, Modal, Icon,
 } from 'semantic-ui-react';
 
 import RecommendationLocation from './Modal/RecommendLocation';
@@ -234,8 +234,8 @@ const preProcessingFriend = () => [
     menu: '치킨',
     rating: 5,
     date: '2019-11-03',
-    isMine: true,
-    image: 'http://127.0.0.1:8000/media/mocks/kyochonChicken.jpeg',
+    isMine: false,
+    image: 'http://127.0.0.1:8000/media/mocks/kyochonChicken.jpg',
     tag: [{ name: 'sweet', sentimental: 1 }, { name: 'small', sentimental: -1 }],
   },
 ];
@@ -270,6 +270,7 @@ export class Recommendation extends Component {
               <RecommendationLocation data={preProcessingLocation()} />
               <RecommendationTag data={preProcessingTag()} />
               <RecommendationMenu data={preProcessingMenu()} />
+              <RecommendationFriend data={preProcessingFriend()} />
             </Modal.Description>
           </Modal.Content>
           <Modal.Actions>
