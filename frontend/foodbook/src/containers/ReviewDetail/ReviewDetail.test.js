@@ -25,8 +25,21 @@ describe('<ReviewDetail />', () => {
     date: '1970-01-01',
   };
 
-  axios.get.mockResolvedValue(resp);
-  axios.delete.mockResolvedValue(resp);
+  jest.spyOn(axios, 'get')
+    .mockImplementation(() => new Promise((res) => {
+      res({
+        status: 200,
+        data: resp,
+      });
+    }));
+
+  jest.spyOn(axios, 'delete')
+    .mockImplementation(() => new Promise((res) => {
+      res({
+        status: 200,
+        data: resp,
+      });
+    }));
 
   let reviewDetail;
 
@@ -60,7 +73,7 @@ describe('<ReviewDetail />', () => {
 
       detailWrapper.setState({ ready: true });
       component.update();
-      const backWrapper = component.find('#back-review-button').at(0);
+      const backWrapper = component.find('#delete-review-button').at(0);
       expect(backWrapper.length).toBe(1);
 
       backWrapper.simulate('click');
@@ -75,6 +88,19 @@ describe('<ReviewDetail />', () => {
       component.update();
 
       const wrapper = component.find('#edit-review-button').at(0);
+
+      wrapper.simulate('click');
+      component.update();
+    });
+
+    it('back button should work', () => {
+      const component = mount(reviewDetail);
+      const detailWrapper = component.find('ReviewDetail');
+
+      detailWrapper.setState({ ready: true });
+      component.update();
+
+      const wrapper = component.find('#back-review-button').at(0);
 
       wrapper.simulate('click');
       component.update();
