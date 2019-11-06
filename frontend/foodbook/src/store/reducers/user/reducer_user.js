@@ -17,15 +17,18 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
+  let newState = state;
+
   switch (action.type) {
     case actionTypes.GET_USER_INFO:
-      return { ...state, user: action.data };
+      newState = { ...state, user: action.data };
+      return newState;
 
     default:
       break;
   }
 
-  return state;
+  return newState;
 };
 
 export default reducer;
