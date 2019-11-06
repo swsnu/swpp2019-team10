@@ -71,7 +71,7 @@ class RecommendationMenu extends Component {
             <h2> You have recently visited here! </h2>
             <div style={{ marginLeft: '12%' }}>{recentList}</div>
           </div>
-          <Divider horizontal> or </Divider>
+          <Divider horizontal> </Divider>
           <div className="recommendation-menu-frequent-wrapper">
             <h2> You frequently visited here! </h2>
             <div style={{ marginLeft: '12%' }}>{frequentList}</div>

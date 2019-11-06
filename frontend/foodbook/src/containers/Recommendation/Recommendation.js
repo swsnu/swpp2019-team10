@@ -267,10 +267,19 @@ export class Recommendation extends Component {
           <Modal.Content>
             <Modal.Description>
               <Header> Choose One:  </Header>
+              <br />
               <RecommendationLocation data={preProcessingLocation()} />
+              <br />
+              <br />
               <RecommendationTag data={preProcessingTag()} />
+              <br />
+              <br />
               <RecommendationMenu data={preProcessingMenu()} />
+              <br />
+              <br />
               <RecommendationFriend data={preProcessingFriend()} />
+              <br />
+              <br />
             </Modal.Description>
           </Modal.Content>
           <Modal.Actions>

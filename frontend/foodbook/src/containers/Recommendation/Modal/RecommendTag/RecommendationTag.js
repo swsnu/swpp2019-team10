@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import {
-  Button, Modal,
+  Button, Modal, Divider
 } from 'semantic-ui-react';
 import ReviewPreview from 'components/ReviewPreview';
 
@@ -40,6 +40,7 @@ class RecommendationTag extends Component {
               tag={review.tag}
             />
           ))}
+          <Divider> </Divider>
         </div>,
       );
     });
