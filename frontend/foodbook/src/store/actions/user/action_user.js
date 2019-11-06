@@ -20,7 +20,7 @@ export const LOGIN_DEEP = () => ({
 export const LOGIN = () => (dispatch) => axios.post('/api/signin/', {
   username: 'swpp',
   password: '1234',
-}).then((res) => dispatch(LOGIN_DEEP(res)))
+}).then(() => dispatch(LOGIN_DEEP()))
   .catch();
 
 export const REGISTER_DEEP = (data) => ({
