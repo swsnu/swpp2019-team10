@@ -11,7 +11,7 @@ import RecommendationFriend from './Modal/RecommendFriend';
 
 const preProcessingLocation = () => ({
   name: '치킨',
-  map: '<div className="recommendation-location-map-wrapper"> <img src="../../images/mockMap.png" /> </div>',
+  map: '<div className="recommendation-location-map-wrapper"> <img src="http://127.0.0.1:8000/media/mocks/mockMap.png" /> </div>',
   reco_list: [
     {
       rank: 1,
@@ -99,7 +99,7 @@ const preProcessingTag = () => {
           rating: 5,
           date: '2019-11-03',
           isMine: true,
-          image: '../../images/potatoChip.jpg',
+          image: 'http://127.0.0.1:8000/media/mocks/potatoChip.jpg',
           tag: [{ name: 'crispy', sentimental: 1 }, { name: 'salty', sentimental: 1 }],
         },
         {
@@ -109,7 +109,7 @@ const preProcessingTag = () => {
           rating: 4,
           date: '2019-11-03',
           isMine: true,
-          image: '../../images/chicken.jpeg',
+          image: 'http://127.0.0.1:8000/media/mocks/chicken.jpeg',
           tag: [{ name: 'crispy', sentimental: 1 }, { name: 'hot', sentimental: -1 }],
         },
       ],
@@ -124,7 +124,7 @@ const preProcessingTag = () => {
           rating: 5,
           date: '2019-11-01',
           isMine: true,
-          image: '../../images/gukBab.jpeg',
+          image: 'http://127.0.0.1:8000/media/mocks/gukBab.jpeg',
           tag: [{ name: 'cheap', sentimental: 1 }],
         },
         {
@@ -134,7 +134,7 @@ const preProcessingTag = () => {
           rating: 4,
           date: '2019-11-03',
           isMine: true,
-          image: '../../images/ramen.jpg',
+          image: 'http://127.0.0.1:8000/media/mocks/ramen.jpg',
           tag: [{ name: 'cheap', sentimental: 1 }, { name: 'meaty', sentimental: 0 }, { name: 'watery', sentimental: -1 }],
         },
       ],
@@ -172,7 +172,7 @@ const preProcessingMenu = (reviewDetail) => {
       rating: 4,
       date: '2019-11-07',
       isMine: true,
-      image: '../../images/bbqChicken.jpg',
+      image: 'http://127.0.0.1:8000/media/mocks/bbqChicken.jpg',
       tag: [{ name: 'satisfying', sentimental: 1 }, { name: 'oily', sentimental: 0 }],
     },
     {
@@ -182,7 +182,7 @@ const preProcessingMenu = (reviewDetail) => {
       rating: 3,
       date: '2019-11-08',
       isMine: true,
-      image: '../../images/yangChicken.jpeg',
+      image: 'http://127.0.0.1:8000/media/mocks/yangChicken.jpeg',
       tag: [{ name: 'cheap', sentimental: 1 }, { name: 'soggy', sentimental: -1 }],
     },
   ];
@@ -195,7 +195,7 @@ const preProcessingMenu = (reviewDetail) => {
       rating: 4,
       date: '2019-11-03',
       isMine: true,
-      image: '../../images/gcovaChicken.jpg',
+      image: 'http://127.0.0.1:8000/media/mocks/gcovaChicken.jpg',
       tag: [{ name: 'soul food', sentimental: 1 }, { name: 'too spicy', sentimental: -1 }],
     },
     {
@@ -205,7 +205,7 @@ const preProcessingMenu = (reviewDetail) => {
       rating: 5,
       date: '2019-10-27',
       isMine: true,
-      image: '../../images/geniousChicken.jpeg',
+      image: 'http://127.0.0.1:8000/media/mocks/geniousChicken.jpeg',
       tag: [{ name: 'crispy', sentimental: 1 }, { name: 'cheap', sentimental: 1 }],
     },
   ];
@@ -229,7 +229,7 @@ const preProcessingFriend = () => [
     rating: 4,
     date: '2019-10-28',
     isMine: false,
-    image: '../../images/goobneChicken.jpg',
+    image: 'http://127.0.0.1:8000/media/mocks/goobneChicken.jpg',
     tag: [{ name: 'healthy', sentimental: 1 }, { name: 'pricy', sentimental: -1 }],
   },
   {
@@ -239,7 +239,7 @@ const preProcessingFriend = () => [
     rating: 5,
     date: '2019-11-03',
     isMine: true,
-    image: '../../images/kyochonChicken.jpeg',
+    image: 'http://127.0.0.1:8000/media/mocks/kyochonChicken.jpeg',
     tag: [{ name: 'sweet', sentimental: 1 }, { name: 'small', sentimental: -1 }],
   },
 ];
@@ -266,19 +266,12 @@ export class Recommendation extends Component {
     return (
       <div className="Recommendation-wrapper">
         <Button onClick={this.show()}> Trigger! </Button>
-        <Modal open={open} dimmer="blurring" trigger={trigger}>
+        <Modal open={open} dimmer="blurring" trigger={trigger} onClose={this.close}>
           <Modal.Header>Get Recommendation!</Modal.Header>
           <Modal.Content>
             <Modal.Description>
               <Header> Choose One:  </Header>
-              <Button color="green" inverted>1</Button>
-              <br />
-              <Button color="green" inverted>2</Button>
-              <br />
-              <Button color="green" inverted>3</Button>
-              <br />
-              <Button color="green" inverted>4</Button>
-              <br />
+              <RecommendationLocation data={preProcessingLocation()} />
             </Modal.Description>
           </Modal.Content>
           <Modal.Actions>

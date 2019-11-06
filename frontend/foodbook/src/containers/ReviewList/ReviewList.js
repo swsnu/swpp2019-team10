@@ -35,7 +35,7 @@ class ReviewList extends Component {
         isMine={review.isMine}
       />
     ));
-
+    console.log('reviewsToRender :', reviewsToRender);
     return (
       <div className="ReviewList">
         <div className="ui special cards fluid">
