@@ -4,11 +4,11 @@ import {
   TextArea,
 } from 'semantic-ui-react';
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
 import './ReviewDetail.css';
 import PropTypes from 'prop-types';
 import ClickToEdit from 'react-click-to-edit';
 
+import Recommendation from 'containers/Recommendation';
 import { connect } from 'react-redux';
 // import * as actionCreators from '../../Stores/Actions/index';
 
@@ -151,10 +151,7 @@ class ReviewDetail extends Component {
               readOnly
             />
             <div className="extra content">
-              <NavLink to="/recommendation">
-                          Read Detail & Get Recommendation!
-                {/* FIXME: Not Yet Implemented */}
-              </NavLink>
+              <Recommendation />
             </div>
             {authorOnly}
             <Button
