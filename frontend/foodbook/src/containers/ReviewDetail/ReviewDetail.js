@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import './ReviewDetail.css';
 import PropTypes from 'prop-types';
 import ClickToEdit from 'react-click-to-edit';
+import GoogleMap from 'components/GoogleMap';
 
 import Recommendation from 'containers/Recommendation';
 import { connect } from 'react-redux';
@@ -65,10 +66,11 @@ class ReviewDetail extends Component {
 
   deleteHandler() {
     const { history, match } = this.props;
-    axios.delete(`/api/review/${match.params.id}/`).catch((error) => this.setState({
-      error: error.response,
-    }));
-    history.push('/main');
+    axios.delete(`/api/review/${match.params.id}/`).then(
+      () => history.push('/main'),
+    ).catch(
+      (error) => this.setState({ error: error.response }),
+    );
   }
 
   render() {
@@ -117,7 +119,7 @@ class ReviewDetail extends Component {
     );
     //  : <div />;
 
-    const googleMap = (<div className="locationGoogle"> Map will be here </div>);
+    const googleMap = (<GoogleMap />);
 
     return (
       <div className="ReviewDetail">
