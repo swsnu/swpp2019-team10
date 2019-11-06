@@ -27,7 +27,7 @@ def review_list(request):
                 image_path = 'http://127.0.0.1:8000'+review.review_img.url
             tag = []
             for tag_item in review.tag.all():
-                tag.append({'name':t.content, 'positive': tag_item.polarity >= 0.3})
+                tag.append({'name':tag_item.content, 'positive': tag_item.polarity >= 0.3})
             dict_review = {
                 'id': review.id,
                 'author': review.author.user.username,
@@ -127,7 +127,7 @@ def review_detail(request, review_id):
             image_path = 'http://127.0.0.1:8000'+review.review_img.url
         tag = []
         for tag_item in review.tag.all():
-            tag.append({'name':t.content, 'positive': tag_item.polarity >= 0.3})
+            tag.append({'name':tag_item.content, 'positive': tag_item.polarity >= 0.3})
         review_dict = {
             'id': review.id,
             'author': review.author.user.username,
