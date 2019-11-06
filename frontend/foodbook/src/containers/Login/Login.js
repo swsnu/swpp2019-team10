@@ -9,7 +9,6 @@ import * as actionCreators from 'store/actions/user/action_user';
 
 class Login extends Component {
   // some behavior or rendering should be added in sprint 4.
-
   loginHandler = (onLogin) => {
     const { history } = this.props;
     onLogin();
@@ -18,13 +17,16 @@ class Login extends Component {
 
   render() {
     const { onSignup, onLogin } = this.props;
+    const version = 'DEMO';
 
     return (
       <div className="login">
         <Card centered>
           <Card.Content>
             <Card.Header textAlign="center"> FoodBook </Card.Header>
-            <Card.Meta textAlign="center"> Sprint 3 </Card.Meta>
+            <Card.Meta textAlign="center">
+              {version}
+            </Card.Meta>
             <Card.Description>
               <center><Button content="Login" id="login-button" onClick={() => { this.loginHandler(onLogin); }} /></center>
               <center><Button content="Signup" id="signup-button" onClick={() => onSignup()} /></center>
