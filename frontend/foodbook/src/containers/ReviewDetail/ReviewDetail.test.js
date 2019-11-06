@@ -54,17 +54,6 @@ describe('<ReviewDetail />', () => {
       expect(wrapper.length).toBe(1);
     });
 
-    it('error message should be shown up', () => {
-      const component = mount(reviewDetail);
-      const detailWrapper = component.find('ReviewDetail');
-
-      detailWrapper.setState({ ready: false, error: { response: 'Error' } });
-      component.update();
-
-      const backWrapper = component.find('.ReviewDetailError');
-      expect(backWrapper.length).toBe(1);
-    });
-
     it('delete button should work', () => {
       const component = mount(reviewDetail);
       const detailWrapper = component.find('ReviewDetail');
@@ -77,7 +66,6 @@ describe('<ReviewDetail />', () => {
       backWrapper.simulate('click');
       component.update();
     });
-
 
     it('edit button should work', () => {
       const component = mount(reviewDetail);
@@ -101,6 +89,17 @@ describe('<ReviewDetail />', () => {
       component.update();
 
       const backWrapper = component.find('.ReviewDetailLoading');
+      expect(backWrapper.length).toBe(1);
+    });
+
+    it('error message should be shown up', () => {
+      const component = mount(reviewDetail);
+      const detailWrapper = component.find('ReviewDetail');
+
+      detailWrapper.setState({ ready: false, error: { response: 'Error' } });
+      component.update();
+
+      const backWrapper = component.find('.ReviewDetailError');
       expect(backWrapper.length).toBe(1);
     });
   });

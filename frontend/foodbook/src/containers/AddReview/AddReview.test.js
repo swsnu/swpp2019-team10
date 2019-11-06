@@ -67,6 +67,10 @@ describe('<AddReview />', () => {
     const submitButton = component.find('#submit-review-button').at(0);
     submitButton.simulate('click');
     component.update();
+
+    addWrapper.setState({ image: '' });
+    submitButton.simulate('click');
+    component.update();
   });
 
   it('should have back button working', () => {
@@ -79,9 +83,34 @@ describe('<AddReview />', () => {
 
   it('should have textfields working', () => {
     const component = mount(addReview);
-    const event = { target: { value: 'sometext' } };
-    component.find('#review-restaurant-input').at(1).simulate('change', event);
-    component.find('#review-menu-input').at(1).simulate('change', event);
-    component.find('#review-content-input').at(1).simulate('change', event);
+    component.find('#review-restaurant-input').at(1).simulate('change', { target: { value: 'restaurant' } });
+    component.find('#review-menu-input').at(1).simulate('change', { target: { value: 'menu' } });
+    component.find('#review-content-input').at(1).simulate('change', { target: { value: 'content' } });
+    component.update();
+
+    const wrapper = component.find('AddReview');
+    expect(wrapper.state('restaurant')).toBe('restaurant');
+    expect(wrapper.state('menu')).toBe('menu');
+    expect(wrapper.state('content')).toBe('content');
+  });
+
+  it('loading message should be shown up', () => {
+    const component = mount(addReview);
+    const wrapper = component.find('AddReview');
+    wrapper.setState({ ready: false });
+    component.update();
+
+    const backWrapper = component.find('.AddReviewLoading');
+    expect(backWrapper.length).toBe(1);
+  });
+
+  it('error message should be shown up', () => {
+    const component = mount(addReview);
+    const wrapper = component.find('AddReview');
+    wrapper.setState({ ready: false, error: { response: 'Error' } });
+    component.update();
+
+    const backWrapper = component.find('.AddReviewError');
+    expect(backWrapper.length).toBe(1);
   });
 });

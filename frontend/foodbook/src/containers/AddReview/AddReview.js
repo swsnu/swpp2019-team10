@@ -111,9 +111,8 @@ class AddReview extends Component {
     const { history } = this.props;
 
     if (error != null) {
-      // history.push('/main');
       return (
-        <div className="ReviewDetailError">
+        <div className="AddReviewError">
           <p>{error.content}</p>
         </div>
       );
@@ -121,7 +120,7 @@ class AddReview extends Component {
 
     if (!ready) {
       return (
-        <div className="ReviewDetailLoading">
+        <div className="AddReviewLoading">
           <p>Loading...</p>
         </div>
       );

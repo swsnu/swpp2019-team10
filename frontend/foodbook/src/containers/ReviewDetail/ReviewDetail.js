@@ -79,7 +79,6 @@ class ReviewDetail extends Component {
     const { history, match } = this.props;
 
     if (error != null) {
-      // history.push('/main');
       return (
         <div className="ReviewDetailError">
           <p>{error.content}</p>
