@@ -82,12 +82,11 @@ class AddReview extends Component {
 
       fd.append('image', file);
       axios.post(`/api/review/${postID}/image/`, fd).then((/* res */) => {
+        history.push('/main');
       }).catch((error) => this.setState({
         error: error.response,
       }));
     }
-
-    history.push('/main');
   }
 
   render() {
@@ -143,7 +142,7 @@ class AddReview extends Component {
           <div className="card" style={{ width: '630px' }}>
             <div className="content">
               <span className="header">
-                Author name will be here
+                Author: SWPP10
               </span>
               <div className="meta">
                 <span className="rating">
