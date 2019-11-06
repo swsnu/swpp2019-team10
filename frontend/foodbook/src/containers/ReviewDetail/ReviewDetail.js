@@ -40,7 +40,7 @@ class ReviewDetail extends Component {
       restaurant: 'Foodbook',
       author: 'Team10',
       menu: 'Logo',
-      image: 'https://i.pinimg.com/474x/91/ec/7e/91ec7ec701884e2959643bf4b31d8ee8--cat-food-food-networktrisha.jpg',
+      image: '',
       rating: 5.0,
       date: '2019-11-04',
       tag: [{ name: 'crispy', positive: true }, { name: 'pricy', positive: false }],
@@ -79,7 +79,6 @@ class ReviewDetail extends Component {
     const { history, match } = this.props;
 
     if (error != null) {
-      history.push('/main');
       return (
         <div className="ReviewDetailError">
           <p>{error.content}</p>
