@@ -54,16 +54,16 @@ describe('<ReviewDetail />', () => {
       expect(wrapper.length).toBe(1);
     });
 
-    it('error message should be shown up', () => {
-      const component = mount(reviewDetail);
-      const detailWrapper = component.find('ReviewDetail');
+    // it('error message should be shown up', () => {
+    //   const component = mount(reviewDetail);
+    //   const detailWrapper = component.find('ReviewDetail');
 
-      detailWrapper.setState({ ready: false, error: 'Error' });
-      component.update();
+    //   detailWrapper.setState({ ready: false, error: 'Error' });
+    //   component.update();
 
-      const backWrapper = component.find('.ReviewDetailError');
-      expect(backWrapper.length).toBe(1);
-    });
+    //   const backWrapper = component.find('.ReviewDetailError');
+    //   expect(backWrapper.length).toBe(1);
+    // });
 
     it('delete button should work', () => {
       const component = mount(reviewDetail);
