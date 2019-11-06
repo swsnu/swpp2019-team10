@@ -65,10 +65,11 @@ class ReviewDetail extends Component {
 
   deleteHandler() {
     const { history, match } = this.props;
-    axios.delete(`/api/review/${match.params.id}/`).catch((error) => this.setState({
-      error: error.response,
-    }));
-    history.push('/main');
+    axios.delete(`/api/review/${match.params.id}/`).then(
+      () => history.push('/main'),
+    ).catch(
+      (error) => this.setState({ error: error.response }),
+    );
   }
 
   render() {
