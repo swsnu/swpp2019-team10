@@ -32,7 +32,6 @@ def review_list(request):
                     pos = 1
                 if tag_item.polarity <= -0.3:
                     pos = -1
-                print(tag_item.content, tag_item.polarity)
                 tag.append({'name':tag_item.content, 'positive': pos})
             dict_review = {
                 'id': review.id,
