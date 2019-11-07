@@ -22,6 +22,7 @@ describe('<ReviewDetail />', () => {
     menu: 'menu',
     image: '',
     rating: 0.0,
+    tag: [{ name: 'good', positive: true }, { name: 'bad', positive: false }],
     date: '1970-01-01',
   };
 

@@ -7,7 +7,6 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import './ReviewDetail.css';
 import PropTypes from 'prop-types';
-import ClickToEdit from 'react-click-to-edit';
 import GoogleMap from 'components/GoogleMap';
 
 import { connect } from 'react-redux';
@@ -15,14 +14,19 @@ import { connect } from 'react-redux';
 
 import axios from 'axios';
 
-const parseTagName = (tags) => tags.map((tag, i) => (
-  <ClickToEdit key={tag.name} wrapperClass={tag.positive ? `pos ${i}` : `neg ${i}`} inputClass={tag.positive ? `pos ${i}` : `neg ${i}`} textClass={tag.positive ? `pos ${i}` : `neg ${i}`} value={tag.name} style={{ display: 'inline' }} endEditing={() => {}}>
-    {/* FIXME */}
-    <span key={`${tag.name}Wrapper`} className={tag.positive ? `pos ${i}` : `neg ${i}`}>
-      {tag.name}
+const parseTagName = (tags) => {
+  const parsed = tags.map((t, i) => (
+    <span key={`${t.name}Wrapper`} className={t.positive ? `pos ${i}` : `neg ${i}`}>
+      {t.name}
     </span>
-  </ClickToEdit>
-));
+  ));
+
+  return (
+    <div className="tags-wrapper" style={{ display: 'inline' }}>
+      {parsed}
+    </div>
+  );
+};
 
 class ReviewDetail extends Component {
   constructor(props) {
@@ -36,15 +40,15 @@ class ReviewDetail extends Component {
     const { match } = this.props;
 
     this.setState({
-      // dummy
-      content: 'asdf',
+      // temporary state
+      content: 'Tasty',
       restaurant: 'Foodbook',
       author: 'Team10',
-      menu: 'Logo',
+      menu: '',
       image: '',
       rating: 5.0,
       date: '2019-11-04',
-      tag: [{ name: 'crispy', positive: true }, { name: 'pricy', positive: false }],
+      tag: [{ name: 'good', positive: true }, { name: 'bad', positive: false }],
       error: null,
     });
 
@@ -57,6 +61,7 @@ class ReviewDetail extends Component {
         image: res.data.image,
         rating: res.data.rating,
         date: res.data.date,
+        tag: res.data.tag,
         ready: true,
       });
     }).catch((error) => this.setState({
