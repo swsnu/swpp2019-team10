@@ -11,11 +11,18 @@ const ReviewPreview = (props) => {
   } = props;
 
   const parseTagName = (tags) => {
-    const parsed = tags.map((t, i) => (
-      <span key={`${t.name}Wrapper`} className={t.positive ? `pos ${i}` : `neg ${i}`}>
-        {t.name}
-      </span>
-    ));
+    const parsed = tags.map((t, i) => {
+      let className;
+      if (t.sentimental === 0) className = `neu ${i}`;
+      else if (t.sentimental === 1) className = `pos ${i}`;
+      else className = `neg ${i}`;
+
+      return (
+        <span key={`${t.name}Wrapper`} className={className}>
+          {t.name}
+        </span>
+      );
+    });
 
     return (
       <div className="tags-wrapper" style={{ display: 'inline' }}>
@@ -81,7 +88,7 @@ ReviewPreview.defaultProps = {
   date: '2019-11-05',
   isMine: true,
   image: 'https://i.pinimg.com/474x/91/ec/7e/91ec7ec701884e2959643bf4b31d8ee8--cat-food-food-networktrisha.jpg',
-  tag: [{ name: 'good', positive: true }, { name: 'bad', positive: false }],
+  tag: [{ name: 'good', sentimental: 1 }, { name: 'bad', sentimental: -1 }, { name: 'netural', sentimental: 0 }],
 };
 
 export default ReviewPreview;
