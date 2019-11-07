@@ -2,12 +2,13 @@
 views for reviews
 '''
 # pylint: disable=line-too-long, unnecessary-comprehension, pointless-string-statement
-# pylint: disable=E0402, R0911, R0914, W0702
+# pylint: disable=E0402, R0911, R0912, R0914, W0702
 import json
 from json import JSONDecodeError
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse, HttpResponseNotFound
 from django.core.exceptions import ObjectDoesNotExist
-from ..models import Profile, Review, Menu, Restaurant, ReviewForm
+from ..models import Profile, Review, Menu, Restaurant, ReviewForm, Tag
+from ..algorithms.tagging import Tagging
 # pylint: enable=E0402
 # pylint: enable=line-too-long
 
@@ -24,6 +25,14 @@ def review_list(request):
             image_path = ""
             if review.review_img:
                 image_path = 'http://127.0.0.1:8000'+review.review_img.url
+            tag = []
+            for tag_item in review.tag.all():
+                pos = 0
+                if tag_item.sentimental >= 0.1:
+                    pos = 1
+                if tag_item.sentimental <= -0.1:
+                    pos = -1
+                tag.append({'name':tag_item.name, 'sentimental': pos})
             dict_review = {
                 'id': review.id,
                 'author': review.author.user.username,
@@ -32,7 +41,8 @@ def review_list(request):
                 'content': review.content,
                 'rating': review.rating,
                 'image': image_path,
-                'date': review.date.strftime("%Y-%m-%d")
+                'date': review.date.strftime("%Y-%m-%d"),
+                'tag': tag
                 }
             review_all_list.append(dict_review)
         return JsonResponse(review_all_list, safe=False)
@@ -87,6 +97,10 @@ def review_list(request):
             )
         request.user.profile.count_write += 1
         request.user.profile.save()
+
+        tags = Tagging.tagging(content)
+        for item in tags.keys():
+            new_review.tag.add(Tag.objects.create(name=item, sentimental=tags[item]))
         dict_new_review = {
             'id': new_review.id,
             'author': new_review.author.user.username,
@@ -116,6 +130,14 @@ def review_detail(request, review_id):
         image_path = ""
         if review.review_img:
             image_path = 'http://127.0.0.1:8000'+review.review_img.url
+        tag = []
+        for tag_item in review.tag.all():
+            pos = 0
+            if tag_item.sentimental >= 0.1:
+                pos = 1
+            if tag_item.sentimental <= -0.1:
+                pos = -1
+            tag.append({'name':tag_item.name, 'sentimental': pos})
         review_dict = {
             'id': review.id,
             'author': review.author.user.username,
@@ -124,7 +146,8 @@ def review_detail(request, review_id):
             'content': review.content,
             'rating': review.rating,
             'date': review.date.strftime("%Y-%m-%d"),
-            'image': image_path
+            'image': image_path,
+            'tag': tag
         }
         return JsonResponse(review_dict)
     if request.method == 'PUT':

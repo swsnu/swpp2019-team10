@@ -5,7 +5,7 @@ test view functions of review model
 import json
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
-from foodbook_api.models import Profile, Review, Menu, Restaurant
+from foodbook_api.models import Profile, Review, Menu, Restaurant, Tag
 from foodbook_api.tests.tests_user import make_image_file
 #from django.core.urlresolvers import reverse
 # Create your tests here.
@@ -81,13 +81,55 @@ class ReviewTestCase(TestCase):
             name='TEST_MENU',
             restaurant=restaurant
         )
-        Review.objects.create(
+        tag1 = Tag.objects.create(
+            name='GOOD',
+            sentimental=0.5
+        )
+        tag2 = Tag.objects.create(
+            name='SOSO',
+            sentimental=0.0
+        )
+        tag3 = Tag.objects.create(
+            name='BAD',
+            sentimental=-0.5
+        )
+        review = Review.objects.create(
             author=profile_user1,
             restaurant=restaurant,
             menu=menu,
             content='TEST_CONTENT',
+            rating=5,
+        )
+        review.tag.add(tag1)
+        review.tag.add(tag2)
+        review.tag.add(tag3)
+
+        Review.objects.create(
+            author=profile_user1,
+            restaurant=restaurant,
+            menu=menu,
+            content='TEST_CONTENT2',
+            rating=5,
+            review_img=make_image_file()[1]
+        )
+
+        Review.objects.create(
+            author=profile_user3,
+            restaurant=restaurant,
+            menu=menu,
+            content='TEST_CONTENT3',
             rating=5
         )
+
+        Review.objects.create(
+            author=profile_user3,
+            restaurant=restaurant,
+            menu=menu,
+            content='TEST_CONTENT4',
+            rating=5,
+            review_img=make_image_file()[1]
+        )
+
     """
     test review_list
     """
@@ -119,14 +161,36 @@ class ReviewTestCase(TestCase):
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
         response = client.post('/api/review/', json.dumps({
-            'content': 'TEST_NEW_CONTENT',
+            'content': 'TEST_NEW_CONTENT. It was spicy.',
             'restaurant_name': 'TEST_REST',
             'menu_name': 'TEST_MENU',
-            'rating': 5
+            'rating': 5,
+            'longitude': 15.5,
+            'latitude': 15.5
         }), 'application/json')
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(Review.objects.count(), 2)
+        self.assertEqual(Review.objects.count(), 5)
         self.assertEqual(Profile.objects.get(id=1).count_write, 1)
+        response = client.post('/api/review/', json.dumps({
+            'content': 'TEST_NEW_CONTENT2',
+            'restaurant_name': 'TEST_REST2',
+            'menu_name': 'TEST_MENU2',
+            'rating': 5,
+        }), 'application/json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(Review.objects.count(), 6)
+        self.assertEqual(Profile.objects.get(id=1).count_write, 2)
+        response = client.post('/api/review/', json.dumps({
+            'content': 'TEST_NEW_CONTENT3',
+            'restaurant_name': 'TEST_REST3',
+            'menu_name': 'TEST_MENU3',
+            'rating': 5,
+            'longitude': 15.5,
+            'latitude': 15.5
+        }), 'application/json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(Review.objects.count(), 7)
+        self.assertEqual(Profile.objects.get(id=1).count_write, 3)
     def test_post_review_list_fail(self):
         """
         POST review list must fail in this case:
@@ -179,6 +243,8 @@ class ReviewTestCase(TestCase):
         self.assertEqual(bodys['restaurant'], 'TEST_REST')
         self.assertEqual(bodys['menu'], 'TEST_MENU')
         self.assertEqual(bodys['rating'], 5)
+        response = client.get('/api/review/2/')
+        self.assertEqual(response.status_code, 200)
     def test_get_review_detail_fail(self):
         """
         GET review detail should fail in rest of the cases
@@ -214,6 +280,16 @@ class ReviewTestCase(TestCase):
         self.assertEqual(bodys['content'], 'TEST_PUT_CONTENT')
         self.assertEqual(bodys['restaurant'], 'TEST_REST')
         self.assertEqual(bodys['menu'], 'TEST_MENU')
+        self.assertEqual(bodys['rating'], 3)
+        response = client.put('/api/review/2/', json.dumps({
+            'content': 'TEST_PUT_CONTENT',
+            'restaurant_name': 'TEST_REST',
+            'menu_name': 'TEST_MENU',
+            'rating': 3
+        }), 'application/json')
+        self.assertEqual(response.status_code, 200)
+        bodys = json.loads(response.content.decode())
+        self.assertEqual(bodys['id'], 2)
         self.assertEqual(bodys['rating'], 3)
     def test_put_review_detail_fail(self):
         """
@@ -264,7 +340,7 @@ class ReviewTestCase(TestCase):
                      email='TEST_EMAIL_1', password='TEST_PW_1')
         response = client.delete('/api/review/1/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(Review.objects.count(), 0)
+        self.assertEqual(Review.objects.count(), 3)
     def test_delete_review_fail(self):
         """
         DELETE review detail should fail in rest of the cases
@@ -305,7 +381,7 @@ class ReviewTestCase(TestCase):
                      email='TEST_EMAIL_1', password='TEST_PW_1')
         response = client.get('/api/friend/3/review/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content.decode(), "[]")
+        self.assertIn('TEST_CONTENT3', response.content.decode())
     def test_get_friend_review_list_fail(self):
         """
         GET friend's review list should fail in rest of the cases
@@ -352,6 +428,10 @@ class ReviewTestCase(TestCase):
         self.assertEqual(bodys['restaurant'], 'TEST_REST')
         self.assertEqual(bodys['menu'], 'TEST_MENU')
         self.assertEqual(bodys['rating'], 5)
+        response = client.get('/api/friend/1/review/2/')
+        self.assertEqual(response.status_code, 200)
+        bodys = json.loads(response.content.decode())
+        self.assertEqual(bodys['id'], 2)
     def test_get_friend_review_detail_fail(self):
         """
         GET friend's review detail should fail in rest of the cases
@@ -363,7 +443,7 @@ class ReviewTestCase(TestCase):
                      email='TEST_EMAIL_3', password='TEST_PW_3')
         response = client.get('/api/friend/2/review/1/')
         self.assertEqual(response.status_code, 403)
-        response = client.get('/api/friend/1/review/3/')
+        response = client.get('/api/friend/1/review/10/')
         self.assertEqual(response.status_code, 404)
         response = client.get('/api/friend/7/review/3/')
         self.assertEqual(response.status_code, 404)
