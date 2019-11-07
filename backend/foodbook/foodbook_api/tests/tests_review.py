@@ -104,7 +104,7 @@ class ReviewTestCase(TestCase):
         review.tag.add(tag2)
         review.tag.add(tag3)
 
-        review2 = Review.objects.create(
+        Review.objects.create(
             author=profile_user1,
             restaurant=restaurant,
             menu=menu,
