@@ -28,10 +28,7 @@ class Tagging():
 
         i = 0
         for item in dict.keys():
-            pos = True
-            if dict[item] < 0.0:
-                pos = False
-            ret[item] = pos
+            ret[item] = dict[item]
             i += 1
             if i == 5:
                 break
