@@ -108,11 +108,11 @@ class Tag(models.Model):
     '''
     save tag information
     fields:
-        content
-        polarity
+        name
+        sentimental
     '''
-    content = models.CharField(max_length=15)
-    polarity = models.FloatField()
+    name = models.CharField(max_length=15)
+    sentimental = models.FloatField()
 
 class ProfileForm(ModelForm):
     '''

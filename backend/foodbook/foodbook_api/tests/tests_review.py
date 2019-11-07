@@ -82,16 +82,16 @@ class ReviewTestCase(TestCase):
             restaurant=restaurant
         )
         tag1 = Tag.objects.create(
-            content='GOOD',
-            polarity=0.5
+            name='GOOD',
+            sentimental=0.5
         )
         tag2 = Tag.objects.create(
-            content='SOSO',
-            polarity=0.0
+            name='SOSO',
+            sentimental=0.0
         )
         tag3 = Tag.objects.create(
-            content='BAD',
-            polarity=-0.5
+            name='BAD',
+            sentimental=-0.5
         )
         review = Review.objects.create(
             author=profile_user1,

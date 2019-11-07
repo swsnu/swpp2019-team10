@@ -28,11 +28,11 @@ def review_list(request):
             tag = []
             for tag_item in review.tag.all():
                 pos = 0
-                if tag_item.polarity >= 0.3:
+                if tag_item.sentimental >= 0.1:
                     pos = 1
-                if tag_item.polarity <= -0.3:
+                if tag_item.sentimental <= -0.1:
                     pos = -1
-                tag.append({'name':tag_item.content, 'positive': pos})
+                tag.append({'name':tag_item.name, 'sentimental': pos})
             dict_review = {
                 'id': review.id,
                 'author': review.author.user.username,
@@ -100,7 +100,7 @@ def review_list(request):
 
         tags = Tagging.tagging(content)
         for item in tags.keys():
-            new_review.tag.add(Tag.objects.create(content=item, polarity=tags[item]))
+            new_review.tag.add(Tag.objects.create(name=item, sentimental=tags[item]))
         dict_new_review = {
             'id': new_review.id,
             'author': new_review.author.user.username,
@@ -133,11 +133,11 @@ def review_detail(request, review_id):
         tag = []
         for tag_item in review.tag.all():
             pos = 0
-            if tag_item.polarity >= 0.3:
+            if tag_item.sentimental >= 0.1:
                 pos = 1
-            if tag_item.polarity <= -0.3:
+            if tag_item.sentimental <= -0.1:
                 pos = -1
-            tag.append({'name':tag_item.content, 'positive': pos})
+            tag.append({'name':tag_item.name, 'sentimental': pos})
         review_dict = {
             'id': review.id,
             'author': review.author.user.username,
