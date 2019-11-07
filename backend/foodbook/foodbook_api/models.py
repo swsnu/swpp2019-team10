@@ -99,7 +99,20 @@ class Review(models.Model):
     )
     review_img = models.ImageField(upload_to='review/images/', blank=True)
     date = models.DateTimeField(auto_now=True)
+    tag = models.ManyToManyField(
+        'Tag',
+    )
     #tag=hasn't decide yet!
+
+class Tag(models.Model):
+    '''
+    save tag information
+    fields:
+        content
+        polarity
+    '''
+    content = models.CharField(max_length=15)
+    polarity = models.FloatField()
 
 class ProfileForm(ModelForm):
     '''
