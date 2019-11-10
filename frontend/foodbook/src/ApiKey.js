@@ -1,5 +1,5 @@
 const ApiKey = {
-  googleApiKey: 'YOUR API KEY',
+  googleApiKey: 'AIzaSyAapdVgmXT7_6f1p_E1NG9yTpYFPzKCRYU',
 };
 
 export default ApiKey;
