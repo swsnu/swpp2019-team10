@@ -23,17 +23,16 @@ export const LOGIN = () => (dispatch) => axios.post('/api/signin/', {
 }).then(() => dispatch(LOGIN_DEEP()))
   .catch();
 
-export const REGISTER_DEEP = (data) => ({
+export const REGISTER_DEEP = () => ({
   type: actionTypes.REGISTER,
-  data,
 });
 
-export const REGISTER = () => (dispatch) => axios.post('/api/signup/', {
-  username: 'swpp',
-  password: '1234',
-  phone_number: '010-1234-5678',
-  age: 22,
-  gender: 'Male',
+export const REGISTER = (userData) => (dispatch) => axios.post('/api/signup/', {
+  username: userData.username,
+  password: userData.password,
+  phone_number: userData.phone_number,
+  age: userData.age,
+  gender: userData.gender,
 })
-  .then((res) => dispatch(REGISTER_DEEP(res.data)))
+  .then(() => dispatch(REGISTER_DEEP()))
   .catch();

@@ -22,6 +22,14 @@ const initialState = {
   number_of_friends: -1,
 };
 
+const mockSignUpUser = {
+  username: "username",
+  password: 'password',
+  phone_number: 'phone_number',
+  age: 0,
+  gender: 'gender',
+}
+
 describe('User', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -32,12 +40,11 @@ describe('User', () => {
       .mockImplementation(() => new Promise((resolve) => {
         const result = {
           status: 204,
-          data: newUser,
         };
         resolve(result);
       }));
 
-    store.dispatch(actionCreators.REGISTER()).then(() => {
+    store.dispatch(actionCreators.REGISTER(mockSignUpUser)).then(() => {
       expect(spy).toHaveBeenCalledTimes(1);
     });
 
