@@ -30,6 +30,11 @@ const mockSignUpUser = {
   gender: 'gender',
 }
 
+const mockLoginUser = {
+  username: 'username',
+  password: 'password'
+}
+
 describe('User', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -63,8 +68,9 @@ describe('User', () => {
         resolve(result);
       }));
 
-    store.dispatch(actionCreators.LOGIN()).then(() => {
+    store.dispatch(actionCreators.LOGIN(mockLoginUser)).then(() => {
       expect(spy).toHaveBeenCalledTimes(1);
+      expect(store.getState().user.user).toEqual(initialState);
       done();
     });
   });
@@ -81,8 +87,8 @@ describe('User', () => {
 
     store.dispatch(actionCreators.GET_USER_INFO()).then(() => {
       expect(spy).toHaveBeenCalledTimes(1);
+      expect(store.getState().user.user).toEqual(newUser);
     });
     done();
-    // FIXME: it doesn't get new state properly
   });
 });

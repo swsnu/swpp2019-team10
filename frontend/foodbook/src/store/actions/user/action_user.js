@@ -1,6 +1,5 @@
 import axios from 'axios';
 import * as actionTypes from './actionTypes_user';
-// import axios from 'axios'; TODO: API Required. Below is mock for test code.
 
 export const GET_USER_INFO_DEEP = (data) => ({
   type: actionTypes.GET_USER_INFO,
@@ -11,15 +10,13 @@ export const GET_USER_INFO = () => (dispatch) => axios.get('/api/user/')
   .then((res) => dispatch(GET_USER_INFO_DEEP(res.data)))
   .catch();
 
-export const LOGIN_AFTER = () => GET_USER_INFO();
-
 export const LOGIN_DEEP = () => ({
   type: actionTypes.LOGIN,
-}); // TODO: @ sprint 4
+});
 
-export const LOGIN = () => (dispatch) => axios.post('/api/signin/', {
-  username: 'swpp',
-  password: '1234',
+export const LOGIN = (userData) => (dispatch) => axios.post('/api/signin/', {
+  username: userData.username,
+  password: userData.password,
 }).then(() => dispatch(LOGIN_DEEP()))
   .catch();
 
