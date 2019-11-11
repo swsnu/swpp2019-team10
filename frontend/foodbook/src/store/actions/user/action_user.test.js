@@ -23,17 +23,17 @@ const initialState = {
 };
 
 const mockSignUpUser = {
-  username: "username",
+  username: 'username',
   password: 'password',
   phone_number: 'phone_number',
   age: 0,
   gender: 'gender',
-}
+};
 
 const mockLoginUser = {
   username: 'username',
-  password: 'password'
-}
+  password: 'password',
+};
 
 describe('User', () => {
   afterEach(() => {

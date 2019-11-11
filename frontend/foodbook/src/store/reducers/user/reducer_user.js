@@ -24,9 +24,9 @@ const reducer = (state = initialState, action) => {
       newState = { ...state, user: action.data };
       return newState;
 
-    case actionTypes.REGISTER:
+    case actionTypes.REGISTER: case actionTypes.LOGIN:
       return newState;
-      
+
     default:
       break;
   }
