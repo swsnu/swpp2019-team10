@@ -111,7 +111,7 @@ describe('<Signup />', () => {
     const wrapper = component.find('.signup');
     expect(wrapper.length).toBe(1);
   });
-  
+
   it('should check ID restriction', () => {
     inputChecker('id');
   });
@@ -153,10 +153,9 @@ describe('<Signup />', () => {
   });
 
   it('should post signup handler when clicking submit button', () => {
-    const spy = jest.spyOn(actionCreators, 'REGISTER').mockImplementation(() => { return { type: '' }; });
+    const spy = jest.spyOn(actionCreators, 'REGISTER').mockImplementation(() => ({ type: '' }));
     const wrapper = component.find('.submit-button');
     wrapper.simulate('click');
     expect(spy).toHaveBeenCalledTimes(1);
-
   });
 });
