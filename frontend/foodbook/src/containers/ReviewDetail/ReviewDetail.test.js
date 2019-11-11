@@ -115,7 +115,7 @@ describe('<ReviewDetail />', () => {
       wrapper.setState({ ready: false });
       component.update();
 
-      const backWrapper = component.find('.ReviewDetailLoading');
+      const backWrapper = component.find('.Review-loading-wrapper');
       expect(backWrapper.length).toBe(1);
     });
 
@@ -126,7 +126,7 @@ describe('<ReviewDetail />', () => {
       detailWrapper.setState({ ready: false, error: { response: 'Error' } });
       component.update();
 
-      const backWrapper = component.find('.ReviewDetailError');
+      const backWrapper = component.find('.Review-error-wrapper');
       expect(backWrapper.length).toBe(1);
     });
   });

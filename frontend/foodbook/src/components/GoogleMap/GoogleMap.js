@@ -18,12 +18,37 @@ Marker.defaultProps = {
 };
 
 class GoogleMap extends Component {
+  // Important! Always set the container height explicitly
   style = { height: '50vh', width: '100%' }
 
+  constructor(props) {
+    super(props);
+    const { center, zoom } = props;
+    this.state = {
+      center,
+      marker: center,
+      zoom,
+    };
+  }
+
+  getGeoLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.setState({
+            center: {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            },
+          });
+        },
+      );
+    }
+  }
+
   render() {
-    const { center, zoom } = this.props;
+    const { center, zoom, marker } = this.state;
     return (
-      // Important! Always set the container height explicitly
       <div style={this.style}>
         <GoogleMapReact
           bootstrapURLKeys={{ key: ApiKey.googleApiKey }}
@@ -31,8 +56,8 @@ class GoogleMap extends Component {
           defaultZoom={zoom}
         >
           <Marker
-            lat={37.450084}
-            lng={126.952459}
+            lat={marker.lat}
+            lng={marker.lng}
             icon="hand point down outline"
           />
         </GoogleMapReact>

@@ -15,11 +15,18 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 const parseTagName = (tags) => {
-  const parsed = tags.map((t, i) => (
-    <span key={`${t.name}Wrapper`} className={t.positive ? `pos ${i}` : `neg ${i}`}>
-      {t.name}
-    </span>
-  ));
+  const parsed = tags.map((t, i) => {
+    let className;
+    if (t.sentimental === 0) className = `neu ${i}`;
+    else if (t.sentimental === 1) className = `pos ${i}`;
+    else className = `neg ${i}`;
+
+    return (
+      <span key={`${t.name}Wrapper`} className={className}>
+        {t.name}
+      </span>
+    );
+  });
 
   return (
     <div className="tags-wrapper" style={{ display: 'inline' }}>
@@ -33,24 +40,13 @@ class ReviewDetail extends Component {
     super(props);
     this.state = {
       ready: false,
+      open: false,
+      error: null,
     };
   }
 
   componentDidMount() {
     const { match } = this.props;
-
-    this.setState({
-      // temporary state
-      content: 'Tasty',
-      restaurant: 'Foodbook',
-      author: 'Team10',
-      menu: '',
-      image: '',
-      rating: 5.0,
-      date: '2019-11-04',
-      tag: [{ name: 'good', positive: true }, { name: 'bad', positive: false }],
-      error: null,
-    });
 
     axios.get(`/api/review/${match.params.id}/`).then((res) => {
       this.setState({
@@ -69,6 +65,10 @@ class ReviewDetail extends Component {
     }));
   }
 
+  show = () => () => this.setState({ open: true });
+
+  close = () => this.setState({ open: false });
+
   deleteHandler() {
     const { history, match } = this.props;
     axios.delete(`/api/review/${match.params.id}/`).then(
@@ -80,14 +80,14 @@ class ReviewDetail extends Component {
 
   render() {
     const {
-      ready, error, content, restaurant, author, menu, image, rating, date, tag,
+      ready, error, content, restaurant, author, menu, image, rating, date, tag, open,
     } = this.state;
 
     const { history, match } = this.props;
 
     if (error != null) {
       return (
-        <div className="ReviewDetailError">
+        <div className="Review-error-wrapper">
           <p>{error.content}</p>
         </div>
       );
@@ -95,7 +95,7 @@ class ReviewDetail extends Component {
 
     if (!ready) {
       return (
-        <div className="ReviewDetailLoading">
+        <div className="Review-loading-wrapper">
           <p>Loading...</p>
         </div>
       );
@@ -127,7 +127,7 @@ class ReviewDetail extends Component {
     const googleMap = (<GoogleMap />);
 
     return (
-      <div className="ReviewDetail">
+      <div className="ReviewDetail-wrapper">
         <div className="ui special cards">
           <div className="card" style={{ width: '630px' }}>
             <div className="content">
