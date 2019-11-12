@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Button, Card, Icon } from 'semantic-ui-react';
+import {
+  Button, Grid, Header, Form, Segment, Message,
+} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
 import * as actionCreators from 'store/actions/user/action_user';
@@ -17,28 +19,35 @@ class Login extends Component {
 
   render() {
     const { onSignup, onLogin } = this.props;
-    const version = 'DEMO';
 
     return (
       <div className="login">
-        <Card centered>
-          <Card.Content>
-            <Card.Header textAlign="center"> FoodBook </Card.Header>
-            <Card.Meta textAlign="center">
-              {version}
-            </Card.Meta>
-            <Card.Description>
-              <center><Button content="Login" id="login-button" onClick={() => { this.loginHandler(onLogin); }} /></center>
-              <center><Button content="Signup" id="signup-button" onClick={() => onSignup()} /></center>
-              {/* this is mock */}
-            </Card.Description>
-          </Card.Content>
+        <Grid textAlign="center" style={{ height: '100vh' }} verticalAlign="middle">
+          <Grid.Column style={{ maxWidth: 450 }}>
+            <Header as="h2" color="teal" textAlign="center">
+              Log-in to your account
+            </Header>
+            <Form size="large">
+              <Segment stacked>
+                <Form.Input fluid icon="user" iconPosition="left" placeholder="ID" />
+                <Form.Input
+                  fluid
+                  icon="lock"
+                  iconPosition="left"
+                  placeholder="Password"
+                  type="password"
+                />
 
-          <Card.Content extra>
-            <Icon name="user" />
-          Team 10
-          </Card.Content>
-        </Card>
+                <Button color="teal" fluid size="large" className="login-button" onClick={() => onLogin()}>
+                  Login
+                </Button>
+              </Segment>
+            </Form>
+            <Message>
+              <Button className="signup-button" onClick={() => onSignup()}>Sign Up</Button>
+            </Message>
+          </Grid.Column>
+        </Grid>
       </div>
     );
   }
