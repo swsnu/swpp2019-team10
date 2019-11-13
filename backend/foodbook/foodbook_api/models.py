@@ -26,7 +26,7 @@ class Profile(models.Model):
     phone_number = models.CharField(max_length=15)
     age = models.IntegerField()
     #taste=hasn't decide yet
-    gender = models.CharField(max_length=1)
+    gender = models.CharField(max_length=4)
     profile_pic = models.ImageField(upload_to="user/profile_pic/", blank=True)
     count_write = models.IntegerField(default=0)
     count_friend = models.IntegerField(default=0)
