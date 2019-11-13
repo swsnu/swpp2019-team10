@@ -16,6 +16,8 @@ import {
   Sidebar,
   Visibility,
 } from 'semantic-ui-react';
+import LoginModal from 'containers/Login/LoginModal';
+import SignupModal from 'containers/Signup/SignupModal';
 
 const getWidth = () => {
   const isSSR = typeof window === 'undefined';
@@ -109,12 +111,8 @@ class DesktopContainer extends Component {
                 <Menu.Item as="a" href="#how-wrapper">How</Menu.Item>
                 <Menu.Item as="a" href="#what-wrapper">What</Menu.Item>
                 <Menu.Item position="right">
-                  <Button as="a" inverted={!fixed} onClick={() => { history.push('/login'); }}>
-                    Log in
-                  </Button>
-                  <Button as="a" inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }} onClick={() => { history.push('/signup'); }}>
-                    Sign Up
-                  </Button>
+                  <LoginModal history={history} fixed={fixed} />
+                  <SignupModal history={history} fixed={fixed} />
                 </Menu.Item>
               </Container>
             </Menu>
@@ -171,8 +169,8 @@ class MobileContainer extends Component {
           <Menu.Item as="a" href="#why-wrapper">Why</Menu.Item>
           <Menu.Item as="a" href="#what-wrapper">What</Menu.Item>
           <Menu.Item as="a" href="#how-wrapper">How</Menu.Item>
-          <Menu.Item as="a" onClick={() => { history.push('/login'); }}>Log in</Menu.Item>
-          <Menu.Item as="a" onClick={() => { history.push('/signup'); }}>Sign Up</Menu.Item>
+          <LoginModal history={history} fixed={false} />
+          <SignupModal history={history} fixed={false} />
         </Sidebar>
 
         <Sidebar.Pusher dimmed={sidebarOpened}>
@@ -188,12 +186,8 @@ class MobileContainer extends Component {
                   <Icon name="sidebar" />
                 </Menu.Item>
                 <Menu.Item position="right">
-                  <Button as="a" inverted>
-                    Log in
-                  </Button>
-                  <Button as="a" inverted style={{ marginLeft: '0.5em' }}>
-                    Sign Up
-                  </Button>
+                  <LoginModal history={history} fixed={false} />
+                  <SignupModal history={history} fixed={false} />
                 </Menu.Item>
               </Menu>
             </Container>
@@ -277,16 +271,16 @@ const Introduce = (props) => {
               <Grid.Row textAlign="center">
                 <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
                   <Header as="h3" style={{ fontSize: '2em' }}>
-                How one
+                    How one
                   </Header>
                   <p style={{ fontSize: '1.33em' }}>should contain how our service will work</p>
                 </Grid.Column>
                 <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
                   <Header as="h3" style={{ fontSize: '2em' }}>
-                How two
+                    How two
                   </Header>
                   <p style={{ fontSize: '1.33em' }}>
-              should contain how our service will work
+                    should contain how our service will work
                   </p>
                 </Grid.Column>
               </Grid.Row>
@@ -297,7 +291,7 @@ const Introduce = (props) => {
         <Segment style={{ padding: '8em 0em' }} vertical>
           <Container text>
             <Header as="h3" style={{ fontSize: '2em' }}>
-            Here should be what our service has to serve.
+              Here should be what our service has to serve.
             </Header>
             <p style={{ fontSize: '1.33em' }}>
             Anim elit nisi esse duis enim.

@@ -8,43 +8,88 @@ import {
 import 'semantic-ui-css/semantic.min.css';
 
 import * as actionCreators from 'store/actions/user/action_user';
+import SignupModal from 'containers/Signup/SignupModal';
 
 class Login extends Component {
-  // some behavior or rendering should be added in sprint 4.
-  loginHandler = (onLogin) => {
-    const { history } = this.props;
-    onLogin();
-    history.push('/main'); // TODO: @ sprint 4, should handle real login system
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      input: {
+        username: '',
+        password: '',
+      },
+    };
+  }
+
+  loginHandler = () => {
+    const { history, onLogin } = this.props;
+    const { input } = this.state;
+
+    const dict = {
+      username: input.username,
+      password: input.password,
+    };
+
+    onLogin(dict)
+      .then(() => history.push('/main'))
+      .catch();
   };
 
   render() {
-    const { onSignup, onLogin } = this.props;
+    const { history } = this.props;
+    const { input } = this.state;
+    const { loginHandler } = this;
 
     return (
       <div className="login">
-        <Grid textAlign="center" style={{ height: '100vh' }} verticalAlign="middle">
+        <Grid textAlign="center">
           <Grid.Column style={{ maxWidth: 450 }}>
             <Header as="h2" color="teal" textAlign="center">
               Log-in to your account
             </Header>
             <Form size="large">
               <Segment stacked>
-                <Form.Input fluid icon="user" iconPosition="left" placeholder="ID" />
+                <Form.Input
+                  fluid
+                  icon="user"
+                  iconPosition="left"
+                  placeholder="ID"
+                  value={input.username}
+                  onChange={(e, { value }) => {
+                    this.setState({
+                      input: {
+                        ...input,
+                        username: value,
+                      },
+                    });
+                  }}
+                />
+
                 <Form.Input
                   fluid
                   icon="lock"
                   iconPosition="left"
                   placeholder="Password"
                   type="password"
+                  value={input.password}
+                  onChange={(e, { value }) => {
+                    this.setState({
+                      input: {
+                        ...input,
+                        password: value,
+                      },
+                    });
+                  }}
                 />
 
-                <Button color="teal" fluid size="large" className="login-button" onClick={() => onLogin()}>
+                <Button color="teal" fluid size="large" className="login-button" onClick={loginHandler}>
                   Login
                 </Button>
               </Segment>
             </Form>
             <Message>
-              <Button className="signup-button" onClick={() => onSignup()}>Sign Up</Button>
+              <SignupModal history={history} color="blue" fixed />
             </Message>
           </Grid.Column>
         </Grid>
@@ -56,17 +101,10 @@ class Login extends Component {
 Login.propTypes = {
   history: propTypes.objectOf(Object).isRequired,
   onLogin: propTypes.func.isRequired,
-  onSignup: propTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  onLogin: () => {
-    dispatch(actionCreators.LOGIN());
-  },
-
-  onSignup: () => {
-    dispatch(actionCreators.REGISTER());
-  },
+  onLogin: (data) => dispatch(actionCreators.LOGIN(data)),
 });
 
 export default connect(null, mapDispatchToProps)(withRouter(Login));

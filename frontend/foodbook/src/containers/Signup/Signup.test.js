@@ -10,7 +10,7 @@ import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
 
 import * as actionCreators from 'store/actions/user/action_user';
-import Signup from './Signup';
+import Signup from '.';
 
 const store = getMockStore({}, {}, {});
 
