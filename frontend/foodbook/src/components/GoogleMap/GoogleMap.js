@@ -4,10 +4,11 @@ import ApiKey from 'ApiKey';
 import { Icon } from 'semantic-ui-react';
 import React, { Component } from 'react';
 import GoogleMapReact from 'google-map-react';
-
 import PropTypes from 'prop-types';
 
-const Marker = ({ icon }) => <div><Icon name={icon} /></div>;
+import SearchBox from './SearchBox';
+
+const Marker = ({ icon }) => <div><Icon name="hand point down outline" /></div>;
 
 Marker.propTypes = {
   icon: PropTypes.string,
@@ -26,10 +27,26 @@ class GoogleMap extends Component {
     const { center, zoom } = props;
     this.state = {
       center,
-      marker: center,
       zoom,
+      mapApiLoaded: false,
+      mapInstance: null,
+      mapApi: null,
+      places: [],
     };
+    this.getGeoLocation();
   }
+
+  apiHasLoaded = (map, maps) => {
+    this.setState({
+      mapApiLoaded: true,
+      mapInstance: map,
+      mapApi: maps,
+    });
+  };
+
+  setPlace = (place) => {
+    this.setState({ places: place });
+  };
 
   getGeoLocation = () => {
     if (navigator.geolocation) {
@@ -47,19 +64,32 @@ class GoogleMap extends Component {
   }
 
   render() {
-    const { center, zoom, marker } = this.state;
+    const {
+      places,
+      mapApiLoaded,
+      mapInstance,
+      mapApi,
+      center,
+      zoom,
+    } = this.state;
     return (
       <div style={this.style}>
+        {mapApiLoaded && <SearchBox map={mapInstance} mapApi={mapApi} setplace={this.setPlace} />}
         <GoogleMapReact
-          bootstrapURLKeys={{ key: ApiKey.googleApiKey }}
+          bootstrapURLKeys={{ key: ApiKey.googleApiKey, libraries: ['places', 'geometry'] }}
           defaultCenter={center}
           defaultZoom={zoom}
+          onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)}
         >
-          <Marker
-            lat={marker.lat}
-            lng={marker.lng}
-            icon="hand point down outline"
-          />
+          {Array.isArray(places) && places.length > 0
+            && places.map((place) => (
+              <Marker
+                key={place.id}
+                text={place.name}
+                lat={place.geometry.location.lat()}
+                lng={place.geometry.location.lng()}
+              />
+            ))}
         </GoogleMapReact>
       </div>
     );
