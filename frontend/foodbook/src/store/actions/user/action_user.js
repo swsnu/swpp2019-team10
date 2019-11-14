@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { push } from 'connected-react-router';
+
 import * as actionTypes from './actionTypes_user';
 
 export const GET_USER_INFO_DEEP = (data) => ({
@@ -14,11 +16,20 @@ export const LOGIN_DEEP = () => ({
   type: actionTypes.LOGIN,
 });
 
+export const LOGIN_FAILED = () => ({
+  type: actionTypes.LOGIN_FAILED,
+});
+
 export const LOGIN = (userData) => (dispatch) => axios.post('/api/signin/', {
   username: userData.username,
   password: userData.password,
-}).then(() => dispatch(LOGIN_DEEP()))
-  .catch();
+}).then(() => {
+  dispatch(LOGIN_DEEP());
+  dispatch(push('/main/'));
+})
+  .catch(() => {
+    dispatch(LOGIN_FAILED());
+  });
 
 export const REGISTER_DEEP = () => ({
   type: actionTypes.REGISTER,

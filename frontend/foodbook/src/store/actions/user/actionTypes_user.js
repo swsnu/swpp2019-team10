@@ -1,4 +1,5 @@
 export const LOGIN = 'LOGIN';
+export const LOGIN_FAILED = 'LOGIN_FAILED';
 export const LOGOUT = 'LOGOUT';
 export const REGISTER = 'REGISTER';
 export const LOGIN_SNS = 'LOGIN_SNS'; // temproray. if login with sns doesn't need reducer then delete it.

@@ -7,8 +7,8 @@ import {
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
-import * as actionCreators from 'store/actions/user/action_user';
 import SignupModal from 'containers/Signup/SignupModal';
+import * as actionCreators from 'store/actions/user/action_user';
 
 class Login extends Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class Login extends Component {
   }
 
   loginHandler = () => {
-    const { history, onLogin } = this.props;
+    const { onLogin } = this.props;
     const { input } = this.state;
 
     const dict = {
@@ -31,13 +31,11 @@ class Login extends Component {
       password: input.password,
     };
 
-    onLogin(dict)
-      .then(() => history.push('/main'))
-      .catch();
+    onLogin(dict);
   };
 
   render() {
-    const { history } = this.props;
+    const { history, failed } = this.props;
     const { input } = this.state;
     const { loginHandler } = this;
 
@@ -72,6 +70,7 @@ class Login extends Component {
                   iconPosition="left"
                   placeholder="Password"
                   type="password"
+                  autoComplete="off"
                   value={input.password}
                   onChange={(e, { value }) => {
                     this.setState({
@@ -101,10 +100,17 @@ class Login extends Component {
 Login.propTypes = {
   history: propTypes.objectOf(Object).isRequired,
   onLogin: propTypes.func.isRequired,
+  failed: propTypes.bool.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   onLogin: (data) => dispatch(actionCreators.LOGIN(data)),
 });
 
-export default connect(null, mapDispatchToProps)(withRouter(Login));
+const mapStateToProps = (state) => {
+  return {
+    failed: state.user.user.failed,
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));

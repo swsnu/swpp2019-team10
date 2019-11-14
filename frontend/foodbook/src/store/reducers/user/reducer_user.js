@@ -9,6 +9,7 @@ const initialState = {
     profile_pic: '',
     number_of_reviews: -1,
     number_of_friends: -1,
+    failed: false,
   }, // stores login information
 
   taste: {
@@ -24,7 +25,32 @@ const reducer = (state = initialState, action) => {
       newState = { ...state, user: action.data };
       return newState;
 
-    case actionTypes.REGISTER: case actionTypes.LOGIN:
+    case actionTypes.LOGIN_FAILED:
+      const user = {
+        ...state.user,
+        failed: true,
+      };
+
+      newState = {
+        ...state,
+        user,
+      };
+
+      return newState;
+
+    case actionTypes.LOGIN:
+      newState = {
+        ...state,
+        user: {
+          ...state.user,
+          failed: false,
+        },
+      };
+      console.log(newState);
+
+      return newState;
+
+    case actionTypes.REGISTER:
       return newState;
 
     default:
