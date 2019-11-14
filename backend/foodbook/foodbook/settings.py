@@ -80,7 +80,7 @@ DATABASES = {
         'NAME': 'team10_db',
         'USER': 'team10_admin',
         'PASSWORD': 'cbgthelove1004!@#$',
-        'HOST': '127.0.0.1',
+        'HOST': '52.231.103.143',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': 'SET default_storage_engine=INNODB'
