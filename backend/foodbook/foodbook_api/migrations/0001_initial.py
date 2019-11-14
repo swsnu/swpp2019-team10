@@ -25,9 +25,9 @@ class Migration(migrations.Migration):
             name='Profile',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('phone_number', models.CharField(max_length=15)),
-                ('age', models.IntegerField()),
-                ('gender', models.CharField(max_length=4)),
+                ('phone_number', models.CharField(max_length=15, null=True)),
+                ('age', models.IntegerField(null=True)),
+                ('gender', models.CharField(max_length=1, null=True)),
                 ('profile_pic', models.ImageField(blank=True, upload_to='user/profile_pic/')),
                 ('count_write', models.IntegerField(default=0)),
                 ('count_friend', models.IntegerField(default=0)),
