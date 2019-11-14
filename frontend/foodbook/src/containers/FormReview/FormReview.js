@@ -1,3 +1,7 @@
+// Review Add, Edit form.
+// "mode" is passed as props. "ADD", "EDIT"
+// "id" is passed as props. Only used for "EDIT" mode.
+
 import {
   Rating,
   TextArea,
@@ -27,22 +31,72 @@ class FormReview extends Component {
   }
 
   componentDidMount() {
-    this.setState({
-      restaurant: '',
-      menu: '',
-      content: '',
-      rating: 0,
-      // https://codepen.io/depy/pen/vEWWdw
-      longitude: 0.0,
-      latitude: 0.0,
-      image: null,
-      error: null,
-      ready: true,
-    });
+    this.getGeoLocation();
+    const { mode, id } = this.props;
+
+    if (mode === 'ADD') {
+      this.setState({
+        restaurant: '',
+        menu: '',
+        content: '',
+        rating: 0,
+        longitude: 0.0,
+        latitude: 0.0,
+        image: null,
+        error: null,
+        ready: true,
+      });
+    } else if (mode === 'EDIT') {
+      axios.get(`/api/review/${id}/`).then((res) => {
+        this.setState({
+          content: res.data.content,
+          restaurant: res.data.restaurant,
+          menu: res.data.menu,
+          rating: res.data.rating,
+          ready: true,
+          longitude: res.data.longitude,
+          latitude: res.data.latitude,
+        });
+      }).catch((error) => this.setState({
+        error: error.response,
+      }));
+    } else {
+      this.setState({
+        error: 'Unknown Form Type',
+      });
+    }
   }
 
   mapLoaded = () => {
 
+  }
+
+  editContentHandler = () => {
+    const {
+      restaurant,
+      menu,
+      content,
+      rating,
+      longitude,
+      latitude,
+    } = this.state;
+
+    const { id } = this.props;
+
+    const reviewDict = {
+      restaurant_name: restaurant,
+      menu_name: menu,
+      content,
+      rating,
+      longitude,
+      latitude,
+    };
+
+    axios.put(`/api/review/${id}/`, reviewDict).then((res) => {
+      this.postImageHandler(res.data.id);
+    }).catch((error) => this.setState({
+      error: error.response,
+    }));
   }
 
   postContentHandler = () => {
@@ -53,7 +107,6 @@ class FormReview extends Component {
       rating,
       longitude,
       latitude,
-      // tag,
     } = this.state;
 
     const reviewDict = {
@@ -63,7 +116,6 @@ class FormReview extends Component {
       rating,
       longitude,
       latitude,
-      // tag,
     };
 
     axios.post('/api/review/', reviewDict).then((res) => {
@@ -71,6 +123,26 @@ class FormReview extends Component {
     }).catch((error) => this.setState({
       error: error.response,
     }));
+  }
+
+  getGeoLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.setState({
+            userLoc: {
+            },
+          });
+          this.googleMap = (
+            <GoogleMap center={{
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            }}
+            />
+          );
+        },
+      );
+    }
   }
 
   postImageHandler = (postID) => {
@@ -105,10 +177,10 @@ class FormReview extends Component {
     );
 
     const {
-      rating, content, restaurant, menu, ready, error,
+      rating, content, restaurant, menu, ready, error, userLoc,
     } = this.state;
 
-    const { history } = this.props;
+    const { history, mode } = this.props;
 
     if (error != null) {
       return (
@@ -126,16 +198,6 @@ class FormReview extends Component {
       );
     }
 
-    const googleMap = (<GoogleMap />);
-
-    const tagArea = <div />;
-    /*
-    (
-      <div className="tags">
-        <span className="tagShow">{ReivewPreview.parseTagName(tag)}</span>
-      </div>
-    );
-    */
 
     const confirmDisabled = content === '' || restaurant === '' || menu === '' || rating === 0;
 
@@ -158,7 +220,6 @@ class FormReview extends Component {
                     onRate={(e, { rating: rate }) => this.setState({ rating: rate })}
                   />
                 </span>
-                {tagArea}
               </div>
             </div>
             <div className="blurring dimmable image">
@@ -220,12 +281,16 @@ FormReview.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }),
+  mode: PropTypes.string,
+  id: PropTypes.number,
 };
 
 FormReview.defaultProps = {
   history: {
     push: () => {},
   },
+  mode: 'ADD',
+  id: 0,
 };
 
 const mapDispatchToProps = (/* dispatch */) => ({});

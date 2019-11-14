@@ -40,7 +40,7 @@ describe('<FormReview />', () => {
     addReview = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <FormReview history={history} />
+          <FormReview history={history} mode="ADD" />
         </ConnectedRouter>
       </Provider>
     );

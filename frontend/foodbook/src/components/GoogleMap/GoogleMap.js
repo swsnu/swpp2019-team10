@@ -11,13 +11,15 @@ import SearchBox from './SearchBox';
 const Marker = () => <div><Icon color="yellow" name="hand point down outline" size="huge" /></div>;
 
 class GoogleMap extends Component {
-  // Important! Always set the container height explicitly
-  style = { height: '50vh', width: '100%' }
-
   constructor(props) {
     super(props);
-    const { center, zoom } = props;
-    this.getGeoLocation();
+
+    const {
+      center, zoom, height, width,
+    } = props;
+
+    this.style = { height, width };
+
     this.state = {
       center,
       zoom,
@@ -40,21 +42,6 @@ class GoogleMap extends Component {
     this.setState({ places: place });
   };
 
-  getGeoLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.setState({
-            center: {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            },
-          });
-        },
-      );
-    }
-  }
-
   render() {
     const {
       places,
@@ -64,9 +51,13 @@ class GoogleMap extends Component {
       center,
       zoom,
     } = this.state;
+
+    const { search } = this.props;
+
     return (
       <div style={this.style}>
-        {mapApiLoaded && <SearchBox map={mapInstance} mapApi={mapApi} setplace={this.setPlace} />}
+        {search && mapApiLoaded
+          && <SearchBox map={mapInstance} mapApi={mapApi} setplace={this.setPlace} />}
         <GoogleMapReact
           bootstrapURLKeys={{ key: ApiKey.googleApiKey, libraries: ['places', 'geometry'] }}
           defaultCenter={center}
@@ -93,7 +84,10 @@ GoogleMap.propTypes = {
     lat: PropTypes.number,
     lng: PropTypes.number,
   }),
+  height: PropTypes.string,
+  width: PropTypes.string,
   zoom: PropTypes.number,
+  search: PropTypes.bool,
 };
 
 GoogleMap.defaultProps = {
@@ -101,7 +95,10 @@ GoogleMap.defaultProps = {
     lat: 37.450084,
     lng: 126.952459,
   },
+  height: '50vh',
+  width: '100%',
   zoom: 17,
+  search: false,
 };
 
 export default GoogleMap;
