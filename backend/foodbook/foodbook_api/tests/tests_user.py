@@ -65,7 +65,14 @@ class UserTestCase(TestCase):
                                content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['username'], 'swpp3')
-        self.assertEqual(response.json()['friends'], [])
+        self.assertEqual(response.json()['gender'], 'M')
+
+        response = client.post('/api/signup/',
+                               json.dumps({'username': 'swpp4', 'password': 'iluvswpp'}),
+                               content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['username'], 'swpp4')
+        self.assertEqual(response.json()['gender'], None)
 
     def test_profile_image(self):
         '''
@@ -88,6 +95,32 @@ class UserTestCase(TestCase):
         response = client.post('/api/signup/2/image/',
                                data={'profile_pic': img_and_file[0].tobytes()})
         self.assertEqual(response.status_code, 400)
+
+    def test_signup_dupcheck(self):
+        '''
+            method that tests /api/signup/:username/
+        '''
+        client = Client()
+
+        response = client.get('/api/signup_dupcheck/')
+        self.assertEqual(response.status_code, 405)
+
+        response = client.post('/api/signup_dupcheck/',
+                               json.dumps({'username1': 'swpp1'}),
+                               content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+        response = client.post('/api/signup_dupcheck/',
+                               json.dumps({'username': 'swpp1'}),
+                               content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['id'], 1)
+
+        response = client.post('/api/signup_dupcheck/',
+                               json.dumps({'username': 'swpp10'}),
+                               content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['id'], -1)
 
     def test_signin(self):
         '''
@@ -147,6 +180,11 @@ class UserTestCase(TestCase):
 
         response = client.put('/api/',
                               json.dumps({'phone_number': '01035961114', 'age': 25, 'gender': 'F'}),
+                              content_type='application/json')
+        self.assertEqual(response.json()['age'], 25)
+
+        response = client.put('/api/',
+                              json.dumps({}),
                               content_type='application/json')
         self.assertEqual(response.json()['age'], 25)
 

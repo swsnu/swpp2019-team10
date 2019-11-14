@@ -22,11 +22,17 @@ def signup(request):
             req_data = json.loads(request.body.decode())
             username = req_data['username']
             password = req_data['password']
-            phone_number = req_data['phone_number']
-            age = req_data['age']
-            gender = req_data['gender']
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
+        phone_number = None
+        age = None
+        gender = None
+        if 'phone_number' in req_data:
+            phone_number = req_data['phone_number']
+        if 'age' in req_data:
+            age = req_data['age']
+        if 'gender' in req_data:
+            gender = req_data['gender']
         new_user = User.objects.create_user(
             username=username, password=password)
         new_profile = Profile.objects.create(
@@ -37,6 +43,7 @@ def signup(request):
         )
         profile_of_user = new_profile
         response_dict = {
+            'id': profile_of_user.id,
             'username': profile_of_user.user.username,
             'phone_number': profile_of_user.phone_number,
             'age': profile_of_user.age,
@@ -46,6 +53,27 @@ def signup(request):
             'friends': []
         }
         return JsonResponse(response_dict, status=200)
+    return HttpResponseNotAllowed(['POST'])
+
+def signup_dupcheck(request):
+    '''
+        method to check if username exists
+    '''
+    if request.method == 'POST':
+        try:
+            req_data = json.loads(request.body.decode())
+            username = req_data['username']
+        except (KeyError, JSONDecodeError) as err:
+            return HttpResponseBadRequest(content=str(err))
+        response_dict = {
+            'id': -1
+        }
+        try:
+            user_get = User.objects.get(username=username)
+            response_dict['id'] = user_get.profile.id
+        except ObjectDoesNotExist:
+            pass
+        return JsonResponse(response_dict)
     return HttpResponseNotAllowed(['POST'])
 
 def profile_image(request, profile_id):
@@ -125,14 +153,14 @@ def user(request):
     if request.method == 'PUT':
         try:
             req_data = json.loads(request.body.decode())
-            phone_number = req_data['phone_number']
-            age = req_data['age']
-            gender = req_data['gender']
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
-        request.user.profile.phone_number = phone_number
-        request.user.profile.age = age
-        request.user.profile.gender = gender
+        if 'phone_number' in req_data:
+            request.user.profile.phone_number = req_data['phone_number']
+        if 'age' in req_data:
+            request.user.profile.age = req_data['age']
+        if 'gender' in req_data:
+            request.user.profile.gender = req_data['gender']
         request.user.profile.save()
         profile_of_user = request.user.profile
         info_of_user = {
