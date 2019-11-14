@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'foodbook.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'team10_db',
+        'USER': 'team10_admin',
+        'PASSWORD': 'cbgthelove1004!@#$',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
         'OPTIONS': {
-            'read_default_file': './my.cnf',
             'init_command': 'SET default_storage_engine=INNODB'
         },
     }
