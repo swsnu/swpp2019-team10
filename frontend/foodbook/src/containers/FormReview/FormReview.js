@@ -8,7 +8,7 @@ import 'semantic-ui-css/semantic.min.css';
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import './AddReview.css';
+import './FormReview.css';
 import GoogleMap from 'components/GoogleMap';
 
 import { connect } from 'react-redux';
@@ -18,7 +18,7 @@ import ImageSelectPreview from 'react-image-select-pv';
 // import StarRating from '../../components/StarRating/StarRating';
 // import * as actionCreators from '../../Stores/Actions/index';
 
-class AddReview extends Component {
+class FormReview extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -112,7 +112,7 @@ class AddReview extends Component {
 
     if (error != null) {
       return (
-        <div className="AddReviewError">
+        <div className="form-review-error">
           <p>{error.content}</p>
         </div>
       );
@@ -120,7 +120,7 @@ class AddReview extends Component {
 
     if (!ready) {
       return (
-        <div className="AddReviewLoading">
+        <div className="form-review-loading">
           <p>Loading...</p>
         </div>
       );
@@ -140,8 +140,8 @@ class AddReview extends Component {
     const confirmDisabled = content === '' || restaurant === '' || menu === '' || rating === 0;
 
     return (
-      <div className="addReview">
-        <div className="ui special cards">
+      <div className="review-fields">
+        <div className="ui-special-cards">
           <div className="card" style={{ width: '630px' }}>
             <div className="content">
               <span className="header">
@@ -151,7 +151,7 @@ class AddReview extends Component {
                 <span className="rating">
                   Rating:
                   <Rating
-                    id="add-review-rating"
+                    id="review-rating"
                     defaultRating={rating}
                     maxRating="5"
                     icon="star"
@@ -216,13 +216,13 @@ class AddReview extends Component {
   }
 }
 
-AddReview.propTypes = {
+FormReview.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }),
 };
 
-AddReview.defaultProps = {
+FormReview.defaultProps = {
   history: {
     push: () => {},
   },
@@ -232,4 +232,4 @@ const mapDispatchToProps = (/* dispatch */) => ({});
 
 const mapStateToProps = (/* state */) => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddReview);
+export default connect(mapStateToProps, mapDispatchToProps)(FormReview);

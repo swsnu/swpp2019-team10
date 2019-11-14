@@ -7,12 +7,12 @@ import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
 import axios from 'axios';
 
-import AddReview from './AddReview';
+import FormReview from './FormReview';
 
 // https://jestjs.io/docs/en/mock-functions.html
 jest.mock('axios');
 
-describe('<AddReview />', () => {
+describe('<FormReview />', () => {
   const mockStore = getMockStore({}, {}, {});
 
   const resp = {
@@ -40,7 +40,7 @@ describe('<AddReview />', () => {
     addReview = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <AddReview history={history} />
+          <FormReview history={history} />
         </ConnectedRouter>
       </Provider>
     );
@@ -52,7 +52,7 @@ describe('<AddReview />', () => {
 
   it('should render without crashing', () => {
     const component = mount(addReview);
-    const wrapper = component.find('AddReview');
+    const wrapper = component.find('FormReview');
     expect(wrapper.length).toBe(1);
   });
 
@@ -63,7 +63,7 @@ describe('<AddReview />', () => {
     component.find('#review-content-input').at(1).simulate('change', { target: { value: 'content' } });
     component.update();
 
-    const wrapper = component.find('AddReview');
+    const wrapper = component.find('FormReview');
     expect(wrapper.state('restaurant')).toBe('restaurant');
     expect(wrapper.state('menu')).toBe('menu');
     expect(wrapper.state('content')).toBe('content');
@@ -71,7 +71,7 @@ describe('<AddReview />', () => {
 
   it('should have image upload functioning', () => {
     const component = mount(addReview);
-    const wrapper = component.find('AddReview');
+    const wrapper = component.find('FormReview');
 
     const imageWrapper = component.find('#add-review-image-selector').at(0);
     imageWrapper.props().onChange([{ blob: 'blob' }]);
@@ -81,9 +81,9 @@ describe('<AddReview />', () => {
 
   it('should have rating functioning', () => {
     const component = mount(addReview);
-    const wrapper = component.find('AddReview');
+    const wrapper = component.find('FormReview');
 
-    const ratingWrapper = component.find('#add-review-rating').at(0);
+    const ratingWrapper = component.find('#review-rating').at(0);
     ratingWrapper.props().onRate('dummy', { rating: 5 });
 
     expect(wrapper.state('rating')).toBe(5);
@@ -98,10 +98,10 @@ describe('<AddReview />', () => {
     component.find('#review-restaurant-input').at(1).simulate('change', event);
     component.find('#review-menu-input').at(1).simulate('change', event);
     component.find('#review-content-input').at(1).simulate('change', event);
-    component.find('#add-review-rating').at(0).props().onRate(null, { rating: 5.0 });
+    component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });
     component.update();
 
-    const addWrapper = component.find('AddReview');
+    const addWrapper = component.find('FormReview');
 
     const submitButton = component.find('#submit-review-button').at(0);
     submitButton.simulate('click');
@@ -125,21 +125,21 @@ describe('<AddReview />', () => {
 
   it('loading message should be shown up', () => {
     const component = mount(addReview);
-    const wrapper = component.find('AddReview');
+    const wrapper = component.find('FormReview');
     wrapper.setState({ ready: false });
     component.update();
 
-    const backWrapper = component.find('.AddReviewLoading');
+    const backWrapper = component.find('.form-review-loading');
     expect(backWrapper.length).toBe(1);
   });
 
   it('error message should be shown up', () => {
     const component = mount(addReview);
-    const wrapper = component.find('AddReview');
+    const wrapper = component.find('FormReview');
     wrapper.setState({ ready: false, error: { response: 'Error' } });
     component.update();
 
-    const backWrapper = component.find('.AddReviewError');
+    const backWrapper = component.find('.form-review-error');
     expect(backWrapper.length).toBe(1);
   });
 });

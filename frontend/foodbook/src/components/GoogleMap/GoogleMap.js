@@ -8,15 +8,7 @@ import PropTypes from 'prop-types';
 
 import SearchBox from './SearchBox';
 
-const Marker = ({ icon }) => <div><Icon name="hand point down outline" /></div>;
-
-Marker.propTypes = {
-  icon: PropTypes.string,
-};
-
-Marker.defaultProps = {
-  icon: '',
-};
+const Marker = () => <div><Icon color="yellow" name="hand point down outline" size="huge" /></div>;
 
 class GoogleMap extends Component {
   // Important! Always set the container height explicitly
@@ -25,6 +17,7 @@ class GoogleMap extends Component {
   constructor(props) {
     super(props);
     const { center, zoom } = props;
+    this.getGeoLocation();
     this.state = {
       center,
       zoom,
@@ -33,7 +26,6 @@ class GoogleMap extends Component {
       mapApi: null,
       places: [],
     };
-    this.getGeoLocation();
   }
 
   apiHasLoaded = (map, maps) => {

@@ -59,6 +59,8 @@ class ReviewDetail extends Component {
         date: res.data.date,
         tag: res.data.tag,
         ready: true,
+        longitude: res.data.longitude,
+        latitude: res.data.latitude,
       });
     }).catch((error) => this.setState({
       error: error.response,
@@ -80,7 +82,7 @@ class ReviewDetail extends Component {
 
   render() {
     const {
-      ready, error, content, restaurant, author, menu, image, rating, date, tag, open,
+      ready, error, content, restaurant, author, menu, image, rating, date, tag, longitude, latitude, open,
     } = this.state;
 
     const { history, match } = this.props;
@@ -124,7 +126,7 @@ class ReviewDetail extends Component {
     );
     //  : <div />;
 
-    const googleMap = (<GoogleMap />);
+    const googleMap = (<GoogleMap center={{ lat: latitude, lng: longitude }} />);
 
     return (
       <div className="ReviewDetail-wrapper">
