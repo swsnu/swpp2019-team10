@@ -22,6 +22,7 @@ def signup(request):
             req_data = json.loads(request.body.decode())
             username = req_data['username']
             password = req_data['password']
+            nickname = req_data['nickname']
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
         phone_number = None
@@ -40,6 +41,7 @@ def signup(request):
             phone_number=phone_number,
             age=age,
             gender=gender,
+            nickname=nickname,
         )
         profile_of_user = new_profile
         response_dict = {
@@ -50,6 +52,7 @@ def signup(request):
             'gender': profile_of_user.gender,
             'number_of_reviews': profile_of_user.count_write,
             'number_of_friends': profile_of_user.count_friend,
+            'nickname': profile_of_user.nickname,
             'friends': []
         }
         return JsonResponse(response_dict, status=200)
@@ -148,6 +151,7 @@ def user(request):
             'profile_pic': profile_of_user.profile_pic.path,
             'number_of_reviews': profile_of_user.count_write,
             'number_of_friends': profile_of_user.count_friend,
+            'nickname': profile_of_user.nickname,
         }
         return JsonResponse(info_of_user)
     if request.method == 'PUT':
@@ -155,6 +159,8 @@ def user(request):
             req_data = json.loads(request.body.decode())
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
+        if 'nickname' in req_data:
+            request.user.profile.nickname = req_data['nickname']
         if 'phone_number' in req_data:
             request.user.profile.phone_number = req_data['phone_number']
         if 'age' in req_data:
@@ -171,6 +177,7 @@ def user(request):
             'profile_pic': profile_of_user.profile_pic.path,
             'number_of_reviews': profile_of_user.count_write,
             'number_of_friends': profile_of_user.count_friend,
+            'nickname': profile_of_user.nickname,
         }
         return JsonResponse(info_of_user, status=200)
     return HttpResponseNotAllowed(['GET', 'PUT'])
@@ -184,23 +191,23 @@ def friend(request):
     if request.method == 'GET':
         profile_of_user = request.user.profile
         info_of_friends = {
-            'friends_list': [(friend.id, friend.user.username) \
+            'friends_list': [(friend.id, friend.nickname) \
                             for friend in profile_of_user.friend.all()]
         }
         return JsonResponse(info_of_friends)
     if request.method == 'POST':
         try:
             req_data = json.loads(request.body.decode())
-            username = req_data['username']
+            user_id = req_data['id']
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
-        tmp_user = User.objects.get(username=username)
-        request.user.profile.friend.add(tmp_user.profile)
+        tmp_user = Profile.objects.get(id=user_id)
+        request.user.profile.friend.add(tmp_user)
         request.user.profile.count_friend += 1
         request.user.profile.save()
         profile_of_user = request.user.profile
         info_of_friends = {
-            'friends_list': [friend.user.username for friend in profile_of_user.friend.all()]
+            'friends_list': [friend.nickname for friend in profile_of_user.friend.all()]
         }
         return JsonResponse(info_of_friends, status=204)
     return HttpResponseNotAllowed(['GET', 'POST'])
@@ -222,6 +229,7 @@ def friend_detail(request, friend_id):
                 'profile_pic': friend_info.profile_pic.path,
                 'number_of_reviews': friend_info.count_write,
                 'number_of_friends': friend_info.count_friend,
+                'nickname': friend_info.nickname,
             }
             return JsonResponse(info_of_friend)
         except Profile.DoesNotExist:

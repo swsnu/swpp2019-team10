@@ -35,11 +35,14 @@ class UserTestCase(TestCase):
     '''
     def setUp(self):
         user = User.objects.create_user(username='swpp1', password='iluvswpp')
-        Profile.objects.create(user=user, phone_number='01035961111', age=22, gender='M')
+        Profile.objects.create(user=user, phone_number='01035961111', age=22,
+                               gender='M', nickname='user1')
         user2 = User.objects.create_user(username='swpp2', password='iluvswpp')
-        Profile.objects.create(user=user2, phone_number='01035961112', age=22, gender='M')
-        user3 = User.objects.create_user(username='friend1', password='iluvswpp')
-        Profile.objects.create(user=user3, phone_number='01035961113', age=22, gender='M')
+        Profile.objects.create(user=user2, phone_number='01035961112', age=22,
+                               gender='M', nickname='user2')
+        user3 = User.objects.create_user(username='friend1', password='iluvswpp',)
+        Profile.objects.create(user=user3, phone_number='01035961113', age=22,
+                               gender='M', nickname='user3')
         client = Client()
         img_and_file = make_image_file()
         client.post('/api/signup/1/image/', data={'profile_pic': img_and_file[1]})
@@ -61,14 +64,15 @@ class UserTestCase(TestCase):
         response = client.post('/api/signup/',
                                json.dumps({'username': 'swpp3', 'password': 'iluvswpp',
                                            'phone_number': '01035961111', 'age': 22,
-                                           'gender': 'M'}),
+                                           'gender': 'M', 'nickname': 'j'}),
                                content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['username'], 'swpp3')
         self.assertEqual(response.json()['gender'], 'M')
 
         response = client.post('/api/signup/',
-                               json.dumps({'username': 'swpp4', 'password': 'iluvswpp'}),
+                               json.dumps({'username': 'swpp4', 'password': 'iluvswpp',
+                                           'nickname': 'j'}),
                                content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['username'], 'swpp4')
@@ -179,7 +183,8 @@ class UserTestCase(TestCase):
         self.assertEqual(response.json()['username'], 'swpp1')
 
         response = client.put('/api/',
-                              json.dumps({'phone_number': '01035961114', 'age': 25, 'gender': 'F'}),
+                              json.dumps({'phone_number': '01035961114', 'age': 25, 'gender': 'F',
+                                          'nickname': 'j'}),
                               content_type='application/json')
         self.assertEqual(response.json()['age'], 25)
 
@@ -205,12 +210,12 @@ class UserTestCase(TestCase):
                                content_type='application/json')
         self.assertEqual(response.status_code, 400)
 
-        response = client.post('/api/friend/', json.dumps({'username': 'friend1'}),
+        response = client.post('/api/friend/', json.dumps({'id': 3}),
                                content_type='application/json')
         self.assertEqual(response.status_code, 204)
 
         response = client.get('/api/friend/')
-        self.assertEqual(response.json()['friends_list'], [[3, 'friend1']])
+        self.assertEqual(response.json()['friends_list'], [[3, 'user3']])
 
     def test_friend_detail(self):
         '''
@@ -237,7 +242,7 @@ class UserTestCase(TestCase):
         response = client.delete('/api/friend/4/')
         self.assertEqual(response.status_code, 404)
 
-        response = client.post('/api/friend/', json.dumps({'username': 'friend1'}),
+        response = client.post('/api/friend/', json.dumps({'id': 3}),
                                content_type='application/json')
         response = client.delete('/api/friend/3/')
         self.assertEqual(response.status_code, 200)
