@@ -57,9 +57,10 @@ export class Signup extends Component {
     const requestDict = {
       username: input.id,
       password: input.password,
-      phone_number: input.phoneNumber ? input.phoneNumber : '',
-      age: input.age ? input.age : -1,
+      phone_number: input.phoneNumber,
+      age: input.age,
       gender: input.gender,
+      nickname: input.name,
     };
 
     onSignup(requestDict).then((res) => {
@@ -171,6 +172,16 @@ export class Signup extends Component {
               value={input.name}
               onChange={this.handleChange}
               required
+            />
+
+            <Form.Input
+              error={error.name}
+              fluid
+              label="Age"
+              name="age"
+              placeholder={this.restirction.age}
+              value={input.age}
+              onChange={this.handleChange}
             />
 
             <Form.Dropdown
