@@ -21,6 +21,7 @@ class LoginModal extends Component {
 
     return (
       <Modal
+        className="login-modal"
         open={open}
         onOpen={this.open}
         onClose={this.close}

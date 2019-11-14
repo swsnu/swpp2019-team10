@@ -107,10 +107,8 @@ const mapDispatchToProps = (dispatch) => ({
   onLogin: (data) => dispatch(actionCreators.LOGIN(data)),
 });
 
-const mapStateToProps = (state) => {
-  return {
-    failed: state.user.user.failed,
-  };
-};
+const mapStateToProps = (state) => ({
+  failed: state.user.user.failed,
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));
