@@ -33,55 +33,36 @@ describe('<Introduce />', () => {
     expect(wrapper.length).toBe(1);
   });
 
-  it('should handle login page', () => {
+  it('should handle going to main page', () => {
     const component = mount(introduce);
-    const wrapper = component.find('Button').at(0);
+    const wrapper = component.find('Button').at(2);
     const spyPush = jest.spyOn(history, 'push')
       .mockImplementation(() => {});
     wrapper.simulate('click');
-
     expect(spyPush).toHaveBeenCalledTimes(1);
   });
 
-  it('should handle signup page', () => {
-    const component = mount(introduce);
-    const wrapper = component.find('Button').at(1);
-    const spyPush = jest.spyOn(history, 'push')
-      .mockImplementation(() => {});
-    wrapper.simulate('click');
-
-    expect(spyPush).toHaveBeenCalledTimes(1);
-  });
-
-  it('should handle login page', () => {
+  it('should handle mobile env', () => {
     global.innerWidth = 300; // resize width
     global.dispatchEvent(new Event('resize')); // dispatch resizing event
 
     const component = mount(introduce);
     const wrapper = component.find('MenuItem').at(4);
-    const spyPush = jest.spyOn(history, 'push')
-      .mockImplementation(() => {});
-    wrapper.simulate('click');
-
-    expect(spyPush).toHaveBeenCalledTimes(1);
+    expect(wrapper.length).toBe(1);
   });
 
-  it('should handle signup page', () => {
+  it('should handle changing view page', () => {
     global.innerWidth = 300;
     global.dispatchEvent(new Event('resize'));
 
     const component = mount(introduce);
     const wrapper = component.find('MenuItem').at(5);
-    const spyPush = jest.spyOn(history, 'push')
-      .mockImplementation(() => {});
-    wrapper.simulate('click');
-    expect(spyPush).toHaveBeenCalledTimes(1);
-
-    global.innerWidth = 800;
-    global.dispatchEvent(new Event('resize'));
+    expect(wrapper.length).toBe(1);
   });
 
   it('should revert when menu is fixed on top', () => {
+    global.innerWidth = 800;
+    global.dispatchEvent(new Event('resize'));
     const component = mount(introduce);
     const wrapper = component.find('DesktopContainer');
 

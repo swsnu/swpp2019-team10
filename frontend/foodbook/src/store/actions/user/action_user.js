@@ -30,6 +30,7 @@ export const REGISTER = (userData) => (dispatch) => axios.post('/api/signup/', {
   phone_number: userData.phone_number,
   age: userData.age,
   gender: userData.gender,
+  nickname: userData.nickname,
 })
   .then(() => dispatch(REGISTER_DEEP()))
   .catch();
