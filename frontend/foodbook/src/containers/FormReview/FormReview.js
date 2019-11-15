@@ -26,6 +26,8 @@ class FormReview extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      /* open is variable for modal component,
+        currently it's undecided if this will be converted to modal so it's left unused. */
       open: false,
       ready: false,
     };
@@ -172,7 +174,7 @@ class FormReview extends Component {
     this.setState({
       latitude: lat,
       longitude: lng,
-    })
+    });
   }
 
   render() {
@@ -228,6 +230,7 @@ class FormReview extends Component {
             <div className="content">
               <span className="header">
                 Author
+                {open}
               </span>
               <div className="meta">
                 <span className="rating">

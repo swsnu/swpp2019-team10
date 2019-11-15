@@ -18,8 +18,8 @@ const mockGeolocation = {
       coords: {
         latitude: 51.1,
         longitude: 45.3,
-      }
-    })))
+      },
+    }))),
 };
 global.navigator.geolocation = mockGeolocation;
 
