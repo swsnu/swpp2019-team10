@@ -26,6 +26,7 @@ class FormReview extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      open: false,
       ready: false,
     };
   }
@@ -44,7 +45,6 @@ class FormReview extends Component {
         latitude: 0.0,
         image: null,
         error: null,
-        ready: true,
       });
     } else if (mode === 'EDIT') {
       axios.get(`/api/review/${id}/`).then((res) => {
@@ -52,6 +52,7 @@ class FormReview extends Component {
           content: res.data.content,
           restaurant: res.data.restaurant,
           menu: res.data.menu,
+          image: res.data.image,
           rating: res.data.rating,
           ready: true,
           longitude: res.data.longitude,
@@ -67,9 +68,9 @@ class FormReview extends Component {
     }
   }
 
-  mapLoaded = () => {
+  show = () => () => this.setState({ open: true });
 
-  }
+  close = () => this.setState({ open: false });
 
   editContentHandler = () => {
     const {
@@ -92,8 +93,8 @@ class FormReview extends Component {
       latitude,
     };
 
-    axios.put(`/api/review/${id}/`, reviewDict).then((res) => {
-      this.postImageHandler(res.data.id);
+    axios.put(`/api/review/${id}/`, reviewDict).then(() => {
+      this.setState({ open: false });
     }).catch((error) => this.setState({
       error: error.response,
     }));
@@ -130,16 +131,19 @@ class FormReview extends Component {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           this.setState({
-            userLoc: {
-            },
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            ready: true,
           });
-          this.googleMap = (
-            <GoogleMap center={{
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            }}
-            />
-          );
+        },
+
+        /* Error callback, default location to 0,0 */
+        () => {
+          this.setState({
+            lat: 0,
+            lng: 0,
+            ready: true,
+          });
         },
       );
     }
@@ -164,9 +168,23 @@ class FormReview extends Component {
     }
   }
 
+  getPos = (lat, lng) => {
+    this.setState({
+      latitude: lat,
+      longitude: lng,
+    })
+  }
+
   render() {
+    const {
+      rating, content, restaurant, menu,
+      ready, error, image, lat, lng, open,
+    } = this.state;
+
+    const { history, mode } = this.props;
+
     // https://www.npmjs.com/package/react-image-select-pv
-    const imgUpload = (
+    const imageField = mode === 'ADD' ? (
       <div>
         <ImageSelectPreview
           id="add-review-image-selector"
@@ -174,13 +192,14 @@ class FormReview extends Component {
           max={1}
         />
       </div>
-    );
+    )
+      : (
+        <img src={image} alt="food img" />
+      );
 
-    const {
-      rating, content, restaurant, menu, ready, error, userLoc,
-    } = this.state;
-
-    const { history, mode } = this.props;
+    const googleMap = mode === 'ADD'
+      ? <GoogleMap center={{ lat, lng }} search getPos={this.getPos} />
+      : <GoogleMap center={{ lat, lng }} />;
 
     if (error != null) {
       return (
@@ -198,6 +217,7 @@ class FormReview extends Component {
       );
     }
 
+    const contentHandler = mode === 'ADD' ? this.postContentHandler : this.editContentHandler;
 
     const confirmDisabled = content === '' || restaurant === '' || menu === '' || rating === 0;
 
@@ -222,12 +242,13 @@ class FormReview extends Component {
                 </span>
               </div>
             </div>
-            <div className="blurring dimmable image">
-              {imgUpload}
+            <div className="image-field">
+              {imageField}
             </div>
-            <div className="google map">
+            <div className="google-map">
               {googleMap}
             </div>
+            <br />
             Restaurant
             <TextArea
               id="review-restaurant-input"
@@ -266,7 +287,7 @@ class FormReview extends Component {
               id="submit-review-button"
               type="button"
               disabled={confirmDisabled}
-              onClick={() => { this.postContentHandler(); }}
+              onClick={() => { contentHandler(); }}
             >
               Submit
             </Button>

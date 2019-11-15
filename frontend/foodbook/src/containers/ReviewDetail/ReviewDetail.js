@@ -42,6 +42,7 @@ class ReviewDetail extends Component {
       ready: false,
       open: false,
       error: null,
+      tag: [],
     };
   }
 
@@ -82,7 +83,8 @@ class ReviewDetail extends Component {
 
   render() {
     const {
-      ready, error, content, restaurant, author, menu, image, rating, date, tag, longitude, latitude, open,
+      ready, error, content, restaurant, author, menu, image,
+      rating, date, tag, longitude, latitude, open,
     } = this.state;
 
     const { history, match } = this.props;

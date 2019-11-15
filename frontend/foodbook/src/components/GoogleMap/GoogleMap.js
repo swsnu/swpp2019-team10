@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 
 import SearchBox from './SearchBox';
 
-const Marker = () => <div><Icon color="yellow" name="hand point down outline" size="huge" /></div>;
+const Marker = () => <div><Icon color="red" name="expand" size="big" /></div>;
 
 class GoogleMap extends Component {
   constructor(props) {
@@ -39,6 +39,8 @@ class GoogleMap extends Component {
   };
 
   setPlace = (place) => {
+    const { getPos } = this.props;
+    getPos(place[0].geometry.location.lat(), place[0].geometry.location.lng());
     this.setState({ places: place });
   };
 
@@ -88,6 +90,7 @@ GoogleMap.propTypes = {
   width: PropTypes.string,
   zoom: PropTypes.number,
   search: PropTypes.bool,
+  getPos: PropTypes.func,
 };
 
 GoogleMap.defaultProps = {
@@ -99,6 +102,7 @@ GoogleMap.defaultProps = {
   width: '100%',
   zoom: 17,
   search: false,
+  getPos: () => {},
 };
 
 export default GoogleMap;

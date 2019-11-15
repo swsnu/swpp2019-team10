@@ -12,6 +12,17 @@ import FormReview from './FormReview';
 // https://jestjs.io/docs/en/mock-functions.html
 jest.mock('axios');
 
+const mockGeolocation = {
+  getCurrentPosition: jest.fn()
+    .mockImplementation((success) => Promise.resolve(success({
+      coords: {
+        latitude: 51.1,
+        longitude: 45.3,
+      }
+    })))
+};
+global.navigator.geolocation = mockGeolocation;
+
 describe('<FormReview />', () => {
   const mockStore = getMockStore({}, {}, {});
 
@@ -93,6 +104,7 @@ describe('<FormReview />', () => {
     const component = mount(addReview);
 
     const event = { target: { value: 'sometext' } };
+    component.update();
 
     // text fields are tested already
     component.find('#review-restaurant-input').at(1).simulate('change', event);
