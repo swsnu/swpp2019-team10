@@ -10,7 +10,7 @@ import GoogleMap from 'components/GoogleMap';
 
 import Recommendation from 'containers/Recommendation';
 import { connect } from 'react-redux';
-// import * as actionCreators from '../../Stores/Actions/index';
+import * as actionCreators from 'store/actions/review/action_review';
 
 import axios from 'axios';
 
@@ -40,6 +40,8 @@ class ReviewDetail extends Component {
     super(props);
     this.state = {
       ready: false,
+      /* open is variable for modal component,
+        currently it's undecided if this will be converted to modal so it's left unused. */
       open: false,
       error: null,
       tag: [],
@@ -134,6 +136,7 @@ class ReviewDetail extends Component {
       <div className="ReviewDetail-wrapper">
         <div className="ui special cards">
           <div className="card" style={{ width: '630px' }}>
+            {open}
             <div className="content">
               <span className="header">{`${menu} ( ${restaurant} )`}</span>
               <div className="meta">
@@ -201,12 +204,14 @@ ReviewDetail.defaultProps = {
   },
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  dispatch,
+const mapStateToProps = (state) => ({
+  review: state.review.reviewDetail,
 });
 
-const mapStateToProps = (state) => ({
-  state,
+const mapDispatchToProps = (dispatch) => ({
+  onGetReview: (id) => {
+    dispatch(actionCreators.GET_REVIEW(id));
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReviewDetail);

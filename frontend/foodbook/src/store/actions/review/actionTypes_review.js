@@ -1,5 +1,6 @@
 export const CLEAR_REVIEWS = 'CLEAR_REVIEWS'; // clear ReviewList array
 export const GET_REVIEWS = 'GET_REVIEWS'; // get Review list
+export const CLEAR_REVIEW = 'CLEAR_REVIEW'; // initialize review data
 export const GET_REVIEW = 'GET_REVIEW'; // get a particular detailed review
 export const POST_REVIEW = 'POST_REVIEW'; // add a review
 export const EDIT_REVIEW = 'EDIT_REVIEW'; // edit a review

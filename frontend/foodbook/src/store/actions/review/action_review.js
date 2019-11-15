@@ -23,18 +23,18 @@ export const GET_REVIEWS = () => (dispatch) => {
     .catch(dispatch(GET_REVIEWS_PRE()));
 };
 
-/*
-
 export const GET_REVIEW_DEEP = (data) => ({
   type: actionTypes.GET_REVIEW,
   data,
 });
 
-export const GET_REVIEW = (id) => {
-  return axios.get('/api/review/' + id)
+export const GET_REVIEW = (id) => (dispatch) => {
+  return axios.get(`/api/review/${id}/`)
     .then((res) => dispatch(GET_REVIEW_DEEP(res.data)))
     .catch();
 };
+
+/*
 
 export const POST_REVIEW = (dispatch) => {
   return axios.get('/api/review/')

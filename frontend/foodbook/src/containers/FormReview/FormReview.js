@@ -18,9 +18,7 @@ import GoogleMap from 'components/GoogleMap';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import ImageSelectPreview from 'react-image-select-pv';
-
-// import StarRating from '../../components/StarRating/StarRating';
-// import * as actionCreators from '../../Stores/Actions/index';
+import * as actionCreators from 'store/actions/review/action_review';
 
 class FormReview extends Component {
   constructor(props) {
@@ -49,20 +47,7 @@ class FormReview extends Component {
         error: null,
       });
     } else if (mode === 'EDIT') {
-      axios.get(`/api/review/${id}/`).then((res) => {
-        this.setState({
-          content: res.data.content,
-          restaurant: res.data.restaurant,
-          menu: res.data.menu,
-          image: res.data.image,
-          rating: res.data.rating,
-          ready: true,
-          longitude: res.data.longitude,
-          latitude: res.data.latitude,
-        });
-      }).catch((error) => this.setState({
-        error: error.response,
-      }));
+      this.onGetReview(id);
     } else {
       this.setState({
         error: 'Unknown Form Type',
@@ -317,8 +302,23 @@ FormReview.defaultProps = {
   id: 0,
 };
 
-const mapDispatchToProps = (/* dispatch */) => ({});
+const mapStateToProps = (state) => ({
+  review: state.review.reviewDetail,
+});
 
-const mapStateToProps = (/* state */) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  onClearReview: () => {
+    dispatch(actionCreators.CLEAR_REVIEW());
+  },
+  onGetReview: (id) => {
+    dispatch(actionCreators.GET_REVIEW(id));
+  },
+  onPostReview: (post) => {
+    dispatch(actionCreators.POST_REVIEW(post));
+  },
+  onEditReview: (id, post) => {
+    dispatch(actionCreators.EDIT_REVIEW(id, post));
+  },
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormReview);
