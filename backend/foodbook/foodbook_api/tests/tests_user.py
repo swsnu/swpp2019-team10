@@ -84,19 +84,23 @@ class UserTestCase(TestCase):
         '''
         client = Client()
 
-        response = client.post('/api/signup/10/image/')
+        user1_id = Profile.objects.get(nickname='user1').id
+        user2_id = Profile.objects.get(nickname='user2').id
+        user3_id = Profile.objects.get(nickname='user3').id
+
+        response = client.post('/api/signup/'+str(user1_id+user2_id+user3_id)+'/image/')
         self.assertEqual(response.status_code, 404)
 
-        response = client.get('/api/signup/2/image/')
+        response = client.get('/api/signup/'+str(user2_id)+'/image/')
         self.assertEqual(response.status_code, 405)
 
         img_and_file = make_image_file()
 
-        response = client.post('/api/signup/2/image/',
+        response = client.post('/api/signup/'+str(user2_id)+'/image/',
                                data={'profile_pic': img_and_file[1]})
         self.assertEqual(response.status_code, 201)
 
-        response = client.post('/api/signup/2/image/',
+        response = client.post('/api/signup/'+str(user2_id)+'/image/',
                                data={'profile_pic': img_and_file[0].tobytes()})
         self.assertEqual(response.status_code, 400)
 
@@ -105,6 +109,8 @@ class UserTestCase(TestCase):
             method that tests /api/signup/:username/
         '''
         client = Client()
+
+        user1_id = Profile.objects.get(nickname='user1').id
 
         response = client.get('/api/signup_dupcheck/')
         self.assertEqual(response.status_code, 405)
@@ -118,7 +124,7 @@ class UserTestCase(TestCase):
                                json.dumps({'username': 'swpp1'}),
                                content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()['id'], 1)
+        self.assertEqual(response.json()['id'], user1_id)
 
         response = client.post('/api/signup_dupcheck/',
                                json.dumps({'username': 'swpp10'}),
@@ -172,12 +178,17 @@ class UserTestCase(TestCase):
         '''
         client = Client()
 
+        user1_id = Profile.objects.get(nickname='user1').id
+
         response = client.get('/api/')
         self.assertEqual(response.status_code, 401)
 
         login_user1(client)
         response = client.post('/api/')
         self.assertEqual(response.status_code, 405)
+
+        img_and_file = make_image_file()
+        client.post('/api/signup/'+str(user1_id)+'/image/', data={'profile_pic': img_and_file[1]})
 
         response = client.get('/api/')
         self.assertEqual(response.json()['username'], 'swpp1')
@@ -199,6 +210,8 @@ class UserTestCase(TestCase):
         '''
         client = Client()
 
+        user3_id = Profile.objects.get(nickname='user3').id
+
         response = client.get('/api/friend/')
         self.assertEqual(response.status_code, 401)
 
@@ -210,18 +223,23 @@ class UserTestCase(TestCase):
                                content_type='application/json')
         self.assertEqual(response.status_code, 400)
 
-        response = client.post('/api/friend/', json.dumps({'id': 3}),
+        response = client.post('/api/friend/', json.dumps({'id': user3_id}),
                                content_type='application/json')
         self.assertEqual(response.status_code, 204)
 
         response = client.get('/api/friend/')
-        self.assertEqual(response.json()['friends_list'], [[3, 'user3']])
+        self.assertEqual(response.json()['friends_list'], [[user3_id, 'user3']])
 
     def test_friend_detail(self):
         '''
             method that tests /api/friend/:friend_id/
         '''
         client = Client()
+
+        user1_id = Profile.objects.get(nickname='user1').id
+        user2_id = Profile.objects.get(nickname='user2').id
+        user3_id = Profile.objects.get(nickname='user3').id
+        no_user_id = user1_id + user2_id + user3_id
 
         response = client.get('/api/friend/3/')
         self.assertEqual(response.status_code, 401)
@@ -230,19 +248,19 @@ class UserTestCase(TestCase):
         response = client.put('/api/friend/3/')
         self.assertEqual(response.status_code, 405)
 
-        response = client.get('/api/friend/4/')
+        response = client.get('/api/friend/'+str(no_user_id)+'/')
         self.assertEqual(response.status_code, 404)
 
         img_and_file = make_image_file()
-        client.post('/api/signup/3/image/', data={'profile_pic': img_and_file[1]})
+        client.post('/api/signup/'+str(user3_id)+'/image/', data={'profile_pic': img_and_file[1]})
 
-        response = client.get('/api/friend/3/')
+        response = client.get('/api/friend/'+str(user3_id)+'/')
         self.assertEqual(response.json()['username'], 'friend1')
 
-        response = client.delete('/api/friend/4/')
+        response = client.delete('/api/friend/'+str(no_user_id)+'/')
         self.assertEqual(response.status_code, 404)
 
-        response = client.post('/api/friend/', json.dumps({'id': 3}),
+        response = client.post('/api/friend/', json.dumps({'id': user3_id}),
                                content_type='application/json')
-        response = client.delete('/api/friend/3/')
+        response = client.delete('/api/friend/'+str(user3_id)+'/')
         self.assertEqual(response.status_code, 200)
