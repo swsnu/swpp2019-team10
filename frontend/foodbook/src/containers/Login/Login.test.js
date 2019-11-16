@@ -103,6 +103,6 @@ describe('<Login />', () => {
   </Provider>
     const component = mount(falseLogin);
     const wrapper = component.find('.login-error-wrapper');
-    expect(wrapper.length).toBe(1);
+    expect(wrapper.length).toBe(2);
   });
 });
