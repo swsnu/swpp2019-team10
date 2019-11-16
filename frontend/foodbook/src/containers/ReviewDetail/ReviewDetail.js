@@ -12,8 +12,6 @@ import Recommendation from 'containers/Recommendation';
 import { connect } from 'react-redux';
 import * as actionCreators from 'store/actions/review/action_review';
 
-import axios from 'axios';
-
 const parseTagName = (tags) => {
   const parsed = tags.map((t, i) => {
     let className;
@@ -39,70 +37,47 @@ class ReviewDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ready: false,
       /* open is variable for modal component,
         currently it's undecided if this will be converted to modal so it's left unused. */
       open: false,
       error: null,
-      tag: [],
     };
   }
 
   componentDidMount() {
-    const { match } = this.props;
-
-    axios.get(`/api/review/${match.params.id}/`).then((res) => {
-      this.setState({
-        content: res.data.content,
-        restaurant: res.data.restaurant,
-        author: res.data.author,
-        menu: res.data.menu,
-        image: res.data.image,
-        rating: res.data.rating,
-        date: res.data.date,
-        tag: res.data.tag,
-        ready: true,
-        longitude: res.data.longitude,
-        latitude: res.data.latitude,
-      });
-    }).catch((error) => this.setState({
-      error: error.response,
-    }));
+    const { match, onGetReview } = this.props;
+    onGetReview(match.params.id);
   }
 
+  /*
   show = () => () => this.setState({ open: true });
 
   close = () => this.setState({ open: false });
+  */
 
   deleteHandler() {
-    const { history, match } = this.props;
-    axios.delete(`/api/review/${match.params.id}/`).then(
-      () => history.push('/main'),
-    ).catch(
-      (error) => this.setState({ error: error.response }),
-    );
+    const { history, match, onDeleteReview } = this.props;
+    onDeleteReview(match.params.id);
+
+    history.push('/main');
   }
 
   render() {
     const {
-      ready, error, content, restaurant, author, menu, image,
-      rating, date, tag, longitude, latitude, open,
+      error, open,
     } = this.state;
 
-    const { history, match } = this.props;
+    const { history, match, review } = this.props;
+
+    const {
+      content, restaurant, author, menu, image,
+      rating, date, tag, longitude, latitude,
+    } = review;
 
     if (error != null) {
       return (
         <div className="Review-error-wrapper">
           <p>{error.content}</p>
-        </div>
-      );
-    }
-
-    if (!ready) {
-      return (
-        <div className="Review-loading-wrapper">
-          <p>Loading...</p>
         </div>
       );
     }
@@ -144,7 +119,7 @@ class ReviewDetail extends Component {
                   Rating:
                   <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
                 </span>
-                <span className="tag">{parseTagName(tag)}</span>
+                <span className="tag">{Array.isArray(tag) && parseTagName(tag)}</span>
               </div>
             </div>
             <div className="blurring dimmable image">
@@ -191,6 +166,9 @@ ReviewDetail.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }),
+  onGetReview: PropTypes.func,
+  onDeleteReview: PropTypes.func,
+  review: PropTypes.shape(PropTypes.any),
 };
 
 ReviewDetail.defaultProps = {
@@ -200,8 +178,11 @@ ReviewDetail.defaultProps = {
     },
   },
   history: {
-    push: () => {},
+    push: null,
   },
+  onGetReview: null,
+  onDeleteReview: null,
+  review: {},
 };
 
 const mapStateToProps = (state) => ({
@@ -211,6 +192,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onGetReview: (id) => {
     dispatch(actionCreators.GET_REVIEW(id));
+  },
+  onDeleteReview: (id) => {
+    dispatch(actionCreators.DELETE_REVIEW(id));
   },
 });
 

@@ -13,8 +13,6 @@ import ReviewDetail from './ReviewDetail';
 jest.mock('axios');
 
 describe('<ReviewDetail />', () => {
-  const mockStore = getMockStore({}, {}, {});
-
   const resp = {
     content: 'test',
     restaurant: 'rest',
@@ -22,9 +20,22 @@ describe('<ReviewDetail />', () => {
     menu: 'menu',
     image: '',
     rating: 0.0,
-    tag: [{ name: 'good', positive: true }, { name: 'bad', positive: false }],
+    tag: [{ name: 'good', sentimental: 1 }, { name: 'bad', sentimental: -1 }, { name: 'netural', sentimental: 0 }],
     date: '1970-01-01',
   };
+
+  const initReview = {
+    content: '',
+    restaurant: '',
+    author: '',
+    menu: '',
+    image: '',
+    rating: 5.0,
+    tag: [],
+    date: '',
+  };
+
+  const mockStore = getMockStore({}, { reviewList: [], reviewDetail: resp }, {});
 
   jest.spyOn(axios, 'get')
     .mockImplementation(() => new Promise((res) => {
@@ -51,6 +62,7 @@ describe('<ReviewDetail />', () => {
           <ReviewDetail
             history={history}
             match={{ params: { id: '1' } }}
+            review={initReview}
           />
         </ConnectedRouter>
       </Provider>
@@ -67,6 +79,7 @@ describe('<ReviewDetail />', () => {
       const wrapper = component.find('Connect(ReviewDetail)');
       expect(wrapper.length).toBe(1);
     });
+
 
     it('delete button should work', () => {
       const component = mount(reviewDetail);
@@ -105,18 +118,6 @@ describe('<ReviewDetail />', () => {
 
       wrapper.simulate('click');
       component.update();
-    });
-
-    it('loading message should be shown up', () => {
-      const component = mount(reviewDetail);
-      const wrapper = component.find('ReviewDetail');
-      expect(wrapper.length).toBe(1);
-
-      wrapper.setState({ ready: false });
-      component.update();
-
-      const backWrapper = component.find('.Review-loading-wrapper');
-      expect(backWrapper.length).toBe(1);
     });
 
     it('error message should be shown up', () => {

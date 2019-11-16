@@ -2,19 +2,7 @@ import * as actionTypes from 'store/actions/review/actionTypes_review';
 
 const initialState = {
   reviewList: [],
-  reviewDetail: {
-    content: '',
-    restaurant: '',
-    author: '',
-    menu: '',
-    image: '',
-    rating: 5,
-    date: '0000-00-00', // should be provided this form
-    tag: [], // TODO: should decide first.
-    ready: true,
-    longitude: 0.0,
-    latitude: 0.0,
-  },
+  reviewDetail: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -27,8 +15,18 @@ const reducer = (state = initialState, action) => {
       };
       return newState;
 
+    case actionTypes.GET_REVIEW:
+      newState = {
+        ...state,
+        reviewDetail: action.data,
+      };
+      return newState;
+
     case actionTypes.CLEAR_REVIEWS:
       return { ...state, reviewList: [] };
+
+    case actionTypes.CLEAR_REVIEW:
+      return { ...state, reviewDetail: {} };
 
     default:
       break;

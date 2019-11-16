@@ -296,7 +296,7 @@ FormReview.propTypes = {
 
 FormReview.defaultProps = {
   history: {
-    push: () => {},
+    push: null,
   },
   mode: 'ADD',
   id: 0,
@@ -307,9 +307,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onClearReview: () => {
-    dispatch(actionCreators.CLEAR_REVIEW());
-  },
+  /*
   onGetReview: (id) => {
     dispatch(actionCreators.GET_REVIEW(id));
   },
@@ -319,6 +317,8 @@ const mapDispatchToProps = (dispatch) => ({
   onEditReview: (id, post) => {
     dispatch(actionCreators.EDIT_REVIEW(id, post));
   },
+  */
+  dispatch
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormReview);

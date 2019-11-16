@@ -28,18 +28,29 @@ export const GET_REVIEW_DEEP = (data) => ({
   data,
 });
 
+export const GET_REVIEW_PRE = () => ({
+  type: actionTypes.CLEAR_REVIEW,
+});
+
 export const GET_REVIEW = (id) => (dispatch) => {
+  dispatch(GET_REVIEW_PRE());
+
   return axios.get(`/api/review/${id}/`)
     .then((res) => dispatch(GET_REVIEW_DEEP(res.data)))
-    .catch();
+    .catch(dispatch(GET_REVIEW_PRE()));
 };
 
-/*
+export const DELETE_REVIEW = (id) => (dispatch) => (
+  axios.delete(`/api/review/${id}/`)
+    .then(dispatch(GET_REVIEW_PRE()))
+);
 
-export const POST_REVIEW = (dispatch) => {
-  return axios.get('/api/review/')
-    .then((res) => dispatch(GET_REVIEWS_DEEP(res.data)))
-    .catch(dispatch(GET_REVIEWS_PRE()));
-};
+export const EDIT_REVIEW = (id, review) => (dispatch) => (
+  axios.put(`/api/review/${id}/`, review)
+    .then(dispatch(GET_REVIEW_PRE()))
+);
 
-*/
+export const POST_REVIEW = (review) => (dispatch) => (
+  axios.get('/api/review/', review)
+    .then(dispatch(GET_REVIEW_PRE()))
+);
