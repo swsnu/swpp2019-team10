@@ -318,7 +318,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(actionCreators.EDIT_REVIEW(id, post));
   },
   */
-  dispatch
+  dispatch,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormReview);
