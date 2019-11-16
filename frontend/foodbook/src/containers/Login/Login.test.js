@@ -45,8 +45,6 @@ describe('<Login />', () => {
   let login;
   const spyLogin = jest.spyOn(actionCreators, 'LOGIN')
     .mockImplementation(() => ({ type: '' }));
-  const spyRegister = jest.spyOn(actionCreators, 'REGISTER')
-    .mockImplementation(() => ({ type: '' }));
 
   beforeEach(() => {
     login = (
@@ -96,11 +94,13 @@ describe('<Login />', () => {
   });
 
   it('should render error message on login failed', () => {
-    const falseLogin = <Provider store={falseStore}>
-    <ConnectedRouter history={history}>
-      <Login />
-    </ConnectedRouter>
-  </Provider>
+    const falseLogin = (
+      <Provider store={falseStore}>
+        <ConnectedRouter history={history}>
+          <Login />
+        </ConnectedRouter>
+      </Provider>
+    );
     const component = mount(falseLogin);
     const wrapper = component.find('.login-error-wrapper');
     expect(wrapper.length).toBe(2);

@@ -90,10 +90,12 @@ class Login extends Component {
                   Login
                 </Button>
 
-                {failed && (<Message negative className="login-error-wrapper">
-    <Message.Header>Login Failed!</Message.Header>
-      <p>Please check the ID or Password!</p>
-  </Message>)}
+                {failed && (
+                <Message negative className="login-error-wrapper">
+                  <Message.Header>Login Failed!</Message.Header>
+                  <p>Please check the ID or Password!</p>
+                </Message>
+                )}
               </Segment>
             </Form>
             <Message>

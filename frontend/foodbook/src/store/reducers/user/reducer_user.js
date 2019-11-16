@@ -19,6 +19,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   let newState = state;
+  let { user } = state;
 
   switch (action.type) {
     case actionTypes.GET_USER_INFO:
@@ -26,7 +27,7 @@ const reducer = (state = initialState, action) => {
       return newState;
 
     case actionTypes.LOGIN_FAILED:
-      const user = {
+      user = {
         ...state.user,
         failed: true,
       };

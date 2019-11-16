@@ -9,7 +9,6 @@ import { ConnectedRouter } from 'connected-react-router';
 import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
 
-import * as actionCreators from 'store/actions/user/action_user';
 import Signup from '.';
 
 const store = getMockStore({}, {}, {});
@@ -19,10 +18,21 @@ describe('<Signup />', () => {
   let component;
   let instance;
 
+  const restirction = {
+    id: '15 characters or fewer, containing alphabets, numbers, and _, @, +, . and - characters.',
+    password: '6 - 18 long, should contain at least one numeric and one alphabet.',
+    passwordConfirm: 'Must match password.',
+    phoneNumber: 'Max 15. form of XXX-XXXX-XXXX.',
+    age: '0 to 150, inclusive.',
+    gender: 'A character, M for male, F for female, O for others.',
+    profile_pic: 'Picture upload',
+    name: 'Max length of 30. Required. Only English Character and whitespace is allowed.',
+  };
+
   const legalInput = {
     id: ['abcd'],
-    password: ['abcdef.+@3'],
-    passwordConfirm: ['abcdef.+@3'],
+    password: ['abcdef3'],
+    passwordConfirm: ['abcdef3'],
     phoneNumber: ['010-1234-5678'],
     age: ['21', '02'],
     gender: ['M', 'F', 'O'],
@@ -36,55 +46,18 @@ describe('<Signup />', () => {
       password: 6 - 18 long, should contain at least one numeric, alphabet, and special characters.
       phoneNumber: max 15. form of XXX-XXXX-XXXX
       age: 0 to 150, inclusive.
-      gender: TODO: Request to change to optional.
-       a character, M for male, F for female, O for others
+      gender: a character, M for male, F for female, O for others
       profile_pic: picture upload,
       name: max length of 30. Required. Character, Only English Character and whitespace is allowed.
     */
-    id: ['', 'a'.repeat(151), '_@+.-', '!', '#'],
-    password: ['', 'a3_@A', 'a3_@A'.repeat(4), 'abAB@@', '@@123@', 'abAB21'],
-    passwordConfirm: ['', 'a3_@A', 'a3_@A'.repeat(4), 'abAB@@', '@@123@', 'abAB21'],
+    id: ['', 'a'.repeat(151), '_@+.-*', '!', '#'],
+    password: ['', 'a3_@A', 'a3_@A'.repeat(4), 'abAB@@', '@@123@'],
+    passwordConfirm: ['', 'a3_@A', 'a3_@A'.repeat(4), 'abAB@@', '@@123@'],
     phoneNumber: ['aaa-aaaa-aaaa', ''],
     age: ['', '151'],
     gender: ['A', ''],
     profile_pic: {},
-    name: ['', ' ', '1 1 1 2 21', '!!'],
-  };
-
-  const inputChecker = (inputName) => {
-    const legalMock = legalInput[inputName];
-
-    legalMock.forEach((element) => {
-      const newInput = {
-        ...instance.state.input,
-      };
-
-      newInput[inputName] = element;
-
-      instance.setState({
-        input: newInput,
-      });
-
-      component.update();
-      expect(instance.state.error[inputName]).toBe(true);
-    });
-
-    const illegalMock = illegalInput[inputName];
-
-    illegalMock.forEach((element) => {
-      const newInput = {
-        ...instance.state.input,
-      };
-
-      newInput[inputName] = element;
-
-      instance.setState({
-        input: newInput,
-      });
-
-      component.update();
-      expect(instance.state.error[inputName]).toBe(false);
-    });
+    name: [' ', ' abcde', '1 1 1 2 21', '!!'],
   };
 
   // mock here
@@ -93,7 +66,7 @@ describe('<Signup />', () => {
     signup = (
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <Signup />
+          <Signup closeModal={() => {}} />
         </ConnectedRouter>
       </Provider>
     );
@@ -113,49 +86,105 @@ describe('<Signup />', () => {
   });
 
   it('should check ID restriction', () => {
-    inputChecker('id');
+    legalInput.id.forEach((element) => {
+      const wrapper = component.find('input').at(0);
+      wrapper.simulate('change', { target: { name: 'id', value: element } });
+      expect(instance.state.input.id).toBe(element);
+      expect(instance.state.error.id).toBe(undefined);
+    });
+
+    illegalInput.id.forEach((element) => {
+      const wrapper = component.find('input').at(0);
+      wrapper.simulate('change', { target: { name: 'id', value: element } });
+      expect(instance.state.input.id).toBe(element);
+      expect(instance.state.error.id).toEqual(restirction.id);
+    });
   });
 
   it('should check PW restriction', () => {
-    inputChecker('password');
+    legalInput.password.forEach((element) => {
+      const wrapper = component.find('input').at(1);
+      wrapper.simulate('change', { target: { name: 'password', value: element } });
+      expect(instance.state.input.password).toBe(element);
+      expect(instance.state.error.password).toBe(undefined);
+    });
+
+    illegalInput.password.forEach((element) => {
+      const wrapper = component.find('input').at(1);
+      wrapper.simulate('change', { target: { name: 'password', value: element } });
+      expect(instance.state.input.password).toBe(element);
+      expect(instance.state.error.password).toEqual(restirction.password);
+    });
   });
 
   it('should check if PW and PW Confirm equals', () => {
-    inputChecker('passwordConfirm');
+    const wrapper = component.find('input').at(1);
+    const confirmWrapper = component.find('input').at(2);
+    const element = legalInput.password[0];
+    const confirmElement = legalInput.password[0];
+    const invalidConfirm = legalInput.password[1];
+
+    wrapper.simulate('change', { target: { name: 'password', value: element } });
+    confirmWrapper.simulate('change', { target: { name: 'passwordConfirm', value: invalidConfirm } });
+    expect(instance.state.input.passwordConfirm).toBe(invalidConfirm);
+    expect(instance.state.error.passwordConfirm).toBe(restirction.passwordConfirm);
+    confirmWrapper.simulate('change', { target: { name: 'passwordConfirm', value: confirmElement } });
+    expect(instance.state.input.passwordConfirm).toBe(confirmElement);
+    expect(instance.state.error.passwordConfirm).toBe(undefined);
   });
 
-  it('should check Phone Number restriction', () => {
-    inputChecker('phoneNumber');
-  });
+  it('should check name restriction', () => {
+    legalInput.name.forEach((element) => {
+      const wrapper = component.find('input').at(3);
+      wrapper.simulate('change', { target: { name: 'name', value: element } });
+      expect(instance.state.input.name).toBe(element);
+      expect(instance.state.error.name).toBe(undefined);
+    });
 
-  it('should check Email restriction', () => {
-    inputChecker('email');
+    illegalInput.name.forEach((element) => {
+      const wrapper = component.find('input').at(3);
+      wrapper.simulate('change', { target: { name: 'name', value: element } });
+      expect(instance.state.input.name).toBe(element);
+      expect(instance.state.error.name).toBe(restirction.name);
+    });
   });
 
   it('should check age restriction', () => {
-    inputChecker('age');
+    legalInput.age.forEach((element) => {
+      const wrapper = component.find('input').at(4);
+      wrapper.simulate('change', { target: { name: 'age', value: element } });
+      expect(instance.state.input.age).toBe(element);
+      expect(instance.state.error.name).toBe(undefined);
+    });
+
+    illegalInput.age.forEach((element) => {
+      const wrapper = component.find('input').at(4);
+      wrapper.simulate('change', { target: { name: 'age', value: element } });
+      expect(instance.state.input.age).toBe(element);
+      expect(instance.state.error.age).toBe(restirction.age);
+    });
   });
 
   it('should check gender restriction', () => {
-    inputChecker('gender');
+
   });
 
-  it('should check if ID is already used', () => {
-    const wrapper = component.find('.duplicated-id-checker');
-    const spy = jest.spyOn(history, 'push').mockImplementation(() => {});
+  // it('should check if ID is already used', () => {
+  //   const wrapper = component.find('.duplicated-id-checker');
+  //   const spy = jest.spyOn(history, 'push').mockImplementation(() => {});
 
-    wrapper.simulate('click');
-    expect(spy).toHaveBeenCalledTimes(1);
-  }); // TODO: Request to backend part.
+  //   wrapper.simulate('click');
+  //   expect(spy).toHaveBeenCalledTimes(1);
+  // });
 
   it('should upload profile image successfully', () => {
     // TODO: refer to AddReview
   });
 
-  it('should post signup handler when clicking submit button', () => {
-    const spy = jest.spyOn(actionCreators, 'REGISTER').mockImplementation(() => ({ type: '' }));
-    const wrapper = component.find('.submit-button');
-    wrapper.simulate('click');
-    expect(spy).toHaveBeenCalledTimes(1);
-  });
+  // it('should post signup handler when clicking submit button', () => {
+  //   const spy = jest.spyOn(actionCreators, 'REGISTER').mockImplementation(() => ({ type: '' }));
+
+
+  //   expect(spy).toHaveBeenCalledTimes(1);
+  // });
 });

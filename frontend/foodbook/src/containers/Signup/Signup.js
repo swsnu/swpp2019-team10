@@ -86,7 +86,7 @@ export class Signup extends Component {
     const inputMatcher = {
       id: /^[A-Za-z0-9_@+.-]{1,15}$/,
       password: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,18}$/,
-      name: /^(\w|\s){1,150}$/,
+      name: /^[A-za-z]([A-za-z]|\s){0,149}$/,
       age: /^([0-9]|([1-9][0-9])|1[0-4][0-9])$/,
       gender: /^[MFO]$/,
     };
@@ -123,8 +123,8 @@ export class Signup extends Component {
     const { input, error } = this.state;
 
     return (
-      <div className="login">
-        <Form id="signup-form" onSubmit={this.signupHandler}>
+      <div className="signup">
+        <Form className="signup-form" onSubmit={this.signupHandler}>
           <Segment>
             <Form.Input
               error={error.id}
@@ -135,6 +135,7 @@ export class Signup extends Component {
               value={input.id}
               onChange={this.handleChange}
               required
+              className="id-input-wrapper"
             />
 
             <Form.Input
@@ -148,6 +149,7 @@ export class Signup extends Component {
               onChange={this.handleChange}
               autoComplete="off"
               required
+              className="pw-input-wrapper"
             />
 
             <Form.Input
@@ -161,6 +163,7 @@ export class Signup extends Component {
               value={input.passwordConfirm}
               onChange={this.handleChange}
               required
+              className="passwordConfirm-input-wrapper"
             />
 
             <Form.Input
@@ -172,16 +175,18 @@ export class Signup extends Component {
               value={input.name}
               onChange={this.handleChange}
               required
+              className="name-input-wrapper"
             />
 
             <Form.Input
-              error={error.name}
+              error={error.age}
               fluid
               label="Age"
               name="age"
               placeholder={this.restirction.age}
               value={input.age}
               onChange={this.handleChange}
+              className="age-input-wrapper"
             />
 
             <Form.Dropdown
@@ -207,10 +212,11 @@ export class Signup extends Component {
                   value: 'O',
                 }]
               }
+              className="gender-input-wrapper"
             />
 
             <ImageSelectPreview
-              className="add-review-image-selector"
+              className="signup-image-selector"
               onChange={(data) => this.setState({
                 input: {
                   ...input,

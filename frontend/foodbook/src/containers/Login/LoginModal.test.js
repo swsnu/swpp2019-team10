@@ -5,7 +5,6 @@ import { ConnectedRouter } from 'connected-react-router';
 import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
 
-import * as actionCreators from 'store/actions/user/action_user';
 import LoginModal from './LoginModal';
 
 const initialUser = {
