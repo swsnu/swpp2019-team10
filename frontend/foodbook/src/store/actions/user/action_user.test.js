@@ -5,6 +5,7 @@ import * as actionCreators from './action_user';
 const newUser = {
   username: 'swpp',
   phone_number: '010-1234-5678',
+  failed: false,
   age: -1,
   gender: 'Male',
   profile_pic: 'undefined',
@@ -15,6 +16,7 @@ const newUser = {
 const initialState = {
   username: '',
   phone_number: '',
+  failed: false,
   age: -1,
   gender: '',
   profile_pic: '',

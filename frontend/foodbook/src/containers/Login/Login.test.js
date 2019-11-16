@@ -23,7 +23,23 @@ const initialUser = {
   taste: {},
 };
 
+const initialFalseUser = {
+  user: {
+    username: '',
+    phone_number: '',
+    age: -1,
+    gender: '',
+    profile_pic: '',
+    number_of_reviews: -1,
+    number_of_friends: -1,
+    failed: true,
+  },
+
+  taste: {},
+};
+
 const store = getMockStore(initialUser, {}, {});
+const falseStore = getMockStore(initialFalseUser, {}, {});
 
 describe('<Login />', () => {
   let login;
@@ -77,5 +93,16 @@ describe('<Login />', () => {
     wrapper.simulate('change', { target: { value: pw } });
     const newTodoInstance = component.find(Login.WrappedComponent).instance();
     expect(newTodoInstance.state.input.password).toEqual(pw);
+  });
+
+  it('should render error message on login failed', () => {
+    const falseLogin = <Provider store={falseStore}>
+    <ConnectedRouter history={history}>
+      <Login />
+    </ConnectedRouter>
+  </Provider>
+    const component = mount(falseLogin);
+    const wrapper = component.find('.login-error-wrapper');
+    expect(wrapper.length).toBe(1);
   });
 });

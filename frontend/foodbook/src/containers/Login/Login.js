@@ -34,6 +34,10 @@ class Login extends Component {
     onLogin(dict);
   };
 
+  loginError = () => {
+
+  };
+
   render() {
     const { history, failed } = this.props;
     const { input } = this.state;
@@ -85,6 +89,11 @@ class Login extends Component {
                 <Button color="teal" fluid size="large" className="login-button" onClick={loginHandler}>
                   Login
                 </Button>
+
+                {failed && (<Message negative className="login-error-wrapper">
+    <Message.Header>Login Failed!</Message.Header>
+      <p>Please check the ID or Password!</p>
+  </Message>)}
               </Segment>
             </Form>
             <Message>
