@@ -16,9 +16,8 @@ import './FormReview.css';
 import GoogleMap from 'components/GoogleMap';
 
 import { connect } from 'react-redux';
-import axios from 'axios';
 import ImageSelectPreview from 'react-image-select-pv';
-// import * as actionCreators from 'store/actions/review/action_review';
+import * as actionCreators from 'store/actions/review/action_review';
 
 class FormReview extends Component {
   constructor(props) {
@@ -32,7 +31,7 @@ class FormReview extends Component {
 
   componentDidMount() {
     this.getGeoLocation();
-    const { mode, id } = this.props;
+    const { mode, id, onGetReview } = this.props;
 
     if (mode === 'ADD') {
       this.setState({
@@ -46,7 +45,7 @@ class FormReview extends Component {
         error: null,
       });
     } else if (mode === 'EDIT') {
-      this.onGetReview(id);
+      onGetReview(id);
     } else {
       this.setState({
         error: 'Unknown Form Type',
@@ -68,7 +67,7 @@ class FormReview extends Component {
       latitude,
     } = this.state;
 
-    const { id } = this.props;
+    const { id, onEditReview } = this.props;
 
     const reviewDict = {
       restaurant_name: restaurant,
@@ -79,12 +78,12 @@ class FormReview extends Component {
       latitude,
     };
 
-    axios.put(`/api/review/${id}/`, reviewDict).then(() => {
-      this.setState({ open: false });
-    }).catch();
+    onEditReview(id, reviewDict);
   }
 
   postContentHandler = () => {
+    const { onPostReview } = this.props;
+
     const {
       restaurant,
       menu,
@@ -92,6 +91,7 @@ class FormReview extends Component {
       rating,
       longitude,
       latitude,
+      image,
     } = this.state;
 
     const reviewDict = {
@@ -103,9 +103,16 @@ class FormReview extends Component {
       latitude,
     };
 
-    axios.post('/api/review/', reviewDict).then((res) => {
-      this.postImageHandler(res.data.id);
-    }).catch();
+    let fd = false;
+
+    if (image != null) {
+      fd = new FormData();
+      const file = new File([image], 'img.jpg');
+
+      fd.append('image', file);
+    }
+
+    onPostReview(reviewDict, fd);
   }
 
   getGeoLocation = () => {
@@ -118,7 +125,7 @@ class FormReview extends Component {
           });
         },
 
-        /* Error callback, default location to 0,0 */
+        /* Error callback, defa9ult location to 0,0 */
         () => {
           this.setState({
             lat: 0,
@@ -126,23 +133,6 @@ class FormReview extends Component {
           });
         },
       );
-    }
-  }
-
-  postImageHandler = (postID) => {
-    const { image } = this.state;
-    const { history } = this.props;
-
-    if (image != null) {
-      const fd = new FormData();
-      const file = new File([image], 'img.jpg');
-
-      fd.append('image', file);
-      axios.post(`/api/review/${postID}/image/`, fd).then((/* res */) => {
-        history.push('/main');
-      }).catch();
-    } else {
-      history.push('/main');
     }
   }
 
@@ -155,20 +145,29 @@ class FormReview extends Component {
 
   render() {
     const {
-      rating, content, restaurant, menu,
-      error, image, open,
-    } = this.state;
-
-    const {
       history, mode, id, review,
     } = this.props;
 
     let ready = false;
 
     if ((mode === 'ADD' && 'lat' in this.state && 'lng' in this.state)
-      || (mode === 'EDIT' && id === review.id)) {
+      || (mode === 'EDIT' && id === review.id && 'content' in this.state)) {
       ready = true;
+      if (mode === 'EDIT') {
+        const { review: loadedReview } = this.props;
+        const {
+          rating, content, restaurant, menu, image,
+        } = loadedReview;
+        this.setState({
+          rating, content, restaurant, menu, image,
+        });
+      }
     }
+
+    const {
+      rating, content, restaurant, menu,
+      error, image, open,
+    } = this.state;
 
     const { lat, lng } = this.state;
 
@@ -297,6 +296,9 @@ FormReview.propTypes = {
   review: PropTypes.shape({
     id: PropTypes.number,
   }),
+  onPostReview: PropTypes.func,
+  onGetReview: PropTypes.func,
+  onEditReview: PropTypes.func,
 };
 
 FormReview.defaultProps = {
@@ -308,6 +310,9 @@ FormReview.defaultProps = {
   review: {
     id: 0,
   },
+  onPostReview: null,
+  onGetReview: null,
+  onEditReview: null,
 };
 
 const mapStateToProps = (state) => ({
@@ -315,7 +320,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  /*
   onGetReview: (id) => {
     dispatch(actionCreators.GET_REVIEW(id));
   },
@@ -325,8 +329,6 @@ const mapDispatchToProps = (dispatch) => ({
   onEditReview: (id, post) => {
     dispatch(actionCreators.EDIT_REVIEW(id, post));
   },
-  */
-  dispatch,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormReview);

@@ -21,6 +21,11 @@ const mockGeolocation = {
       },
     }))),
 };
+
+const mockFakeGeolocation = {
+  getCurrentPosition: jest.fn(),
+};
+
 global.navigator.geolocation = mockGeolocation;
 
 describe('<FormReview />', () => {
@@ -136,13 +141,13 @@ describe('<FormReview />', () => {
   });
 
   it('loading message should be shown up', () => {
+    global.navigator.geolocation = mockFakeGeolocation;
     const component = mount(addReview);
     const wrapper = component.find('FormReview');
-    wrapper.setState({ ready: false });
-    component.update();
 
     const backWrapper = component.find('.form-review-loading');
     expect(backWrapper.length).toBe(1);
+    global.navigator.geolocation = mockGeolocation;
   });
 
   it('error message should be shown up', () => {

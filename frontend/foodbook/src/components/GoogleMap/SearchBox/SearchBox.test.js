@@ -26,13 +26,13 @@ describe('<SearchBox />', () => {
 
     const mapApi = {
       places: {
-        SearchBox: () => ({
+        SearchBox: jest.fn(() => ({
           addListener: jest.fn(),
           bindTo: jest.fn(),
           getPlaces: jest.fn().mockImplementation(
             () => ([geoFalsePlace, geoViewPlace, geoDefaultPlace]),
           ),
-        }),
+        })),
       },
       event: {
         clearInstanceListeners: jest.fn(),
