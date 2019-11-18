@@ -45,14 +45,14 @@ export const DELETE_REVIEW = (id) => (dispatch) => (
     .then(dispatch(GET_REVIEW_PRE()))
 );
 
-/*
 export const EDIT_REVIEW = (id, review) => (dispatch) => (
   axios.put(`/api/review/${id}/`, review)
     .then(dispatch(GET_REVIEW_PRE()))
 );
 
-export const POST_REVIEW = (review) => (dispatch) => (
+export const POST_REVIEW = (review, image) => (dispatch) => (
   axios.get('/api/review/', review)
-    .then(dispatch(GET_REVIEW_PRE()))
+    .then((res) => (
+      image ? axios.post(`/api/review/${res.data.id}/image/`, image).then(dispatch(GET_REVIEW_PRE())) : {}
+    ))
 );
-*/

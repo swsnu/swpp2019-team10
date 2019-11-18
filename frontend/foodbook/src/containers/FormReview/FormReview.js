@@ -18,7 +18,7 @@ import GoogleMap from 'components/GoogleMap';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import ImageSelectPreview from 'react-image-select-pv';
-import * as actionCreators from 'store/actions/review/action_review';
+// import * as actionCreators from 'store/actions/review/action_review';
 
 class FormReview extends Component {
   constructor(props) {
@@ -27,7 +27,6 @@ class FormReview extends Component {
       /* open is variable for modal component,
         currently it's undecided if this will be converted to modal so it's left unused. */
       open: false,
-      ready: false,
     };
   }
 
@@ -82,9 +81,7 @@ class FormReview extends Component {
 
     axios.put(`/api/review/${id}/`, reviewDict).then(() => {
       this.setState({ open: false });
-    }).catch((error) => this.setState({
-      error: error.response,
-    }));
+    }).catch();
   }
 
   postContentHandler = () => {
@@ -108,9 +105,7 @@ class FormReview extends Component {
 
     axios.post('/api/review/', reviewDict).then((res) => {
       this.postImageHandler(res.data.id);
-    }).catch((error) => this.setState({
-      error: error.response,
-    }));
+    }).catch();
   }
 
   getGeoLocation = () => {
@@ -120,7 +115,6 @@ class FormReview extends Component {
           this.setState({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-            ready: true,
           });
         },
 
@@ -129,7 +123,6 @@ class FormReview extends Component {
           this.setState({
             lat: 0,
             lng: 0,
-            ready: true,
           });
         },
       );
@@ -147,9 +140,7 @@ class FormReview extends Component {
       fd.append('image', file);
       axios.post(`/api/review/${postID}/image/`, fd).then((/* res */) => {
         history.push('/main');
-      }).catch((error) => this.setState({
-        error: error.response,
-      }));
+      }).catch();
     } else {
       history.push('/main');
     }
@@ -165,10 +156,37 @@ class FormReview extends Component {
   render() {
     const {
       rating, content, restaurant, menu,
-      ready, error, image, lat, lng, open,
+      error, image, open,
     } = this.state;
 
-    const { history, mode } = this.props;
+    const {
+      history, mode, id, review,
+    } = this.props;
+
+    let ready = false;
+
+    if ((mode === 'ADD' && 'lat' in this.state && 'lng' in this.state)
+      || (mode === 'EDIT' && id === review.id)) {
+      ready = true;
+    }
+
+    const { lat, lng } = this.state;
+
+    if (error != null) {
+      return (
+        <div className="form-review-error">
+          <p>{error.content}</p>
+        </div>
+      );
+    }
+
+    if (!ready) {
+      return (
+        <div className="form-review-loading">
+          <p>Loading...</p>
+        </div>
+      );
+    }
 
     // https://www.npmjs.com/package/react-image-select-pv
     const imageField = mode === 'ADD' ? (
@@ -187,22 +205,6 @@ class FormReview extends Component {
     const googleMap = mode === 'ADD'
       ? <GoogleMap center={{ lat, lng }} search getPos={this.getPos} />
       : <GoogleMap center={{ lat, lng }} />;
-
-    if (error != null) {
-      return (
-        <div className="form-review-error">
-          <p>{error.content}</p>
-        </div>
-      );
-    }
-
-    if (!ready) {
-      return (
-        <div className="form-review-loading">
-          <p>Loading...</p>
-        </div>
-      );
-    }
 
     const contentHandler = mode === 'ADD' ? this.postContentHandler : this.editContentHandler;
 
@@ -292,6 +294,9 @@ FormReview.propTypes = {
   }),
   mode: PropTypes.string,
   id: PropTypes.number,
+  review: PropTypes.shape({
+    id: PropTypes.number,
+  }),
 };
 
 FormReview.defaultProps = {
@@ -300,6 +305,9 @@ FormReview.defaultProps = {
   },
   mode: 'ADD',
   id: 0,
+  review: {
+    id: 0,
+  },
 };
 
 const mapStateToProps = (state) => ({
