@@ -55,19 +55,22 @@ class ReviewTestCase(TestCase):
             user=user1,
             phone_number='TEST_PHN_1',
             age=10,
-            gender='TEST_G_1',
+            gender='M',
+            nickname='user1',
         )
         Profile.objects.create(
             user=user2,
             phone_number='TEST_PHN_2',
             age=20,
-            gender='TEST_G_2',
+            gender='M',
+            nickname='user2',
         )
         profile_user3 = Profile.objects.create(
             user=user3,
             phone_number='TEST_PHN_3',
             age=30,
-            gender='TEST_G_3',
+            gender='F',
+            nickname='user3',
         )
         profile_user1.friend.add(profile_user3)
         profile_user3.friend.add(profile_user1)
@@ -170,7 +173,7 @@ class ReviewTestCase(TestCase):
         }), 'application/json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Review.objects.count(), 5)
-        self.assertEqual(Profile.objects.get(id=1).count_write, 1)
+        self.assertEqual(Profile.objects.get(nickname='user1').count_write, 1)
         response = client.post('/api/review/', json.dumps({
             'content': 'TEST_NEW_CONTENT2',
             'restaurant_name': 'TEST_REST2',
@@ -179,7 +182,7 @@ class ReviewTestCase(TestCase):
         }), 'application/json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Review.objects.count(), 6)
-        self.assertEqual(Profile.objects.get(id=1).count_write, 2)
+        self.assertEqual(Profile.objects.get(nickname='user1').count_write, 2)
         response = client.post('/api/review/', json.dumps({
             'content': 'TEST_NEW_CONTENT3',
             'restaurant_name': 'TEST_REST3',
@@ -190,7 +193,7 @@ class ReviewTestCase(TestCase):
         }), 'application/json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Review.objects.count(), 7)
-        self.assertEqual(Profile.objects.get(id=1).count_write, 3)
+        self.assertEqual(Profile.objects.get(nickname='user1').count_write, 3)
     def test_post_review_list_fail(self):
         """
         POST review list must fail in this case:
@@ -232,18 +235,20 @@ class ReviewTestCase(TestCase):
         review should exist
         """
         client = Client()
+        review1_id = Review.objects.get(content='TEST_CONTENT').id
+        review2_id = Review.objects.get(content='TEST_CONTENT2').id
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
-        response = client.get('/api/review/1/')
+        response = client.get('/api/review/'+str(review1_id)+'/')
         self.assertEqual(response.status_code, 200)
         bodys = json.loads(response.content.decode())
-        self.assertEqual(bodys['id'], 1)
+        self.assertEqual(bodys['id'], review1_id)
         self.assertEqual(bodys['author'], 'TEST_USER_1')
         self.assertEqual(bodys['content'], 'TEST_CONTENT')
         self.assertEqual(bodys['restaurant'], 'TEST_REST')
         self.assertEqual(bodys['menu'], 'TEST_MENU')
         self.assertEqual(bodys['rating'], 5)
-        response = client.get('/api/review/2/')
+        response = client.get('/api/review/'+str(review2_id)+'/')
         self.assertEqual(response.status_code, 200)
     def test_get_review_detail_fail(self):
         """
@@ -265,9 +270,11 @@ class ReviewTestCase(TestCase):
         proper input
         """
         client = Client()
+        review1_id = Review.objects.get(content='TEST_CONTENT').id
+        review2_id = Review.objects.get(content='TEST_CONTENT2').id
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
-        response = client.put('/api/review/1/', json.dumps({
+        response = client.put('/api/review/'+str(review1_id)+'/', json.dumps({
             'content': 'TEST_PUT_CONTENT',
             'restaurant_name': 'TEST_REST',
             'menu_name': 'TEST_MENU',
@@ -275,13 +282,13 @@ class ReviewTestCase(TestCase):
         }), 'application/json')
         self.assertEqual(response.status_code, 200)
         bodys = json.loads(response.content.decode())
-        self.assertEqual(bodys['id'], 1)
+        self.assertEqual(bodys['id'], review1_id)
         self.assertEqual(bodys['author'], 'TEST_USER_1')
         self.assertEqual(bodys['content'], 'TEST_PUT_CONTENT')
         self.assertEqual(bodys['restaurant'], 'TEST_REST')
         self.assertEqual(bodys['menu'], 'TEST_MENU')
         self.assertEqual(bodys['rating'], 3)
-        response = client.put('/api/review/2/', json.dumps({
+        response = client.put('/api/review/'+str(review2_id)+'/', json.dumps({
             'content': 'TEST_PUT_CONTENT',
             'restaurant_name': 'TEST_REST',
             'menu_name': 'TEST_MENU',
@@ -289,14 +296,19 @@ class ReviewTestCase(TestCase):
         }), 'application/json')
         self.assertEqual(response.status_code, 200)
         bodys = json.loads(response.content.decode())
-        self.assertEqual(bodys['id'], 2)
+        self.assertEqual(bodys['id'], review2_id)
         self.assertEqual(bodys['rating'], 3)
     def test_put_review_detail_fail(self):
         """
         PUT review detail should fail in rest of the cases
         """
         client = Client()
-        response = client.put('/api/review/1/', {
+        review1_id = Review.objects.get(content='TEST_CONTENT').id
+        review2_id = Review.objects.get(content='TEST_CONTENT2').id
+        review3_id = Review.objects.get(content='TEST_CONTENT3').id
+        review4_id = Review.objects.get(content='TEST_CONTENT4').id
+        no_review_id = review1_id + review2_id + review3_id + review4_id
+        response = client.put('/api/review/'+str(review1_id)+'/', {
             'content': 'TEST_PUT_CONTENT',
             'restaurant_name': 'TEST_REST',
             'menu_name': 'TEST_MENU',
@@ -305,7 +317,7 @@ class ReviewTestCase(TestCase):
         self.assertEqual(response.status_code, 401)
         client.login(username='TEST_USER_2',
                      email='TEST_EMAIL_2', password='TEST_PW_2')
-        response = client.put('/api/review/1/', {
+        response = client.put('/api/review/'+str(review1_id)+'/', {
             'content': 'TEST_PUT_CONTENT',
             'restaurant_name': 'TEST_REST',
             'menu_name': 'TEST_MENU',
@@ -314,14 +326,14 @@ class ReviewTestCase(TestCase):
         self.assertEqual(response.status_code, 403)
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
-        response = client.put('/api/review/1/', {
+        response = client.put('/api/review/'+str(review1_id)+'/', {
             'content': 'TEST_PUT_CONTENT',
             'restaurant_name': 'TEST_REST',
             'menu_name': 'TEST_MENU',
             'rating': 3
         })
         self.assertEqual(response.status_code, 400)
-        response = client.put('/api/review/7/', {
+        response = client.put('/api/review/'+str(no_review_id)+'/', {
             'content': 'TEST_PUT_CONTENT',
             'restaurant_name': 'TEST_REST',
             'menu_name': 'TEST_MENU',
@@ -336,9 +348,10 @@ class ReviewTestCase(TestCase):
         review author should be current user
         """
         client = Client()
+        review1_id = Review.objects.get(content='TEST_CONTENT').id
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
-        response = client.delete('/api/review/1/')
+        response = client.delete('/api/review/'+str(review1_id)+'/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Review.objects.count(), 3)
     def test_delete_review_fail(self):
@@ -377,9 +390,10 @@ class ReviewTestCase(TestCase):
         friend with friend_id exist
         """
         client = Client()
+        user3_id = Profile.objects.get(nickname='user3').id
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
-        response = client.get('/api/friend/3/review/')
+        response = client.get('/api/friend/'+str(user3_id)+'/review/')
         self.assertEqual(response.status_code, 200)
         self.assertIn('TEST_CONTENT3', response.content.decode())
     def test_get_friend_review_list_fail(self):
@@ -387,22 +401,27 @@ class ReviewTestCase(TestCase):
         GET friend's review list should fail in rest of the cases
         """
         client = Client()
-        response = client.get('/api/friend/3/review/')
+        user1_id = Profile.objects.get(nickname='user1').id
+        user2_id = Profile.objects.get(nickname='user2').id
+        user3_id = Profile.objects.get(nickname='user3').id
+        no_user_id = user1_id + user2_id + user3_id
+        response = client.get('/api/friend/'+str(user3_id)+'/review/')
         self.assertEqual(response.status_code, 401)
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
-        response = client.get('/api/friend/2/review/')
+        response = client.get('/api/friend/'+str(user2_id)+'/review/')
         self.assertEqual(response.status_code, 403)
-        response = client.get('/api/friend/7/review/')
+        response = client.get('/api/friend/'+str(no_user_id)+'/review/')
         self.assertEqual(response.status_code, 404)
     def test_friend_list_other_method_not_allowed(self):
         """
         Other methods in friend review list are not allowed
         """
         client = Client()
+        user3_id = Profile.objects.get(nickname='user3').id
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
-        response = client.put('/api/friend/3/review/')
+        response = client.put('/api/friend/'+str(user3_id)+'/review/')
         self.assertEqual(response.status_code, 405)
 
     """
@@ -417,48 +436,62 @@ class ReviewTestCase(TestCase):
         review with review_id exist
         """
         client = Client()
+        user1_id = Profile.objects.get(nickname='user1').id
+        review1_id = Review.objects.get(content='TEST_CONTENT').id
+        review2_id = Review.objects.get(content='TEST_CONTENT2').id
         client.login(username='TEST_USER_3',
                      email='TEST_EMAIL_3', password='TEST_PW_3')
-        response = client.get('/api/friend/1/review/1/')
+        response = client.get('/api/friend/'+str(user1_id)+'/review/'+str(review1_id)+'/')
         self.assertEqual(response.status_code, 200)
         bodys = json.loads(response.content.decode())
-        self.assertEqual(bodys['id'], 1)
+        self.assertEqual(bodys['id'], review1_id)
         self.assertEqual(bodys['author'], 'TEST_USER_1')
         self.assertEqual(bodys['content'], 'TEST_CONTENT')
         self.assertEqual(bodys['restaurant'], 'TEST_REST')
         self.assertEqual(bodys['menu'], 'TEST_MENU')
         self.assertEqual(bodys['rating'], 5)
-        response = client.get('/api/friend/1/review/2/')
+        response = client.get('/api/friend/'+str(user1_id)+'/review/'+str(review2_id)+'/')
         self.assertEqual(response.status_code, 200)
         bodys = json.loads(response.content.decode())
-        self.assertEqual(bodys['id'], 2)
+        self.assertEqual(bodys['id'], review2_id)
     def test_get_friend_review_detail_fail(self):
         """
         GET friend's review detail should fail in rest of the cases
         """
         client = Client()
-        response = client.get('/api/friend/1/review/1/')
+        user1_id = Profile.objects.get(nickname='user1').id
+        user2_id = Profile.objects.get(nickname='user2').id
+        user3_id = Profile.objects.get(nickname='user3').id
+        no_user_id = user1_id + user2_id + user3_id
+        review1_id = Review.objects.get(content='TEST_CONTENT').id
+        review2_id = Review.objects.get(content='TEST_CONTENT2').id
+        review3_id = Review.objects.get(content='TEST_CONTENT3').id
+        review4_id = Review.objects.get(content='TEST_CONTENT4').id
+        no_review_id = review1_id + review2_id + review3_id + review4_id
+        response = client.get('/api/friend/'+str(user1_id)+'/review/'+str(review1_id)+'/')
         self.assertEqual(response.status_code, 401)
         client.login(username='TEST_USER_3',
                      email='TEST_EMAIL_3', password='TEST_PW_3')
-        response = client.get('/api/friend/2/review/1/')
+        response = client.get('/api/friend/'+str(user2_id)+'/review/'+str(review1_id)+'/')
         self.assertEqual(response.status_code, 403)
-        response = client.get('/api/friend/1/review/10/')
+        response = client.get('/api/friend/'+str(user1_id)+'/review/'+str(no_review_id)+'/')
         self.assertEqual(response.status_code, 404)
-        response = client.get('/api/friend/7/review/3/')
+        response = client.get('/api/friend/'+str(no_user_id)+'/review/'+str(review3_id)+'/')
         self.assertEqual(response.status_code, 404)
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
-        response = client.get('/api/friend/3/review/1/')
+        response = client.get('/api/friend/'+str(user3_id)+'/review/'+str(review1_id)+'/')
         self.assertEqual(response.status_code, 403)
     def test_friend_review_detail_other_method_not_allowed(self):
         """
         Other methods in friend review detail are not allowed
         """
         client = Client()
+        user1_id = Profile.objects.get(nickname='user1').id
+        review1_id = Review.objects.get(content='TEST_CONTENT').id
         client.login(username='TEST_USER_3',
                      email='TEST_EMAIL_3', password='TEST_PW_3')
-        response = client.put('/api/friend/1/review/1/')
+        response = client.put('/api/friend/'+str(user1_id)+'/review/'+str(review1_id)+'/')
         self.assertEqual(response.status_code, 405)
 
     def test_image_success(self):
@@ -470,11 +503,12 @@ class ReviewTestCase(TestCase):
         proper input format: multipart/form-data
         """
         client = Client()
+        review1_id = Review.objects.get(content='TEST_CONTENT').id
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
         img_and_file = make_image_file()
 
-        response = client.post('/api/review/1/image/',
+        response = client.post('/api/review/'+str(review1_id)+'/image/',
                                data={'image': img_and_file[1]})
         self.assertEqual(response.status_code, 200)
 
@@ -483,22 +517,28 @@ class ReviewTestCase(TestCase):
         GET friend's review detail should fail in rest of the cases
         """
         client = Client()
+        review1_id = Review.objects.get(content='TEST_CONTENT').id
+        review2_id = Review.objects.get(content='TEST_CONTENT2').id
+        review3_id = Review.objects.get(content='TEST_CONTENT3').id
+        review4_id = Review.objects.get(content='TEST_CONTENT4').id
+        no_review_id = review1_id + review2_id + review3_id + review4_id
+
         img_and_file = make_image_file()
-        response = client.post('/api/review/1/image/',
+        response = client.post('/api/review/'+str(review1_id)+'/image/',
                                data={'image': img_and_file[1]})
         self.assertEqual(response.status_code, 401)
         client.login(username='TEST_USER_2',
                      email='TEST_EMAIL_2', password='TEST_PW_2')
-        response = client.post('/api/review/1/image/',
+        response = client.post('/api/review/'+str(review1_id)+'/image/',
                                data={'image': img_and_file[1]})
         self.assertEqual(response.status_code, 403)
-        response = client.post('/api/review/7/image/',
+        response = client.post('/api/review/'+str(no_review_id)+'/image/',
                                data={'image': img_and_file[1]})
         self.assertEqual(response.status_code, 404)
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
-        response = client.get('/api/review/1/image/')
+        response = client.get('/api/review/'+str(review1_id)+'/image/')
         self.assertEqual(response.status_code, 405)
-        response = client.post('/api/review/1/image/',
+        response = client.post('/api/review/'+str(review1_id)+'/image/',
                                data={'image': img_and_file[0].tobytes()})
         self.assertEqual(response.status_code, 400)

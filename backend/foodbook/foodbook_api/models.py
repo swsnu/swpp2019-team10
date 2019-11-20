@@ -112,7 +112,7 @@ class Tag(models.Model):
         name
         sentimental
     '''
-    name = models.CharField(max_length=15)
+    name = models.CharField(max_length=30)
     sentimental = models.FloatField()
 
 class ProfileForm(ModelForm):
