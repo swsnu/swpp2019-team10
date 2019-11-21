@@ -90,7 +90,7 @@ describe('User', () => {
       expect(spy).toHaveBeenCalledTimes(1);
       expect(store.getState().user.user.failed).toBeTruthy();
       done();
-    });  
+    });
   });
 
   it('should fetch login information', (done) => {
