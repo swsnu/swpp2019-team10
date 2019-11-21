@@ -2,30 +2,10 @@
     test views/user_views.py
 '''
 # pylint: disable=W0105, R0904, R0801
-from io import BytesIO
-from PIL import Image
-from django.core.files import File
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from foodbook_api.models import Profile, Review, Menu, Restaurant
-
-def login_user1(client):
-    '''
-        method that log in with user 1
-    '''
-    client.login(username='TEST_USER_1',
-                 email='TEST_EMAIL_1', password='TEST_PW_1')
-
-def make_image_file():
-    '''
-        method that make fake image file
-    '''
-    file_obj = BytesIO()
-    img = Image.new('RGB', (60, 30), color='red')
-    img.save(file_obj, 'png')
-    file_obj.seek(0)
-    file = File(file_obj, name='test.png')
-    return (img, file)
+from foodbook_api.tests.tests_user import make_image_file
 
 # Create your tests here.
 class RecommendationTestCase(TestCase):
