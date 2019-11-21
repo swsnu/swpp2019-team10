@@ -1,36 +1,98 @@
 import spacy
 from textblob import TextBlob
-
-dict = ['acerbic', 'acid', 'acidic', 'acrid', 'aftertaste', 'ambrosia', 'ambrosial', 'appealing', 'appetite', 'appetizer', 'appetizing', 'astringent', 'balsamic', 'biting', 'bitter', 'bittersweat', 'brackish', 'briny', 'caustic', 'choice', 'delectable', 'delicious', 'divine', 'dry', 'dulcet', 'dulcified', 'flavored', 'flavorful', 'flavoring', 'flavorsome', 'fruity', 'full-bodied', 'gamy', 'gustatory', 'harsh', 'heavenly', 'honey', 'honeyed', 'hot', 'juicy', 'luscious', 'lush', 'mellow', 'mouthwatering', 'nectarous', 'palatable', 'peppery', 'pickled', 'piquant', 'pungent', 'rancid', 'rank', 'rich', 'saccharine', 'saline', 'salty', 'savory', 'scrumptious', 'sec', 'sharp', 'sour', 'spicy', 'strong', 'succulent', 'sugary', 'sweet', 'sweet-and-sour', 'sweetened', 'syrupy', 'tang', 'tart', 'tasteful', 'tasteless', 'tasting', 'tasty', 'toothsome', 'treacly', 'unsweetened', 'vinegary', 'yummy', 'zesty', 'nice', 'fantastic', 'excellent', 'unexpected', 'professional', 'good', 'well', 'bad', 'worst', 'fast', 'friendly', 'attentive', 'wonderful', 'beautiful', 'good', 'great', 'nice', 'amazing', 'friendly', 'delicious', 'more', 'bad', 'awesome', 'perfect', 'excellent', 'happy', 'fresh', 'well', 'sure', 'clean', 'many', 'full', 'first', 'favorite', 'wonderful', 'worth', 'fantastic', 'special', 'free', 'quick', 'ok', 'sweet', 'huge', 'hot', 'easy', 'beautiful', 'cool', 'helpful', 'other', 'incredible', 'disappointed', 'horrible', 'right', 'cheap', 'able', 'most', 'little', 'fine', 'much', 'comfortable', 'okay', 'attentive', 'rude', 'impressed', 'available', 'top', 'big', 'new', 'pleasant', 'wrong', 'spicy', 'own', 'glad', 'fast', 'fair', 'professional', 'tender', 'yummy', 'reasonable', 'warm', 'large', 'high', 'fun', 'small', 'tasty', 'kind', 'terrible', 'expensive', 'super', 'decent', 'cold', 'unique', 'interesting', 'cute', 'least', 'healthy', 'lovely', 'whole', 'pleased', 'last', 'knowledgeable', 'old', 'authentic', 'flavorful', 'honest', 'satisfied', 'fabulous', 'important', 'enough', 'slow', 'salty', 'next', '-', 'different', 'spectacular', 'crazy', 'long', 'non', 'dirty', 'only', 'late', 'busy', 'disappointing', 'regular', 'close', 'courteous', 'sick', 'soft', 'few', 'short', 'personable', 'red', 'outstanding', 'simple', 'light', 'front', 'same', 'impressive', 'superb', 'prepared', 'awful', 'mexican', 'delightful', 'intimate', 'chinese', 'entire', 'weird', 'several', 'patient', 'loyal', 'excited', 'true', 'vegan', 'outdoor', 'annoying', 'french', 'welcome', 'overall', 'disgusting', 'bright', 'overpriced', 'surprised', 'second', 'hungry', 'rare', 'white', 'nasty', 'fried', 'vegetarian', 'memorable', 'polite', 'Most', 'pricey', 'MORE', 'extra', 'juicy', 'affordable', 'dry', 'tasteless', 'complimentary', 'rich', 'positive', 'trendy', 'enjoyable', 'particular', 'bland', 'main', 'garlic', 'crispy', 'safe', 'green', 'phenomenal', 'italian', 'single', 'original', 'refreshing', 'casual', 'willing', 'iced', 'tomato', 'asian', 'indian', 'exceptional', 'normal', 'clear', 'generous', 'gorgeous', 'indoor', 'real', 'brown', 'possible', 'tough', 'total', 'strong', 'proud', 'thick', 'negative', 'outside', 'alright', 'lucky', 'funny', 'knowledgable', 'popular', 'thin', 'wide', 'out', 'stupid', 'loud', 'experienced', 'neat', 'eggplant', 'local', 'filthy', 'certain', 'mini', 'steamed', 'watery', 'favourite', 'less', 'interested', 'famous', 'sophisticated', 'classic', 'live', 'disrespectful', 'entertaining', 'samosas', 'prompt', 'grand', 'overwhelming', 'recent', 'natural', 'attractive', 'inventive', 'More', 'inexpensive', 'usual', 'impeccable', 'romantic', 'daily', 'american', 'upset', 'strange', 'moist', 'thrilled', 'cooked', 'welcoming', 'mild', 'terrific', 'dental', 'hearty', 'afraid', 'smooth', 'bitter', 'polish', 'superior', 'ugly', 'poor', 'pricy', 'sunny', 'thankful', 'ample', 'random', 'hipster', 'secret', 'outrageous', 'lively', 'additional', 'quiet', 'americanized', 'past', 'interactive', 'needless', 'sticky', 'gross', 'relaxed', 'thoughtful', 'painful', 'bottom', 'ridiculous', 'detailed', 'incompetent', 'half', 'respectful', 'evident', 'elderly', 'flavourful', 'fellow', 'drunk', 'kid', 'mediocre', 'worthy', 'humorous', 'pushy', 'cheesy', 'malaysian', 'venetian', 'unhappy', 'various', 'average', 'shady', 'lousy', 'common', 'efficient', 'black', 'ravioli', 'female', 'young', 'aged', 'legendary', 'middle', 'eastern', 'insane', 'savory', 'wise', 'open', 'existent', 'comfy', 'surprising', 'basic', 'hostess', 'creamy', 'edible', 'equipped', 'extensive', 'consistent', 'sooo', 'familiar', 'varied', 'spacious', 'anti', 'organic', 'difficult', 'colorful', 'monthly', 'square', 'talented', 'homemade', 'empty', 'upscale', 'fat', 'sized', 'competent', 'complementary', 'roasted', 'considerate', 'bold', 'sympathetic', 'ideal', 'pretentious', 'korean', 'prime', 'ferris', 'crowded', 'early', 'sorry', 'chatty', 'rainy', 'shredded', 'undercooked', 'flawless', 'glorious', 'round', 'bouncey', 'organized', 'inexperienced', 'pleasing', 'understaffed', 'orange', 'confused', 'hungarian', 'competitive', 'future', 'exhausting', 'shocked', 'delicate', 'closed', 'drunken', 'scottsdale', 'caprese', 'piss', 'brownie', 'banh', 'appealing', 'chimichurri', 'picky', 'unreal', 'serve', 'retail', 'plain', 'popcorn', 'midwestern', 'ready', 'unqualified', 'incapable', 'slight', 'overrun', 'counter', 'discerning', 'accessible', 'chill', 'leafy', 'sarcastic', 'attentative', 'finicky', 'primary', 'unbendable', 'arrogant', 'dietary', 'sparse', 'latin', 'pretty', 'wishful', 'embarrassed', 'aware', 'medical', 'exorbitant', 'modern', 'recreational', 'suitable', 'untold', 'miserable', 'appreciative', 'significant', 'fortunate', 'bean', 'general', 'seasoned', 'hotdog', 'ever', 'biased', 'mandatory', 'complete', 'magical', 'individual', 'heavy', 'upbeat', 'accommodating', 'weekly', 'godforsaken', 'cardinal', 'hawaiian', 'harcha', 'caviar', 'contrived', 'alone', 'dedicated', 'secure', 'importantly', 'tremendous', 'medium', 'responsive', 'overcooked', 'similar', 'sore', 'soo', 'combined', 'neem', 'concerned', 'discourteous', 'undetermined', 'impolite', 'cheerful', 'skeptical', 'indicative', 'drool', 'swollen', 'neutral', 'transparent', 'powerful', 'frozen', 'such', 'graceful', 'valuable', 'unsurpassed', 'annual', 'precious', 'giant', 'seasonal', 'plump', 'exotic', 'semi', 'accompanying', 'bring', 'seamless', 'lovable', 'former', 'hectic', 'rubbed', 'crap', 'avid', 'silly', 'nearby', 'olive', 'unnecessary', 'bulgogi', 'squid', 'blended', 'unorganized', 'jaded', 'greek', 'yum', 'pint', 'fashioned', 'talkative', 'spanish', 'iraqi', 'underappreciate', 'fluffy', 'aromatic', 'persian', 'arab', 'gaudy', 'hideous', 'tasteful', 'interior', 'actual', 'pleasurable', 'ripe', 'depressed', 'junky', 'unable', 'legal', 'western', 'focused', 'vegas', 'serious', 'mean', 'pc', 'trustworthy', 'overnight', 'precise', 'affirmative', 'off', 'inedible', 'nuked', 'online', 'peddle', 'unflavorful', 'buzzed', 'questionable', 'pillowy', 'truffle', 'shallot', 'volcanic', 'dang', 'exclusive', 'impatient', 'unprofessional', 'fuzzy', 'messy', 'fabulous-', 'luscious', 'third', 'absent', 'par', 'thorough', 'bitchy', 'snobby', 'mecktoberf', 'bartendress', 'fondue', 'angry', 'creative', 'downstairs', 'cooperative', 'darn', 'vietnamese', 'chunky', 'decadent', 'pendant', 'national', 'oversized', 'fancy', 'adorable', 'braised', 'convenient', 'trashy', 'family', 'oatmeal', 'spontaneous', 'artisan', 'overrated', 'informed', 'skimpy', 'intentional', 'sour', 'up', 'displeased', 'agitated', 'key', 'careful', 'japanese', 'swift', '1st', 'wild', 'tall', 'apologetic', 'cut', 'damn', 'tasting', 'promising', 'pecan', 'gooey', 'brilliant', 'southwest', 'bloody', 'divine', 'communicative', 'shrimp', 'hidden', 'dated', 'essential', 'desolate', 'frosted', 'worthwhile', 'cheery', 'delicous', 'unsalted', 'elitist', 'purplish', "kind've", 'vous', 'noodle', 'specific', 'balsamic', 'standard', 'stringy', 'hummingbird', 'racist', 'content', 'obtrusive', 'bothered', 'southwestern', 'plentiful', 'pressured', 'adequate', 'elegant', 'distinguished', 'expansive', 'like', 'forthright', '25th', 'deep', 'allergic', 'intoxicated', 'peruvian', 'milky', 'flavored', 'really', 'scrumptious', 'chopped', 'straight', 'forward', 'suggestive', 'raw', 'broad', 'scottish', 'ill', 'rubbery', 'hilarious', 'urban', 'dire', 'east', 'unusual', 'rear', 'intuitive', 'stocked', 'outs-', 'blue', 'falafel', 'straightforward', 'dreading', 'floral', 'major', 'compassionate', 'expert', 'sterile', 'immaculate', 'packed', 'fake', 'soggy', 'crappy', 'culinary', 'gigantic', 'oily', 'unappetizing', 'feta', 'pregnant', 'youthful', 'very', 'omelet', 'harsh', 'bottled', 'remarkable', 'permanent', 'ammo', 'personal', 'clearly', 'unlimited', 'dark', 'mammoth', 'hush', 'accurate', 'understanding', 'vermicelli', 'stenchy', 'hollandaise', 'effortless', 'sicilian', 'stodgy', 'gluten', 'sexy', 'swanky', 'nightly', 'serene', 'concentrated', 'ecuadorian', 'appetizing', 'amazed', 'sparkling', 'routine', 'weary', 'acoustic', 'skinny', 'crisp', 'separate', 'sad', 'brave', 'appropriate', 'best', 'supernatural', 'calm', 'hydrated', '3rd', 'near', 'tired', 'progressive', 'independent', 'english', 'minty', 'informative', 'well-', 'massive', 'bagged', 'exciting', 'confident', 'parmesan', 'solid', 'stylish', 'unsanitary', 'postal', 'beloved', 'excessive', 'smart', 'dumb', 'litte', 'fussy', 'nie', 'confusing', 'columbian', 'grateful', 'dim', 'double', 'instant', 'unbelievable', 'marvelous', 'bent', 'pre', 'movie', 'practical', 'flaky', 'convinced', 'foul', 'accountable', 'smokehouse', 'low', 'filo', 'w/', 'constant', 'traumatic', 'multiple', 'handy', 'upfront']
-
+from stanfordnlp.server import CoreNLPClient
 class Tagging():
-    def tagging(text):
-        nlp = spacy.load("en_core_web_sm")
+    def is_word(self, node):
+        if len(node.child)==0:
+            return True
+        else:
+            return False
+    def is_leaf(self, node):
+        if len(node.child)==1 and is_word(node.child[0]):
+            return True
+        else:
+            return False
 
-        content = TextBlob(text)
-
-        dict = {}
-
-        for sentence in content.sentences:
-            doc = nlp(sentence.string)
+    def check_negation(self, word, negation_words, dict_of_adj):
+        for n in negation_words:
+            if dict_of_adj[word]==n.source:
+                return 'not '
+        return ''
+    def sample(self, tree, negation_words, dict_of_adj):
+        sentiment_sen=[]
+        """
+        if is_leaf(tree):
+            if tree.value=="JJ":
+                negation=check_negation(tree.child[0], negation_words, dict_of_adj)
+                sentiment_adj.append(negation+tree.child[0].value)
+        """
+        for ch in tree.child:
+            sentiment_sen += sample(ch, negation_words, dict_of_adj)
+        if tree.value=="S":
+            s=generate_string_for_sentiment(tree)
+            content = TextBlob(s)
+            sentence = content.sentences[0]
             polarity = sentence.sentiment.polarity
-            for token in doc:
-                if token.pos_ == "ADJ":
-                    if token.lemma_ in dict:
-                        if abs(dict[token.lemma_]) < abs(polarity):
-                            dict[token.lemma_] = polarity
-                    else:
-                        dict[token.lemma_] = polarity
-
-        res = sorted(dict.items(), key=(lambda x: abs(x[1])), reverse = True)
-
-        ret = {}
-
-        i = 0
-        for item in dict.keys():
-            ret[item] = dict[item]
-            i += 1
-            if i == 5:
-                break
-
-        return ret
+            sentiment_sen.append((s, polarity))
+        return sentiment_sen
+    def generate_string_for_sentiment(self, tree):
+        if is_word(tree):
+            if tree.value=="n't":
+                return "not "
+            return tree.value+' '
+        s=''
+        for ch in tree.child:
+            s = s + generate_string_for_sentiment(ch)
+        return s
+    def tagging(self, text):
+        with CoreNLPClient(start_server=False, annotators=['tokenize', 'ssplit', 'pos', 'lemma', 'parse', 'depparse'], timeout=60000, memory='16G') as client:
+            # submit the request to the server
+            ann = client.annotate(text)
+            # get the first sentence
+            sentences = ann.sentence
+            list_of_sent=[]
+            for sentence in sentences:
+                dict_of_adj = {}
+                list_of_adj = []
+                list_of_adj_prop = []
+                for i, t in enumerate(sentence.token):
+                    if t.pos == "JJ":
+                        dict_of_adj[t.word] = i+1
+                        list_of_adj.append(t.word)
+                        list_of_adj_prop.append(t.word)
+                negs = []
+                for edg in sentence.basicDependencies.edge:
+                    if edg.dep == "neg":
+                        negs.append(edg)
+                for i, word in enumerate(list_of_adj):
+                    negation = check_negation(word, negs, dict_of_adj)
+                    list_of_adj_prop[i] = negation+list_of_adj[i]
+                parse = sentence.parseTree
+                phrases = sample(parse, negs, dict_of_adj)
+                for i, word in enumerate(list_of_adj):
+                    for p in phrases:
+                        if word in p[0]:
+                            found=False
+                            for prop in list_of_sent:
+                                if list_of_adj_prop[i] == prop[0]:
+                                    prop[1]+=p[1]
+                                    prop[2]+=1
+                                    found=True
+                            if not found:
+                                list_of_sent.append(
+                                    (list_of_adj_prop[i], p[1], 1))
+                            break
+            res={}
+            for prop in list_of_sent:
+                res[prop[0]]=prop[1]/prop[2]
+            print(res)
+            ret = {}
+            i = 0
+            for item in res.keys():
+                ret[item] = res[item]
+                i += 1
+                if i == 5:
+                    break
+            print(ret)
+            return ret
+                
