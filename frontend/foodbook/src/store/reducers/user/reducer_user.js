@@ -15,6 +15,8 @@ const initialState = {
   taste: {
     // TODO: implement this!
   },
+
+  search: undefined,
 };
 
 const reducer = (state = initialState, action) => {
@@ -46,6 +48,14 @@ const reducer = (state = initialState, action) => {
           ...state.user,
           failed: false,
         },
+      };
+
+      return newState;
+
+    case actionTypes.FIND_ID:
+      newState = {
+        ...state,
+        search: action.data,
       };
 
       return newState;

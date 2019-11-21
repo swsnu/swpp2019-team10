@@ -35,13 +35,30 @@ export const REGISTER_DEEP = () => ({
   type: actionTypes.REGISTER,
 });
 
-export const REGISTER = (userData) => (dispatch) => axios.post('/api/signup/', {
-  username: userData.username,
-  password: userData.password,
-  phone_number: userData.phone_number,
-  age: userData.age,
-  gender: userData.gender,
-  nickname: userData.nickname,
-})
-  .then(() => dispatch(REGISTER_DEEP()))
+export const FIND_ID_DEEP = (data) => ({
+  type: actionTypes.FIND_ID,
+  data,
+});
+
+export const FIND_ID = (username) => (dispatch) => axios.post('/api/signup_dupcheck', username)
+  .then((res) => dispatch(FIND_ID_DEEP(res.data)))
   .catch();
+
+export const REGISTER = (userData) => (dispatch) => {
+  dispatch(FIND_ID_DEEP(userData.username))
+    .then((res) => {
+      if (res.data.id === -1) {
+        return axios.post('/api/signup/', {
+          username: userData.username,
+          password: userData.password,
+          phone_number: userData.phone_number,
+          age: userData.age,
+          gender: userData.gender,
+          nickname: userData.nickname,
+        })
+          .then(() => dispatch(REGISTER_DEEP()))
+          .catch();
+      }
+      return undefined;
+    });
+};
