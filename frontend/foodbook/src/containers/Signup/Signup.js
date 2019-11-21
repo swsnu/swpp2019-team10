@@ -3,7 +3,7 @@ import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  Form, Segment,
+  Form, Segment, Message,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
@@ -46,6 +46,8 @@ export class Signup extends Component {
         gender: undefined,
         profile_pic: undefined,
       },
+
+      duplicatedUser: false,
     };
   }
 
@@ -105,7 +107,7 @@ export class Signup extends Component {
   };
 
   render() {
-    const { input, error } = this.state;
+    const { input, error, duplicatedUser } = this.state;
 
     return (
       <div className="signup">
@@ -200,8 +202,13 @@ export class Signup extends Component {
               }
               className="gender-input-wrapper"
             />
-            <input type="submit" className="login-button" name="submit" value="submit" />
 
+            {duplicatedUser && (
+              <Message negative className="duplicated-id-error-wrapper">
+                <Message.Header>Signup Failed!</Message.Header>
+                <p>Your ID is duplicated! Please use another ID.</p>
+              </Message>
+            )}
           </Segment>
         </Form>
       </div>
@@ -218,4 +225,8 @@ const mapDispatchToProps = (dispatch) => ({
   onSignup: (userData) => dispatch(actionCreators.REGISTER(userData)),
 });
 
-export default connect(null, mapDispatchToProps)(withRouter(Signup));
+const mapStateToProps = (state) => ({
+  duplicatedUser: state.user.searched ? state.user.searched.id !== -1 : false,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Signup));

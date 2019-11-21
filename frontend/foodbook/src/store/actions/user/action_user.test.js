@@ -109,4 +109,23 @@ describe('User', () => {
     });
     done();
   });
+
+  it('should handle searching user', (done) => {
+    const spy = jest.spyOn(axios, 'post')
+      .mockImplementation(() => new Promise((resolve) => {
+        const result = {
+          status: 204,
+          data: {
+            id: 3,
+          },
+        };
+        resolve(result);
+      }));
+
+    store.dispatch(actionCreators.FIND_ID('abc')).then(() => {
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(store.getState().user.search.id).toBe(3);
+    });
+    done();
+  });
 });
