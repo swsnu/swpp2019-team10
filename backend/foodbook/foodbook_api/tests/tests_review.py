@@ -363,11 +363,15 @@ class ReviewTestCase(TestCase):
         self.assertEqual(response.status_code, 401)
         client.login(username='TEST_USER_2',
                      email='TEST_EMAIL_2', password='TEST_PW_2')
-        response = client.delete('/api/review/1/')
+        review1_id = Review.objects.get(content='TEST_CONTENT').id
+        review2_id = Review.objects.get(content='TEST_CONTENT2').id
+        review3_id = Review.objects.get(content='TEST_CONTENT3').id
+        no_review_id = review1_id + review2_id + review3_id
+        response = client.delete('/api/review/'+str(review1_id)+'/')
         self.assertEqual(response.status_code, 403)
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
-        response = client.delete('/api/review/7/')
+        response = client.delete('/api/review/'+str(no_review_id)+'/')
         self.assertEqual(response.status_code, 404)
 
     def test_review_detail_other_method_not_allowed(self):

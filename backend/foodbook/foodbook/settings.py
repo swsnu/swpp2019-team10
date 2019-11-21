@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'foodbook.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'team10_db',
+        'NAME': 'team10_db_jaeho',
         'USER': 'team10_admin',
         'PASSWORD': 'cbgthelove1004!@#$',
         'HOST': '52.231.103.143',
