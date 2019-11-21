@@ -55,7 +55,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FIND_ID:
       newState = {
         ...state,
-        search: action.data,
+        search: action.data.id,
       };
 
       return newState;
