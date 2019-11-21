@@ -37,6 +37,8 @@ matrix:
     - python -m spacy download en_core_web_sm
     - python -m textblob.download_corpora
     - pip install mysqlclient
+    - pip install pandas
+    - pip install surprise
     script:
     - pylint --load-plugins pylint_django */models.py */views/*.py */tests/*.py
     - python manage.py makemigrations

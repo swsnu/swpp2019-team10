@@ -5,6 +5,7 @@ module
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ModelForm
+from django_mysql.models import JSONField
 # Create your models here.
 
 
@@ -25,7 +26,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=15, null=True)
     age = models.IntegerField(null=True)
-    #taste=hasn't decide yet
+    taste = JSONField()
     gender = models.CharField(max_length=1, null=True)
     nickname = models.CharField(max_length=100)
     profile_pic = models.ImageField(upload_to="user/profile_pic/", blank=True)
@@ -62,7 +63,7 @@ class Menu(models.Model):
         related_name='menu_list',
         null=True
     )
-    #taste=hasn't decide yet
+    taste = JSONField()
 
 class Review(models.Model):
     '''
