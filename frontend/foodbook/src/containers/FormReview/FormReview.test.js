@@ -143,7 +143,6 @@ describe('<FormReview />', () => {
   it('loading message should be shown up', () => {
     global.navigator.geolocation = mockFakeGeolocation;
     const component = mount(addReview);
-    const wrapper = component.find('FormReview');
 
     const backWrapper = component.find('.form-review-loading');
     expect(backWrapper.length).toBe(1);
