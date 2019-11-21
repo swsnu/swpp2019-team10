@@ -23,10 +23,11 @@ class Profile(models.Model):
         friend: ManyToMany to self
     '''
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone_number = models.CharField(max_length=15)
-    age = models.IntegerField()
+    phone_number = models.CharField(max_length=15, null=True)
+    age = models.IntegerField(null=True)
     #taste=hasn't decide yet
-    gender = models.CharField(max_length=1)
+    gender = models.CharField(max_length=1, null=True)
+    nickname = models.CharField(max_length=100)
     profile_pic = models.ImageField(upload_to="user/profile_pic/", blank=True)
     count_write = models.IntegerField(default=0)
     count_friend = models.IntegerField(default=0)
@@ -111,7 +112,7 @@ class Tag(models.Model):
         name
         sentimental
     '''
-    name = models.CharField(max_length=15)
+    name = models.CharField(max_length=30)
     sentimental = models.FloatField()
 
 class ProfileForm(ModelForm):

@@ -76,8 +76,15 @@ WSGI_APPLICATION = 'foodbook.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'team10_db',
+        'USER': 'team10_admin',
+        'PASSWORD': 'cbgthelove1004!@#$',
+        'HOST': '52.231.103.143',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': 'SET default_storage_engine=INNODB'
+        },
     }
 }
 
