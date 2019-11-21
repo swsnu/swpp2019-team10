@@ -195,6 +195,7 @@ export class Signup extends Component {
               placeholder="Your gender here"
               fluid
               selection
+              onChange={this.handleChange}  
               options={
                 [{
                   key: 'M',

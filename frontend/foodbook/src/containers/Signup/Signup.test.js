@@ -166,7 +166,22 @@ describe('<Signup />', () => {
   });
 
   it('should check gender restriction', () => {
+    const wrapperButton = component.find('DropdownMenu');
+    const wrapperMale = component.find('DropdownItem').at(0);
+    const wrapperFemale = component.find('DropdownItem').at(1);
+    const wrapperOthers = component.find('DropdownItem').at(2);
 
+    expect(instance.state.input.gender).toBe('');
+
+    wrapperButton.simulate('click');
+    wrapperMale.simulate('click');
+    expect(instance.state.input.gender).toBe('M');
+
+    wrapperFemale.simulate('click');
+    expect(instance.state.input.gender).toBe('F');
+
+    wrapperOthers.simulate('click');
+    expect(instance.state.input.gender).toBe('O');
   });
 
   // it('should check if ID is already used', () => {
