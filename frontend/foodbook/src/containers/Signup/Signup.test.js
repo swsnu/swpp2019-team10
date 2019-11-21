@@ -122,7 +122,7 @@ describe('<Signup />', () => {
     const confirmWrapper = component.find('input').at(2);
     const element = legalInput.password[0];
     const confirmElement = legalInput.password[0];
-    const invalidConfirm = legalInput.password[1];
+    const invalidConfirm = 'aaaaa';
 
     wrapper.simulate('change', { target: { name: 'password', value: element } });
     confirmWrapper.simulate('change', { target: { name: 'passwordConfirm', value: invalidConfirm } });

@@ -47,7 +47,6 @@ const reducer = (state = initialState, action) => {
           failed: false,
         },
       };
-      console.log(newState);
 
       return newState;
 
