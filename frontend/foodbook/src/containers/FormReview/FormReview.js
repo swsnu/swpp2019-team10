@@ -151,7 +151,7 @@ class FormReview extends Component {
     let ready = false;
 
     if ((mode === 'ADD' && 'lat' in this.state && 'lng' in this.state)
-      || (mode === 'EDIT' && id === review.id && 'content' in this.state)) {
+      || (mode === 'EDIT' && id === review.id && !('content' in this.state))) {
       ready = true;
       if (mode === 'EDIT') {
         const { review: loadedReview } = this.props;

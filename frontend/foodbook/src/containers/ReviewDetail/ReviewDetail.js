@@ -168,7 +168,19 @@ ReviewDetail.propTypes = {
   }),
   onGetReview: PropTypes.func,
   onDeleteReview: PropTypes.func,
-  review: PropTypes.shape(PropTypes.any),
+  review: PropTypes.shape({
+    id: PropTypes.number,
+    content: PropTypes.string,
+    restaurant: PropTypes.string,
+    author: PropTypes.string,
+    menu: PropTypes.string,
+    image: PropTypes.any,
+    rating: PropTypes.number,
+    date: PropTypes.string,
+    tag: PropTypes.any,
+    longitude: PropTypes.number,
+    latitude: PropTypes.number,
+  }),
 };
 
 ReviewDetail.defaultProps = {
@@ -182,7 +194,9 @@ ReviewDetail.defaultProps = {
   },
   onGetReview: null,
   onDeleteReview: null,
-  review: {},
+  review: {
+    id: 0,
+  },
 };
 
 const mapStateToProps = (state) => ({

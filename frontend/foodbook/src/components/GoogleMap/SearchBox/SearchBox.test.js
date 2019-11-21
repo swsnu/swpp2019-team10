@@ -48,6 +48,6 @@ describe('<SearchBox />', () => {
   it('should render without crashing', () => {
     const component = mount(searchBox);
     const wrapper = component.find('SearchBox');
-    expect(wrapper.length).toBe(2);
+    expect(wrapper.length).toBe(1);
   });
 });
