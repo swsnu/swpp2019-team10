@@ -8,7 +8,6 @@ import {
 import 'semantic-ui-css/semantic.min.css';
 
 import * as actionCreators from 'store/actions/user/action_user';
-import ImageSelectPreview from 'react-image-select-pv';
 
 export class Signup extends Component {
   restirction = {
@@ -51,7 +50,7 @@ export class Signup extends Component {
   }
 
   signupHandler = () => {
-    const { onSignup, closeModal, onUploadProfilePic } = this.props;
+    const { onSignup, closeModal } = this.props;
     const { input } = this.state;
 
     const requestDict = {
@@ -63,22 +62,8 @@ export class Signup extends Component {
       nickname: input.name,
     };
 
-    onSignup(requestDict).then((res) => {
-      if (input.profile_pic) {
-        const fd = new FormData();
-        const file = new File([input.profile_pic], 'img.jpg');
-
-        fd.append('image', file);
-
-        const data = {
-          id: res.id,
-          file: fd,
-        };
-
-        onUploadProfilePic(data)
-          .then(() => { alert('!'); closeModal(); })
-          .catch();
-      }
+    onSignup(requestDict).then(() => {
+      closeModal();
     });
   };
 
@@ -124,7 +109,7 @@ export class Signup extends Component {
 
     return (
       <div className="signup">
-        <Form className="signup-form" onSubmit={this.signupHandler}>
+        <Form className="signup-form" id="signup-form" onSubmit={this.signupHandler}>
           <Segment>
             <Form.Input
               error={error.id}
@@ -195,7 +180,7 @@ export class Signup extends Component {
               placeholder="Your gender here"
               fluid
               selection
-              onChange={this.handleChange}  
+              onChange={this.handleChange}
               options={
                 [{
                   key: 'M',
@@ -215,17 +200,7 @@ export class Signup extends Component {
               }
               className="gender-input-wrapper"
             />
-
-            <ImageSelectPreview
-              className="signup-image-selector"
-              onChange={(data) => this.setState({
-                input: {
-                  ...input,
-                  profile_pic: data[0].blob,
-                },
-              })}
-              max={1}
-            />
+            <input type="submit" className="login-button" name="submit" value="submit" />
 
           </Segment>
         </Form>
@@ -237,13 +212,10 @@ export class Signup extends Component {
 Signup.propTypes = {
   onSignup: propTypes.func.isRequired,
   closeModal: propTypes.func.isRequired,
-  onUploadProfilePic: propTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   onSignup: (userData) => dispatch(actionCreators.REGISTER(userData)),
-
-  onUploadProfilePic: (data) => dispatch(actionCreators.PROFILE_PIC(data)),
 });
 
 export default connect(null, mapDispatchToProps)(withRouter(Signup));

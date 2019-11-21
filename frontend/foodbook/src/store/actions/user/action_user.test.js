@@ -77,6 +77,22 @@ describe('User', () => {
     });
   });
 
+  it('should set failed flag to true when login failed', (done) => {
+    const spy = jest.spyOn(axios, 'post')
+      .mockImplementation(() => new Promise((resolve, reject) => {
+        const result = {
+          status: 401,
+        };
+        reject(result);
+      }));
+
+    store.dispatch(actionCreators.LOGIN(mockLoginUser)).then(() => {
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(store.getState().user.user.failed).toBeTruthy();
+      done();
+    });  
+  });
+
   it('should fetch login information', (done) => {
     const spy = jest.spyOn(axios, 'get')
       .mockImplementation(() => new Promise((resolve) => {

@@ -25,7 +25,6 @@ describe('<Signup />', () => {
     phoneNumber: 'Max 15. form of XXX-XXXX-XXXX.',
     age: '0 to 150, inclusive.',
     gender: 'A character, M for male, F for female, O for others.',
-    profile_pic: 'Picture upload',
     name: 'Max length of 30. Required. Only English Character and whitespace is allowed.',
   };
 
@@ -36,7 +35,6 @@ describe('<Signup />', () => {
     phoneNumber: ['010-1234-5678'],
     age: ['21', '02'],
     gender: ['M', 'F', 'O'],
-    profile_pic: {},
     name: ['Aadfadsf ASFDasdf', 'DD DD'],
   };
 
@@ -189,17 +187,6 @@ describe('<Signup />', () => {
   //   const spy = jest.spyOn(history, 'push').mockImplementation(() => {});
 
   //   wrapper.simulate('click');
-  //   expect(spy).toHaveBeenCalledTimes(1);
-  // });
-
-  it('should upload profile image successfully', () => {
-    // TODO: refer to AddReview
-  });
-
-  // it('should post signup handler when clicking submit button', () => {
-  //   const spy = jest.spyOn(actionCreators, 'REGISTER').mockImplementation(() => ({ type: '' }));
-
-
   //   expect(spy).toHaveBeenCalledTimes(1);
   // });
 });

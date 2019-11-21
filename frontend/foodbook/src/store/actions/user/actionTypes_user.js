@@ -4,7 +4,7 @@ export const LOGOUT = 'LOGOUT';
 export const REGISTER = 'REGISTER';
 export const LOGIN_SNS = 'LOGIN_SNS'; // temproray. if login with sns doesn't need reducer then delete it.
 export const REGISTER_SNS = 'REGISTER_SNS'; // same as above.
-export const PROFILE_PIC = 'PROFILE_PIC';
+export const UPLOAD_PROFILE_PIC = 'UPLOAD_PROFILE_PIC';
 
 export const GET_USER_ID = 'GET_USER_ID'; // I think, first get id from nickname and
 export const GET_USER_INFO = 'GET_USER_INFO';
