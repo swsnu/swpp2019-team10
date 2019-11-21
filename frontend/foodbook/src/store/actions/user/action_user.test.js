@@ -124,7 +124,7 @@ describe('User', () => {
 
     store.dispatch(actionCreators.FIND_ID('abc')).then(() => {
       expect(spy).toHaveBeenCalledTimes(1);
-      expect(store.getState().user.search.id).toBe(3);
+      expect(store.getState().user.search).toBe(3);
     });
     done();
   });

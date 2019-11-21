@@ -17,7 +17,6 @@ export class Signup extends Component {
     phoneNumber: 'Max 15. form of XXX-XXXX-XXXX.',
     age: '0 to 150, inclusive.',
     gender: 'A character, M for male, F for female, O for others.',
-    profile_pic: 'Picture upload',
     name: 'Max length of 30. Required. Only English Character and whitespace is allowed.',
   };
 
@@ -33,7 +32,6 @@ export class Signup extends Component {
         phoneNumber: '',
         age: '',
         gender: '',
-        profile_pic: '',
       },
 
       error: {
@@ -44,10 +42,7 @@ export class Signup extends Component {
         phoneNumber: undefined,
         age: undefined,
         gender: undefined,
-        profile_pic: undefined,
       },
-
-      duplicatedUser: false,
     };
   }
 
@@ -64,10 +59,11 @@ export class Signup extends Component {
       nickname: input.name,
     };
 
-    onSignup(requestDict).then(() => {
-      closeModal();
+    onSignup(requestDict).then((res) => {
+      console.log(res);
+      if (res) closeModal();
     });
-  };
+  }
 
   inputChecker = (name, value) => {
     const inputMatcher = {
@@ -107,7 +103,8 @@ export class Signup extends Component {
   };
 
   render() {
-    const { input, error, duplicatedUser } = this.state;
+    const { input, error } = this.state;
+    const { duplicated } = this.props;
 
     return (
       <div className="signup">
@@ -203,7 +200,7 @@ export class Signup extends Component {
               className="gender-input-wrapper"
             />
 
-            {duplicatedUser && (
+            {duplicated >= 0 && (
               <Message negative className="duplicated-id-error-wrapper">
                 <Message.Header>Signup Failed!</Message.Header>
                 <p>Your ID is duplicated! Please use another ID.</p>
@@ -219,6 +216,11 @@ export class Signup extends Component {
 Signup.propTypes = {
   onSignup: propTypes.func.isRequired,
   closeModal: propTypes.func.isRequired,
+  duplicated: propTypes.number,
+};
+
+Signup.defaultProps = {
+  duplicated: -2,
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -226,7 +228,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
-  duplicatedUser: state.user.searched ? state.user.searched.id !== -1 : false,
+  duplicated: state.user.search,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Signup));
