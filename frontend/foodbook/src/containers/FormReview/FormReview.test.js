@@ -195,7 +195,7 @@ describe('<FormReview />', () => {
 
     it('should have textfields working', () => {
       const component = mount(editReview);
-      component.update();
+      expect(spyGet).toHaveBeenCalledTimes(1);
 
       component.find('#review-restaurant-input').at(1).simulate('change', { target: { value: 'restaurant' } });
       component.find('#review-menu-input').at(1).simulate('change', { target: { value: 'menu' } });
