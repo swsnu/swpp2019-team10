@@ -125,7 +125,7 @@ class FormReview extends Component {
           });
         },
 
-        /* Error callback, defa9ult location to 0,0 */
+        /* Error callback, default location to 0,0 */
         () => {
           this.setState({
             lat: 0,
