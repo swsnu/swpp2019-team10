@@ -1,6 +1,7 @@
 import os
 import re
 import stanfordnlp
+from foodbook_api.algorithms import config
 from stanfordnlp.pipeline.doc import Word
 #from nltk.tokenize.treebank import TreebankWordDetokenizer
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
@@ -10,14 +11,14 @@ from msrest.authentication import CognitiveServicesCredentials
 class Tagging:
     def check_enviroment(self):
         key_var_name = 'TEXT_ANALYTICS_SUBSCRIPTION_KEY'
-        os.environ["TEXT_ANALYTICS_SUBSCRIPTION_KEY"] = '0e7b8176202b49969ccf46667d046ab0'
+        os.environ["TEXT_ANALYTICS_SUBSCRIPTION_KEY"] = config.api_key
         if not key_var_name in os.environ:
             raise Exception(
                 'Please set/export the environment variable: {}'.format(key_var_name))
         subscription_key_var = os.environ[key_var_name]
 
         endpoint_var_name = 'TEXT_ANALYTICS_ENDPOINT'
-        os.environ["TEXT_ANALYTICS_ENDPOINT"] = 'https://swppteam10-nlp.cognitiveservices.azure.com/'
+        os.environ["TEXT_ANALYTICS_ENDPOINT"] = config.api_endpoint
         if not endpoint_var_name in os.environ:
             raise Exception(
                 'Please set/export the environment variable: {}'.format(endpoint_var_name))
