@@ -248,7 +248,6 @@ describe('<FormReview />', () => {
   describe('mode: UNKNOWN', () => {
     it('error message should be shown up', () => {
       const component = mount(unknownReview);
-      const wrapper = component.find('FormReview');
 
       const backWrapper = component.find('.form-review-error');
       expect(backWrapper.length).toBe(1);
