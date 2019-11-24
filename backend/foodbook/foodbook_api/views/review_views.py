@@ -21,6 +21,7 @@ def review_list(request):
         return HttpResponse(status=401)
     if request.method == 'GET':
         review_all_list = []
+        #player, created = Profile.objects.get_or_create(user=request.user)
         for review in Review.objects.filter(author=request.user.profile):
             image_path = ""
             if review.review_img:
@@ -98,7 +99,7 @@ def review_list(request):
         request.user.profile.count_write += 1
         request.user.profile.save()
 
-        tags = Tagging.tagging(content)
+        tags = Tagging().tagging(content)
         for item in tags.keys():
             new_review.tag.add(Tag.objects.create(name=item, sentimental=tags[item]))
         dict_new_review = {
