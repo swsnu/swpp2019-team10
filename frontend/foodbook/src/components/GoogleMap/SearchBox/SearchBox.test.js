@@ -11,7 +11,7 @@ describe('<SearchBox />', () => {
   const geoFalsePlace = {};
   const geoViewPlace = {
     geometry: {
-      viewPort: true,
+      viewport: true,
     },
   };
 
@@ -51,6 +51,7 @@ describe('<SearchBox />', () => {
     const component = mount(searchBox);
     const wrapper = component.find('SearchBox');
     expect(wrapper.length).toBe(1);
+    component.unmount();
   });
 
   it('should have clearSearchBox functioning', () => {
