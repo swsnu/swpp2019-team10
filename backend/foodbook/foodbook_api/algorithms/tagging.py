@@ -77,9 +77,9 @@ class Tagging:
         res = {}
         for tag in list_of_tags:
             if tag.advmod == None:
-                res[tag.name.lemma] = tag.sentiment
+                res[tag.name.lemma] = tag.sentiment / tag.count
             else:
-                res[tag.advmod.lemma + ' ' + tag.name.lemma] = tag.sentiment
+                res[tag.advmod.lemma + ' ' + tag.name.lemma] = tag.sentiment / tag.count
         r = sorted(res.items(), key=(lambda x: abs(x[1])), reverse=True)
         ret = {}
         i = 0
