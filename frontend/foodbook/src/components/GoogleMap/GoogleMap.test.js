@@ -5,7 +5,9 @@ import GoogleMap from './GoogleMap';
 describe('<GoogleMap />', () => {
   let googleMap;
 
-  let places = [{
+  const places = [{
+    id: 1,
+    name: 'restaurant',
     geometry: {
       location: {
         lat: () => 0.0,

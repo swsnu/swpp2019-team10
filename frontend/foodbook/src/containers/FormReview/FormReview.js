@@ -151,18 +151,18 @@ class FormReview extends Component {
     let ready = false;
 
     if ((mode === 'ADD' && 'lat' in this.state && 'lng' in this.state)
-      || (mode === 'EDIT' && id === review.id && !('content' in this.state))) {
+      || (mode === 'EDIT' && id === review.id && 'content' in this.state)) {
       ready = true;
-      if (mode === 'EDIT') {
-        const { review: loadedReview } = this.props;
-        const {
-          rating, content, restaurant, menu, image,
-        } = loadedReview;
-        this.setState({
-          rating, content, restaurant, menu, image,
-        });
-      }
+    } else if (mode === 'EDIT') {
+      const { review: loadedReview } = this.props;
+      const {
+        rating, content, restaurant, menu, image,
+      } = loadedReview;
+      this.setState({
+        rating, content, restaurant, menu, image,
+      });
     }
+
 
     const {
       rating, content, restaurant, menu,

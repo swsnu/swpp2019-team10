@@ -10,7 +10,6 @@ import axios from 'axios';
 import FormReview from './FormReview';
 
 // https://jestjs.io/docs/en/mock-functions.html
-jest.mock('axios');
 
 const mockGeolocation = {
   getCurrentPosition: jest.fn()
@@ -44,6 +43,7 @@ describe('<FormReview />', () => {
 
   let addReview;
   let editReview;
+  let unknownReview;
 
   const spyPost = jest.spyOn(axios, 'post')
     .mockImplementation(() => new Promise((res) => {
@@ -81,6 +81,13 @@ describe('<FormReview />', () => {
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
           <FormReview history={history} mode="EDIT" id={0} />
+        </ConnectedRouter>
+      </Provider>
+    );
+    unknownReview = (
+      <Provider store={mockStore}>
+        <ConnectedRouter history={history}>
+          <FormReview history={history} mode="UNKNOWN" />
         </ConnectedRouter>
       </Provider>
     );
@@ -183,6 +190,15 @@ describe('<FormReview />', () => {
       const backWrapper = component.find('.form-review-error');
       expect(backWrapper.length).toBe(1);
     });
+
+    it('has setPlace functioning correctly', () => {
+      const component = mount(addReview);
+      const wrapper = component.find('FormReview');
+      wrapper.at(0).instance().getPos(23.0, 9.0);
+
+      expect(wrapper.at(0).state('longitude')).toBe(9.0);
+      expect(wrapper.at(0).state('latitude')).toBe(23.0);
+    });
   });
 
   describe('mode: EDIT', () => {
@@ -192,11 +208,12 @@ describe('<FormReview />', () => {
       expect(wrapper.length).toBe(1);
       expect(spyGet).toHaveBeenCalledTimes(1);
     });
-/*
+
     it('should have textfields working', () => {
       const component = mount(editReview);
       expect(spyGet).toHaveBeenCalledTimes(1);
 
+      expect(component.find('#review-restaurant-input').length).toBe(2);
       component.find('#review-restaurant-input').at(1).simulate('change', { target: { value: 'restaurant' } });
       component.find('#review-menu-input').at(1).simulate('change', { target: { value: 'menu' } });
       component.find('#review-content-input').at(1).simulate('change', { target: { value: 'content' } });
@@ -221,11 +238,20 @@ describe('<FormReview />', () => {
       component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });
       component.update();
 
-      const submitButton = component.find('#edit-review-button').at(0);
+      const submitButton = component.find('#submit-review-button').at(0);
       submitButton.simulate('click');
       component.update();
       expect(spyPut).toHaveBeenCalledTimes(1);
     });
-*/
+  });
+
+  describe('mode: UNKNOWN', () => {
+    it('error message should be shown up', () => {
+      const component = mount(unknownReview);
+      const wrapper = component.find('FormReview');
+
+      const backWrapper = component.find('.form-review-error');
+      expect(backWrapper.length).toBe(1);
+    });
   });
 });
