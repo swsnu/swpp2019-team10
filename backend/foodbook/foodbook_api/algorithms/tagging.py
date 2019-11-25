@@ -1,7 +1,7 @@
 import os
 import re
 import stanfordnlp
-from foodbook_api.algorithms import config
+#from foodbook_api.algorithms import config
 from stanfordnlp.pipeline.doc import Word
 #from nltk.tokenize.treebank import TreebankWordDetokenizer
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
