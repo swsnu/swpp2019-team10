@@ -96,7 +96,7 @@ def review_list(request):
             content=content,
             rating=rating,
             )
-        tags = Tagging(request.user.profile, menu).tagging(content)
+        tags = Tagging(request.user.profile, menu, rating).tagging(content)
         for item in tags.keys():
             new_review.tag.add(Tag.objects.create(name=item, sentimental=tags[item]))
         dict_new_review = {
