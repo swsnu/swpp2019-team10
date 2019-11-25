@@ -5,7 +5,7 @@ import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
 // import * as actionCreators from 'store/actions/user/action_user';
 
-import App from './App';
+import App from '.';
 
 const mockStore = getMockStore({}, {}, {});
 
