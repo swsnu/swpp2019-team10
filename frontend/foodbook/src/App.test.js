@@ -3,18 +3,66 @@ import { mount } from 'enzyme';
 import { history } from 'store/store';
 import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
-// import * as actionCreators from 'store/actions/user/action_user';
+import * as actionCreators from 'store/actions/user/action_user';
 
 import App from './App';
 
-const mockStore = getMockStore({}, {}, {});
+const loggedOutUser = {
+  user: {
+    username: '',
+    phone_number: '',
+    age: -1,
+    gender: '',
+    number_of_reviews: -1,
+    number_of_friends: -1,
+    failed: false,
+  }, // stores login information
 
-describe('<Login />', () => {
-  let app;
+  taste: {
+    // TODO: implement this!
+  },
+
+  search: undefined,
+  logged_in: false,
+};
+
+const loggedInUser = {
+  user: {
+    username: '',
+    phone_number: '',
+    age: -1,
+    gender: '',
+    number_of_reviews: -1,
+    number_of_friends: -1,
+    failed: false,
+  }, // stores login information
+
+  taste: {
+    // TODO: implement this!
+  },
+
+  search: undefined,
+  logged_in: true,
+};
+
+const loggedInStore = getMockStore(loggedInUser, {}, {});
+const loggedOutStore = getMockStore(loggedOutUser, {}, {});
+
+describe('<App />', () => {
+  let loggedInApp;
+  let loggedOutApp;
+  const spyLoad = jest.spyOn(actionCreators, 'GET_USER_INFO')
+    .mockImplementation(() => ({ type: '' }));
 
   beforeEach(() => {
-    app = (
-      <Provider store={mockStore}>
+    loggedInApp = (
+      <Provider store={loggedInStore}>
+        <App history={history} />
+      </Provider>
+    );
+
+    loggedOutApp = (
+      <Provider store={loggedOutStore}>
         <App history={history} />
       </Provider>
     );
@@ -24,9 +72,17 @@ describe('<Login />', () => {
     jest.clearAllMocks();
   });
 
-  it('should render without crashing', () => {
-    const component = mount(app);
+  it('should render without crashing when logged in', () => {
+    const component = mount(loggedInApp);
     const wrapper = component.find('.App');
+    expect(spyLoad).toHaveBeenCalledTimes(1);
+    expect(wrapper.length).toBe(1);
+  });
+
+  it('should render without crashing when logged out', () => {
+    const component = mount(loggedOutApp);
+    const wrapper = component.find('.App');
+    expect(spyLoad).toHaveBeenCalledTimes(1);
     expect(wrapper.length).toBe(1);
   });
 });
