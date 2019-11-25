@@ -67,7 +67,7 @@ class Menu(models.Model):
     )
     taste = JSONField(
         default=my_default)
-    count_review = models.IntegerField(default=0)
+    num_of_review = models.IntegerField(default=0)
 
 class Review(models.Model):
     '''

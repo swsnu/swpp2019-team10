@@ -100,9 +100,9 @@ class Tagging:
             self.profile.taste[i] = (
                 self.profile.taste[i] * self.profile.count_write + res[i]) / (self.profile.count_write + 1)
             self.menu.taste[i] = (
-                self.menu.taste[i] * self.menu.count_review + res[i]) / (self.menu.count_review + 1)
+                self.menu.taste[i] * self.menu.num_of_review + res[i]) / (self.menu.num_of_review + 1)
         self.profile.count_write += 1
-        self.menu.count_review += 1
+        self.menu.num_of_review += 1
         self.profile.save()
         self.menu.save()
 
