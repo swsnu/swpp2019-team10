@@ -60,3 +60,14 @@ export const REGISTER = (userData) => (dispatch) => dispatch(FIND_ID(userData.us
     }
     return undefined;
   });
+
+export const LOGOUT_DEEP = () => ({
+  type: actionTypes.LOGOUT,
+});
+
+export const LOGOUT = () => (dispatch) => axios.get('/api/signout/')
+  .then(() => {
+    dispatch(LOGOUT_DEEP());
+    dispatch(push('/'));
+  })
+  .catch();
