@@ -1,5 +1,5 @@
 const ApiKey = {
-  googleApiKey: 'YOUR API KEY',
+  googleApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
 };
 
 export default ApiKey;

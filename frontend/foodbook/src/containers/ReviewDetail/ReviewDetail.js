@@ -6,92 +6,78 @@ import {
 import React, { Component } from 'react';
 import './ReviewDetail.css';
 import PropTypes from 'prop-types';
-import ClickToEdit from 'react-click-to-edit';
 import GoogleMap from 'components/GoogleMap';
 
 import Recommendation from 'containers/Recommendation';
 import { connect } from 'react-redux';
-// import * as actionCreators from '../../Stores/Actions/index';
+import * as actionCreators from 'store/actions/review/action_review';
 
-import axios from 'axios';
+const parseTagName = (tags) => {
+  const parsed = tags.map((t, i) => {
+    let className;
+    if (t.sentimental === 0) className = `neu ${i}`;
+    else if (t.sentimental === 1) className = `pos ${i}`;
+    else className = `neg ${i}`;
 
-const parseTagName = (tags) => tags.map((tag, i) => (
-  <ClickToEdit key={tag.name} wrapperClass={tag.positive ? `pos ${i}` : `neg ${i}`} inputClass={tag.positive ? `pos ${i}` : `neg ${i}`} textClass={tag.positive ? `pos ${i}` : `neg ${i}`} value={tag.name} style={{ display: 'inline' }} endEditing={() => {}}>
-    {/* FIXME */}
-    <span key={`${tag.name}Wrapper`} className={tag.positive ? `pos ${i}` : `neg ${i}`}>
-      {tag.name}
-    </span>
-  </ClickToEdit>
-));
+    return (
+      <span key={`${t.name}Wrapper`} className={className}>
+        {t.name}
+      </span>
+    );
+  });
+
+  return (
+    <div className="tags-wrapper" style={{ display: 'inline' }}>
+      {parsed}
+    </div>
+  );
+};
 
 class ReviewDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ready: false,
+      /* open is variable for modal component,
+        currently it's undecided if this will be converted to modal so it's left unused. */
+      open: false,
+      error: null,
     };
   }
 
   componentDidMount() {
-    const { match } = this.props;
-
-    this.setState({
-      // dummy
-      content: 'asdf',
-      restaurant: 'Foodbook',
-      author: 'Team10',
-      menu: 'Logo',
-      image: '',
-      rating: 5.0,
-      date: '2019-11-04',
-      tag: [{ name: 'crispy', positive: true }, { name: 'pricy', positive: false }],
-      error: null,
-    });
-
-    axios.get(`/api/review/${match.params.id}/`).then((res) => {
-      this.setState({
-        content: res.data.content,
-        restaurant: res.data.restaurant,
-        author: res.data.author,
-        menu: res.data.menu,
-        image: res.data.image,
-        rating: res.data.rating,
-        date: res.data.date,
-        ready: true,
-      });
-    }).catch((error) => this.setState({
-      error: error.response,
-    }));
+    const { match, onGetReview } = this.props;
+    onGetReview(match.params.id);
   }
 
+  /*
+  show = () => () => this.setState({ open: true });
+
+  close = () => this.setState({ open: false });
+  */
+
   deleteHandler() {
-    const { history, match } = this.props;
-    axios.delete(`/api/review/${match.params.id}/`).then(
-      () => history.push('/main'),
-    ).catch(
-      (error) => this.setState({ error: error.response }),
-    );
+    const { history, match, onDeleteReview } = this.props;
+    onDeleteReview(match.params.id);
+
+    history.push('/main');
   }
 
   render() {
     const {
-      ready, error, content, restaurant, author, menu, image, rating, date, tag,
+      error, open,
     } = this.state;
 
-    const { history, match } = this.props;
+    const { history, match, review } = this.props;
+
+    const {
+      content, restaurant, author, menu, image,
+      rating, date, tag, longitude, latitude,
+    } = review;
 
     if (error != null) {
       return (
-        <div className="ReviewDetailError">
+        <div className="Review-error-wrapper">
           <p>{error.content}</p>
-        </div>
-      );
-    }
-
-    if (!ready) {
-      return (
-        <div className="ReviewDetailLoading">
-          <p>Loading...</p>
         </div>
       );
     }
@@ -119,12 +105,13 @@ class ReviewDetail extends Component {
     );
     //  : <div />;
 
-    const googleMap = (<GoogleMap />);
+    const googleMap = (<GoogleMap center={{ lat: latitude, lng: longitude }} />);
 
     return (
-      <div className="ReviewDetail">
+      <div className="ReviewDetail-wrapper">
         <div className="ui special cards">
           <div className="card" style={{ width: '630px' }}>
+            {open}
             <div className="content">
               <span className="header">{`${menu} ( ${restaurant} )`}</span>
               <div className="meta">
@@ -132,7 +119,7 @@ class ReviewDetail extends Component {
                   Rating:
                   <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
                 </span>
-                <span className="tag">{parseTagName(tag)}</span>
+                <span className="tag">{Array.isArray(tag) && parseTagName(tag)}</span>
               </div>
             </div>
             <div className="blurring dimmable image">
@@ -179,6 +166,21 @@ ReviewDetail.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }),
+  onGetReview: PropTypes.func,
+  onDeleteReview: PropTypes.func,
+  review: PropTypes.shape({
+    id: PropTypes.number,
+    content: PropTypes.string,
+    restaurant: PropTypes.string,
+    author: PropTypes.string,
+    menu: PropTypes.string,
+    image: PropTypes.any,
+    rating: PropTypes.number,
+    date: PropTypes.string,
+    tag: PropTypes.any,
+    longitude: PropTypes.number,
+    latitude: PropTypes.number,
+  }),
 };
 
 ReviewDetail.defaultProps = {
@@ -188,16 +190,26 @@ ReviewDetail.defaultProps = {
     },
   },
   history: {
-    push: () => {},
+    push: null,
+  },
+  onGetReview: null,
+  onDeleteReview: null,
+  review: {
+    id: 0,
   },
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  dispatch,
+const mapStateToProps = (state) => ({
+  review: state.review.reviewDetail,
 });
 
-const mapStateToProps = (state) => ({
-  state,
+const mapDispatchToProps = (dispatch) => ({
+  onGetReview: (id) => {
+    dispatch(actionCreators.GET_REVIEW(id));
+  },
+  onDeleteReview: (id) => {
+    dispatch(actionCreators.DELETE_REVIEW(id));
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReviewDetail);

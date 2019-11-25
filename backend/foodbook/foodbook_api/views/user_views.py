@@ -143,16 +143,18 @@ def user(request):
         return HttpResponse(status=401)
     if request.method == 'GET':
         profile_of_user = request.user.profile
+
         info_of_user = {
             'username': profile_of_user.user.username,
             'phone_number': profile_of_user.phone_number,
             'age': profile_of_user.age,
             'gender': profile_of_user.gender,
-            'profile_pic': profile_of_user.profile_pic.path,
             'number_of_reviews': profile_of_user.count_write,
             'number_of_friends': profile_of_user.count_friend,
             'nickname': profile_of_user.nickname,
         }
+        if profile_of_user.profile_pic is not None:
+            info_of_user['profile_pic'] = profile_of_user.profile_pic.path
         return JsonResponse(info_of_user)
     if request.method == 'PUT':
         try:
@@ -174,11 +176,12 @@ def user(request):
             'phone_number': profile_of_user.phone_number,
             'age': profile_of_user.age,
             'gender': profile_of_user.gender,
-            'profile_pic': profile_of_user.profile_pic.path,
             'number_of_reviews': profile_of_user.count_write,
             'number_of_friends': profile_of_user.count_friend,
             'nickname': profile_of_user.nickname,
         }
+        if profile_of_user.profile_pic is not None:
+            info_of_user['profile_pic'] = profile_of_user.profile_pic.path
         return JsonResponse(info_of_user, status=200)
     return HttpResponseNotAllowed(['GET', 'PUT'])
 
@@ -226,11 +229,12 @@ def friend_detail(request, friend_id):
                 'phone_number': friend_info.phone_number,
                 'age': friend_info.age,
                 'gender': friend_info.gender,
-                'profile_pic': friend_info.profile_pic.path,
                 'number_of_reviews': friend_info.count_write,
                 'number_of_friends': friend_info.count_friend,
                 'nickname': friend_info.nickname,
             }
+            if friend_info.profile_pic is not None:
+                info_of_friend['profile_pic'] = friend_info.profile_pic.path
             return JsonResponse(info_of_friend)
         except Profile.DoesNotExist:
             return HttpResponseNotFound()
