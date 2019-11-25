@@ -43,7 +43,6 @@ class App extends Component {
       </ConnectedRouter>
     );
   }
->>>>>>> resolving refreshing issue
 }
 
 App.propTypes = {
