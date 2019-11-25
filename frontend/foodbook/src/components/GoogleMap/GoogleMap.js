@@ -4,37 +4,77 @@ import ApiKey from 'ApiKey';
 import { Icon } from 'semantic-ui-react';
 import React, { Component } from 'react';
 import GoogleMapReact from 'google-map-react';
-
 import PropTypes from 'prop-types';
 
-const Marker = ({ icon }) => <div><Icon name={icon} /></div>;
+import SearchBox from './SearchBox';
 
-Marker.propTypes = {
-  icon: PropTypes.string,
-};
-
-Marker.defaultProps = {
-  icon: '',
-};
+const Marker = () => <div><Icon color="red" name="expand" size="big" /></div>;
 
 class GoogleMap extends Component {
-  style = { height: '50vh', width: '100%' }
+  constructor(props) {
+    super(props);
+
+    const {
+      center, zoom, height, width,
+    } = props;
+
+    this.style = { height, width };
+
+    this.state = {
+      center,
+      zoom,
+      mapApiLoaded: false,
+      mapInstance: null,
+      mapApi: null,
+      places: [],
+    };
+  }
+
+  apiHasLoaded = (map, maps) => {
+    this.setState({
+      mapApiLoaded: true,
+      mapInstance: map,
+      mapApi: maps,
+    });
+  };
+
+  setPlace = (place) => {
+    const { getPos } = this.props;
+    getPos(place[0].geometry.location.lat(), place[0].geometry.location.lng());
+    this.setState({ places: place });
+  };
 
   render() {
-    const { center, zoom } = this.props;
+    const {
+      places,
+      mapApiLoaded,
+      mapInstance,
+      mapApi,
+      center,
+      zoom,
+    } = this.state;
+
+    const { search } = this.props;
+
     return (
-      // Important! Always set the container height explicitly
       <div style={this.style}>
+        {search && mapApiLoaded
+          && <SearchBox map={mapInstance} mapApi={mapApi} setplace={this.setPlace} />}
         <GoogleMapReact
-          bootstrapURLKeys={{ key: ApiKey.googleApiKey }}
+          bootstrapURLKeys={{ key: ApiKey.googleApiKey, libraries: ['places', 'geometry'] }}
           defaultCenter={center}
           defaultZoom={zoom}
+          onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)}
         >
-          <Marker
-            lat={37.450084}
-            lng={126.952459}
-            icon="hand point down outline"
-          />
+          {Array.isArray(places) && places.length > 0
+            && places.map((place) => (
+              <Marker
+                key={place.id}
+                text={place.name}
+                lat={place.geometry.location.lat()}
+                lng={place.geometry.location.lng()}
+              />
+            ))}
         </GoogleMapReact>
       </div>
     );
@@ -46,7 +86,11 @@ GoogleMap.propTypes = {
     lat: PropTypes.number,
     lng: PropTypes.number,
   }),
+  height: PropTypes.string,
+  width: PropTypes.string,
   zoom: PropTypes.number,
+  search: PropTypes.bool,
+  getPos: PropTypes.func,
 };
 
 GoogleMap.defaultProps = {
@@ -54,7 +98,11 @@ GoogleMap.defaultProps = {
     lat: 37.450084,
     lng: 126.952459,
   },
+  height: '50vh',
+  width: '100%',
   zoom: 17,
+  search: false,
+  getPos: () => {},
 };
 
 export default GoogleMap;

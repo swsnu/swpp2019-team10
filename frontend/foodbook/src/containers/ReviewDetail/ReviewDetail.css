@@ -6,6 +6,10 @@
     color: red
 }
 
+.neu {
+    color: gray
+}
+
 .CTE--wrapper {
     display: inline !important
 }
