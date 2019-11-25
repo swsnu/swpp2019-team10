@@ -3,14 +3,18 @@ import { push } from 'connected-react-router';
 
 import * as actionTypes from './actionTypes_user';
 
+export const USER_IS_NOT_LOGGED_IN = () => ({
+  type: actionTypes.USER_IS_NOT_LOGGED_IN,
+});
+
 export const GET_USER_INFO_DEEP = (data) => ({
   type: actionTypes.GET_USER_INFO,
   data,
 });
 
-export const GET_USER_INFO = () => (dispatch) => axios.get('/api/user/')
+export const GET_USER_INFO = () => (dispatch) => axios.get('/api/')
   .then((res) => dispatch(GET_USER_INFO_DEEP(res.data)))
-  .catch();
+  .catch(() => dispatch(USER_IS_NOT_LOGGED_IN()));
 
 export const LOGIN_DEEP = () => ({
   type: actionTypes.LOGIN,

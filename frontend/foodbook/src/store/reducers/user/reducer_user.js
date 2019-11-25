@@ -6,7 +6,6 @@ const initialState = {
     phone_number: '',
     age: -1,
     gender: '',
-    profile_pic: '',
     number_of_reviews: -1,
     number_of_friends: -1,
     failed: false,
@@ -25,8 +24,12 @@ const reducer = (state = initialState, action) => {
   let { user } = state;
 
   switch (action.type) {
+    case actionTypes.USER_IS_NOT_LOGGED_IN:
+      newState = { ...state, user: initialState.user, logged_in: false };
+      return newState;
+
     case actionTypes.GET_USER_INFO:
-      newState = { ...state, user: action.data };
+      newState = { ...state, user: action.data, logged_in: true };
       return newState;
 
     case actionTypes.LOGIN_FAILED:
