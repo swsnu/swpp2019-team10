@@ -39,6 +39,7 @@ matrix:
     - pip install pandas
     - pip install surprise
     - pip install django_mysql
+    - pip install --upgrade azure-cognitiveservices-language-textanalytics
     script:
     - pylint --load-plugins pylint_django */models.py */views/*.py */tests/*.py
     - python manage.py makemigrations
