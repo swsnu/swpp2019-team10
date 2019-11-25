@@ -17,6 +17,7 @@ const initialState = {
   },
 
   search: undefined,
+  logged_in: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -37,6 +38,7 @@ const reducer = (state = initialState, action) => {
       newState = {
         ...state,
         user,
+        logged_in: false,
       };
 
       return newState;
@@ -48,6 +50,16 @@ const reducer = (state = initialState, action) => {
           ...state.user,
           failed: false,
         },
+        logged_in: true,
+      };
+
+      return newState;
+
+    case actionTypes.LOGOUT:
+      newState = {
+        ...state,
+        user: initialState.user,
+        logged_in: false,
       };
 
       return newState;

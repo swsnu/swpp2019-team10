@@ -122,6 +122,7 @@ describe('User', () => {
     store.dispatch(actionCreators.LOGIN(mockLoginUser)).then(() => {
       expect(spy).toHaveBeenCalledTimes(1);
       expect(store.getState().user.user).toEqual(initialState);
+      expect(store.getState().user.logged_in).toBeTruthy();
       done();
     });
   });
@@ -138,6 +139,7 @@ describe('User', () => {
     store.dispatch(actionCreators.LOGIN(mockLoginUser)).then(() => {
       expect(spy).toHaveBeenCalledTimes(1);
       expect(store.getState().user.user.failed).toBeTruthy();
+      expect(store.getState().user.logged_in).toBeFalsy();
       done();
     });
   });
@@ -174,6 +176,25 @@ describe('User', () => {
     store.dispatch(actionCreators.FIND_ID('abc')).then(() => {
       expect(spy).toHaveBeenCalledTimes(1);
       expect(store.getState().user.search).toBe(3);
+    });
+    done();
+  });
+
+  it('should logout correctly', (done) => {
+    const spyLogout = jest.spyOn(axios, 'get')
+      .mockImplementation(() => new Promise((resolve) => {
+        const result = {
+          status: 204,
+          data: {
+            id: 3,
+          },
+        };
+        resolve(result);
+      }));
+
+    store.dispatch(actionCreators.LOGOUT()).then(() => {
+      expect(spyLogout).toHaveBeenCalledTimes(1);
+      expect(store.getState().user.logged_in).toBeFalsy();
     });
     done();
   });

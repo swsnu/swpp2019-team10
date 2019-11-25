@@ -11,6 +11,7 @@ import { NavLink } from 'react-router-dom';
 import FriendList from 'containers/FriendList';
 import RawCalendar from 'components/RawCalendar';
 import ReviewList from 'containers/ReviewList';
+import Logout from 'containers/Logout';
 
 const menuStyle = {
   border: 'none',
@@ -74,6 +75,7 @@ export default class Main extends Component {
       <div className="main">
         <Container text style={{ marginTop: '2em' }}>
           <Header as="h1"><NavLink to="/main">FoodBook</NavLink></Header>
+          <Logout />
         </Container>
         {/* Title Region */}
 
