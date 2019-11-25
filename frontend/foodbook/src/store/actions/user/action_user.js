@@ -40,11 +40,9 @@ export const FIND_ID_DEEP = (data) => ({
   data,
 });
 
-export const FIND_ID = (username) => (dispatch) => {
-  return axios.post('/api/signup_dupcheck/', { username })
-    .then((res) => dispatch(FIND_ID_DEEP(res.data)))
-    .catch();
-};
+export const FIND_ID = (username) => (dispatch) => axios.post('/api/signup_dupcheck/', { username })
+  .then((res) => dispatch(FIND_ID_DEEP(res.data)))
+  .catch();
 
 export const REGISTER = (userData) => (dispatch) => dispatch(FIND_ID(userData.username))
   .then((res) => {
