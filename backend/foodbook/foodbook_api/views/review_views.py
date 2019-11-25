@@ -191,6 +191,8 @@ def review_detail(request, review_id):
             return HttpResponseNotFound()
         if request.user.profile.id != review.author.id:
             return HttpResponse(status=403)
+        review.menu.count_review -= 1
+        review.menu.save()
         review.delete()
         request.user.profile.count_write -= 1
         request.user.profile.save()
