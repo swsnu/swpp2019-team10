@@ -60,7 +60,6 @@ export class Signup extends Component {
     };
 
     onSignup(requestDict).then((res) => {
-      console.log(res);
       if (res) closeModal();
     });
   }

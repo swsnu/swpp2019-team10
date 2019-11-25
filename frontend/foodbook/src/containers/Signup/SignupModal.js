@@ -39,7 +39,7 @@ class SignupModal extends Component {
             <Signup closeModal={this.close} />
           </Modal.Content>
           <Modal.Actions>
-            <Button icon="check" color="teal" form="signup-form" type="submit" content="Join" />
+            <Button icon="check" color="teal" form="signup-form" type="submit" content="Join" className="signup-submit-button" />
             <Button icon="x" color="teal" content="close" onClick={this.close} />
           </Modal.Actions>
         </Modal>

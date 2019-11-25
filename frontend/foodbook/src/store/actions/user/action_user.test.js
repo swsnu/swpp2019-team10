@@ -32,6 +32,14 @@ const mockSignUpUser = {
   gender: 'gender',
 };
 
+const mockUserWithoutAge = {
+  username: 'username',
+  password: 'password',
+  phone_number: 'phone_number',
+  age: '',
+  gender: 'gender',
+};
+
 const mockLoginUser = {
   username: 'username',
   password: 'password',
@@ -47,6 +55,47 @@ describe('User', () => {
       .mockImplementation(() => new Promise((resolve) => {
         const result = {
           status: 204,
+          data: {
+            id: -1,
+          },
+        };
+        resolve(result);
+      }));
+
+    store.dispatch(actionCreators.REGISTER(mockSignUpUser));
+    expect(spy).toHaveBeenCalledTimes(1);
+    const newState = store.getState();
+    expect(newState.user.user).toEqual(initialState);
+    done();
+  });
+
+  it('should register properly when age is undefined', (done) => {
+    const spy = jest.spyOn(axios, 'post')
+      .mockImplementation(() => new Promise((resolve) => {
+        const result = {
+          status: 204,
+          data: {
+            id: -1,
+          },
+        };
+        resolve(result);
+      }));
+
+    store.dispatch(actionCreators.REGISTER(mockUserWithoutAge));
+    expect(spy).toHaveBeenCalledTimes(1);
+    const newState = store.getState();
+    expect(newState.user.user).toEqual(initialState);
+    done();
+  });
+
+  it('should not register when the id is duplicated', (done) => {
+    const spy = jest.spyOn(axios, 'post')
+      .mockImplementation(() => new Promise((resolve) => {
+        const result = {
+          status: 204,
+          data: {
+            id: 3,
+          },
         };
         resolve(result);
       }));
