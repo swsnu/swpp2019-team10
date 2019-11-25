@@ -8,7 +8,6 @@ const newUser = {
   failed: false,
   age: -1,
   gender: 'Male',
-  profile_pic: 'undefined',
   number_of_reviews: 123,
   number_of_friends: 456,
 };
@@ -19,7 +18,6 @@ const initialState = {
   failed: false,
   age: -1,
   gender: '',
-  profile_pic: '',
   number_of_reviews: -1,
   number_of_friends: -1,
 };
@@ -157,6 +155,23 @@ describe('User', () => {
     store.dispatch(actionCreators.GET_USER_INFO()).then(() => {
       expect(spy).toHaveBeenCalledTimes(1);
       expect(store.getState().user.user).toEqual(newUser);
+    });
+    done();
+  });
+
+  it('should set the login flag false when failed to fetch login information', (done) => {
+    const spy = jest.spyOn(axios, 'get')
+      .mockImplementation(() => new Promise((res, rej) => {
+        const result = {
+          status: 401,
+        };
+
+        rej(result);
+      }));
+
+    store.dispatch(actionCreators.GET_USER_INFO()).catch(() => {
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(store.getState().user.logged_in).toBeFalsy();
     });
     done();
   });

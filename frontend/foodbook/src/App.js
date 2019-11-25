@@ -23,11 +23,17 @@ class App extends Component {
     props.onLoad();
   }
 
+  componentDidMount() {
+    const { history, loggedIn, onLoad } = this.props;
+    const redirectUrl = loggedIn ? '/main' : '/introduce';
+    onLoad();
+    history.push(redirectUrl);
+  }
+
   render() {
     const { history, loggedIn } = this.props;
     const redirectUrl = loggedIn ? '/main' : '/introduce';
-    console.log('Login status: ', loggedIn);
-    console.log('Redirect to : ', redirectUrl);
+
     return (
       <ConnectedRouter history={history}>
         <div className="App">
@@ -59,4 +65,4 @@ const mapDispatchToProps = (dispatch) => ({
   onLoad: () => dispatch(actionCreators.GET_USER_INFO()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)((App));
