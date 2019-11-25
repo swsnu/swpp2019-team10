@@ -13,7 +13,6 @@ const loggedOutUser = {
     phone_number: '',
     age: -1,
     gender: '',
-    profile_pic: '',
     number_of_reviews: -1,
     number_of_friends: -1,
     failed: false,
@@ -33,7 +32,6 @@ const loggedInUser = {
     phone_number: '',
     age: -1,
     gender: '',
-    profile_pic: '',
     number_of_reviews: -1,
     number_of_friends: -1,
     failed: false,
@@ -77,14 +75,14 @@ describe('<App />', () => {
   it('should render without crashing when logged in', () => {
     const component = mount(loggedInApp);
     const wrapper = component.find('.App');
-    expect(spyLoad).toHaveBeenCalledTimes(2);
+    expect(spyLoad).toHaveBeenCalledTimes(1);
     expect(wrapper.length).toBe(1);
   });
 
   it('should render without crashing when logged out', () => {
     const component = mount(loggedOutApp);
     const wrapper = component.find('.App');
-    expect(spyLoad).toHaveBeenCalledTimes(2);
+    expect(spyLoad).toHaveBeenCalledTimes(1);
     expect(wrapper.length).toBe(1);
   });
 });
