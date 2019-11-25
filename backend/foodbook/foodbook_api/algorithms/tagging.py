@@ -1,9 +1,8 @@
 import os
 import re
 import stanfordnlp
-#from foodbook_api.algorithms import config
+from foodbook_api.algorithms import config
 from stanfordnlp.pipeline.doc import Word
-#from nltk.tokenize.treebank import TreebankWordDetokenizer
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
 from msrest.authentication import CognitiveServicesCredentials
 
@@ -16,20 +15,20 @@ SYNONYMS = {
 }
 
 class Tagging:
-    def __init__(self, profile, menu):
+    def __init__(self, profile, menu, rating):
         self.profile = profile
         self.menu = menu
-    
+        self.rating = rating
     def check_enviroment(self):
         key_var_name = 'TEXT_ANALYTICS_SUBSCRIPTION_KEY'
-        #os.environ["TEXT_ANALYTICS_SUBSCRIPTION_KEY"] = config.api_key  #execute this if you want to set ennv variable
+        os.environ["TEXT_ANALYTICS_SUBSCRIPTION_KEY"] = config.api_key  #execute this if you want to set ennv variable
         if not key_var_name in os.environ:
             raise Exception(
                 'Please set/export the environment variable: {}'.format(key_var_name))
         subscription_key_var = os.environ[key_var_name]
 
         endpoint_var_name = 'TEXT_ANALYTICS_ENDPOINT'
-        #os.environ["TEXT_ANALYTICS_ENDPOINT"] = config.api_endpoint  #execute this if you want to set ennv variable
+        os.environ["TEXT_ANALYTICS_ENDPOINT"] = config.api_endpoint  #execute this if you want to set ennv variable
         if not endpoint_var_name in os.environ:
             raise Exception(
                 'Please set/export the environment variable: {}'.format(endpoint_var_name))
@@ -98,9 +97,9 @@ class Tagging:
                 res[i] = ret[i][0] / ret[i][1]
         for i in res.keys():
             self.profile.taste[i] = (
-                self.profile.taste[i] * self.profile.count_write + res[i]) / (self.profile.count_write + 1)
+                self.profile.taste[i] * self.profile.count_write + res[i] * self.rating) / (self.profile.count_write + 1)
             self.menu.taste[i] = (
-                self.menu.taste[i] * self.menu.num_of_review + res[i]) / (self.menu.num_of_review + 1)
+                self.menu.taste[i] * self.menu.num_of_review + res[i] * self.rating) / (self.menu.num_of_review + 1)
         self.profile.count_write += 1
         self.menu.num_of_review += 1
         self.profile.save()
