@@ -29,9 +29,9 @@ def review_list(request):
             tag = []
             for tag_item in review.tag.all():
                 pos = 0
-                if tag_item.sentimental >= 0.1:
+                if tag_item.sentimental >= 0.6:
                     pos = 1
-                if tag_item.sentimental <= -0.1:
+                if tag_item.sentimental <= 0.4:
                     pos = -1
                 tag.append({'name':tag_item.name, 'sentimental': pos})
             dict_review = {
@@ -96,10 +96,7 @@ def review_list(request):
             content=content,
             rating=rating,
             )
-        request.user.profile.count_write += 1
-        request.user.profile.save()
-
-        tags = Tagging().tagging(content)
+        tags = Tagging(request.user.profile, menu).tagging(content)
         for item in tags.keys():
             new_review.tag.add(Tag.objects.create(name=item, sentimental=tags[item]))
         dict_new_review = {
@@ -134,9 +131,9 @@ def review_detail(request, review_id):
         tag = []
         for tag_item in review.tag.all():
             pos = 0
-            if tag_item.sentimental >= 0.1:
+            if tag_item.sentimental >= 0.6:
                 pos = 1
-            if tag_item.sentimental <= -0.1:
+            if tag_item.sentimental <= 0.4:
                 pos = -1
             tag.append({'name':tag_item.name, 'sentimental': pos})
         review_dict = {

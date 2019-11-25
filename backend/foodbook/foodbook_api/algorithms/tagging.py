@@ -7,8 +7,19 @@ from stanfordnlp.pipeline.doc import Word
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
 from msrest.authentication import CognitiveServicesCredentials
 
+SYNONYMS = {
+    'sweet': ['sweet', 'sugary', 'sugared', 'honeyed', 'candied', 'syrupy', 'treacly', 'cloying', 'bittersweet'],
+    'salty': ['salty', 'salt', 'salted', 'saline', 'briny', 'brackish', 'piquant', 'tangy'],
+    'umami': ['umami', 'meaty', 'savory'],
+    'bitter': ['bitter', 'sharp'],
+    'sour': ['sour', 'acid', 'acidy', 'acidic', 'sharp', 'acidulated']
+}
 
 class Tagging:
+    def __init__(self, profile, menu):
+        self.profile = profile
+        self.menu = menu
+    
     def check_enviroment(self):
         key_var_name = 'TEXT_ANALYTICS_SUBSCRIPTION_KEY'
         #os.environ["TEXT_ANALYTICS_SUBSCRIPTION_KEY"] = config.api_key  #execute this if you want to set ennv variable
@@ -71,9 +82,33 @@ class Tagging:
             "can not", "cannot")
         step6 = step5.replace(" ` ", " '")
         return step6.strip()
+    
+    def update_models(self, tags):
+        ret = {'sweet': (0,0), 'salty': (0,0), 'umami': (0,0), 'bitter': (0,0), 'sour': (0,0)}
+        for adj in tags:
+            for i in ret.keys():
+                if adj.name.lemma in SYNONYMS[i]:
+                    ret[i][0] += adj.sentiment / adj.count
+                    ret[i][1] += 1
+        res = {}
+        for i in ret.keys():
+            if ret[i][1] == 0:
+                res[i] = 0.5
+            else:
+                res[i] = ret[i][0] / ret[i][1]
+        for i in res.keys():
+            self.profile.taste[i] = (
+                self.profile.taste[i] * self.profile.count_write + res[i]) / (self.profile.count_write + 1)
+            self.menu.taste[i] = (
+                self.menu.taste[i] * self.menu.count_review + res[i]) / (self.menu.count_review + 1)
+        self.profile.count_write += 1
+        self.menu.count_review += 1
+        self.profile.save()
+        self.menu.save()
 
     def tagging(self, text):
         list_of_tags = self.tagging_for_recommend(text)
+        self.update_models(list_of_tags)
         res = {}
         for tag in list_of_tags:
             if tag.advmod == None:
@@ -94,7 +129,6 @@ class Tagging:
         nlp = stanfordnlp.Pipeline()
         doc = nlp(text)
         print(doc.text)
-        #re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s', doc.text)
         sentiments = self.sentiment(doc.sentences)
         list_of_tag = []
         for index, sentence in enumerate(doc.sentences):

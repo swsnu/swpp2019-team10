@@ -9,6 +9,8 @@ from django_mysql.models import JSONField
 # Create your models here.
 
 
+def my_default():
+    return {'sweet': 0.5, 'salty': 0.5, 'umami': 0.5, 'bitter': 0.5, 'sour': 0.5}
 class Profile(models.Model):
     '''
     save user's information
@@ -26,7 +28,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=15, null=True)
     age = models.IntegerField(null=True)
-    taste = JSONField()
+    taste = JSONField(default=my_default)
     gender = models.CharField(max_length=1, null=True)
     nickname = models.CharField(max_length=100)
     profile_pic = models.ImageField(upload_to="user/profile_pic/", blank=True)
@@ -63,7 +65,9 @@ class Menu(models.Model):
         related_name='menu_list',
         null=True
     )
-    taste = JSONField()
+    taste = JSONField(
+        default=my_default)
+    count_review = models.IntegerField(default=0)
 
 class Review(models.Model):
     '''
