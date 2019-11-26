@@ -26,7 +26,10 @@ matrix:
     - "3.6"
     - "3.7"
     - "3.8"
+    services:
+    - mysql
     before_install:
+    - mysql -e "CREATE DATABASE test_team10_DB;"
     - cd backend/foodbook
     install:
     - pip install -r requirements.txt
@@ -43,8 +46,8 @@ matrix:
     script:
     - pylint --load-plugins pylint_django */models.py */views/*.py */tests/*.py
     - python manage.py makemigrations
-    - python manage.py migrate --fake-initial
-    - coverage run --branch --source='./foodbook_api/views' manage.py test foodbook_api/tests/ --keepdb
+    - python manage.py migrate
+    - coverage run --branch --source='./foodbook_api/views' manage.py test foodbook_api/tests/
     - coverage report -m
     after_success:
     - coveralls
