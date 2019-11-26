@@ -9,6 +9,7 @@ from ..algorithms.recommendation import Recommendation
 # Create your views here.
 
 
+@transaction.atomic
 def recommendation(request, review_id):
     '''
         method to recommend menus

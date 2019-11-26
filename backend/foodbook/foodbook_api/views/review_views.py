@@ -11,7 +11,7 @@ from ..models import Profile, Review, Menu, Restaurant, ReviewForm, Tag
 from ..algorithms.tagging import Tagging
 # pylint: enable=E0402
 # pylint: enable=line-too-long
-
+@transaction.atomic
 def review_list(request):
     """
     review list
@@ -113,6 +113,7 @@ def review_list(request):
     return HttpResponseNotAllowed(['GET', 'POST'])
 
 
+@transaction.atomic
 def review_detail(request, review_id):
     """
     review detail
@@ -200,6 +201,8 @@ def review_detail(request, review_id):
     #else:
     return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
 
+
+@transaction.atomic
 def friend_review_list(request, friend_id):
     """
     friend review list
@@ -235,6 +238,7 @@ def friend_review_list(request, friend_id):
     return HttpResponseNotAllowed(['GET'])
 
 
+@transaction.atomic
 def friend_review_detail(request, friend_id, review_id):
     """
     friend review detail
@@ -273,6 +277,7 @@ def friend_review_detail(request, friend_id, review_id):
     return HttpResponseNotAllowed(['GET'])
 
 
+@transaction.atomic
 def review_image(request, review_id):
     """
     put image on review by this function
