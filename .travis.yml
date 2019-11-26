@@ -22,15 +22,12 @@ matrix:
     after_success:
     - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
   - language: python
-    services:
-    - mysql
     python:
     - "3.6"
     - "3.7"
     - "3.8"
     before_install:
     - cd backend/foodbook
-    - mysql -e 'CREATE DATABASE IF NOT EXISTS test_team10_db_jaeho;'
     install:
     - pip install -r requirements.txt
     - pip install coveralls
