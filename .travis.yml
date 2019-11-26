@@ -43,7 +43,7 @@ matrix:
     script:
     - pylint --load-plugins pylint_django */models.py */views/*.py */tests/*.py
     - python manage.py makemigrations
-    - python manage.py migrate
+    - python manage.py migrate --fake-initial
     - coverage run --branch --source='./foodbook_api/views' manage.py test foodbook_api/tests/
     - coverage report -m
     after_success:
