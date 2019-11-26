@@ -26,7 +26,10 @@ matrix:
     - "3.6"
     - "3.7"
     - "3.8"
+    services:
+    - mysql
     before_install:
+    - mysql -e "CREATE DATABASE test_team10_DB;"
     - cd backend/foodbook
     install:
     - pip install -r requirements.txt
