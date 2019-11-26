@@ -1,7 +1,7 @@
 import os
 import re
 import stanfordnlp
-#from foodbook_api.algorithms import config
+from foodbook_api.algorithms import config
 from stanfordnlp.pipeline.doc import Word
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
 from msrest.authentication import CognitiveServicesCredentials
@@ -21,14 +21,14 @@ class Tagging:
         self.rating = rating
     def check_enviroment(self):
         key_var_name = 'TEXT_ANALYTICS_SUBSCRIPTION_KEY'
-        #os.environ["TEXT_ANALYTICS_SUBSCRIPTION_KEY"] = config.api_key  #execute this if you want to set ennv variable
+        os.environ["TEXT_ANALYTICS_SUBSCRIPTION_KEY"] = config.api_key  #execute this if you want to set ennv variable
         if not key_var_name in os.environ:
             raise Exception(
                 'Please set/export the environment variable: {}'.format(key_var_name))
         subscription_key_var = os.environ[key_var_name]
 
         endpoint_var_name = 'TEXT_ANALYTICS_ENDPOINT'
-        #os.environ["TEXT_ANALYTICS_ENDPOINT"] = config.api_endpoint  #execute this if you want to set ennv variable
+        os.environ["TEXT_ANALYTICS_ENDPOINT"] = config.api_endpoint  #execute this if you want to set ennv variable
         if not endpoint_var_name in os.environ:
             raise Exception(
                 'Please set/export the environment variable: {}'.format(endpoint_var_name))
@@ -133,7 +133,7 @@ class Tagging:
         for index, sentence in enumerate(doc.sentences):
             list_of_adj = [None for word in sentence.words]
             for word in sentence.words:
-                if word.upos == 'ADJ':
+                if word.upos == 'ADJ' or word.xpos == 'VBN':
                     list_of_adj[int(word.index)-1] = Adjative(word,
                                                               sentiment=sentiments[index].score)
             for dep_edge in sentence.dependencies:
@@ -179,3 +179,8 @@ class Adjative:
     def update_word(self, new_word):
         self.count += new_word.count
         self.sentiment += new_word.sentiment
+
+    def __str__(self):
+        if self.advmod is None:
+            return self.name.text
+        return self.advmod.text+' '+self.name.text
