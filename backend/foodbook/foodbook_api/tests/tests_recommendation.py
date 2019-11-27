@@ -118,7 +118,7 @@ class RecommendationTestCase(TestCase):
         '''
         client = Client()
 
-        review1_id = Review.objects.get(content='TEST_CONTENT2').id
+        review1_id = Review.objects.get(content='TEST_CONTENT_R2').id
 
         response = client.post('/api/review/' + str(review1_id) + '/recommendation/')
         self.assertEqual(response.status_code, 405)
