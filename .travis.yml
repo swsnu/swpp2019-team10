@@ -43,7 +43,8 @@ matrix:
     - python download_model.py < input.txt
     script:
     - pylint --load-plugins pylint_django */models.py */views/*.py */tests/*.py
-    - coverage run --branch --source='./foodbook_api/views' manage.py test foodbook_api/tests/
+    - echo "yes" > yes.in
+    - coverage run --branch --source='./foodbook_api/views' manage.py test foodbook_api/tests/ < yes.in
     - coverage report -m
     after_success:
     - coveralls
