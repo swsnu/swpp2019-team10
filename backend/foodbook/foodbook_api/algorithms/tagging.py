@@ -1,6 +1,7 @@
 import os
 import re
-import stanfordnlp
+from foodbook_api.apps import FoodbookApiConfig
+#import stanfordnlp
 #from foodbook_api.algorithms import config
 from stanfordnlp.pipeline.doc import Word
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
@@ -13,7 +14,7 @@ SYNONYMS = {
     'bitter': ['bitter', 'sharp'],
     'sour': ['sour', 'acid', 'acidy', 'acidic', 'sharp', 'acidulated']
 }
-nlp = stanfordnlp.Pipeline()
+#nlp = stanfordnlp.Pipeline()
 
 class Tagging:
     def __init__(self, profile, menu, rating):
@@ -126,7 +127,7 @@ class Tagging:
         return ret
 
     def tagging_for_recommend(self, text):
-        doc = nlp(text)
+        doc = FoodbookApiConfig.nlp(text)
         print(doc.text)
         sentiments = self.sentiment(doc.sentences)
         list_of_tag = []
