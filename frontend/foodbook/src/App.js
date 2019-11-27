@@ -18,10 +18,18 @@ axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    const { history, loggedIn, onLoad } = this.props;
+    onLoad();
+    const redirectUrl = loggedIn ? '/main' : '/introduce';
+    history.push(redirectUrl);
+  }
+
   componentDidMount() {
     const { history, loggedIn, onLoad } = this.props;
-    const redirectUrl = loggedIn ? '/main' : '/introduce';
     onLoad();
+    const redirectUrl = loggedIn ? '/main' : '/introduce';
     history.push(redirectUrl);
   }
 
