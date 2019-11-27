@@ -26,7 +26,7 @@ const getWidth = () => {
 };
 
 const HomepageHeading = (props) => {
-  const { mobile, history } = props;
+  const { mobile } = props;
 
   return (
     <Container text>
@@ -57,7 +57,6 @@ const HomepageHeading = (props) => {
 
 HomepageHeading.propTypes = {
   mobile: PropTypes.bool,
-  history: PropTypes.objectOf(Object).isRequired,
 };
 
 HomepageHeading.defaultProps = {
