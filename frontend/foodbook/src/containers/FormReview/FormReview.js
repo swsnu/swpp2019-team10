@@ -1,11 +1,14 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 // Review Add, Edit form.
 // "mode" is passed as props. "ADD", "EDIT"
 // "id" is passed as props. Only used for "EDIT" mode.
 
 import {
   Rating,
-  TextArea,
   Button,
+  Form,
+  Image,
+  Modal,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
@@ -53,9 +56,21 @@ class FormReview extends Component {
     }
   }
 
-  show = () => () => this.setState({ open: true });
+  open = () => this.setState({
+    open: true,
+  });
 
-  close = () => this.setState({ open: false });
+  close = () => this.setState({
+    restaurant: '',
+    menu: '',
+    content: '',
+    rating: 0,
+    longitude: 0.0,
+    latitude: 0.0,
+    image: null,
+    error: null,
+    open: false,
+  });
 
   editContentHandler = () => {
     const {
@@ -145,9 +160,8 @@ class FormReview extends Component {
 
   render() {
     const {
-      history, mode, id, review,
+      mode, id, review, fixed,
     } = this.props;
-
     let ready = false;
 
     if ((mode === 'ADD' && 'lat' in this.state && 'lng' in this.state)
@@ -189,16 +203,16 @@ class FormReview extends Component {
 
     // https://www.npmjs.com/package/react-image-select-pv
     const imageField = mode === 'ADD' ? (
-      <div>
+      <Form.Field>
         <ImageSelectPreview
           id="add-review-image-selector"
           onChange={(data) => this.setState({ image: data[0].blob })}
           max={1}
         />
-      </div>
+      </Form.Field>
     )
       : (
-        <img src={image} alt="food img" />
+        <Image src={image} alt="food img" />
       );
 
     const googleMap = mode === 'ADD'
@@ -209,80 +223,118 @@ class FormReview extends Component {
 
     const confirmDisabled = content === '' || restaurant === '' || menu === '' || rating === 0;
 
+    let triggarButton;
+    switch (mode) {
+      case 'ADD':
+        triggarButton = (
+          <Button id="review-modal-triggar" className="ui medium image" inverted={!fixed} onClick={this.open}>
+            <i className="edit outline black icon fluid massive center link" style={{ marginLeft: '85%' }} />
+          </Button>
+        );
+        break;
+      case 'EDIT':
+        triggarButton = (
+          <Button id="review-modal-triggar" className="ui medium image" inverted={!fixed} onClick={this.open}>
+            Edit
+          </Button>
+        );
+        break;
+      default:
+        triggarButton = (
+          <Button id="review-modal-triggar" className="ui medium image" inverted={!fixed} onClick={this.open}>
+            Error
+          </Button>
+        );
+    }
     return (
-      <div className="review-fields">
-        <div className="ui-special-cards">
-          <div className="card" style={{ width: '630px' }}>
-            <div className="content">
+      <Modal
+        className="form-review-modal"
+        open={open}
+        onOpen={this.open}
+        onClose={this.close}
+        trigger={(
+          triggarButton
+      )}
+      >
+        <Modal.Header>
+          Review
+        </Modal.Header>
+        <Modal.Content>
+          <Form id="review-form" style={{ width: '1000px' }}>
+            <Form.Field className="content">
               <span className="header">
                 Author
                 {open}
               </span>
-              <div className="meta">
-                <span className="rating">
-                  Rating:
-                  <Rating
-                    id="review-rating"
-                    defaultRating={rating}
-                    maxRating="5"
-                    icon="star"
-                    onRate={(e, { rating: rate }) => this.setState({ rating: rate })}
-                  />
-                </span>
-              </div>
-            </div>
-            <div className="image-field">
-              {imageField}
-            </div>
-            <div className="google-map">
-              {googleMap}
-            </div>
-            <br />
-            Restaurant
-            <TextArea
-              id="review-restaurant-input"
-              rows="1"
-              type="text"
-              value={restaurant}
-              onChange={(event) => this.setState({ restaurant: event.target.value })}
-            />
-            <br />
-            Menu
-            <TextArea
-              id="review-menu-input"
-              rows="1"
-              type="text"
-              value={menu}
-              onChange={(event) => this.setState({ menu: event.target.value })}
-            />
-            <br />
-            Content
-            <TextArea
+            </Form.Field>
+            <Form.Group widths="equal">
+              <Form.TextArea
+                fluid
+                id="review-restaurant-input"
+                rows="1"
+                type="text"
+                label="Restaurant"
+                value={restaurant}
+                onChange={(event) => this.setState({ restaurant: event.target.value })}
+              />
+              <Form.TextArea
+                fluid
+                id="review-menu-input"
+                rows="1"
+                type="text"
+                label="Menu"
+                value={menu}
+                onChange={(event) => this.setState({ menu: event.target.value })}
+              />
+            </Form.Group>
+            <Form.Field>
+              <label>Rating:</label>
+              <Rating
+                id="review-rating"
+                defaultRating={rating}
+                maxRating="5"
+                icon="star"
+                size="huge"
+                onRate={(e, { rating: rate }) => this.setState({ rating: rate })}
+              />
+            </Form.Field>
+            <Form.TextArea
+              fluid
               id="review-content-input"
               rows="4"
               type="text"
+              label="Content"
               value={content}
               onChange={(event) => this.setState({ content: event.target.value })}
             />
+            <Form.Field className="image-field">
+              {imageField}
+            </Form.Field>
+            <Form.Field className="google-map">
+              {googleMap}
+            </Form.Field>
             <br />
-            <Button
-              id="back-review-button"
-              type="button"
-              onClick={() => history.push('/main')}
-            >
-              Back
-            </Button>
-            <Button
-              id="submit-review-button"
-              type="button"
-              disabled={confirmDisabled}
-              onClick={() => { contentHandler(); }}
-            >
-              Submit
-            </Button>
-          </div>
-        </div>
-      </div>
+            <br />
+          </Form>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button
+            id="back-review-button"
+            type="button"
+            onClick={this.close}
+          >
+            Back
+          </Button>
+          <Button
+            id="submit-review-button"
+            type="button"
+            disabled={confirmDisabled}
+            onClick={() => { contentHandler(); }}
+          >
+            Submit
+          </Button>
+        </Modal.Actions>
+      </Modal>
     );
   }
 }
@@ -299,6 +351,7 @@ FormReview.propTypes = {
   onPostReview: PropTypes.func,
   onGetReview: PropTypes.func,
   onEditReview: PropTypes.func,
+  fixed: PropTypes.bool,
 };
 
 FormReview.defaultProps = {
@@ -313,6 +366,7 @@ FormReview.defaultProps = {
   onPostReview: null,
   onGetReview: null,
   onEditReview: null,
+  fixed: false,
 };
 
 const mapStateToProps = (state) => ({
