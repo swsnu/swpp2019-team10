@@ -1,6 +1,7 @@
 '''
     views for getting csrf token
 '''
+from django.db import transaction
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.views.decorators.csrf import ensure_csrf_cookie
 

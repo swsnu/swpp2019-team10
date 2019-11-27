@@ -1,6 +1,7 @@
 '''
     views for user model
 '''
+from django.db import transaction
 from django.http import HttpResponse, HttpResponseNotAllowed, \
 JsonResponse
 # pylint: disable=relative-beyond-top-level
