@@ -45,7 +45,8 @@ matrix:
     - pylint --load-plugins pylint_django */models.py */views/*.py */tests/*.py
     - python manage.py dbshell < sqlinput.in
     - python manage.py makemigrations
-    - coverage run --branch --source='./foodbook_api/views' manage.py test foodbook_api/tests/
+    - echo "yes\n" > yes.in
+    - coverage run --branch --source='./foodbook_api/views' manage.py test foodbook_api/tests/ < yes.in
     - coverage report -m
     after_success:
     - coveralls
