@@ -3,14 +3,18 @@ import { push } from 'connected-react-router';
 
 import * as actionTypes from './actionTypes_user';
 
+export const USER_IS_NOT_LOGGED_IN = () => ({
+  type: actionTypes.USER_IS_NOT_LOGGED_IN,
+});
+
 export const GET_USER_INFO_DEEP = (data) => ({
   type: actionTypes.GET_USER_INFO,
   data,
 });
 
-export const GET_USER_INFO = () => (dispatch) => axios.get('/api/user/')
+export const GET_USER_INFO = () => (dispatch) => axios.get('/api/')
   .then((res) => dispatch(GET_USER_INFO_DEEP(res.data)))
-  .catch();
+  .catch(() => dispatch(USER_IS_NOT_LOGGED_IN()));
 
 export const LOGIN_DEEP = () => ({
   type: actionTypes.LOGIN,
@@ -35,13 +39,39 @@ export const REGISTER_DEEP = () => ({
   type: actionTypes.REGISTER,
 });
 
-export const REGISTER = (userData) => (dispatch) => axios.post('/api/signup/', {
-  username: userData.username,
-  password: userData.password,
-  phone_number: userData.phone_number,
-  age: userData.age,
-  gender: userData.gender,
-  nickname: userData.nickname,
-})
-  .then(() => dispatch(REGISTER_DEEP()))
+export const FIND_ID_DEEP = (data) => ({
+  type: actionTypes.FIND_ID,
+  data,
+});
+
+export const FIND_ID = (username) => (dispatch) => axios.post('/api/signup_dupcheck/', { username })
+  .then((res) => dispatch(FIND_ID_DEEP(res.data)))
+  .catch();
+
+export const REGISTER = (userData) => (dispatch) => dispatch(FIND_ID(userData.username))
+  .then((res) => {
+    if (res.data.id === -1) {
+      return axios.post('/api/signup/', {
+        username: userData.username,
+        password: userData.password,
+        phone_number: userData.phone_number,
+        age: userData.age === '' ? -1 : userData.age,
+        gender: userData.gender,
+        nickname: userData.nickname,
+      })
+        .then(() => dispatch(REGISTER_DEEP()))
+        .catch();
+    }
+    return undefined;
+  });
+
+export const LOGOUT_DEEP = () => ({
+  type: actionTypes.LOGOUT,
+});
+
+export const LOGOUT = () => (dispatch) => axios.get('/api/signout/')
+  .then(() => {
+    dispatch(LOGOUT_DEEP());
+    dispatch(push('/'));
+  })
   .catch();

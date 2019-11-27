@@ -33,15 +33,6 @@ describe('<Introduce />', () => {
     expect(wrapper.length).toBe(1);
   });
 
-  it('should handle going to main page', () => {
-    const component = mount(introduce);
-    const wrapper = component.find('Button').at(2);
-    const spyPush = jest.spyOn(history, 'push')
-      .mockImplementation(() => {});
-    wrapper.simulate('click');
-    expect(spyPush).toHaveBeenCalledTimes(1);
-  });
-
   it('should handle mobile env', () => {
     global.innerWidth = 300; // resize width
     global.dispatchEvent(new Event('resize')); // dispatch resizing event

@@ -111,7 +111,11 @@ class Login extends Component {
 Login.propTypes = {
   history: propTypes.objectOf(Object).isRequired,
   onLogin: propTypes.func.isRequired,
-  failed: propTypes.bool.isRequired,
+  failed: propTypes.bool,
+};
+
+Login.defaultProps = {
+  failed: false,
 };
 
 const mapDispatchToProps = (dispatch) => ({
