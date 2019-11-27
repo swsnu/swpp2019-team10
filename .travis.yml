@@ -44,7 +44,10 @@ matrix:
     script:
     - pylint --load-plugins pylint_django */models.py */views/*.py */tests/*.py
     - python manage.py dbshell < sqlinput.in
+    - python manage.py migrate --fake
     - python manage.py makemigrations
+    - python manage.py migrate --fake-initial
+    - python manage.py migrate contenttypes
     - python manage.py migrate
     - coverage run --branch --source='./foodbook_api/views' manage.py test foodbook_api/tests/
     - coverage report -m
