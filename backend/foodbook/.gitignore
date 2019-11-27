@@ -6,7 +6,6 @@ foodbook_api/algorithms/config.py
 *.log
 *.pot
 *.pyc
-*/migrations/*
 */__pycache__/*
 */__pycache__/
 __pycache__/
