@@ -187,6 +187,14 @@ class UserTestCase(TestCase):
         response = client.post('/api/')
         self.assertEqual(response.status_code, 405)
 
+        response = client.get('/api/')
+        self.assertEqual(response.json()['username'], 'swpp1')
+
+        response = client.put('/api/',
+                              json.dumps({'phone_number': '01035961114'}),
+                              content_type='application/json')
+        self.assertEqual(response.json()['age'], 22)
+
         img_and_file = make_image_file()
         client.post('/api/signup/'+str(user1_id)+'/image/', data={'profile_pic': img_and_file[1]})
 

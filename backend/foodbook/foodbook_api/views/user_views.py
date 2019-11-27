@@ -164,7 +164,7 @@ def user(request):
             'number_of_friends': profile_of_user.count_friend,
             'nickname': profile_of_user.nickname,
         }
-        if profile_of_user.profile_pic is not None:
+        if profile_of_user.profile_pic:
             info_of_user['profile_pic'] = profile_of_user.profile_pic.path
         return JsonResponse(info_of_user)
     if request.method == 'PUT':
@@ -191,7 +191,7 @@ def user(request):
             'number_of_friends': profile_of_user.count_friend,
             'nickname': profile_of_user.nickname,
         }
-        if profile_of_user.profile_pic is not None:
+        if profile_of_user.profile_pic:
             info_of_user['profile_pic'] = profile_of_user.profile_pic.path
         return JsonResponse(info_of_user, status=200)
     return HttpResponseNotAllowed(['GET', 'PUT'])
@@ -248,7 +248,7 @@ def friend_detail(request, friend_id):
                 'number_of_friends': friend_info.count_friend,
                 'nickname': friend_info.nickname,
             }
-            if friend_info.profile_pic is not None:
+            if friend_info.profile_pic:
                 info_of_friend['profile_pic'] = friend_info.profile_pic.path
             return JsonResponse(info_of_friend)
         except Profile.DoesNotExist:
