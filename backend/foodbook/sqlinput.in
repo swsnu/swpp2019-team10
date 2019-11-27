@@ -1,0 +1,6 @@
+DROP DATABASE IF EXISTS testdb;
+show databases;
+use team10_db_jaeho;
+show tables;
+DROP TABLE django_migrations;
+quit
