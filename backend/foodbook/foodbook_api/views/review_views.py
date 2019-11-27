@@ -7,6 +7,7 @@ import json
 from json import JSONDecodeError
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse, HttpResponseNotFound
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 from ..models import Profile, Review, Menu, Restaurant, ReviewForm, Tag
 from ..algorithms.tagging import Tagging
 # pylint: enable=E0402
