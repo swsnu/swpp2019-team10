@@ -43,8 +43,7 @@ matrix:
     - pip install surprise
     - pip install django_mysql
     - pip install --upgrade azure-cognitiveservices-language-textanalytics
-    - echo "Y" > yes.in
-    - python download_model.py < yes.in
+    - python download_model.py < input.txt
     script:
     - pylint --load-plugins pylint_django */models.py */views/*.py */tests/*.py
     - python manage.py makemigrations
