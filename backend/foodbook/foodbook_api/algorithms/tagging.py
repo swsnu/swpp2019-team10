@@ -13,6 +13,7 @@ SYNONYMS = {
     'bitter': ['bitter', 'sharp'],
     'sour': ['sour', 'acid', 'acidy', 'acidic', 'sharp', 'acidulated']
 }
+nlp = stanfordnlp.Pipeline()
 
 class Tagging:
     def __init__(self, profile, menu, rating):
@@ -125,7 +126,6 @@ class Tagging:
         return ret
 
     def tagging_for_recommend(self, text):
-        nlp = stanfordnlp.Pipeline()
         doc = nlp(text)
         print(doc.text)
         sentiments = self.sentiment(doc.sentences)
