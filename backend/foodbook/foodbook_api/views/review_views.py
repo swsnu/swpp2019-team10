@@ -5,7 +5,6 @@ views for reviews
 # pylint: disable=E0402, R0911, R0912, R0914, W0702
 import json
 from json import JSONDecodeError
-from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse, HttpResponseNotFound
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
