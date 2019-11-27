@@ -9,9 +9,15 @@ from django_mysql.models import JSONField
 # Create your models here.
 
 def default_tag():
+    '''
+    method returns default tag
+    '''
     return []
 
 def my_default():
+    '''
+    method returns default tag with values
+    '''
     return {'sweet': 0.5, 'salty': 0.5, 'umami': 0.5, 'bitter': 0.5, 'sour': 0.5}
 class Profile(models.Model):
     '''

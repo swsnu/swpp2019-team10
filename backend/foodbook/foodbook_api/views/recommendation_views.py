@@ -5,6 +5,7 @@ from django.db import transaction
 from django.http import HttpResponse, HttpResponseNotAllowed, \
 JsonResponse
 # pylint: disable=relative-beyond-top-level
+from django.db import transaction
 from ..models import Review
 from ..algorithms.recommendation import Recommendation
 # Create your views here.

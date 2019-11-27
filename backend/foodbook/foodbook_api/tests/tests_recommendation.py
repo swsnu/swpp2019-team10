@@ -1,5 +1,5 @@
 '''
-    test views/user_views.py
+    test views/recommendation_views.py
 '''
 # pylint: disable=W0105, R0904, R0801
 from django.test import TestCase, Client
@@ -10,18 +10,18 @@ from foodbook_api.tests.tests_user import make_image_file
 # Create your tests here.
 class RecommendationTestCase(TestCase):
     '''
-        class that tests views/token_views.py
+        class that tests views/recommendation_views.py
     '''
     def setUp(self):
         user1 = User.objects.create_user(
-            username='TEST_USER_1', email='TEST_EMAIL_1', password='TEST_PW_1')
+            username='TEST_USER_R1', email='TEST_EMAIL_R1', password='TEST_PW_R1')
         user2 = User.objects.create_user(
-            username='TEST_USER_2', email='TEST_EMAIL_2', password='TEST_PW_2')
+            username='TEST_USER_R2', email='TEST_EMAIL_R2', password='TEST_PW_R2')
         user3 = User.objects.create_user(
-            username='TEST_USER_3', email='TEST_EMAIL_3', password='TEST_PW_3')
+            username='TEST_USER_R3', email='TEST_EMAIL_R3', password='TEST_PW_R3')
         profile_user1 = Profile.objects.create(
             user=user1,
-            phone_number='TEST_PHN_1',
+            phone_number='TEST_PHN_R1',
             age=10,
             gender='M',
             nickname='user1',
@@ -29,7 +29,7 @@ class RecommendationTestCase(TestCase):
         )
         Profile.objects.create(
             user=user2,
-            phone_number='TEST_PHN_2',
+            phone_number='TEST_PHN_R2',
             age=20,
             gender='M',
             nickname='user2',
@@ -37,7 +37,7 @@ class RecommendationTestCase(TestCase):
         )
         profile_user3 = Profile.objects.create(
             user=user3,
-            phone_number='TEST_PHN_3',
+            phone_number='TEST_PHN_R3',
             age=30,
             gender='F',
             nickname='user3',
@@ -46,8 +46,8 @@ class RecommendationTestCase(TestCase):
         profile_user1.friend.add(profile_user3)
         profile_user3.friend.add(profile_user1)
         restaurant1 = Restaurant.objects.create(
-            name='TEST_REST',
-            longitude=15,
+            name='TEST_REST1',
+            longitude=18,
             latitude=15,
             rating=5
         )
@@ -82,8 +82,8 @@ class RecommendationTestCase(TestCase):
             author=profile_user1,
             restaurant=restaurant1,
             menu=menu1,
-            content='TEST_CONTENT2',
-            rating=5,
+            content='TEST_CONTENT_R2',
+            rating=1,
             review_img=make_image_file()[1]
         )
 
@@ -91,16 +91,16 @@ class RecommendationTestCase(TestCase):
             author=profile_user3,
             restaurant=restaurant1,
             menu=menu2,
-            content='TEST_CONTENT3',
-            rating=5
+            content='TEST_CONTENT_R3',
+            rating=2
         )
 
         Review.objects.create(
             author=profile_user3,
             restaurant=restaurant2,
             menu=menu3,
-            content='TEST_CONTENT4',
-            rating=5,
+            content='TEST_CONTENT_R4',
+            rating=3,
             review_img=make_image_file()[1]
         )
 
@@ -108,8 +108,8 @@ class RecommendationTestCase(TestCase):
             author=profile_user3,
             restaurant=restaurant2,
             menu=menu4,
-            content='TEST_CONTENT1',
-            rating=5
+            content='TEST_CONTENT_R1',
+            rating=4
         )
 
     def test_recommendation(self):
@@ -118,7 +118,7 @@ class RecommendationTestCase(TestCase):
         '''
         client = Client()
 
-        review1_id = Review.objects.get(content='TEST_CONTENT2').id
+        review1_id = Review.objects.get(content='TEST_CONTENT_R2').id
 
         response = client.post('/api/review/' + str(review1_id) + '/recommendation/')
         self.assertEqual(response.status_code, 405)
@@ -126,8 +126,8 @@ class RecommendationTestCase(TestCase):
         response = client.get('/api/review/' + str(review1_id) + '/recommendation/')
         self.assertEqual(response.status_code, 401)
 
-        client.login(username='TEST_USER_1',
-                     email='TEST_EMAIL_1', password='TEST_PW_1')
+        client.login(username='TEST_USER_R1',
+                     email='TEST_EMAIL_R1', password='TEST_PW_R1')
 
         response = client.get('/api/review/' + str(review1_id) + '/recommendation/')
         self.assertEqual(response.status_code, 200)
