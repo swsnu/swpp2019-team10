@@ -47,14 +47,14 @@ class RecommendationTestCase(TestCase):
         profile_user3.friend.add(profile_user1)
         restaurant1 = Restaurant.objects.create(
             name='TEST_REST1',
-            longitude=18,
-            latitude=15,
+            longitude=37.5,
+            latitude=126.95,
             rating=5
         )
         restaurant2 = Restaurant.objects.create(
             name='TEST_REST2',
-            longitude=13,
-            latitude=13,
+            longitude=37.8,
+            latitude=126.93,
             rating=3
         )
         menu1 = Menu.objects.create(
@@ -112,23 +112,44 @@ class RecommendationTestCase(TestCase):
             rating=4
         )
 
-    def test_recommendation(self):
+    def test_recomloc(self):
         '''
-            method that tests /api/signup/
+            method that tests /api/review/<int:review_id>/recomloc/
         '''
         client = Client()
 
         review1_id = Review.objects.get(content='TEST_CONTENT_R2').id
 
-        response = client.post('/api/review/' + str(review1_id) + '/recommendation/')
+        response = client.post('/api/review/' + str(review1_id) + '/recomloc/')
         self.assertEqual(response.status_code, 405)
 
-        response = client.get('/api/review/' + str(review1_id) + '/recommendation/')
+        response = client.get('/api/review/' + str(review1_id) + '/recomloc/')
         self.assertEqual(response.status_code, 401)
 
         client.login(username='TEST_USER_R1',
                      email='TEST_EMAIL_R1', password='TEST_PW_R1')
 
-        response = client.get('/api/review/' + str(review1_id) + '/recommendation/')
+        response = client.get('/api/review/' + str(review1_id) + '/recomloc/')
+        self.assertEqual(response.status_code, 200)
+        print(response.content.decode())
+
+    def test_recomtst(self):
+        '''
+            method that tests /api/review/<int:review_id>/recomtst/
+        '''
+        client = Client()
+
+        review1_id = Review.objects.get(content='TEST_CONTENT_R2').id
+
+        response = client.post('/api/review/' + str(review1_id) + '/recomtst/')
+        self.assertEqual(response.status_code, 405)
+
+        response = client.get('/api/review/' + str(review1_id) + '/recomtst/')
+        self.assertEqual(response.status_code, 401)
+
+        client.login(username='TEST_USER_R1',
+                     email='TEST_EMAIL_R1', password='TEST_PW_R1')
+
+        response = client.get('/api/review/' + str(review1_id) + '/recomtst/')
         self.assertEqual(response.status_code, 200)
         print(response.content.decode())

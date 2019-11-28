@@ -11,9 +11,9 @@ from ..algorithms.recommendation import Recommendation
 
 
 @transaction.atomic
-def recommendation(request, review_id):
+def recomloc(request, review_id):
     '''
-        method to recommend menus
+        method to recommend menus by location
     '''
     if request.method == 'GET':
         if not request.user.is_authenticated:
@@ -22,7 +22,26 @@ def recommendation(request, review_id):
         menu = review.menu
 
         response_dict = {
-            'restaurant_list': Recommendation.recommendation(request.user.profile.id, menu.name)
+            'restaurant_list': Recommendation.recommendation(request.user.profile.id,
+                                                             menu.name, type='loc')
+        }
+        return JsonResponse(response_dict, status=200)
+    return HttpResponseNotAllowed(['GET'])
+
+@transaction.atomic
+def recomtst(request, review_id):
+    '''
+        method to recommend menus by taste
+    '''
+    if request.method == 'GET':
+        if not request.user.is_authenticated:
+            return HttpResponse(status=401)
+        review = Review.objects.get(id=review_id)
+        menu = review.menu
+
+        response_dict = {
+            'restaurant_list': Recommendation.recommendation(request.user.profile.id,
+                                                             menu.name, type='tst')
         }
         return JsonResponse(response_dict, status=200)
     return HttpResponseNotAllowed(['GET'])

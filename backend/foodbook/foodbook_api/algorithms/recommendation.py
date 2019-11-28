@@ -20,8 +20,16 @@ def size(x):
     return math.sqrt(res)
 
 class Recommendation():
-    def recommendation(user_id, name):
-        review = Review.objects.filter(menu__name=name)
+    def recommendation(user_id, name, type):
+        review = []
+        if type == 'loc':
+            review = Review.objects.filter(menu__name=name)
+            review = review.filter(restaurant__longitude__gte=37.45)
+            review = review.filter(restaurant__longitude__lte=37.55)
+            review = review.filter(restaurant__latitude__gte=126.9)
+            review = review.filter(restaurant__latitude__lte=127)
+        else:
+            review = Review.objects.filter(menu__name=name)
         itemID = [item.menu.id for item in review]
         userID = [item.author.id for item in review]
         rating = []
@@ -52,17 +60,20 @@ class Recommendation():
         algo = KNNBasic()
         algo.fit(trainset)
 
-        menu = Menu.objects.filter(name=name)
         res = []
-        for item in menu:
-            pred = algo.predict(user_id, item.id, verbose=True)
-            res.append((pred.est, item.id))
-        res.sort(reverse=True)
+        for item in review:
+            pred = algo.predict(user_id, item.menu.id, verbose=True)
+            res.append((pred.est, item.restaurant))
+        res.sort(reverse=True, key=lambda x: x[0])
 
         ret = []
+        ret_dict = []
         for item in res:
-            menu = Menu.objects.get(id=item[1])
-            restaurant = menu.restaurant
+            restaurant = item[1]
             if restaurant.id not in ret:
                 ret.append(restaurant.id)
-        return ret
+                ret_dict.append({'name': restaurant.name,
+                                 'longitude': restaurant.longitude,
+                                 'latitude': restaurant.latitude,
+                                 'rating': restaurant.rating})
+        return ret_dict
