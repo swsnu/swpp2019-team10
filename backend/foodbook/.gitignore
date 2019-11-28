@@ -2,10 +2,10 @@
 # Edit at https://www.gitignore.io/?templates=vim,linux,macos,python,django,pycharm,windows,intellij
 
 ### Django ###
+foodbook_api/algorithms/config.py
 *.log
 *.pot
 *.pyc
-*/migrations/*
 */__pycache__/*
 */__pycache__/
 __pycache__/

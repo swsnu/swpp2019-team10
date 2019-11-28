@@ -7,11 +7,12 @@ import json
 from json import JSONDecodeError
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse, HttpResponseNotFound
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 from ..models import Profile, Review, Menu, Restaurant, ReviewForm, Tag
 from ..algorithms.tagging import Tagging
 # pylint: enable=E0402
 # pylint: enable=line-too-long
-
+@transaction.atomic
 def review_list(request):
     """
     review list
@@ -21,6 +22,7 @@ def review_list(request):
         return HttpResponse(status=401)
     if request.method == 'GET':
         review_all_list = []
+        #player, created = Profile.objects.get_or_create(user=request.user)
         for review in Review.objects.filter(author=request.user.profile):
             image_path = ""
             if review.review_img:
@@ -28,9 +30,9 @@ def review_list(request):
             tag = []
             for tag_item in review.tag.all():
                 pos = 0
-                if tag_item.sentimental >= 0.1:
+                if tag_item.sentimental >= 0.6:
                     pos = 1
-                if tag_item.sentimental <= -0.1:
+                if tag_item.sentimental <= 0.4:
                     pos = -1
                 tag.append({'name':tag_item.name, 'sentimental': pos})
             dict_review = {
@@ -95,10 +97,7 @@ def review_list(request):
             content=content,
             rating=rating,
             )
-        request.user.profile.count_write += 1
-        request.user.profile.save()
-
-        tags = Tagging.tagging(content)
+        tags = Tagging(request.user.profile, menu, rating).tagging(content)
         for item in tags.keys():
             new_review.tag.add(Tag.objects.create(name=item, sentimental=tags[item]))
         dict_new_review = {
@@ -115,6 +114,7 @@ def review_list(request):
     return HttpResponseNotAllowed(['GET', 'POST'])
 
 
+@transaction.atomic
 def review_detail(request, review_id):
     """
     review detail
@@ -133,9 +133,9 @@ def review_detail(request, review_id):
         tag = []
         for tag_item in review.tag.all():
             pos = 0
-            if tag_item.sentimental >= 0.1:
+            if tag_item.sentimental >= 0.6:
                 pos = 1
-            if tag_item.sentimental <= -0.1:
+            if tag_item.sentimental <= 0.4:
                 pos = -1
             tag.append({'name':tag_item.name, 'sentimental': pos})
         review_dict = {
@@ -193,6 +193,8 @@ def review_detail(request, review_id):
             return HttpResponseNotFound()
         if request.user.profile.id != review.author.id:
             return HttpResponse(status=403)
+        review.menu.num_of_review -= 1
+        review.menu.save()
         review.delete()
         request.user.profile.count_write -= 1
         request.user.profile.save()
@@ -200,6 +202,8 @@ def review_detail(request, review_id):
     #else:
     return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
 
+
+@transaction.atomic
 def friend_review_list(request, friend_id):
     """
     friend review list
@@ -235,6 +239,7 @@ def friend_review_list(request, friend_id):
     return HttpResponseNotAllowed(['GET'])
 
 
+@transaction.atomic
 def friend_review_detail(request, friend_id, review_id):
     """
     friend review detail
@@ -273,6 +278,7 @@ def friend_review_detail(request, friend_id, review_id):
     return HttpResponseNotAllowed(['GET'])
 
 
+@transaction.atomic
 def review_image(request, review_id):
     """
     put image on review by this function

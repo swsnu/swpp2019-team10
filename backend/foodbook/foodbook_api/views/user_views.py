@@ -3,6 +3,7 @@
 '''
 import json
 from json.decoder import JSONDecodeError
+from django.db import transaction
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, \
 JsonResponse, HttpResponseNotFound
@@ -12,7 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from ..models import Profile, ProfileForm
 # Create your views here.
 
-
+@transaction.atomic
 def signup(request):
     '''
         method to sign up
@@ -58,6 +59,8 @@ def signup(request):
         return JsonResponse(response_dict, status=200)
     return HttpResponseNotAllowed(['POST'])
 
+
+@transaction.atomic
 def signup_dupcheck(request):
     '''
         method to check if username exists
@@ -79,6 +82,8 @@ def signup_dupcheck(request):
         return JsonResponse(response_dict)
     return HttpResponseNotAllowed(['POST'])
 
+
+@transaction.atomic
 def profile_image(request, profile_id):
     '''
         method to upload profile image
@@ -106,6 +111,8 @@ def profile_image(request, profile_id):
         return HttpResponseBadRequest()
     return HttpResponseNotAllowed(['POST'])
 
+
+@transaction.atomic
 def signin(request):
     '''
         method to sign in
@@ -124,6 +131,8 @@ def signin(request):
         return HttpResponse(status=401)
     return HttpResponseNotAllowed(['POST'])
 
+
+@transaction.atomic
 def signout(request):
     '''
         method to sign out
@@ -135,6 +144,8 @@ def signout(request):
         return HttpResponse(status=204)
     return HttpResponseNotAllowed(['GET'])
 
+
+@transaction.atomic
 def user(request):
     '''
         method to manipulating user info
@@ -185,6 +196,8 @@ def user(request):
         return JsonResponse(info_of_user, status=200)
     return HttpResponseNotAllowed(['GET', 'PUT'])
 
+
+@transaction.atomic
 def friend(request):
     '''
         method to manage friend
@@ -215,6 +228,8 @@ def friend(request):
         return JsonResponse(info_of_friends, status=204)
     return HttpResponseNotAllowed(['GET', 'POST'])
 
+
+@transaction.atomic
 def friend_detail(request, friend_id):
     '''
         method to show friends' detail
