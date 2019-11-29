@@ -12,3 +12,4 @@ backend/foodbook/foodbook_api/migrations/__pycache__/__init__.cpython-37.pyc
 backend/foodbook/db.sqlite3
 frontend/foodbook/.env
 backend/foodbook/foodbook_api/algorithms/config.py
+backend/foodbook/foodbook_api/migrations/
