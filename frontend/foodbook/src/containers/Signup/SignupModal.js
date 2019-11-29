@@ -21,27 +21,29 @@ class SignupModal extends Component {
     const { fixed, color } = this.props;
 
     return (
-      <Modal
-        open={open}
-        onOpen={this.open}
-        onClose={this.close}
-        trigger={(
-          <Button as="a" inverted={!fixed} onClick={this.open} color={color}>
-            Sign up
-          </Button>
-        )}
-      >
-        <Header as="h2" color="teal" textAlign="center">
-              Sign-up into Foodbook!
-        </Header>
-        <Modal.Content scrolling>
-          <Signup closeModal={this.close} />
-        </Modal.Content>
-        <Modal.Actions>
-          <Button icon="check" color="teal" form="signup-form" type="submit" content="Join" />
-          <Button icon="x" color="teal" content="close" onClick={this.close} />
-        </Modal.Actions>
-      </Modal>
+      <div className="signup-modal">
+        <Modal
+          open={open}
+          onOpen={this.open}
+          onClose={this.close}
+          trigger={(
+            <Button as="a" inverted={!fixed} onClick={this.open} color={color}>
+              Sign up
+            </Button>
+          )}
+        >
+          <Header as="h2" color="teal" textAlign="center">
+                Sign-up into Foodbook!
+          </Header>
+          <Modal.Content scrolling>
+            <Signup closeModal={this.close} />
+          </Modal.Content>
+          <Modal.Actions>
+            <Button icon="check" color="teal" form="signup-form" type="submit" content="Join" className="signup-submit-button" />
+            <Button icon="x" color="teal" content="close" onClick={this.close} />
+          </Modal.Actions>
+        </Modal>
+      </div>
     );
   }
 }

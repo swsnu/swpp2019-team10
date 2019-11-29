@@ -1,36 +1,187 @@
-import spacy
-from textblob import TextBlob
+import os
+import re
+from foodbook_api.apps import FoodbookApiConfig
+#import stanfordnlp
+#from foodbook_api.algorithms import config
+from stanfordnlp.pipeline.doc import Word
+from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
+from msrest.authentication import CognitiveServicesCredentials
 
-dict = ['acerbic', 'acid', 'acidic', 'acrid', 'aftertaste', 'ambrosia', 'ambrosial', 'appealing', 'appetite', 'appetizer', 'appetizing', 'astringent', 'balsamic', 'biting', 'bitter', 'bittersweat', 'brackish', 'briny', 'caustic', 'choice', 'delectable', 'delicious', 'divine', 'dry', 'dulcet', 'dulcified', 'flavored', 'flavorful', 'flavoring', 'flavorsome', 'fruity', 'full-bodied', 'gamy', 'gustatory', 'harsh', 'heavenly', 'honey', 'honeyed', 'hot', 'juicy', 'luscious', 'lush', 'mellow', 'mouthwatering', 'nectarous', 'palatable', 'peppery', 'pickled', 'piquant', 'pungent', 'rancid', 'rank', 'rich', 'saccharine', 'saline', 'salty', 'savory', 'scrumptious', 'sec', 'sharp', 'sour', 'spicy', 'strong', 'succulent', 'sugary', 'sweet', 'sweet-and-sour', 'sweetened', 'syrupy', 'tang', 'tart', 'tasteful', 'tasteless', 'tasting', 'tasty', 'toothsome', 'treacly', 'unsweetened', 'vinegary', 'yummy', 'zesty', 'nice', 'fantastic', 'excellent', 'unexpected', 'professional', 'good', 'well', 'bad', 'worst', 'fast', 'friendly', 'attentive', 'wonderful', 'beautiful', 'good', 'great', 'nice', 'amazing', 'friendly', 'delicious', 'more', 'bad', 'awesome', 'perfect', 'excellent', 'happy', 'fresh', 'well', 'sure', 'clean', 'many', 'full', 'first', 'favorite', 'wonderful', 'worth', 'fantastic', 'special', 'free', 'quick', 'ok', 'sweet', 'huge', 'hot', 'easy', 'beautiful', 'cool', 'helpful', 'other', 'incredible', 'disappointed', 'horrible', 'right', 'cheap', 'able', 'most', 'little', 'fine', 'much', 'comfortable', 'okay', 'attentive', 'rude', 'impressed', 'available', 'top', 'big', 'new', 'pleasant', 'wrong', 'spicy', 'own', 'glad', 'fast', 'fair', 'professional', 'tender', 'yummy', 'reasonable', 'warm', 'large', 'high', 'fun', 'small', 'tasty', 'kind', 'terrible', 'expensive', 'super', 'decent', 'cold', 'unique', 'interesting', 'cute', 'least', 'healthy', 'lovely', 'whole', 'pleased', 'last', 'knowledgeable', 'old', 'authentic', 'flavorful', 'honest', 'satisfied', 'fabulous', 'important', 'enough', 'slow', 'salty', 'next', '-', 'different', 'spectacular', 'crazy', 'long', 'non', 'dirty', 'only', 'late', 'busy', 'disappointing', 'regular', 'close', 'courteous', 'sick', 'soft', 'few', 'short', 'personable', 'red', 'outstanding', 'simple', 'light', 'front', 'same', 'impressive', 'superb', 'prepared', 'awful', 'mexican', 'delightful', 'intimate', 'chinese', 'entire', 'weird', 'several', 'patient', 'loyal', 'excited', 'true', 'vegan', 'outdoor', 'annoying', 'french', 'welcome', 'overall', 'disgusting', 'bright', 'overpriced', 'surprised', 'second', 'hungry', 'rare', 'white', 'nasty', 'fried', 'vegetarian', 'memorable', 'polite', 'Most', 'pricey', 'MORE', 'extra', 'juicy', 'affordable', 'dry', 'tasteless', 'complimentary', 'rich', 'positive', 'trendy', 'enjoyable', 'particular', 'bland', 'main', 'garlic', 'crispy', 'safe', 'green', 'phenomenal', 'italian', 'single', 'original', 'refreshing', 'casual', 'willing', 'iced', 'tomato', 'asian', 'indian', 'exceptional', 'normal', 'clear', 'generous', 'gorgeous', 'indoor', 'real', 'brown', 'possible', 'tough', 'total', 'strong', 'proud', 'thick', 'negative', 'outside', 'alright', 'lucky', 'funny', 'knowledgable', 'popular', 'thin', 'wide', 'out', 'stupid', 'loud', 'experienced', 'neat', 'eggplant', 'local', 'filthy', 'certain', 'mini', 'steamed', 'watery', 'favourite', 'less', 'interested', 'famous', 'sophisticated', 'classic', 'live', 'disrespectful', 'entertaining', 'samosas', 'prompt', 'grand', 'overwhelming', 'recent', 'natural', 'attractive', 'inventive', 'More', 'inexpensive', 'usual', 'impeccable', 'romantic', 'daily', 'american', 'upset', 'strange', 'moist', 'thrilled', 'cooked', 'welcoming', 'mild', 'terrific', 'dental', 'hearty', 'afraid', 'smooth', 'bitter', 'polish', 'superior', 'ugly', 'poor', 'pricy', 'sunny', 'thankful', 'ample', 'random', 'hipster', 'secret', 'outrageous', 'lively', 'additional', 'quiet', 'americanized', 'past', 'interactive', 'needless', 'sticky', 'gross', 'relaxed', 'thoughtful', 'painful', 'bottom', 'ridiculous', 'detailed', 'incompetent', 'half', 'respectful', 'evident', 'elderly', 'flavourful', 'fellow', 'drunk', 'kid', 'mediocre', 'worthy', 'humorous', 'pushy', 'cheesy', 'malaysian', 'venetian', 'unhappy', 'various', 'average', 'shady', 'lousy', 'common', 'efficient', 'black', 'ravioli', 'female', 'young', 'aged', 'legendary', 'middle', 'eastern', 'insane', 'savory', 'wise', 'open', 'existent', 'comfy', 'surprising', 'basic', 'hostess', 'creamy', 'edible', 'equipped', 'extensive', 'consistent', 'sooo', 'familiar', 'varied', 'spacious', 'anti', 'organic', 'difficult', 'colorful', 'monthly', 'square', 'talented', 'homemade', 'empty', 'upscale', 'fat', 'sized', 'competent', 'complementary', 'roasted', 'considerate', 'bold', 'sympathetic', 'ideal', 'pretentious', 'korean', 'prime', 'ferris', 'crowded', 'early', 'sorry', 'chatty', 'rainy', 'shredded', 'undercooked', 'flawless', 'glorious', 'round', 'bouncey', 'organized', 'inexperienced', 'pleasing', 'understaffed', 'orange', 'confused', 'hungarian', 'competitive', 'future', 'exhausting', 'shocked', 'delicate', 'closed', 'drunken', 'scottsdale', 'caprese', 'piss', 'brownie', 'banh', 'appealing', 'chimichurri', 'picky', 'unreal', 'serve', 'retail', 'plain', 'popcorn', 'midwestern', 'ready', 'unqualified', 'incapable', 'slight', 'overrun', 'counter', 'discerning', 'accessible', 'chill', 'leafy', 'sarcastic', 'attentative', 'finicky', 'primary', 'unbendable', 'arrogant', 'dietary', 'sparse', 'latin', 'pretty', 'wishful', 'embarrassed', 'aware', 'medical', 'exorbitant', 'modern', 'recreational', 'suitable', 'untold', 'miserable', 'appreciative', 'significant', 'fortunate', 'bean', 'general', 'seasoned', 'hotdog', 'ever', 'biased', 'mandatory', 'complete', 'magical', 'individual', 'heavy', 'upbeat', 'accommodating', 'weekly', 'godforsaken', 'cardinal', 'hawaiian', 'harcha', 'caviar', 'contrived', 'alone', 'dedicated', 'secure', 'importantly', 'tremendous', 'medium', 'responsive', 'overcooked', 'similar', 'sore', 'soo', 'combined', 'neem', 'concerned', 'discourteous', 'undetermined', 'impolite', 'cheerful', 'skeptical', 'indicative', 'drool', 'swollen', 'neutral', 'transparent', 'powerful', 'frozen', 'such', 'graceful', 'valuable', 'unsurpassed', 'annual', 'precious', 'giant', 'seasonal', 'plump', 'exotic', 'semi', 'accompanying', 'bring', 'seamless', 'lovable', 'former', 'hectic', 'rubbed', 'crap', 'avid', 'silly', 'nearby', 'olive', 'unnecessary', 'bulgogi', 'squid', 'blended', 'unorganized', 'jaded', 'greek', 'yum', 'pint', 'fashioned', 'talkative', 'spanish', 'iraqi', 'underappreciate', 'fluffy', 'aromatic', 'persian', 'arab', 'gaudy', 'hideous', 'tasteful', 'interior', 'actual', 'pleasurable', 'ripe', 'depressed', 'junky', 'unable', 'legal', 'western', 'focused', 'vegas', 'serious', 'mean', 'pc', 'trustworthy', 'overnight', 'precise', 'affirmative', 'off', 'inedible', 'nuked', 'online', 'peddle', 'unflavorful', 'buzzed', 'questionable', 'pillowy', 'truffle', 'shallot', 'volcanic', 'dang', 'exclusive', 'impatient', 'unprofessional', 'fuzzy', 'messy', 'fabulous-', 'luscious', 'third', 'absent', 'par', 'thorough', 'bitchy', 'snobby', 'mecktoberf', 'bartendress', 'fondue', 'angry', 'creative', 'downstairs', 'cooperative', 'darn', 'vietnamese', 'chunky', 'decadent', 'pendant', 'national', 'oversized', 'fancy', 'adorable', 'braised', 'convenient', 'trashy', 'family', 'oatmeal', 'spontaneous', 'artisan', 'overrated', 'informed', 'skimpy', 'intentional', 'sour', 'up', 'displeased', 'agitated', 'key', 'careful', 'japanese', 'swift', '1st', 'wild', 'tall', 'apologetic', 'cut', 'damn', 'tasting', 'promising', 'pecan', 'gooey', 'brilliant', 'southwest', 'bloody', 'divine', 'communicative', 'shrimp', 'hidden', 'dated', 'essential', 'desolate', 'frosted', 'worthwhile', 'cheery', 'delicous', 'unsalted', 'elitist', 'purplish', "kind've", 'vous', 'noodle', 'specific', 'balsamic', 'standard', 'stringy', 'hummingbird', 'racist', 'content', 'obtrusive', 'bothered', 'southwestern', 'plentiful', 'pressured', 'adequate', 'elegant', 'distinguished', 'expansive', 'like', 'forthright', '25th', 'deep', 'allergic', 'intoxicated', 'peruvian', 'milky', 'flavored', 'really', 'scrumptious', 'chopped', 'straight', 'forward', 'suggestive', 'raw', 'broad', 'scottish', 'ill', 'rubbery', 'hilarious', 'urban', 'dire', 'east', 'unusual', 'rear', 'intuitive', 'stocked', 'outs-', 'blue', 'falafel', 'straightforward', 'dreading', 'floral', 'major', 'compassionate', 'expert', 'sterile', 'immaculate', 'packed', 'fake', 'soggy', 'crappy', 'culinary', 'gigantic', 'oily', 'unappetizing', 'feta', 'pregnant', 'youthful', 'very', 'omelet', 'harsh', 'bottled', 'remarkable', 'permanent', 'ammo', 'personal', 'clearly', 'unlimited', 'dark', 'mammoth', 'hush', 'accurate', 'understanding', 'vermicelli', 'stenchy', 'hollandaise', 'effortless', 'sicilian', 'stodgy', 'gluten', 'sexy', 'swanky', 'nightly', 'serene', 'concentrated', 'ecuadorian', 'appetizing', 'amazed', 'sparkling', 'routine', 'weary', 'acoustic', 'skinny', 'crisp', 'separate', 'sad', 'brave', 'appropriate', 'best', 'supernatural', 'calm', 'hydrated', '3rd', 'near', 'tired', 'progressive', 'independent', 'english', 'minty', 'informative', 'well-', 'massive', 'bagged', 'exciting', 'confident', 'parmesan', 'solid', 'stylish', 'unsanitary', 'postal', 'beloved', 'excessive', 'smart', 'dumb', 'litte', 'fussy', 'nie', 'confusing', 'columbian', 'grateful', 'dim', 'double', 'instant', 'unbelievable', 'marvelous', 'bent', 'pre', 'movie', 'practical', 'flaky', 'convinced', 'foul', 'accountable', 'smokehouse', 'low', 'filo', 'w/', 'constant', 'traumatic', 'multiple', 'handy', 'upfront']
+SYNONYMS = {
+    'sweet': ['sweet', 'sugary', 'sugared', 'honeyed', 'candied', 'syrupy', 'treacly', 'cloying', 'bittersweet'],
+    'salty': ['salty', 'salt', 'salted', 'saline', 'briny', 'brackish', 'piquant', 'tangy'],
+    'umami': ['umami', 'meaty', 'savory'],
+    'bitter': ['bitter', 'sharp'],
+    'sour': ['sour', 'acid', 'acidy', 'acidic', 'sharp', 'acidulated']
+}
+#nlp = stanfordnlp.Pipeline()
 
-class Tagging():
-    def tagging(text):
-        nlp = spacy.load("en_core_web_sm")
+class Tagging:
+    def __init__(self, profile, menu, rating):
+        self.profile = profile
+        self.menu = menu
+        self.rating = rating
+    def check_enviroment(self):
+        key_var_name = 'TEXT_ANALYTICS_SUBSCRIPTION_KEY'
+        #os.environ["TEXT_ANALYTICS_SUBSCRIPTION_KEY"] = config.api_key  #execute this if you want to set ennv variable
+        if not key_var_name in os.environ:
+            raise Exception(
+                'Please set/export the environment variable: {}'.format(key_var_name))
+        subscription_key_var = os.environ[key_var_name]
 
-        content = TextBlob(text)
+        endpoint_var_name = 'TEXT_ANALYTICS_ENDPOINT'
+        #os.environ["TEXT_ANALYTICS_ENDPOINT"] = config.api_endpoint  #execute this if you want to set ennv variable
+        if not endpoint_var_name in os.environ:
+            raise Exception(
+                'Please set/export the environment variable: {}'.format(endpoint_var_name))
+        endpoint_var = os.environ[endpoint_var_name]
+        return (subscription_key_var, endpoint_var)
 
-        dict = {}
+    def authenticateClient(self):
+        subscription_key, endpoint = self.check_enviroment()
+        credentials = CognitiveServicesCredentials(subscription_key)
+        text_analytics_client = TextAnalyticsClient(
+            endpoint=endpoint, credentials=credentials)
+        return text_analytics_client
 
-        for sentence in content.sentences:
-            doc = nlp(sentence.string)
-            polarity = sentence.sentiment.polarity
-            for token in doc:
-                if token.pos_ == "ADJ":
-                    if token.lemma_ in dict:
-                        if abs(dict[token.lemma_]) < abs(polarity):
-                            dict[token.lemma_] = polarity
-                    else:
-                        dict[token.lemma_] = polarity
+    def sentiment(self, sentences):
 
-        res = sorted(dict.items(), key=(lambda x: abs(x[1])), reverse = True)
+        client = self.authenticateClient()
+        documents = []
+        ids = 0
+        for sent in sentences:
+            words = [i.text for i in sent.words]
+            documents.append({"id": ids, "language": "en",
+                              "text": self.untokenize(words)})
+            ids += 1
+        try:
+            response = client.sentiment(documents=documents)
+            return response.documents
+            """
+            for document in response.documents:
+                print("Document Id: ", document.id, ", Sentiment Score: ",
+                    "{:.2f}".format(document.score))
+                print(document)
+            """
+        except Exception as err:
+            print("Encountered exception. {}".format(err))
 
+    def untokenize(self, words):
+        """
+        Untokenizing a text undoes the tokenizing operation, restoring
+        punctuation and spaces to the places that people expect them to be.
+        Ideally, `untokenize(tokenize(text))` should be identical to `text`,
+        except for line breaks.
+        """
+        text = ' '.join(words)
+        step1 = text.replace("`` ", '"').replace(
+            " ''", '"').replace('. . .',  '...')
+        step2 = step1.replace(" ( ", " (").replace(" ) ", ") ")
+        step3 = re.sub(r' ([.,:;?!%]+)([ \'"`])', r"\1\2", step2)
+        step4 = re.sub(r' ([.,:;?!%]+)$', r"\1", step3)
+        step5 = step4.replace(" '", "'").replace(" n't", "n't").replace(
+            "can not", "cannot")
+        step6 = step5.replace(" ` ", " '")
+        return step6.strip()
+    
+    def update_models(self, tags):
+        ret = {'sweet': (0,0), 'salty': (0,0), 'umami': (0,0), 'bitter': (0,0), 'sour': (0,0)}
+        for adj in tags:
+            for i in ret.keys():
+                if adj.name.lemma in SYNONYMS[i]:
+                    ret[i][0] += adj.sentiment / adj.count
+                    ret[i][1] += 1
+        res = {}
+        for i in ret.keys():
+            if ret[i][1] == 0:
+                res[i] = 0.5
+            else:
+                res[i] = ret[i][0] / ret[i][1]
+        for i in res.keys():
+            self.profile.taste[i] = (
+                self.profile.taste[i] * self.profile.count_write + res[i] * self.rating) / (self.profile.count_write + 1)
+            self.menu.taste[i] = (
+                self.menu.taste[i] * self.menu.num_of_review + res[i] * self.rating) / (self.menu.num_of_review + 1)
+        self.profile.count_write += 1
+        self.menu.num_of_review += 1
+        self.profile.save()
+        self.menu.save()
+
+    def tagging(self, text):
+        list_of_tags = self.tagging_for_recommend(text)
+        self.update_models(list_of_tags)
+        res = {}
+        for tag in list_of_tags:
+            if tag.advmod == None:
+                res[tag.name.lemma] = tag.sentiment / tag.count
+            else:
+                res[tag.advmod.lemma + ' ' + tag.name.lemma] = tag.sentiment / tag.count
+        r = sorted(res.items(), key=(lambda x: abs(x[1])), reverse=True)
         ret = {}
-
         i = 0
-        for item in dict.keys():
-            ret[item] = dict[item]
+        for item in res.keys():
+            ret[item] = res[item]
             i += 1
             if i == 5:
                 break
-
         return ret
+
+    def tagging_for_recommend(self, text):
+        doc = FoodbookApiConfig.nlp(text)
+        print(doc.text)
+        sentiments = self.sentiment(doc.sentences)
+        list_of_tag = []
+        for index, sentence in enumerate(doc.sentences):
+            list_of_adj = [None for word in sentence.words]
+            for word in sentence.words:
+                if word.upos == 'ADJ' or word.xpos == 'VBN':
+                    list_of_adj[int(word.index)-1] = Adjative(word,
+                                                              sentiment=sentiments[index].score)
+            for dep_edge in sentence.dependencies:
+                if dep_edge[1] == 'advmod' and list_of_adj[int(dep_edge[0].index)-1] is not None:
+                    list_of_adj[int(dep_edge[0].index) -
+                                1].set_advmod(dep_edge[2])
+            for adj in list_of_adj:
+                if adj is None:
+                    continue
+                is_update = False
+                for i, tag in enumerate(list_of_tag):
+                    if adj == tag:
+                        list_of_tag[i].update_word(adj)
+                        is_update = True
+                if not is_update:
+                    list_of_tag.append(adj)
+        return list_of_tag
+        """
+        for dep_edge in doc.sentences[1].dependencies:
+            print((dep_edge[0].text, dep_edge[1], dep_edge[2].text))
+        """
+
+
+class Adjative:
+    def __init__(self, name: Word, advmod: Word, sentiment: float):
+        self.name = name
+        self.advmod = advmod
+        self.sentiment = sentiment
+        self.count = 1
+
+    def __init__(self, name: Word, sentiment: float):
+        self.name = name
+        self.advmod = None
+        self.sentiment = sentiment
+        self.count = 1
+
+    def __eq__(self, value):
+        return self.name.lemma == value.name.lemma and self.advmod.lemma == value.advmod.lemma
+
+    def set_advmod(self, advmod: Word):
+        self.advmod = advmod
+
+    def update_word(self, new_word):
+        self.count += new_word.count
+        self.sentiment += new_word.sentiment
+
+    def __str__(self):
+        if self.advmod is None:
+            return self.name.text
+        return self.advmod.text+' '+self.name.text

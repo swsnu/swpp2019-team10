@@ -23,7 +23,6 @@ matrix:
     - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
   - language: python
     python:
-    - "3.5"
     - "3.6"
     - "3.7"
     - "3.8"
@@ -37,6 +36,11 @@ matrix:
     - python -m spacy download en_core_web_sm
     - python -m textblob.download_corpora
     - pip install mysqlclient
+    - pip install pandas
+    - pip install surprise
+    - pip install django_mysql
+    - pip install --upgrade azure-cognitiveservices-language-textanalytics
+    - python download_model.py < input.txt
     script:
     - pylint --load-plugins pylint_django */models.py */views/*.py */tests/*.py
     - python manage.py makemigrations
