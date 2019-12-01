@@ -75,14 +75,12 @@ describe('<App />', () => {
   it('should render without crashing when logged in', () => {
     const component = mount(loggedInApp);
     const wrapper = component.find('.App');
-    expect(spyLoad).toHaveBeenCalledTimes(2);
     expect(wrapper.length).toBe(1);
   });
 
   it('should render without crashing when logged out', () => {
     const component = mount(loggedOutApp);
     const wrapper = component.find('.App');
-    expect(spyLoad).toHaveBeenCalledTimes(2);
     expect(wrapper.length).toBe(1);
   });
 });
