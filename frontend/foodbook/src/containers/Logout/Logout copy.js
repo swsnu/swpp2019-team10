@@ -1,28 +1,24 @@
-import React, { Component } from 'react';
-import propTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Button } from 'semantic-ui-react';
-import 'semantic-ui-css/semantic.min.css';
+import propTypes from 'prop-types';
 
 import * as actionCreators from 'store/actions/user/action_user';
 
-export class Logout extends Component {
-  logoutHandler = () => {
-    const { onLogout } = this.props;
-    onLogout();
+export const Logout = (props) => {
+  const logoutHandler = () => {
+    const { onLogout } = props;
+    console.log(onLogout);
+    // onLogout();
   };
 
-  render() {
-    const { logoutHandler } = this;
-
-    return (
-      <div className="logout">
-        <Button onClick={logoutHandler}> Logout </Button>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="logout">
+      <Button onClick={logoutHandler} primary> Logout </Button>
+    </div>
+  );
+};
 
 Logout.propTypes = {
   onLogout: propTypes.func.isRequired,

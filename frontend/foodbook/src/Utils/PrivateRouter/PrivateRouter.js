@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import propTypes from 'prop-types';
@@ -10,7 +10,6 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
   const { onLoad, history } = rest;
 
   onLoad().then((res) => {
-    console.log(res);
     if (!res) history.push('/introduce/');
   });
 
@@ -25,6 +24,7 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
 PrivateRoute.propTypes = {
   onLoad: propTypes.func.isRequired,
   history: propTypes.objectOf(Object).isRequired,
+  component: propTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({ onLoad: () => dispatch(actionCreators.GET_USER_INFO()) }

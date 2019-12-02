@@ -3,7 +3,6 @@ import { mount } from 'enzyme';
 import { history } from 'store/store';
 import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
-import * as actionCreators from 'store/actions/user/action_user';
 
 import App from './App';
 
@@ -51,8 +50,6 @@ const loggedOutStore = getMockStore(loggedOutUser, {}, {});
 describe('<App />', () => {
   let loggedInApp;
   let loggedOutApp;
-  const spyLoad = jest.spyOn(actionCreators, 'GET_USER_INFO')
-    .mockImplementation(() => ({ type: '' }));
 
   beforeEach(() => {
     loggedInApp = (

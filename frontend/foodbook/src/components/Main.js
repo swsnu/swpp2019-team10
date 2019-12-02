@@ -11,6 +11,7 @@ import RawCalendar from 'components/RawCalendar';
 import ReviewList from 'containers/ReviewList';
 
 import FormReview from 'containers/FormReview/FormReview';
+import { Logout } from 'containers/Logout/Logout';
 
 export default class Main extends Component {
   constructor() {
@@ -45,7 +46,7 @@ export default class Main extends Component {
         break;
 
       case 'location':
-        mainRenderer = (<div className="main-location-wrapper"> location </div>);
+        mainRenderer = (<div className="main-location-wrapper"> location <Logout /> </div>);
         break;
 
       case 'type':
@@ -67,7 +68,8 @@ export default class Main extends Component {
           <Grid.Row height={10}></Grid.Row>
           <Grid.Row>
             <Grid.Column width={4}>
-              <Header as="h1"><NavLink to="/main">FoodBook</NavLink></Header>
+              <Header as="h1"><NavLink to="/">FoodBook</NavLink></Header>
+              <Logout />
             </Grid.Column>
           </Grid.Row>
           {/* view select region */}
