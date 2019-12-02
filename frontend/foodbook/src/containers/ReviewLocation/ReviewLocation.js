@@ -2,16 +2,12 @@ import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import GoogleMap from 'components/GoogleMap';
 
 import ReviewPreview from 'components/ReviewPreview/';
 import * as actionCreators from 'store/actions/review/action_review';
 
 class ReviewLocation extends Component {
-  constructor(props) {
-    super(props);
-    const { onGetAll } = this.props;
-  }
-
   componentDidMount() {
     this.getGeoLocation();
   }

@@ -42,8 +42,6 @@ class FormReview extends Component {
         menu: '',
         content: '',
         rating: 0,
-        longitude: 0.0,
-        latitude: 0.0,
         image: null,
         error: null,
       });
@@ -65,8 +63,6 @@ class FormReview extends Component {
     menu: '',
     content: '',
     rating: 0,
-    longitude: 0.0,
-    latitude: 0.0,
     image: null,
     error: null,
     open: false,
@@ -78,8 +74,8 @@ class FormReview extends Component {
       menu,
       content,
       rating,
-      longitude,
-      latitude,
+      lat,
+      lng,
     } = this.state;
 
     const { id, onEditReview } = this.props;
@@ -89,8 +85,8 @@ class FormReview extends Component {
       menu_name: menu,
       content,
       rating,
-      longitude,
-      latitude,
+      longitude: lng,
+      latitude: lat,
     };
 
     onEditReview(id, reviewDict);
@@ -104,8 +100,8 @@ class FormReview extends Component {
       menu,
       content,
       rating,
-      longitude,
-      latitude,
+      lng,
+      lat,
       image,
     } = this.state;
 
@@ -114,8 +110,8 @@ class FormReview extends Component {
       menu_name: menu,
       content,
       rating,
-      longitude,
-      latitude,
+      longitude: lng,
+      latitude: lat,
     };
 
     let fd = false;
@@ -153,8 +149,8 @@ class FormReview extends Component {
 
   getPos = (lat, lng) => {
     this.setState({
-      latitude: lat,
-      longitude: lng,
+      lat,
+      lng,
     });
   }
 
