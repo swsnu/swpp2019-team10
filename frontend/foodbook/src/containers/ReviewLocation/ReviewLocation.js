@@ -10,11 +10,48 @@ class ReviewLocation extends Component {
   constructor(props) {
     super(props);
     const { onGetAll } = this.props;
-    onGetAll();
+  }
+
+  componentDidMount() {
+    this.getGeoLocation();
+  }
+
+  getGeoLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.setState({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+
+        /* Error callback, default location to 0,0 */
+        () => {
+          this.setState({
+            lat: 0,
+            lng: 0,
+          });
+        },
+      );
+    }
   }
 
   render() {
-    const { reviews, dateString } = this.props;
+    const ready = 'lat' in this.state && 'lng' in this.state;
+
+    if (!ready) {
+      return (
+        <div className="review-location-loading">
+          <p>Loading...</p>
+        </div>
+      );
+    }
+
+    const { reviews, dateString, onGetAll } = this.props;
+    const { lng, lat } = this.state;
+
+    onGetAll(lng, lat);
 
     let reviewsToRender = reviews;
     if (dateString) {

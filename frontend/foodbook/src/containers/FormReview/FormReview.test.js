@@ -70,6 +70,7 @@ describe('<FormReview />', () => {
     }));
 
   beforeEach(() => {
+    global.navigator.geolocation = mockGeolocation;
     addReview = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
@@ -187,7 +188,6 @@ describe('<FormReview />', () => {
 
       const backWrapper = component.find('.form-review-loading');
       expect(backWrapper.length).toBe(1);
-      global.navigator.geolocation = mockGeolocation;
     });
 
     it('error message should be shown up', () => {

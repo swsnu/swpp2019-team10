@@ -11,6 +11,20 @@ import ReviewLocation from './ReviewLocation';
 
 const mockStore = getMockStore({}, {}, {});
 
+const mockGeolocation = {
+  getCurrentPosition: jest.fn()
+    .mockImplementation((success) => Promise.resolve(success({
+      coords: {
+        latitude: 51.1,
+        longitude: 45.3,
+      },
+    }))),
+};
+
+const mockFakeGeolocation = {
+  getCurrentPosition: jest.fn(),
+};
+
 describe('ReviewLocation', () => {
   let reviewLocation;
   let dateUndefinedReviewLocation;
@@ -34,7 +48,8 @@ describe('ReviewLocation', () => {
   ];
 
   beforeEach(() => {
-    reviewList = (
+    global.navigator.geolocation = mockGeolocation;
+    reviewLocation = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
           <ReviewLocation reviews={stubReviews} dateString="0" />
@@ -42,7 +57,7 @@ describe('ReviewLocation', () => {
       </Provider>
     );
 
-    dateUndefinedReviewList = (
+    dateUndefinedReviewLocation = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
           <ReviewLocation reviews={stubReviews} />
@@ -81,5 +96,13 @@ describe('ReviewLocation', () => {
     instance.forceUpdate();
     const wrapper = component.find('ReviewPreview');
     expect(wrapper.length).toBe(2);
+  });
+
+  it('loading message should be shown up', () => {
+    global.navigator.geolocation = mockFakeGeolocation;
+    const component = mount(reviewLocation);
+
+    const backWrapper = component.find('.review-location-loading');
+    expect(backWrapper.length).toBe(1);
   });
 });
