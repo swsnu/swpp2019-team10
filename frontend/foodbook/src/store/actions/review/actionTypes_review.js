@@ -9,3 +9,4 @@ export const DELETE_REVIEW = 'DELETE_REVIEW'; // delete a review
 export const GET_TYPES = 'GET_TYPES'; // for type-menu view; refer to 7th picture of model and implementation
 export const GET_MENU = 'GET_MENU_LIST'; // get menu list accroding to the type
 export const GET_REVIEW_MENU = 'GET_REVIEW_MENU'; // get reviews for selected menu
+export const GET_REVIEW_LOCATION = 'GET_REVIEW_LOCATION'; // get review for selected location

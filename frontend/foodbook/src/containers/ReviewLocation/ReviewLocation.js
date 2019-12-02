@@ -37,7 +37,7 @@ class ReviewLocation extends Component {
     ));
 
     return (
-      <div className="ReviewList">
+      <div className="ReviewLocation">
         <div className="ui special cards fluid">
           <div className="card fluid" style={{ width: '630px' }}>
             <div className="content">
@@ -67,8 +67,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onGetAll: () => {
-    dispatch(actionCreators.GET_REVIEWS());
+  onGetAll: (lng, lat) => {
+    dispatch(actionCreators.GET_REVIEW_LOCATION(lng, lat));
   },
 });
 

@@ -7,13 +7,13 @@ import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
 import * as actionCreators from 'store/actions/review/action_review';
 import ReviewPreview from 'components/ReviewPreview';
-import ReviewList from './ReviewLocation';
+import ReviewLocation from './ReviewLocation';
 
 const mockStore = getMockStore({}, {}, {});
 
-describe('ReviewList', () => {
-  let reviewList;
-  let dateUndefinedReviewList;
+describe('ReviewLocation', () => {
+  let reviewLocation;
+  let dateUndefinedReviewLocation;
   const spyGetAll = jest.spyOn(actionCreators, 'GET_REVIEWS')
     .mockImplementation(() => ({ type: '' }));
 
@@ -37,7 +37,7 @@ describe('ReviewList', () => {
     reviewList = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <ReviewList reviews={stubReviews} dateString="0" />
+          <ReviewLocation reviews={stubReviews} dateString="0" />
         </ConnectedRouter>
       </Provider>
     );
@@ -45,7 +45,7 @@ describe('ReviewList', () => {
     dateUndefinedReviewList = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <ReviewList reviews={stubReviews} />
+          <ReviewLocation reviews={stubReviews} />
         </ConnectedRouter>
       </Provider>
     );
@@ -56,28 +56,28 @@ describe('ReviewList', () => {
   });
 
   it('should render without errors', () => {
-    const component = mount(reviewList);
-    const wrapper = component.find('.ReviewList');
+    const component = mount(reviewLocation);
+    const wrapper = component.find('.ReviewLocation');
     expect(wrapper.length).toBe(1);
   });
 
   it('should call onGetAll on loading', () => {
-    const component = mount(reviewList);
+    const component = mount(reviewLocation);
     expect(component).not.toBe(null);
     expect(spyGetAll).toHaveBeenCalledTimes(1);
   });
 
   it('should handle dateString', () => {
-    const component = mount(reviewList);
-    const instance = component.find(ReviewList.WrappedComponent).instance();
+    const component = mount(reviewLocation);
+    const instance = component.find(ReviewLocation.WrappedComponent).instance();
     instance.forceUpdate();
-    const wrapper = component.find('ReviewList');
+    const wrapper = component.find('.ReviewLocation');
     expect(wrapper.length).toBe(1);
   });
 
   it('should render when dateString is undefined', () => {
-    const component = mount(dateUndefinedReviewList);
-    const instance = component.find(ReviewList.WrappedComponent).instance();
+    const component = mount(dateUndefinedReviewLocation);
+    const instance = component.find(ReviewLocation.WrappedComponent).instance();
     instance.forceUpdate();
     const wrapper = component.find('ReviewPreview');
     expect(wrapper.length).toBe(2);
