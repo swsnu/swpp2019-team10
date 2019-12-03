@@ -6,6 +6,8 @@ import { history } from 'store/store';
 import { ConnectedRouter } from 'connected-react-router';
 import { Provider } from 'react-redux';
 import { getMockStore } from 'test-utils/mock';
+import * as actionCreators from 'store/actions/user/action_user';
+
 import Introduce from '.';
 
 const store = getMockStore({}, {}, {});
@@ -68,5 +70,45 @@ describe('<Introduce />', () => {
     });
     component.update();
     expect(component.find('Menu').at(0).prop('inverted')).toBe(false);
+  });
+
+  it('should redner correctly when not logged in', (done) => {
+    const spyAction = jest.spyOn(actionCreators, 'GET_USER_INFO')
+    .mockImplementation(() => () => new Promise((res) => {
+      const data = {
+        type: 'USER_IS_NOT_LOGGED_IN',
+      };
+      
+      res(data);
+    }));
+    
+    const spyHistory = jest.spyOn(history, 'push')
+    .mockImplementation(() => {});
+    
+    const component = mount(introduce);
+
+    expect(spyAction).toHaveBeenCalledTimes(1);
+    setTimeout(() => expect(spyHistory).toHaveBeenCalledTimes(0), 100);
+    done();
+  });
+
+  it('should redirect to main page when logged in', (done) => {
+    const spyAction = jest.spyOn(actionCreators, 'GET_USER_INFO')
+    .mockImplementation(() => () => new Promise((res) => {
+      const data = {
+        type: 'GET_USER_INFO',
+      };
+      
+      res(data);
+    }));
+    
+    const spyHistory = jest.spyOn(history, 'push')
+    .mockImplementation(() => {});
+    
+    const component = mount(introduce);
+
+    expect(spyAction).toHaveBeenCalledTimes(1);
+    setTimeout(() => expect(spyHistory).toHaveBeenCalledTimes(1), 100);
+    done();
   });
 });
