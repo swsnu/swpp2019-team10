@@ -17,6 +17,7 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
 
   return (
     <Route
+      className="private-route"
       {...rest}
       render={(props) => <Component {...props} />}
     />

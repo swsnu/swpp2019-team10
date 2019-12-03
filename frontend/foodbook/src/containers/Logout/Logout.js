@@ -15,16 +15,15 @@ export const Logout = (props) => {
       });
   };
 
-    return (
-      <div className="logout">
-        <Button onClick={logoutHandler}> Logout </Button>
-      </div>
-    );
-}
+  return (
+    <div className="logout">
+      <Button onClick={logoutHandler}> Logout </Button>
+    </div>
+  );
+};
 
 Logout.propTypes = {
   history: propTypes.objectOf(Object).isRequired,
 };
 
 export default Logout;
-

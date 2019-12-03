@@ -7,6 +7,7 @@ import {
   Popup,
 } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
+import propTypes from 'prop-types';
 
 import FriendList from 'containers/FriendList';
 import RawCalendar from 'components/RawCalendar';
@@ -127,3 +128,7 @@ export default class Main extends Component {
     );
   }
 }
+
+Main.propTypes = {
+  history: propTypes.objectOf(Object).isRequired,
+};
