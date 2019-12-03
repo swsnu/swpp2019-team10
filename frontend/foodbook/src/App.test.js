@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { history } from 'store/store';
 import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
@@ -70,14 +70,14 @@ describe('<App />', () => {
   });
 
   it('should render without crashing when logged in', () => {
-    const component = mount(loggedInApp);
-    const wrapper = component.find('.App');
+    const component = shallow(loggedInApp);
+    const wrapper = component.find(App);
     expect(wrapper.length).toBe(1);
   });
 
   it('should render without crashing when logged out', () => {
-    const component = mount(loggedOutApp);
-    const wrapper = component.find('.App');
+    const component = shallow(loggedOutApp);
+    const wrapper = component.find(App);
     expect(wrapper.length).toBe(1);
   });
 });
