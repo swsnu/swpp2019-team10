@@ -20,6 +20,6 @@ const rootReducer = combineReducers({
 });
 
 const store = createStore(rootReducer,
-  applyMiddleware(logger, thunk, routerMiddleware(history)));
+  applyMiddleware(thunk, routerMiddleware(history), logger));
 
 export default store;

@@ -10,7 +10,9 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
   const { onLoad, history } = rest;
 
   onLoad().then((res) => {
-    if (!res) history.push('/introduce/');
+    if (res.type === 'USER_IS_NOT_LOGGED_IN') history.push('/introduce/');
+  }).catch(() => {
+    history.push('/introduce/');
   });
 
   return (

@@ -232,7 +232,9 @@ export class Introduce extends Component {
 
     const { onLoad, history } = this.props;
     onLoad().then((res) => {
-      if (res.data) history.push('/main/');
+      if (res.type === 'GET_USER_INFO') {
+        history.push('/main/');
+      }
     }).catch();
   }
 
