@@ -49,7 +49,7 @@ export const getMockRecoStore = (recoState) => {
   const mockRecoReducer = getMockReducer(recoState);
 
   const rootReducer = combineReducers({
-    reco: mockRecoReducer,
+    recom: mockRecoReducer,
     router: connectRouter(history),
   });
 
@@ -67,7 +67,7 @@ export const getMockStore = (userState, reviewState, recommendationState) => {
   const rootReducer = combineReducers({
     user: mockUserReducer,
     review: mockReviewReducer,
-    reco: mockRecoReducer,
+    recom: mockRecoReducer,
     router: connectRouter(history),
   });
 

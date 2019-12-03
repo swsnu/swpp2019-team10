@@ -23,6 +23,8 @@ urlpatterns = [
     path('friend/<int:friend_id>/review/<int:review_id>/',
          review_views.friend_review_detail, name='friend_review_detail'),
 
-    path('review/<int:review_id>/recomloc/', recommendation_views.recomloc, name='recomloc'),
-    path('review/<int:review_id>/recomtst/', recommendation_views.recomtst, name='recomtst'),
+    path('review/<int:review_id>/recomloc/<str:coordinate_val>/',
+         recommendation_views.recomloc, name='recomloc'),
+    path('review/<int:review_id>/recomtst/',
+         recommendation_views.recomtst, name='recomtst'),
 ]

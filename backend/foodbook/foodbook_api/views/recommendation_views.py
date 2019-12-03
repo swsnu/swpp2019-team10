@@ -11,7 +11,7 @@ from ..algorithms.recommendation import Recommendation
 
 
 @transaction.atomic
-def recomloc(request, review_id):
+def recomloc(request, review_id, coordinate_val):
     '''
         method to recommend menus by location
     '''
@@ -21,11 +21,17 @@ def recomloc(request, review_id):
         review = Review.objects.get(id=review_id)
         menu = review.menu
 
-        response_dict = {
-            'restaurant_list': Recommendation.recommendation(request.user.profile.id,
-                                                             menu.name, type='loc')
-        }
-        return JsonResponse(response_dict, status=200)
+        str_tmp = coordinate_val
+        str_split = str_tmp.split('=', 1)
+
+        str_split = str_split[1].split(',', 1)
+        lat = float(str_split[0])
+        log = float(str_split[1])
+
+        response_dict = Recommendation.recommendation(request.user.profile.id,
+                                                      menu.name, type='loc',
+                                                      log=log, lat=lat)
+        return JsonResponse(response_dict, status=200, safe=False)
     return HttpResponseNotAllowed(['GET'])
 
 @transaction.atomic
@@ -39,9 +45,7 @@ def recomtst(request, review_id):
         review = Review.objects.get(id=review_id)
         menu = review.menu
 
-        response_dict = {
-            'restaurant_list': Recommendation.recommendation(request.user.profile.id,
-                                                             menu.name, type='tst')
-        }
-        return JsonResponse(response_dict, status=200)
+        response_dict = Recommendation.recommendation(request.user.profile.id,
+                                                      menu.name, type='tst')
+        return JsonResponse(response_dict, status=200, safe=False)
     return HttpResponseNotAllowed(['GET'])
