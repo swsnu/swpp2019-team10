@@ -74,18 +74,19 @@ describe('<Introduce />', () => {
 
   it('should redner correctly when not logged in', (done) => {
     const spyAction = jest.spyOn(actionCreators, 'GET_USER_INFO')
-    .mockImplementation(() => () => new Promise((res) => {
-      const data = {
-        type: 'USER_IS_NOT_LOGGED_IN',
-      };
-      
-      res(data);
-    }));
-    
+      .mockImplementation(() => () => new Promise((res) => {
+        const data = {
+          type: 'USER_IS_NOT_LOGGED_IN',
+        };
+
+        res(data);
+      }));
+
     const spyHistory = jest.spyOn(history, 'push')
-    .mockImplementation(() => {});
-    
+      .mockImplementation(() => {});
+
     const component = mount(introduce);
+    expect(component.find('#start-wrapper').length).toBe(1);
 
     expect(spyAction).toHaveBeenCalledTimes(1);
     setTimeout(() => expect(spyHistory).toHaveBeenCalledTimes(0), 100);
@@ -94,18 +95,19 @@ describe('<Introduce />', () => {
 
   it('should redirect to main page when logged in', (done) => {
     const spyAction = jest.spyOn(actionCreators, 'GET_USER_INFO')
-    .mockImplementation(() => () => new Promise((res) => {
-      const data = {
-        type: 'GET_USER_INFO',
-      };
-      
-      res(data);
-    }));
-    
+      .mockImplementation(() => () => new Promise((res) => {
+        const data = {
+          type: 'GET_USER_INFO',
+        };
+
+        res(data);
+      }));
+
     const spyHistory = jest.spyOn(history, 'push')
-    .mockImplementation(() => {});
-    
+      .mockImplementation(() => {});
+
     const component = mount(introduce);
+    expect(component.find('#start-wrapper').length).toBe(1);
 
     expect(spyAction).toHaveBeenCalledTimes(1);
     setTimeout(() => expect(spyHistory).toHaveBeenCalledTimes(1), 100);
