@@ -29,8 +29,8 @@ def recomloc(request, review_id, coordinate_val):
         log = float(str_split[1])
 
         response_dict = Recommendation.recommendation(request.user.profile.id,
-                                                         menu.name, type='loc',
-                                                         log=log, lat=lat)
+                                                      menu.name, type='loc',
+                                                      log=log, lat=lat)
         return JsonResponse(response_dict, status=200, safe=False)
     return HttpResponseNotAllowed(['GET'])
 
@@ -46,6 +46,6 @@ def recomtst(request, review_id):
         menu = review.menu
 
         response_dict = Recommendation.recommendation(request.user.profile.id,
-                                                         menu.name, type='tst')
+                                                      menu.name, type='tst')
         return JsonResponse(response_dict, status=200, safe=False)
     return HttpResponseNotAllowed(['GET'])
