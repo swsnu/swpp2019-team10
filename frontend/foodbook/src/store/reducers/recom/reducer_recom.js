@@ -1,21 +1,29 @@
-import * as actionTypes from 'store/actions/review/actionTypes_recom';
+import * as actionTypes from 'store/actions/recom/actionTypes_recom';
 
 const initialState = {
-  recomList: [],
+  recomlocList: [],
+  recomtstList: [],
 };
 
 const reducer = (state = initialState, action) => {
   let newState = state;
   switch (action.type) {
-    case actionTypes.GET_RECOMS:
+    case actionTypes.GET_RECOMS_LOC:
       newState = {
         ...state,
-        recomList: action.data,
+        recomlocList: action.data,
+      };
+      return newState;
+
+    case actionTypes.GET_RECOMS_TST:
+      newState = {
+        ...state,
+        recomtstList: action.data,
       };
       return newState;
 
     case actionTypes.CLEAR_RECOMS:
-      return { ...state, recomList: [] };
+      return { ...state, recomlocList: [], recomtstList: [] };
 
     default:
       break;
