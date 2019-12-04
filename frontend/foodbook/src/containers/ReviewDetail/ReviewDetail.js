@@ -140,7 +140,7 @@ class ReviewDetail extends Component {
               readOnly
             />
             <div className="extra content">
-              <Recommendation />
+              <Recommendation data={menu} />
             </div>
             {authorOnly}
             <Button

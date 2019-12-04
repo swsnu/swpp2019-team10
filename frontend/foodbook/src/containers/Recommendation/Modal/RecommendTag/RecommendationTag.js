@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import {
-  Button, Modal, Divider,
+  Button, Modal, Header, List,
 } from 'semantic-ui-react';
-import ReviewPreview from 'components/ReviewPreview';
+import './RecommendationTag.css';
+import * as actionCreators from 'store/actions/recom/action_recom';
 
 class RecommendationTag extends Component {
   constructor(props) {
     super(props);
     this.state = { open: false };
+    const { onGetAll, match } = this.props;
+    onGetAll(match.params.id);
   }
 
   open = () => this.setState({ open: true })
@@ -17,33 +22,41 @@ class RecommendationTag extends Component {
 
   render() {
     const { open } = this.state;
-    const { data } = this.props;
+    const { recoms, data } = this.props;
 
-    const recoList = [];
+    const parseScore = (score) => ((score < 3) ? 'RED' : 'BLUE');
 
-    data.forEach((re) => {
-      recoList.push(
-        <div key={re.tag} className="recommendation-tag-wrapper">
-          You liked it because...
-          <h3>{`It was ${re.tag}!`}</h3>
+    let recommendList = recoms.length === 0 ? null : recoms.map((e) => (
+      <List.Item key={e.name}>
+        <List.Icon name="marker" />
+        <List.Content>
+          {e.name}
+          <List.Description>
+            <span className={parseScore(e.rating)}>
+              {e.rating !== undefined && `${e.rating}(Avg.) `}
+            </span>
+            <b />
+            <span className={parseScore(e.my_rating)}>
+              {e.my_rating !== undefined && e.my_rating >= 1
+              && `${e.my_rating}(Yours.) `}
+            </span>
+            <b />
+            <span className={parseScore(e.other_rating)}>
+              {e.other_rating !== undefined && e.other_rating >= 1
+              && `${e.other_rating}(Others.) `}
+            </span>
+            <br />
+            <br />
+          </List.Description>
+        </List.Content>
+      </List.Item>
+    ));
 
-          {re.reviewsForTag.map((review) => (
-            <ReviewPreview
-              key={review.id}
-              id={review.id}
-              author={review.author}
-              menu={review.menu}
-              rating={review.rating}
-              date={review.date}
-              isMine={review.isMine}
-              image={review.image}
-              tag={review.tag}
-            />
-          ))}
-          <Divider> </Divider>
-        </div>,
-      );
-    });
+    recommendList = (
+      <List id="recommendList">
+        {recommendList}
+      </List>
+    );
 
     return (
       <Modal
@@ -51,14 +64,17 @@ class RecommendationTag extends Component {
         onOpen={this.open}
         onClose={this.close}
         trigger={
-          <Button color="green" inverted> Recommend By Your Tag! </Button>
+          <Button id="recom-tst-button" color="green" inverted> Recommend By Your Taste! </Button>
         }
       >
         <Modal.Header>
-          Recommendation By Tag!
+          {`Recommendation for ${data}!`}
         </Modal.Header>
         <Modal.Content scrolling>
-          {recoList}
+          <Modal.Description>
+            <Header> List Based on Your Experience </Header>
+            {recommendList}
+          </Modal.Description>
         </Modal.Content>
         <Modal.Actions>
           <Button icon="check" content="All Done" onClick={this.close} />
@@ -69,7 +85,29 @@ class RecommendationTag extends Component {
 }
 
 RecommendationTag.propTypes = {
-  data: propTypes.arrayOf(Object).isRequired,
+  recoms: propTypes.arrayOf(Object),
+  onGetAll: propTypes.func.isRequired,
+  match: propTypes.shape({
+    params: propTypes.shape({
+      id: propTypes.string,
+    }),
+  }).isRequired,
+  data: propTypes.string,
 };
 
-export default RecommendationTag;
+RecommendationTag.defaultProps = {
+  recoms: [],
+  data: 'menu',
+};
+
+const mapStateToProps = (state) => ({
+  recoms: state.recom.recomtstList,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onGetAll: (id) => {
+    dispatch(actionCreators.GET_RECOMS_TST(id));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(RecommendationTag));

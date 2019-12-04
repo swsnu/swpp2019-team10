@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import review_views, user_views, token_views
+from .views import review_views, user_views, token_views, recommendation_views
 
 urlpatterns = [
     path('', user_views.user, name='user'),
@@ -22,4 +22,9 @@ urlpatterns = [
          review_views.friend_review_list, name='friend_review_list'),
     path('friend/<int:friend_id>/review/<int:review_id>/',
          review_views.friend_review_detail, name='friend_review_detail'),
+
+    path('review/<int:review_id>/recomloc/<str:coordinate_val>/',
+         recommendation_views.recomloc, name='recomloc'),
+    path('review/<int:review_id>/recomtst/',
+         recommendation_views.recomtst, name='recomtst'),
 ]
