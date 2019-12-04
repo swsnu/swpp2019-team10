@@ -1,28 +1,64 @@
-import React from 'react';
-import { Route } from 'react-router-dom';
+import React, { Component } from 'react';
+import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import propTypes from 'prop-types';
 
 import * as actionCreators from 'store/actions/user/action_user';
 
-export const PrivateRoute = ({ component: Component, ...rest }) => {
-  const { onLoad, history } = rest;
+export class PrivateRoute extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ready: false,
+      login: false,
+    };
+  }
 
-  onLoad().then((res) => {
-    if (res.type === 'USER_IS_NOT_LOGGED_IN') history.push('/introduce/');
-  }).catch(() => {
-    history.push('/introduce/');
-  });
+  componentDidMount() {
+    const { onLoad } = this.props;
 
-  return (
-    <Route
-      className="private-route"
-      {...rest}
-      render={(props) => <Component {...props} />}
-    />
-  );
-};
+    onLoad().then((res) => {
+      if (res.type === 'GET_USER_INFO') {
+        this.setState({
+          ready: true,
+          login: true,
+        });
+      } else {
+        this.setState({
+          ready: true,
+          login: false,
+        });
+      }
+    }).catch(() => {
+      this.setState({
+        ready: true,
+        login: false,
+      });
+    });
+  }
+
+  render() {
+    const { component: MyComponent, ...rest } = this.props;
+    const { ready, login } = this.state;
+    let toRender;
+
+    if (!ready) {
+      toRender = <div className="loading" />;
+    } else if (login) {
+      toRender = (
+        <Route
+          className="private-route"
+          {...rest}
+          render={(props) => <MyComponent {...props} />}
+        />
+      );
+    } else {
+      toRender = <Redirect to="/introduce/" />;
+    }
+    return toRender;
+  }
+}
 
 PrivateRoute.propTypes = {
   onLoad: propTypes.func.isRequired,
