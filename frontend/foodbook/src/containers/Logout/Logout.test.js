@@ -5,7 +5,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
 
-import * as actionCreators from 'store/actions/user/action_user';
+import Axios from 'axios';
 import Logout from '.';
 
 const loggedinUser = {
@@ -14,7 +14,6 @@ const loggedinUser = {
     phone_number: '',
     age: -1,
     gender: '',
-    profile_pic: '',
     number_of_reviews: -1,
     number_of_friends: -1,
     failed: false,
@@ -32,7 +31,6 @@ const loggedoutUser = {
     phone_number: '',
     age: -1,
     gender: '',
-    profile_pic: '',
     number_of_reviews: -1,
     number_of_friends: -1,
     failed: false,
@@ -49,14 +47,16 @@ const loggedOutStore = getMockStore(loggedoutUser, {}, {});
 
 describe('<Logout />', () => {
   let logout;
-  const spyLogout = jest.spyOn(actionCreators, 'LOGOUT')
-    .mockImplementation(() => ({ type: '' }));
+  const spyLogout = jest.spyOn(Axios, 'get')
+    .mockImplementation(() => new Promise((res) => {
+      res();
+    }));
 
   beforeEach(() => {
     logout = (
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <Logout />
+          <Logout history={history} />
         </ConnectedRouter>
       </Provider>
     );
@@ -72,20 +72,21 @@ describe('<Logout />', () => {
     expect(wrapper.length).toBe(1);
   });
 
-  it('should dispatch logout action', () => {
+  it('should dispatch logout action', (done) => {
     const component = mount(logout);
     const wrapper = component.find('Button').at(0);
 
     wrapper.simulate('click');
 
     expect(spyLogout).toHaveBeenCalledTimes(1);
+    done();
   });
 
-  it('should not crash when not logged in', () => {
+  it('should not crash when not logged in', (done) => {
     const falseLogout = (
       <Provider store={loggedOutStore}>
         <ConnectedRouter history={history}>
-          <Logout />
+          <Logout history={history} />
         </ConnectedRouter>
       </Provider>
     );
@@ -96,5 +97,6 @@ describe('<Logout />', () => {
     wrapper.simulate('click');
 
     expect(spyLogout).toHaveBeenCalledTimes(1);
+    done();
   });
 });

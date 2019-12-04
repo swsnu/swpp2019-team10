@@ -34,7 +34,7 @@ describe('main', () => {
     main = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <Main />
+          <Main history={history} />
         </ConnectedRouter>
       </Provider>
     );

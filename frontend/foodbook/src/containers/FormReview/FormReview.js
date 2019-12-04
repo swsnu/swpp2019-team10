@@ -130,7 +130,6 @@ class FormReview extends Component {
 
     onPostReview(reviewDict, fd);
     this.close();
-    history.push('/main');
   }
 
   getGeoLocation = () => {

@@ -181,12 +181,4 @@ describe('<Signup />', () => {
     wrapperOthers.simulate('click');
     expect(instance.state.input.gender).toBe('O');
   });
-
-  // it('should check if ID is already used', () => {
-  //   const wrapper = component.find('.duplicated-id-checker');
-  //   const spy = jest.spyOn(history, 'push').mockImplementation(() => {});
-
-  //   wrapper.simulate('click');
-  //   expect(spy).toHaveBeenCalledTimes(1);
-  // });
 });
