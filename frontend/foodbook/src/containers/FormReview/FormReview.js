@@ -98,7 +98,7 @@ class FormReview extends Component {
   }
 
   postContentHandler = () => {
-    const { onPostReview, history } = this.props;
+    const { onPostReview } = this.props;
 
     const {
       restaurant,
