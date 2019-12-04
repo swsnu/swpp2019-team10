@@ -75,8 +75,28 @@ class Recommendation():
             restaurant = item[1]
             if restaurant.id not in ret:
                 ret.append(restaurant.id)
+                res_reviews = restaurant.review_list.all()
+                my_rating = 0
+                other_rating = 0
+                my_count = 0
+                other_count = 0
+                for re in res_reviews:
+                    if re.author.id == user_id:
+                        my_rating += re.rating
+                        my_count += 1
+                    else:
+                        other_rating += re.rating
+                        other_count += 1
+                if my_count > 0:
+                    my_rating /= my_count
+                if other_count > 0:
+                    other_rating /= other_count
                 ret_dict.append({'name': restaurant.name,
                                  'longitude': restaurant.longitude,
                                  'latitude': restaurant.latitude,
-                                 'rating': restaurant.rating})
+                                 'rating': restaurant.rating,
+                                 'my_rating': my_rating,
+                                 'other_rating': other_rating})
+                if len(ret) == 10:
+                    break
         return ret_dict

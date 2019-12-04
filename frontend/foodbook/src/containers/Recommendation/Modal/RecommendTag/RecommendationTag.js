@@ -22,9 +22,9 @@ class RecommendationTag extends Component {
 
   render() {
     const { open } = this.state;
-    const { recoms } = this.props;
+    const { recoms, data } = this.props;
 
-    const parseScore = (score) => ((score >= 4) ? 'RED' : 'BLUE');
+    const parseScore = (score) => ((score < 3) ? 'RED' : 'BLUE');
 
     let recommendList = recoms.length === 0 ? null : recoms.map((e) => (
       <List.Item key={e.name}>
@@ -32,9 +32,19 @@ class RecommendationTag extends Component {
         <List.Content>
           {e.name}
           <List.Description>
-            <div className={parseScore(e.rating)}>
+            <span className={parseScore(e.rating)}>
               {e.rating !== undefined && `${e.rating}(Avg.) `}
-            </div>
+            </span>
+            <b />
+            <span className={parseScore(e.my_rating)}>
+              {e.my_rating !== undefined && e.my_rating >= 1
+              && `${e.my_rating}(Yours.) `}
+            </span>
+            <b />
+            <span className={parseScore(e.other_rating)}>
+              {e.other_rating !== undefined && e.other_rating >= 1
+              && `${e.other_rating}(Others.) `}
+            </span>
             <br />
             <br />
           </List.Description>
@@ -58,7 +68,7 @@ class RecommendationTag extends Component {
         }
       >
         <Modal.Header>
-          Recommendation By Your Taste!
+          {`Recommendation for ${data}!`}
         </Modal.Header>
         <Modal.Content scrolling>
           <Modal.Description>
@@ -79,13 +89,15 @@ RecommendationTag.propTypes = {
   onGetAll: propTypes.func.isRequired,
   match: propTypes.shape({
     params: propTypes.shape({
-      id: propTypes.number,
+      id: propTypes.string,
     }),
   }).isRequired,
+  data: propTypes.string,
 };
 
 RecommendationTag.defaultProps = {
   recoms: [],
+  data: 'menu',
 };
 
 const mapStateToProps = (state) => ({

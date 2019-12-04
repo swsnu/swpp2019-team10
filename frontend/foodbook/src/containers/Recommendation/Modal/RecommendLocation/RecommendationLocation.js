@@ -49,7 +49,7 @@ class RecommendationLocation extends Component {
 
   render() {
     const { open } = this.state;
-    const { recoms } = this.props;
+    const { recoms, data } = this.props;
 
     let ready = false;
     if ('lat' in this.state && 'lng' in this.state) {
@@ -77,7 +77,7 @@ class RecommendationLocation extends Component {
       return undefined;
     }; */
 
-    const parseScore = (score) => ((score >= 4) ? 'RED' : 'BLUE');
+    const parseScore = (score) => ((score < 3) ? 'RED' : 'BLUE');
 
     /* let recommendList = recoms.map((e) => (
       <List.Item key={e.id}>
@@ -103,9 +103,19 @@ class RecommendationLocation extends Component {
         <List.Content>
           {e.name}
           <List.Description>
-            <div className={parseScore(e.rating)}>
+            <span className={parseScore(e.rating)}>
               {e.rating !== undefined && `${e.rating}(Avg.) `}
-            </div>
+            </span>
+            <b />
+            <span className={parseScore(e.my_rating)}>
+              {e.my_rating !== undefined && e.my_rating >= 1
+              && `${e.my_rating}(Yours.) `}
+            </span>
+            <b />
+            <span className={parseScore(e.other_rating)}>
+              {e.other_rating !== undefined && e.other_rating >= 1
+              && `${e.other_rating}(Others.) `}
+            </span>
             <br />
             <br />
           </List.Description>
@@ -130,7 +140,7 @@ class RecommendationLocation extends Component {
         }
       >
         <Modal.Header>
-          {`Recommendation for ${recoms.length >= 1 && recoms[0].name}!`}
+          {`Recommendation for ${data}!`}
         </Modal.Header>
         <Modal.Content image scrolling>
           <Modal.Description>
@@ -151,13 +161,15 @@ RecommendationLocation.propTypes = {
   onGetAll: propTypes.func.isRequired,
   match: propTypes.shape({
     params: propTypes.shape({
-      id: propTypes.number,
+      id: propTypes.string,
     }),
   }).isRequired,
+  data: propTypes.string,
 };
 
 RecommendationLocation.defaultProps = {
   recoms: [],
+  data: 'menu',
 };
 
 const mapStateToProps = (state) => ({

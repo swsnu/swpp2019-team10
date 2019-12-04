@@ -74,13 +74,19 @@ def review_list(request):
                     name=restaurant_name,
                     longitude=longitude,
                     latitude=latitude,
+                    rating=rating,
                 )
             else:
                 restaurant = Restaurant.objects.create(
                     name=restaurant_name,
                     longitude=0,
                     latitude=0,
+                    rating=rating,
                 )
+        num_of_review = restaurant.review_list.all().count()
+        restaurant.rating = (restaurant.rating * num_of_review + rating)
+        restaurant.rating = restaurant.rating / (num_of_review + 1)
+        restaurant.save()
         try:
             menu = restaurant.menu_list.all()
             menu = menu.get(name=menu_name)
