@@ -31,12 +31,16 @@ describe('<RecommendationLocation />', () => {
       latitude: '37.5',
       longitude: '126.95',
       rating: 5,
+      my_rating: 0,
+      other_rating: 3.5,
     },
     {
       name: 'TEST_RES_2',
       latitude: '37.8',
       longitude: '126.95',
       rating: 2,
+      my_rating: 4,
+      other_rating: 0,
     },
   ];
 

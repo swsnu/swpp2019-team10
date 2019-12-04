@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import propTypes from 'prop-types';
 import {
   Button, Header, Modal, Icon,
 } from 'semantic-ui-react';
@@ -24,6 +25,7 @@ export class Recommendation extends Component {
 
   render() {
     const { open } = this.state;
+    const { data } = this.props;
 
     return (
       <div className="Recommendation-wrapper">
@@ -40,10 +42,10 @@ export class Recommendation extends Component {
             <Modal.Description>
               <Header> Choose One:  </Header>
               <br />
-              <RecommendationLocation />
+              <RecommendationLocation data={data} />
               <br />
               <br />
-              <RecommendationTag />
+              <RecommendationTag data={data} />
               <br />
               <br />
             </Modal.Description>
@@ -59,5 +61,13 @@ export class Recommendation extends Component {
     );
   }
 }
+
+Recommendation.propTypes = {
+  data: propTypes.string,
+};
+
+Recommendation.defaultProps = {
+  data: 'menu',
+};
 
 export default Recommendation;
