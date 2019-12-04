@@ -5,12 +5,13 @@ import {
   Menu,
 } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
+import propTypes from 'prop-types';
 
 import FriendList from 'containers/FriendList';
 import RawCalendar from 'components/RawCalendar';
 import ReviewList from 'containers/ReviewList';
-
 import FormReview from 'containers/FormReview/FormReview';
+import Logout from 'containers/Logout';
 
 export default class Main extends Component {
   constructor() {
@@ -23,6 +24,7 @@ export default class Main extends Component {
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
   render() {
+    const { history } = this.props;
     const { activeItem } = this.state;
 
     let mainRenderer = <div />;
@@ -68,6 +70,7 @@ export default class Main extends Component {
           <Grid.Row>
             <Grid.Column width={4}>
               <Header as="h1"><NavLink to="/main">FoodBook</NavLink></Header>
+              <Logout history={history} />
             </Grid.Column>
           </Grid.Row>
           {/* view select region */}
@@ -109,3 +112,7 @@ export default class Main extends Component {
     );
   }
 }
+
+Main.propTypes = {
+  history: propTypes.objectOf(Object).isRequired,
+};
