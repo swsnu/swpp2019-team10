@@ -11,9 +11,10 @@ SYNONYMS = {
     'sweet': ['sweet', 'sugary', 'sugared', 'honeyed', 'candied', 'syrupy', 'treacly', 'cloying', 'bittersweet'],
     'salty': ['salty', 'salt', 'salted', 'saline', 'briny', 'brackish', 'piquant', 'tangy'],
     'umami': ['umami', 'meaty', 'savory'],
-    'bitter': ['bitter', 'sharp'],
+    'bitter': ['bitter', 'sharp', 'bittersweet'],
     'sour': ['sour', 'acid', 'acidy', 'acidic', 'sharp', 'acidulated']
 }
+NAGATION = ['not', 'less']
 #nlp = stanfordnlp.Pipeline()
 
 class Tagging:
@@ -89,8 +90,12 @@ class Tagging:
         for adj in tags:
             for i in ret.keys():
                 if adj.name.lemma in SYNONYMS[i]:
-                    ret[i][0] += adj.sentiment / adj.count
-                    ret[i][1] += 1
+                    if adj.advmod.lemma in NAGATION:
+                        ret[i][0] += (1 - adj.sentiment / adj.count)
+                        ret[i][1] += 1
+                    else:
+                        ret[i][0] += adj.sentiment / adj.count
+                        ret[i][1] += 1
         res = {}
         for i in ret.keys():
             if ret[i][1] == 0:
