@@ -15,6 +15,7 @@ import 'semantic-ui-css/semantic.min.css';
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 import './FormReview.css';
 import GoogleMap from 'components/GoogleMap';
 
@@ -97,7 +98,7 @@ class FormReview extends Component {
   }
 
   postContentHandler = () => {
-    const { onPostReview } = this.props;
+    const { onPostReview, history } = this.props;
 
     const {
       restaurant,
@@ -128,6 +129,8 @@ class FormReview extends Component {
     }
 
     onPostReview(reviewDict, fd);
+    this.close();
+    history.push('/main');
   }
 
   getGeoLocation = () => {
@@ -385,4 +388,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(FormReview);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(FormReview));

@@ -53,6 +53,9 @@ export const EDIT_REVIEW = (id, review) => (dispatch) => (
 export const POST_REVIEW = (review, image) => (dispatch) => (
   axios.post('/api/review/', review)
     .then((res) => (
-      image ? axios.post(`/api/review/${res.data.id}/image/`, image).then(dispatch(GET_REVIEW_PRE())) : {}
+      image ? axios.post(`/api/review/${res.data.id}/image/`, image).then(() => {
+        dispatch(GET_REVIEW_PRE());
+        dispatch(GET_REVIEWS_DEEP());
+      }) : {}
     ))
 );
