@@ -20,14 +20,17 @@ def size(x):
     return math.sqrt(res)
 
 class Recommendation():
-    def recommendation(user_id, name, type):
+    def recommendation(user_id, name, **kwargs):
         review = []
+        type = kwargs['type']
+        log = kwargs['log'] if 'log' in kwargs else None
+        lat = kwargs['lat'] if 'lat' in kwargs else None
         if type == 'loc':
             review = Review.objects.filter(menu__name=name)
-            review = review.filter(restaurant__longitude__gte=37.45)
-            review = review.filter(restaurant__longitude__lte=37.55)
-            review = review.filter(restaurant__latitude__gte=126.9)
-            review = review.filter(restaurant__latitude__lte=127)
+            review = review.filter(restaurant__longitude__gte=log-0.05)
+            review = review.filter(restaurant__longitude__lte=log+0.05)
+            review = review.filter(restaurant__latitude__gte=lat-0.05)
+            review = review.filter(restaurant__latitude__lte=lat+0.05)
         else:
             review = Review.objects.filter(menu__name=name)
         itemID = [item.menu.id for item in review]
@@ -72,8 +75,28 @@ class Recommendation():
             restaurant = item[1]
             if restaurant.id not in ret:
                 ret.append(restaurant.id)
+                res_reviews = restaurant.review_list.all()
+                my_rating = 0
+                other_rating = 0
+                my_count = 0
+                other_count = 0
+                for re in res_reviews:
+                    if re.author.id == user_id:
+                        my_rating += re.rating
+                        my_count += 1
+                    else:
+                        other_rating += re.rating
+                        other_count += 1
+                if my_count > 0:
+                    my_rating /= my_count
+                if other_count > 0:
+                    other_rating /= other_count
                 ret_dict.append({'name': restaurant.name,
                                  'longitude': restaurant.longitude,
                                  'latitude': restaurant.latitude,
-                                 'rating': restaurant.rating})
+                                 'rating': restaurant.rating,
+                                 'my_rating': my_rating,
+                                 'other_rating': other_rating})
+                if len(ret) == 10:
+                    break
         return ret_dict

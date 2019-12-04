@@ -81,7 +81,8 @@
       "!src/serviceWorker.js",
       "!src/test-utils/*",
       "!src/store/actions/actionTypes.js",
-      "!src/containers/Recommendation/**/*.*"
+      "!src/containers/Recommendation/Modal/RecommendMenu/*.*",
+      "!src/containers/Recommendation/Modal/RecommendFriend/*.*"
     ]
   }
 }

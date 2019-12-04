@@ -8,6 +8,7 @@ import thunk from 'redux-thunk';
 
 import userReducer from './reducers/user/reducer_user';
 import reviewReducer from './reducers/review/reducer_review';
+import recomReducer from './reducers/recom/reducer_recom';
 
 export const history = createBrowserHistory();
 
@@ -16,6 +17,7 @@ export const history = createBrowserHistory();
 const rootReducer = combineReducers({
   user: userReducer,
   review: reviewReducer,
+  recom: recomReducer,
   router: connectRouter(history),
 });
 

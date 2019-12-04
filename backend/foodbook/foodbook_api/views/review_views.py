@@ -2,7 +2,7 @@
 views for reviews
 '''
 # pylint: disable=line-too-long, unnecessary-comprehension, pointless-string-statement
-# pylint: disable=E0402, R0911, R0912, R0914, W0702
+# pylint: disable=E0402, R0911, R0912, R0914, W0702, R0915
 import json
 from json import JSONDecodeError
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse, HttpResponseNotFound
@@ -74,21 +74,29 @@ def review_list(request):
                     name=restaurant_name,
                     longitude=longitude,
                     latitude=latitude,
+                    rating=rating,
                 )
             else:
                 restaurant = Restaurant.objects.create(
                     name=restaurant_name,
                     longitude=0,
                     latitude=0,
+                    rating=rating,
                 )
+        num_of_review = restaurant.review_list.all().count()
+        restaurant.rating = (restaurant.rating * num_of_review + rating)
+        restaurant.rating = restaurant.rating / (num_of_review + 1)
+        restaurant.save()
         try:
-            menu = Menu.objects.get(name=menu_name)
+            menu = restaurant.menu_list.all()
+            menu = menu.get(name=menu_name)
         except:
             """
             this is dummy!
             """
             menu = Menu.objects.create(
                 name=menu_name,
+                restaurant=restaurant,
             )
         new_review = Review.objects.create(
             author=request.user.profile,
@@ -195,6 +203,8 @@ def review_detail(request, review_id):
             return HttpResponse(status=403)
         review.menu.num_of_review -= 1
         review.menu.save()
+        if review.menu.num_of_review == 0:
+            review.menu.delete()
         review.delete()
         request.user.profile.count_write -= 1
         request.user.profile.save()
