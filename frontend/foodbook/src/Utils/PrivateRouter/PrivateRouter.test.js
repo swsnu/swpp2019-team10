@@ -41,14 +41,13 @@ describe('<PrivateRouter />', () => {
         res(data);
       }));
 
-    const spyHistory = jest.spyOn(history, 'push')
-      .mockImplementation(() => {});
-
     component = mount(route);
-    const wrapper = component.find('.inner-wrapper');
-    expect(wrapper.length).toBe(1);
-    expect(spyAction).toHaveBeenCalledTimes(1);
-    setTimeout(() => expect(spyHistory).toHaveBeenCalledTimes(1), 100);
+    setTimeout(() => {
+      const wrapper = component.find('.inner-wrapper');
+      expect(wrapper.length).toBe(0);
+      expect(spyAction).toHaveBeenCalledTimes(1);
+      expect(component.find('Redirect').length).toBe(1);
+    }, 100);
     done();
   });
 
@@ -62,14 +61,13 @@ describe('<PrivateRouter />', () => {
         res(data);
       }));
 
-    const spyHistory = jest.spyOn(history, 'push')
-      .mockImplementation(() => {});
-
     component = mount(route);
-    const wrapper = component.find('.inner-wrapper');
-    expect(wrapper.length).toBe(1);
-    expect(spyAction).toHaveBeenCalledTimes(1);
-    setTimeout(() => expect(spyHistory).toHaveBeenCalledTimes(0), 100);
+
+    setTimeout(() => {
+      const wrapper = component.find('.inner-wrapper');
+      expect(wrapper.length).toBe(1);
+      expect(spyAction).toHaveBeenCalledTimes(1);
+    }, 100);
     done();
   });
 
@@ -83,14 +81,13 @@ describe('<PrivateRouter />', () => {
         rej(data);
       }));
 
-    const spyHistory = jest.spyOn(history, 'push')
-      .mockImplementation(() => {});
-
     component = mount(route);
-    const wrapper = component.find('.inner-wrapper');
-    expect(wrapper.length).toBe(1);
-    expect(spyAction).toHaveBeenCalledTimes(1);
-    setTimeout(() => expect(spyHistory).toHaveBeenCalledTimes(1), 100);
+    setTimeout(() => {
+      const wrapper = component.find('.inner-wrapper');
+      expect(wrapper.length).toBe(0);
+      expect(spyAction).toHaveBeenCalledTimes(1);
+      expect(component.find('Redirect').length).toBe(1);
+    }, 100);
     done();
   });
 });
