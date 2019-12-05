@@ -15,7 +15,7 @@ export const USER_IS_NOT_LOGGED_IN = 'USER_IS_NOT_LOGGED_IN';
 export const GET_FRIENDS = 'GET_FRIENDS';
 // export const GET_FRIEND_INFO = 'GET_FRIEND_INFO'
 // It doesn't need because we are to implement GET_USER_INFO to use id.
-
+export const CLEAR_SEARCH_USERS = 'CLEAR_SEARCH_USERS';
 export const SEARCH_USERS = 'SEARCH_USERS';
 
 export const ADD_FRIEND = 'ADD_FRIEND';

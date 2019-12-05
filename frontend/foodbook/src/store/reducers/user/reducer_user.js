@@ -88,6 +88,13 @@ const reducer = (state = initialState, action) => {
       };
       return newState;
 
+    case actionTypes.CLEAR_SEARCH_USERS:
+      newState = {
+        ...state,
+        searchUsers: [],
+      };
+      return newState;
+
     case actionTypes.SEARCH_USERS:
       newState = {
         ...state,

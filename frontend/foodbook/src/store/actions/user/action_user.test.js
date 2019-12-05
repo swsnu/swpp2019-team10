@@ -249,4 +249,60 @@ describe('User', () => {
     });
     done();
   });
+
+  it('should add friend', (done) => {
+    const userList = [{ id: 1, nickname: 'name' }];
+    const spyAddFriend = jest.spyOn(axios, 'post')
+      .mockImplementation(() => new Promise((resolve) => {
+        const result = {
+          status: 204,
+          data: userList,
+        };
+        resolve(result);
+      }));
+
+    const spyGet = jest.spyOn(axios, 'get')
+      .mockImplementation(() => new Promise((resolve) => {
+        const result = {
+          status: 200,
+          data: userList,
+        };
+        resolve(result);
+      }));
+
+    store.dispatch(actionCreators.ADD_FRIEND(1)).then(() => {
+      expect(spyAddFriend).toHaveBeenCalledTimes(1);
+      expect(spyGet).toHaveBeenCalledTimes(2);
+      expect(store.getState().user.friend).toBe(userList);
+    });
+    done();
+  });
+
+  it('should delete friend', (done) => {
+    const userList = [{ id: 1, nickname: 'name' }];
+    const spyDeleteFriend = jest.spyOn(axios, 'delete')
+      .mockImplementation(() => new Promise((resolve) => {
+        const result = {
+          status: 204,
+          data: userList,
+        };
+        resolve(result);
+      }));
+
+    const spyGet = jest.spyOn(axios, 'get')
+      .mockImplementation(() => new Promise((resolve) => {
+        const result = {
+          status: 200,
+          data: userList,
+        };
+        resolve(result);
+      }));
+
+    store.dispatch(actionCreators.DELETE_FRIEND(1)).then(() => {
+      expect(spyDeleteFriend).toHaveBeenCalledTimes(1);
+      expect(spyGet).toHaveBeenCalledTimes(2);
+      expect(store.getState().user.friend).toBe(userList);
+    });
+    done();
+  });
 });
