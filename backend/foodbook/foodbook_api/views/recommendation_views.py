@@ -18,7 +18,7 @@ def recomloc(request, review_id, coordinate_val):
     if request.method == 'GET':
         if not request.user.is_authenticated:
             return HttpResponse(status=401)
-        review = Review.objects.get(id=review_id)
+        review = Review.objects.select_related('menu').get(id=review_id)
         menu = review.menu
 
         str_tmp = coordinate_val
@@ -42,7 +42,7 @@ def recomtst(request, review_id):
     if request.method == 'GET':
         if not request.user.is_authenticated:
             return HttpResponse(status=401)
-        review = Review.objects.get(id=review_id)
+        review = Review.objects.select_related('menu').get(id=review_id)
         menu = review.menu
 
         response_dict = Recommendation.recommendation(request.user.profile.id,

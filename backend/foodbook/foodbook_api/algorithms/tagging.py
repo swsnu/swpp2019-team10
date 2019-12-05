@@ -11,11 +11,10 @@ SYNONYMS = {
     'sweet': ['sweet', 'sugary', 'sugared', 'honeyed', 'candied', 'syrupy', 'treacly', 'cloying', 'bittersweet'],
     'salty': ['salty', 'salt', 'salted', 'saline', 'briny', 'brackish', 'piquant', 'tangy'],
     'umami': ['umami', 'meaty', 'savory'],
-    'bitter': ['bitter', 'sharp'],
+    'bitter': ['bitter', 'sharp', 'bittersweet'],
     'sour': ['sour', 'acid', 'acidy', 'acidic', 'sharp', 'acidulated']
 }
-#nlp = stanfordnlp.Pipeline()
-
+NAGATION = ['not', 'less']
 class Tagging:
     def __init__(self, profile, menu, rating):
         self.profile = profile
@@ -85,12 +84,16 @@ class Tagging:
         return step6.strip()
     
     def update_models(self, tags):
-        ret = {'sweet': (0,0), 'salty': (0,0), 'umami': (0,0), 'bitter': (0,0), 'sour': (0,0)}
+        ret = {'sweet': [0,0], 'salty': [0,0], 'umami': [0,0], 'bitter': [0,0], 'sour': [0,0]}
         for adj in tags:
             for i in ret.keys():
                 if adj.name.lemma in SYNONYMS[i]:
-                    ret[i][0] += adj.sentiment / adj.count
-                    ret[i][1] += 1
+                    if adj.advmod.lemma in NAGATION:
+                        ret[i][0] += (1 - adj.sentiment / adj.count)
+                        ret[i][1] += 1
+                    else:
+                        ret[i][0] += adj.sentiment / adj.count
+                        ret[i][1] += 1
         res = {}
         for i in ret.keys():
             if ret[i][1] == 0:

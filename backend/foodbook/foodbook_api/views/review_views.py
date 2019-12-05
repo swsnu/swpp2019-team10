@@ -22,8 +22,8 @@ def review_list(request):
         return HttpResponse(status=401)
     if request.method == 'GET':
         review_all_list = []
-        #player, created = Profile.objects.get_or_create(user=request.user)
-        for review in Review.objects.filter(author=request.user.profile):
+        for review in Review.objects.select_related(
+                'restaurant', 'menu').prefetch_related('tag').filter(author=request.user.profile):
             image_path = ""
             if review.review_img:
                 image_path = 'http://127.0.0.1:8000'+review.review_img.url
@@ -37,7 +37,7 @@ def review_list(request):
                 tag.append({'name':tag_item.name, 'sentimental': pos})
             dict_review = {
                 'id': review.id,
-                'author': review.author.user.username,
+                'author': request.user.username,
                 'restaurant': review.restaurant.name,
                 'menu': review.menu.name,
                 'content': review.content,
@@ -110,9 +110,9 @@ def review_list(request):
             new_review.tag.add(Tag.objects.create(name=item, sentimental=tags[item]))
         dict_new_review = {
             'id': new_review.id,
-            'author': new_review.author.user.username,
-            'restaurant': new_review.restaurant.name,
-            'menu': new_review.menu.name,
+            'author': request.user.username,
+            'restaurant': restaurant.name,
+            'menu': menu.name,
             'content': new_review.content,
             'rating': new_review.rating,
             'date': new_review.date.strftime("%Y-%m-%d")
@@ -132,7 +132,8 @@ def review_detail(request, review_id):
         return HttpResponse(status=401)
     if request.method == 'GET':
         try:
-            review = Review.objects.get(id=review_id)
+            review = Review.objects.select_related(
+                'author__user', 'restaurant', 'menu').prefetch_related('tag').get(id=review_id)
         except ObjectDoesNotExist:
             return HttpResponseNotFound()
         image_path = ""
@@ -160,10 +161,11 @@ def review_detail(request, review_id):
         return JsonResponse(review_dict)
     if request.method == 'PUT':
         try:
-            review = Review.objects.get(id=review_id)
+            review = Review.objects.select_related(
+                'author__user', 'restaurant', 'menu').get(id=review_id)
         except ObjectDoesNotExist:
             return HttpResponseNotFound()
-        if request.user.profile.id != review.author.id:
+        if request.user.id != review.author.user.id:
             return HttpResponse(status=403)
         try:
             req_data = json.loads(request.body.decode())
@@ -196,10 +198,10 @@ def review_detail(request, review_id):
         return JsonResponse(dict_review)
     if request.method == 'DELETE':
         try:
-            review = Review.objects.get(id=review_id)
+            review = Review.objects.select_related('author__user').get(id=review_id)
         except ObjectDoesNotExist:
             return HttpResponseNotFound()
-        if request.user.profile.id != review.author.id:
+        if request.user.id != review.author.user.id:
             return HttpResponse(status=403)
         review.menu.num_of_review -= 1
         review.menu.save()
@@ -229,7 +231,8 @@ def friend_review_list(request, friend_id):
         return HttpResponse(status=403)
     if request.method == 'GET':
         review_all_list = []
-        for review in Review.objects.filter(author=friend):
+        for review in Review.objects.select_related(
+                'author__user', 'restaurant', 'menu').filter(author=friend):
             image_path = ""
             if review.review_img:
                 image_path = 'http://127.0.0.1:8000'+review.review_img.url
@@ -297,7 +300,8 @@ def review_image(request, review_id):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
     try:
-        review = Review.objects.get(id=review_id)
+        review = Review.objects.select_related(
+            'author__user', 'restaurant', 'menu').prefetch_related('tag').get(id=review_id)
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
     if request.user.profile.id != review.author.id:

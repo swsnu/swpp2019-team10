@@ -47,7 +47,7 @@ def signup(request):
         profile_of_user = new_profile
         response_dict = {
             'id': profile_of_user.id,
-            'username': profile_of_user.user.username,
+            'username': new_user.username,
             'phone_number': profile_of_user.phone_number,
             'age': profile_of_user.age,
             'gender': profile_of_user.gender,
@@ -75,7 +75,7 @@ def signup_dupcheck(request):
             'id': -1
         }
         try:
-            user_get = User.objects.get(username=username)
+            user_get = User.objects.select_related('profile').get(username=username)
             response_dict['id'] = user_get.profile.id
         except ObjectDoesNotExist:
             pass
@@ -89,7 +89,7 @@ def profile_image(request, profile_id):
         method to upload profile image
     '''
     try:
-        profile = Profile.objects.get(id=profile_id)
+        profile = Profile.objects.select_related('user').get(id=profile_id)
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
     if request.method == 'POST':
@@ -156,7 +156,7 @@ def user(request):
         profile_of_user = request.user.profile
 
         info_of_user = {
-            'username': profile_of_user.user.username,
+            'username': request.user.username,
             'phone_number': profile_of_user.phone_number,
             'age': profile_of_user.age,
             'gender': profile_of_user.gender,
@@ -183,7 +183,7 @@ def user(request):
         request.user.profile.save()
         profile_of_user = request.user.profile
         info_of_user = {
-            'username': profile_of_user.user.username,
+            'username': request.user.username,
             'phone_number': profile_of_user.phone_number,
             'age': profile_of_user.age,
             'gender': profile_of_user.gender,
@@ -207,8 +207,8 @@ def friend(request):
     if request.method == 'GET':
         profile_of_user = request.user.profile
         info_of_friends = {
-            'friends_list': [(friend.id, friend.nickname) \
-                            for friend in profile_of_user.friend.all()]
+            'friends_list': [(friend['id'], friend['nickname']) \
+                            for friend in profile_of_user.friend.all().values('id', 'nickname')]
         }
         return JsonResponse(info_of_friends)
     if request.method == 'POST':
@@ -223,7 +223,8 @@ def friend(request):
         request.user.profile.save()
         profile_of_user = request.user.profile
         info_of_friends = {
-            'friends_list': [friend.nickname for friend in profile_of_user.friend.all()]
+            'friends_list': [friend['nickname'] \
+                 for friend in profile_of_user.friend.all().values('nickname')]
         }
         return JsonResponse(info_of_friends, status=204)
     return HttpResponseNotAllowed(['GET', 'POST'])
@@ -238,7 +239,7 @@ def friend_detail(request, friend_id):
         return HttpResponse(status=401)
     if request.method == 'GET':
         try:
-            friend_info = Profile.objects.get(id=friend_id)
+            friend_info = Profile.objects.select_related('user').get(id=friend_id)
             info_of_friend = {
                 'username': friend_info.user.username,
                 'phone_number': friend_info.phone_number,
