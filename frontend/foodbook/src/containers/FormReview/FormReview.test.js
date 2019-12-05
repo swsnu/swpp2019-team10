@@ -207,8 +207,8 @@ describe('<FormReview />', () => {
       const wrapper = component.find('FormReview');
       wrapper.at(0).instance().getPos(23.0, 9.0);
 
-      expect(wrapper.at(0).state('longitude')).toBe(9.0);
-      expect(wrapper.at(0).state('latitude')).toBe(23.0);
+      expect(wrapper.at(0).state('lng')).toBe(9.0);
+      expect(wrapper.at(0).state('lat')).toBe(23.0);
     });
   });
 

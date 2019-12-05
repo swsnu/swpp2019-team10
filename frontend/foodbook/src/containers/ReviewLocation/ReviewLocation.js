@@ -1,3 +1,5 @@
+import { Form } from 'semantic-ui-react';
+
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -8,6 +10,11 @@ import ReviewPreview from 'components/ReviewPreview/';
 import * as actionCreators from 'store/actions/review/action_review';
 
 class ReviewLocation extends Component {
+  constructor(props) {
+    super(props);
+    this.setState();
+  }
+
   componentDidMount() {
     this.getGeoLocation();
   }
@@ -16,10 +23,14 @@ class ReviewLocation extends Component {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          const onGetAll = this.props;
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
           this.setState({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
+            lat,
+            lng,
           });
+          onGetAll(lng, lat);
         },
 
         /* Error callback, default location to 0,0 */
@@ -31,6 +42,13 @@ class ReviewLocation extends Component {
         },
       );
     }
+  }
+
+  getPos = (lat, lng) => {
+    this.setState({
+      lat,
+      lng,
+    });
   }
 
   render() {
@@ -48,6 +66,12 @@ class ReviewLocation extends Component {
     const { lng, lat } = this.state;
 
     onGetAll(lng, lat);
+
+    const googleMap = (
+      <Form.Field>
+        <GoogleMap center={{ lat, lng }} search getPos={this.getPos} />
+      </Form.Field>
+    );
 
     let reviewsToRender = reviews;
     if (dateString) {
@@ -71,6 +95,7 @@ class ReviewLocation extends Component {
 
     return (
       <div className="ReviewLocation">
+        {googleMap}
         <div className="ui special cards fluid">
           <div className="card fluid" style={{ width: '630px' }}>
             <div className="content">
