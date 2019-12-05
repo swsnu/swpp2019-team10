@@ -3,7 +3,7 @@
 import ApiKey from 'ApiKey';
 import { Icon } from 'semantic-ui-react';
 import React, { Component } from 'react';
-import GoogleMapReact from 'google-map-react';
+import GoogleMapReact, { InfoWindow } from 'google-map-react';
 import PropTypes from 'prop-types';
 
 import SearchBox from './SearchBox';
@@ -27,6 +27,7 @@ class GoogleMap extends Component {
       mapInstance: null,
       mapApi: null,
       places: [],
+      selected: null,
     };
   }
 
@@ -39,10 +40,18 @@ class GoogleMap extends Component {
   };
 
   setPlace = (place) => {
-    const { getPos } = this.props;
-    getPos(place[0].geometry.location.lat(), place[0].geometry.location.lng());
     this.setState({ places: place });
   };
+
+  clickEvent = (place) => {
+    this.setState({ selected: place });
+    const { getPos } = this.props;
+    getPos(place.geometry.location.lat(), place.geometry.location.lng());
+  };
+
+  closeEvent = () => {
+    this.setState({ selected: null });
+  }
 
   render() {
     const {
@@ -52,6 +61,7 @@ class GoogleMap extends Component {
       mapApi,
       center,
       zoom,
+      selected,
     } = this.state;
 
     const { search } = this.props;
@@ -73,8 +83,27 @@ class GoogleMap extends Component {
                 text={place.name}
                 lat={place.geometry.location.lat()}
                 lng={place.geometry.location.lng()}
+                onClick={() => {
+                  this.closeEvent();
+                }}
               />
             ))}
+          {selected && (
+            <InfoWindow
+              onCloseClick={() => {
+                this.setState({ selected: null });
+              }}
+              position={{
+                lat: selected.geometry.coordinates[1],
+                lng: selected.geometry.coordinates[0],
+              }}
+            >
+              <div>
+                <h2>{selected.properties.NAME}</h2>
+                <p>{selected.properties.DESCRIPTIO}</p>
+              </div>
+            </InfoWindow>
+          )}
         </GoogleMapReact>
       </div>
     );
@@ -91,6 +120,7 @@ GoogleMap.propTypes = {
   zoom: PropTypes.number,
   search: PropTypes.bool,
   getPos: PropTypes.func,
+  selected: PropTypes.shape({ }),
 };
 
 GoogleMap.defaultProps = {
@@ -103,6 +133,7 @@ GoogleMap.defaultProps = {
   zoom: 17,
   search: false,
   getPos: () => {},
+  selected: null,
 };
 
 export default GoogleMap;
