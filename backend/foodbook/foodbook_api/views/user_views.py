@@ -270,11 +270,11 @@ def search_user(request, nickname):
     if request.method == 'GET':
         users = Profile.objects.filter(nickname__startswith=nickname)
         info_of_users = []
-        for user in users:
-            if user.id == request.user.profile.id:
+        for user_tmp in users:
+            if user_tmp.id == request.user.profile.id:
                 continue
-            if user in request.user.profile.friend.all():
+            if user_tmp in request.user.profile.friend.all():
                 continue
-            info_of_users.append({'id': user.id, 'nickname': user.nickname})
+            info_of_users.append({'id': user_tmp.id, 'nickname': user_tmp.nickname})
         return JsonResponse(info_of_users, safe=False)
     return HttpResponseNotAllowed(['GET'])
