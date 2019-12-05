@@ -20,14 +20,14 @@ def size(x):
     return math.sqrt(res)
 
 class Recommendation():
-    def recommendation(user_id, name, **kwargs):
+    def recommendation(user_id, category, **kwargs):
         review = []
         type = kwargs['type']
         log = kwargs['log'] if 'log' in kwargs else None
         lat = kwargs['lat'] if 'lat' in kwargs else None
         if type == 'loc':
             review = Review.objects.select_related(
-                'menu__restaurant', 'author__user').filter(menu__name=name)
+                'menu__restaurant', 'author__user').filter(category=category)
             review = review.select_related(
                 'menu__restaurant', 'author__user').filter(restaurant__longitude__gte=log-0.05)
             review = review.select_related(
@@ -38,7 +38,7 @@ class Recommendation():
                 'menu__restaurant', 'author__user').filter(restaurant__latitude__lte=lat+0.05)
         else:
             review = Review.objects.select_related(
-                'menu__restaurant', 'author__user').filter(menu__name=name)
+                'menu__restaurant', 'author__user').filter(category=category)
         itemID = [item.menu.id for item in review]
         userID = [item.author.id for item in review]
         rating = []

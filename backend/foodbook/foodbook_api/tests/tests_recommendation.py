@@ -84,7 +84,8 @@ class RecommendationTestCase(TestCase):
             menu=menu1,
             content='TEST_CONTENT_R2',
             rating=1,
-            review_img=make_image_file()[1]
+            review_img=make_image_file()[1],
+            category='CATEGORY'
         )
 
         Review.objects.create(
@@ -92,7 +93,8 @@ class RecommendationTestCase(TestCase):
             restaurant=restaurant1,
             menu=menu2,
             content='TEST_CONTENT_R3',
-            rating=2
+            rating=2,
+            category='CATEGORY'
         )
 
         Review.objects.create(
@@ -101,7 +103,8 @@ class RecommendationTestCase(TestCase):
             menu=menu3,
             content='TEST_CONTENT_R4',
             rating=3,
-            review_img=make_image_file()[1]
+            review_img=make_image_file()[1],
+            category='CATEGORY'
         )
 
         Review.objects.create(
@@ -109,7 +112,8 @@ class RecommendationTestCase(TestCase):
             restaurant=restaurant2,
             menu=menu4,
             content='TEST_CONTENT_R1',
-            rating=4
+            rating=4,
+            category='CATEGORY'
         )
 
     def test_recomloc(self):
