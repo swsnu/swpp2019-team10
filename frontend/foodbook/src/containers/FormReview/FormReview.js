@@ -160,7 +160,7 @@ class FormReview extends Component {
 
   render() {
     const {
-      mode, id, review, fixed,
+      mode, id, review, fixed, username,
     } = this.props;
     let ready = false;
 
@@ -263,8 +263,7 @@ class FormReview extends Component {
           <Form id="review-form" style={{ width: '1000px' }}>
             <Form.Field className="content">
               <span className="header">
-                Author
-                {open}
+                {username}
               </span>
             </Form.Field>
             <Form.Group widths="equal">
@@ -352,6 +351,7 @@ FormReview.propTypes = {
   onGetReview: PropTypes.func,
   onEditReview: PropTypes.func,
   fixed: PropTypes.bool,
+  username: PropTypes.string,
 };
 
 FormReview.defaultProps = {
@@ -367,10 +367,12 @@ FormReview.defaultProps = {
   onGetReview: null,
   onEditReview: null,
   fixed: false,
+  username: null,
 };
 
 const mapStateToProps = (state) => ({
   review: state.review.reviewDetail,
+  username: state.user.user.username,
 });
 
 const mapDispatchToProps = (dispatch) => ({
