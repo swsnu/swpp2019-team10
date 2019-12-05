@@ -18,8 +18,7 @@ def recomloc(request, review_id, coordinate_val):
     if request.method == 'GET':
         if not request.user.is_authenticated:
             return HttpResponse(status=401)
-        review = Review.objects.select_related('menu').get(id=review_id)
-        menu = review.menu
+        review = Review.objects.get(id=review_id)
 
         str_tmp = coordinate_val
         str_split = str_tmp.split('=', 1)
@@ -29,7 +28,7 @@ def recomloc(request, review_id, coordinate_val):
         log = float(str_split[1])
 
         response_dict = Recommendation.recommendation(request.user.profile.id,
-                                                      menu.name, type='loc',
+                                                      review.category, type='loc',
                                                       log=log, lat=lat)
         return JsonResponse(response_dict, status=200, safe=False)
     return HttpResponseNotAllowed(['GET'])
@@ -42,10 +41,9 @@ def recomtst(request, review_id):
     if request.method == 'GET':
         if not request.user.is_authenticated:
             return HttpResponse(status=401)
-        review = Review.objects.select_related('menu').get(id=review_id)
-        menu = review.menu
+        review = Review.objects.get(id=review_id)
 
         response_dict = Recommendation.recommendation(request.user.profile.id,
-                                                      menu.name, type='tst')
+                                                      review.category, type='tst')
         return JsonResponse(response_dict, status=200, safe=False)
     return HttpResponseNotAllowed(['GET'])
