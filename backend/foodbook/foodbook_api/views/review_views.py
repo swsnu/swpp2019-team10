@@ -22,7 +22,8 @@ def review_list(request):
         return HttpResponse(status=401)
     if request.method == 'GET':
         review_all_list = []
-        for review in Review.objects.select_related('restaurant', 'menu').prefetch_related('tag').filter(author=request.user.profile):
+        for review in Review.objects.select_related(
+                'restaurant', 'menu').prefetch_related('tag').filter(author=request.user.profile):
             image_path = ""
             if review.review_img:
                 image_path = 'http://127.0.0.1:8000'+review.review_img.url
