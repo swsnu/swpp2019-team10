@@ -49,13 +49,17 @@ export const EDIT_REVIEW = (id, review) => (dispatch) => (
   axios.put(`/api/review/${id}/`, review)
     .then(dispatch(GET_REVIEW_PRE()))
 );
-
+export const POST_REVIEW_ADD = (review) => ({
+  type: actionTypes.POST_REVIEW,
+  ...review,
+});
 export const POST_REVIEW = (review, image) => (dispatch) => (
   axios.post('/api/review/', review)
     .then((res) => (
-      image ? axios.post(`/api/review/${res.data.id}/image/`, image).then(() => {
-        dispatch(GET_REVIEW_PRE());
-        dispatch(GET_REVIEWS_DEEP());
-      }) : {}
+      (image !== false) ? axios.post(`/api/review/${res.data.id}/image/`, image, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }).then((resp) => dispatch(POST_REVIEW_ADD(resp.data))) : dispatch(POST_REVIEW_ADD(res.data))
     ))
 );

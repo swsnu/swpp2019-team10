@@ -307,6 +307,14 @@ def review_image(request, review_id):
         if form.is_valid():
             review.review_img = request.FILES['image']
             review.save()
+            tag = []
+            for tag_item in review.tag.all():
+                pos = 0
+                if tag_item.sentimental >= 0.6:
+                    pos = 1
+                if tag_item.sentimental <= 0.4:
+                    pos = -1
+                tag.append({'name':tag_item.name, 'sentimental': pos})
             dict_review = {
                 'id': review.id,
                 'author': review.author.user.username,
@@ -315,7 +323,8 @@ def review_image(request, review_id):
                 'content': review.content,
                 'rating': review.rating,
                 'date': review.date.strftime("%Y-%m-%d"),
-                'image': 'http://127.0.0.1:8000'+review.review_img.url
+                'image': 'http://127.0.0.1:8000'+review.review_img.url,
+                'tag': tag
             }
             return JsonResponse(dict_review)
         #else:

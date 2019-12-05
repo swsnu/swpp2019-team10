@@ -13,9 +13,9 @@ class ReviewList extends Component {
     onGetAll();
   }
 
+
   render() {
     const { reviews, dateString } = this.props;
-
     let reviewsToRender = reviews;
     if (dateString) {
       reviewsToRender = reviewsToRender.filter((review) => review.date === dateString);

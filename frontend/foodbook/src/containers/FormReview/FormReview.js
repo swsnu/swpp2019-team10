@@ -124,10 +124,8 @@ class FormReview extends Component {
     if (image != null) {
       fd = new FormData();
       const file = new File([image], 'img.jpg');
-
       fd.append('image', file);
     }
-
     onPostReview(reviewDict, fd);
     this.close();
   }
@@ -379,8 +377,8 @@ const mapDispatchToProps = (dispatch) => ({
   onGetReview: (id) => {
     dispatch(actionCreators.GET_REVIEW(id));
   },
-  onPostReview: (post) => {
-    dispatch(actionCreators.POST_REVIEW(post));
+  onPostReview: (post, img) => {
+    dispatch(actionCreators.POST_REVIEW(post, img));
   },
   onEditReview: (id, post) => {
     dispatch(actionCreators.EDIT_REVIEW(id, post));
