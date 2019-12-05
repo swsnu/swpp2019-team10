@@ -15,6 +15,9 @@ const initialState = {
     // TODO: implement this!
   },
 
+  friend: [{ id: 1, nickname: 'name' }],
+  searchUsers: [],
+
   search: undefined,
   logged_in: false,
 };
@@ -76,6 +79,20 @@ const reducer = (state = initialState, action) => {
       return newState;
 
     case actionTypes.REGISTER:
+      return newState;
+
+    case actionTypes.GET_FRIENDS:
+      newState = {
+        ...state,
+        friend: action.data,
+      };
+      return newState;
+
+    case actionTypes.SEARCH_USERS:
+      newState = {
+        ...state,
+        searchUsers: action.data,
+      };
       return newState;
 
     default:

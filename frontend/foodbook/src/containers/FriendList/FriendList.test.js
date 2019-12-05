@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import FriendList from './FriendList';
 // import * as actionCreators from 'store/actions/user/action_user';
 
-const mockStore = getMockStore({}, {}, {});
+const mockStore = getMockStore({ friend: [{ id: 1, nickname: 'name' }] }, {}, {});
 
 jest.mock('../../components/Friend/Friend', () => jest.fn(() => (
   <div className="spyFriend">
@@ -43,6 +43,6 @@ describe('friendlist', () => {
   it('should render each Friend correctly', () => {
     const component = mount(friendList);
     const wrapper = component.find('.spyFriend');
-    expect(wrapper.length).toBe(2); // FIXME: should be modified after axios applyed
+    expect(wrapper.length).toBe(1); // FIXME: should be modified after axios applyed
   });
 });

@@ -75,3 +75,19 @@ export const LOGOUT = () => (dispatch) => axios.get('/api/signout/')
     dispatch(push('/'));
   })
   .catch();
+
+export const GET_FRIENDS_DEEP = (data) => ({
+  type: actionTypes.GET_FRIENDS,
+  data,
+});
+
+export const GET_FRIENDS = () => (dispatch) => axios.get('/api/friend/')
+  .then((res) => { dispatch(GET_FRIENDS_DEEP(res.data)); });
+
+export const SEARCH_USERS_DEEP = (data) => ({
+  type: actionTypes.SEARCH_USERS,
+  data,
+});
+
+export const SEARCH_USERS = (prefix) => (dispatch) => axios.get(`/api/search_users/${prefix}/`)
+  .then((res) => { dispatch(SEARCH_USERS_DEEP(res.data)); });

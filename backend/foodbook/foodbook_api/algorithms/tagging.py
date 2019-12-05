@@ -2,7 +2,7 @@ import os
 import re
 from foodbook_api.apps import FoodbookApiConfig
 #import stanfordnlp
-#from foodbook_api.algorithms import config
+from foodbook_api.algorithms import config
 from stanfordnlp.pipeline.doc import Word
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
 from msrest.authentication import CognitiveServicesCredentials
@@ -22,14 +22,14 @@ class Tagging:
         self.rating = rating
     def check_enviroment(self):
         key_var_name = 'TEXT_ANALYTICS_SUBSCRIPTION_KEY'
-        #os.environ["TEXT_ANALYTICS_SUBSCRIPTION_KEY"] = config.api_key  #execute this if you want to set ennv variable
+        os.environ["TEXT_ANALYTICS_SUBSCRIPTION_KEY"] = config.api_key  #execute this if you want to set ennv variable
         if not key_var_name in os.environ:
             raise Exception(
                 'Please set/export the environment variable: {}'.format(key_var_name))
         subscription_key_var = os.environ[key_var_name]
 
         endpoint_var_name = 'TEXT_ANALYTICS_ENDPOINT'
-        #os.environ["TEXT_ANALYTICS_ENDPOINT"] = config.api_endpoint  #execute this if you want to set ennv variable
+        os.environ["TEXT_ANALYTICS_ENDPOINT"] = config.api_endpoint  #execute this if you want to set ennv variable
         if not endpoint_var_name in os.environ:
             raise Exception(
                 'Please set/export the environment variable: {}'.format(endpoint_var_name))
@@ -82,7 +82,7 @@ class Tagging:
             "can not", "cannot")
         step6 = step5.replace(" ` ", " '")
         return step6.strip()
-    
+
     def update_models(self, tags):
         ret = {'sweet': [0,0], 'salty': [0,0], 'umami': [0,0], 'bitter': [0,0], 'sour': [0,0]}
         for adj in tags:

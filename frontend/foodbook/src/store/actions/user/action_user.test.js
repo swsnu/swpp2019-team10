@@ -213,4 +213,40 @@ describe('User', () => {
     });
     done();
   });
+
+  it('should get friends', (done) => {
+    const friendList = [{ id: 1, nickname: 'name' }];
+    const spyGetFriends = jest.spyOn(axios, 'get')
+      .mockImplementation(() => new Promise((resolve) => {
+        const result = {
+          status: 200,
+          data: friendList,
+        };
+        resolve(result);
+      }));
+
+    store.dispatch(actionCreators.GET_FRIENDS()).then(() => {
+      expect(spyGetFriends).toHaveBeenCalledTimes(1);
+      expect(store.getState().user.friend).toBe(friendList);
+    });
+    done();
+  });
+
+  it('should search users', (done) => {
+    const userList = [{ id: 1, nickname: 'name' }];
+    const spySearchUsers = jest.spyOn(axios, 'get')
+      .mockImplementation(() => new Promise((resolve) => {
+        const result = {
+          status: 200,
+          data: userList,
+        };
+        resolve(result);
+      }));
+
+    store.dispatch(actionCreators.SEARCH_USERS('u')).then(() => {
+      expect(spySearchUsers).toHaveBeenCalledTimes(1);
+      expect(store.getState().user.searchUsers).toBe(userList);
+    });
+    done();
+  });
 });

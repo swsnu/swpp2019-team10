@@ -1,27 +1,63 @@
-import React from 'react';
-import Friend from 'components/Friend';
+import React, { Component } from 'react';
+import propTypes from 'prop-types';
+import { connect } from 'react-redux';
+import * as actionCreators from 'store/actions/user/action_user';
+import Friend from '../../components/Friend';
 
-const FriendList = () => (
-  <div className="friend-preview">
-    <div className="ui special cards">
-      <div className="card">
-        <div className="content">
-          <div className="header" style={{ textAlign: 'center' }}> Friend </div>
-          <br />
-          <div className="ui search">
-            <div className="ui icon input fluid">
-              <input className="prompt" type="text" placeholder="Search Friends..." />
-              <i className="search icon" />
+class FriendList extends Component {
+  constructor(props) {
+    super(props);
+    const { onGetFriends } = props;
+    onGetFriends();
+  }
+
+  render() {
+    const { friend } = this.props;
+
+    const friendList = friend.map((f) => <Friend key={f.id} name={f.nickname} friend="0" review="0" />);
+
+    return (
+      <div className="friend-preview">
+        <div className="ui special cards">
+          <div className="card">
+            <div className="content">
+              <div className="header" style={{ textAlign: 'center' }}> Friend </div>
+              <br />
+              <div className="ui search">
+                <div className="ui icon input fluid">
+                  <input className="prompt" type="text" placeholder="Search Friends..." />
+                  <i className="search icon" />
+                </div>
+                <div className="results" />
+              </div>
+              <br />
+              {friendList}
             </div>
-            <div className="results" />
           </div>
-          <br />
-          <Friend name="Semantic UI" picture="https://semantic-ui.com/images/logo.png" friend="123" review="0" />
-          <Friend name="React" picture="https://cdn.auth0.com/blog/react-js/react.png" friend="999" review="123" />
         </div>
       </div>
-    </div>
-  </div>
-);
+    );
+  }
+}
 
-export default FriendList;
+FriendList.propTypes = {
+  friend: propTypes.arrayOf(propTypes.shape({
+    id: propTypes.number,
+    nickname: propTypes.string,
+  })),
+  onGetFriends: propTypes.func.isRequired,
+};
+
+FriendList.defaultProps = {
+  friend: [],
+};
+
+const mapStateToProps = (state) => ({
+  friend: state.user.friend,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onGetFriends: () => dispatch(actionCreators.GET_FRIENDS()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(FriendList);
