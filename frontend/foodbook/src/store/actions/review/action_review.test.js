@@ -77,4 +77,41 @@ describe('Review Action', () => {
         done();
       });
   });
+
+  it('should post review twice without error when image', (done) => {
+    const spy = jest.spyOn(axios, 'post')
+      .mockImplementation(() => new Promise((res) => {
+        const result = {
+          status: 201,
+          data: stubReviews[0],
+        };
+        res(result);
+      }));
+    store.dispatch(actionCreators.POST_REVIEW(stubReviews[0], true))
+      .then(() => {
+        const newState = store.getState();
+        expect(spy).toHaveBeenCalledTimes(2);
+        expect(newState.review.reviewList.length).toBe(1);
+        done();
+      })
+      .catch();
+  });
+  it('should post review once without error when no image', (done) => {
+    const spy = jest.spyOn(axios, 'post')
+      .mockImplementation(() => new Promise((res) => {
+        const result = {
+          status: 201,
+          data: stubReviews[0],
+        };
+        res(result);
+      }));
+    store.dispatch(actionCreators.POST_REVIEW(stubReviews[0], false))
+      .then(() => {
+        const newState = store.getState();
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(newState.review.reviewList.length).toBe(2);
+        done();
+      })
+      .catch();
+  });
 });
