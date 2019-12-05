@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom';
 import propTypes from 'prop-types';
 
 import FriendList from 'containers/FriendList';
-import RawCalendar from 'components/RawCalendar';
+import RealCalendar from 'containers/RealCalendar/RealCalendar';
 import ReviewList from 'containers/ReviewList';
 import FormReview from 'containers/FormReview/FormReview';
 import Logout from 'containers/Logout';
@@ -42,7 +42,7 @@ export default class Main extends Component {
       case 'calendar':
         mainRenderer = (
           <div className="main-calendar-wrapper">
-            <RawCalendar />
+            <RealCalendar />
           </div>
         );
         break;

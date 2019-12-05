@@ -1,7 +1,7 @@
 import React, { Component } from 'react'; // useState lets functional component have state.
 import Calendar from 'react-calendar';
 import './RawCalendar.css';
-
+import PropTypes from 'prop-types';
 import ReviewList from 'containers/ReviewList';
 
 const parseDate = (dateInfo) => {
@@ -48,11 +48,12 @@ export class RawCalendar extends Component {
 
   render() {
     const { dateString, date } = this.state;
+    const { tileDisabled } = this.props;
     const { handleChange } = this;
 
     return (
       <div className="RawCalendar">
-        <Calendar id="calendar" style={{ marginLeft: '50%' }} onChange={handleChange} value={date} />
+        <Calendar id="calendar" style={{ marginLeft: '50%' }} onChange={handleChange} value={date} tileDisabled={tileDisabled} />
         <h3 style={{ marginLeft: '25%' }}>
           {`Your Food history of ${dateString}`}
         </h3>
@@ -61,4 +62,9 @@ export class RawCalendar extends Component {
     );
   }
 }
+
+RawCalendar.propTypes = {
+  tileDisabled: PropTypes.func.isRequired,
+};
+
 export default RawCalendar;
