@@ -15,6 +15,7 @@ import 'semantic-ui-css/semantic.min.css';
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 import './FormReview.css';
 import GoogleMap from 'components/GoogleMap';
 
@@ -123,11 +124,10 @@ class FormReview extends Component {
     if (image != null) {
       fd = new FormData();
       const file = new File([image], 'img.jpg');
-
       fd.append('image', file);
     }
-
     onPostReview(reviewDict, fd);
+    this.close();
   }
 
   getGeoLocation = () => {
@@ -377,12 +377,12 @@ const mapDispatchToProps = (dispatch) => ({
   onGetReview: (id) => {
     dispatch(actionCreators.GET_REVIEW(id));
   },
-  onPostReview: (post) => {
-    dispatch(actionCreators.POST_REVIEW(post));
+  onPostReview: (post, img) => {
+    dispatch(actionCreators.POST_REVIEW(post, img));
   },
   onEditReview: (id, post) => {
     dispatch(actionCreators.EDIT_REVIEW(id, post));
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(FormReview);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(FormReview));

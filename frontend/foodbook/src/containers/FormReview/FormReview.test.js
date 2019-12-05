@@ -165,7 +165,14 @@ describe('<FormReview />', () => {
 
       addWrapper.setState({ image: 'blob' });
       component.update();
-      submitButton.simulate('click');
+      component.find('Button #review-modal-triggar').simulate('click');
+      component.update();
+      component.find('TextArea #review-restaurant-input').simulate('change', event);
+      component.find('TextArea #review-menu-input').simulate('change', event);
+      component.find('TextArea #review-content-input').simulate('change', event);
+      component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });
+      component.update();
+      component.find('#submit-review-button').at(0).simulate('click');
       component.update();
       expect(spyPost).toHaveBeenCalledTimes(2);
     });

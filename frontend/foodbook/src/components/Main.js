@@ -10,12 +10,13 @@ import propTypes from 'prop-types';
 import FriendList from 'containers/FriendList';
 import RawCalendar from 'components/RawCalendar';
 import ReviewList from 'containers/ReviewList';
+import FormReview from 'containers/FormReview/FormReview';
 import Logout from 'containers/Logout';
-import FormReview from 'containers/FormReview';
+
 
 export default class Main extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       activeItem: 'feed',
     };
