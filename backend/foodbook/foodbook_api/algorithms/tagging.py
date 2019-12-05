@@ -84,7 +84,7 @@ class Tagging:
         return step6.strip()
     
     def update_models(self, tags):
-        ret = {'sweet': (0,0), 'salty': (0,0), 'umami': (0,0), 'bitter': (0,0), 'sour': (0,0)}
+        ret = {'sweet': [0,0], 'salty': [0,0], 'umami': [0,0], 'bitter': [0,0], 'sour': [0,0]}
         for adj in tags:
             for i in ret.keys():
                 if adj.name.lemma in SYNONYMS[i]:
