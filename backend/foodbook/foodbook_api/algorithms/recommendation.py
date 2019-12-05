@@ -26,13 +26,19 @@ class Recommendation():
         log = kwargs['log'] if 'log' in kwargs else None
         lat = kwargs['lat'] if 'lat' in kwargs else None
         if type == 'loc':
-            review = Review.objects.filter(menu__name=name)
-            review = review.filter(restaurant__longitude__gte=log-0.05)
-            review = review.filter(restaurant__longitude__lte=log+0.05)
-            review = review.filter(restaurant__latitude__gte=lat-0.05)
-            review = review.filter(restaurant__latitude__lte=lat+0.05)
+            review = Review.objects.select_related(
+                'menu__restaurant', 'author__user').filter(menu__name=name)
+            review = review.select_related(
+                'menu__restaurant', 'author__user').filter(restaurant__longitude__gte=log-0.05)
+            review = review.select_related(
+                'menu__restaurant', 'author__user').filter(restaurant__longitude__lte=log+0.05)
+            review = review.select_related(
+                'menu__restaurant', 'author__user').filter(restaurant__latitude__gte=lat-0.05)
+            review = review.select_related(
+                'menu__restaurant', 'author__user').filter(restaurant__latitude__lte=lat+0.05)
         else:
-            review = Review.objects.filter(menu__name=name)
+            review = Review.objects.select_related(
+                'menu__restaurant', 'author__user').filter(menu__name=name)
         itemID = [item.menu.id for item in review]
         userID = [item.author.id for item in review]
         rating = []
@@ -75,7 +81,7 @@ class Recommendation():
             restaurant = item[1]
             if restaurant.id not in ret:
                 ret.append(restaurant.id)
-                res_reviews = restaurant.review_list.all()
+                res_reviews = restaurant.review_list.select_related('author').all()
                 my_rating = 0
                 other_rating = 0
                 my_count = 0
