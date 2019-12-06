@@ -58,10 +58,10 @@ class RestaurantReview extends Component {
         trigger={(
           <Button id="res-list-button" color="green" onClick={() => this.clickHandler(data.id)} inverted>
             {' '}
-Show Reviews of
-            {data.name}
-!
+            Show Reviews of
             {' '}
+            {data.name}
+            {'!'}
           </Button>
         )}
       >
@@ -93,8 +93,8 @@ RestaurantReview.propTypes = {
   data: propTypes.shape({
     id: propTypes.number,
     name: propTypes.string,
-    longitude: propTypes.string,
-    latitude: propTypes.string,
+    longitude: propTypes.number,
+    latitude: propTypes.number,
     rating: propTypes.number,
     my_rating: propTypes.number,
     other_rating: propTypes.number,

@@ -20,10 +20,10 @@ class RecommendationLocation extends Component {
   }
 
   recomHandler = () => {
-    const { onGetAll, match } = this.props;
+    const { onGetAll, id } = this.props;
     const { lat, lng } = this.state;
     onGetAll({
-      id: match.params.id,
+      id,
       lat,
       log: lng,
     });
@@ -136,12 +136,8 @@ class RecommendationLocation extends Component {
 RecommendationLocation.propTypes = {
   recoms: propTypes.arrayOf(Object),
   onGetAll: propTypes.func.isRequired,
-  match: propTypes.shape({
-    params: propTypes.shape({
-      id: propTypes.string,
-    }),
-  }).isRequired,
   data: propTypes.string,
+  id: propTypes.number,
 };
 
 RecommendationLocation.defaultProps = {
