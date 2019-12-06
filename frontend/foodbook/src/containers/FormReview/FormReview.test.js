@@ -132,7 +132,7 @@ describe('<FormReview />', () => {
 
       // category may change so test only one category, rest will be consistent
       wrapperChicken.simulate('click');
-      expect(instance.state.category).toBe('Chicken');
+      expect(instance.state.category).toBe('chicken');
     });
 
     it('should have image upload functioning', () => {

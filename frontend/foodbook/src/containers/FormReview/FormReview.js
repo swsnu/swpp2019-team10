@@ -298,7 +298,7 @@ class FormReview extends Component {
                     'Western', 'Fastfood', 'Dessert', 'Snack', 'Asian'].map((str) => ({
                     key: str,
                     text: str,
-                    value: str,
+                    value: str.toLowerCase(),
                   }))
                 }
                 className="category-input-wrapper"
