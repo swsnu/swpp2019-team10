@@ -119,7 +119,7 @@ export default class Main extends Component {
                 <div className="ui special cards">
                   <div className="card" style={{ width: '630px' }}>
                     <div className="content">
-                      <FormReview fixed={false} />
+                      <FormReview fixed={false} mode="ADD" />
                     </div>
                   </div>
                 </div>
