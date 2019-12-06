@@ -46,7 +46,9 @@ class ReviewDetail extends Component {
 
   componentDidMount() {
     const { match, onGetReview } = this.props;
-    onGetReview(match.params.id);
+    onGetReview(match.params.id).then(() => {
+      this.setState({ ready: true });
+    });
   }
 
   /*
@@ -64,7 +66,7 @@ class ReviewDetail extends Component {
 
   render() {
     const {
-      error, open,
+      error, open, ready,
     } = this.state;
 
     const { history, match, review } = this.props;
@@ -78,6 +80,14 @@ class ReviewDetail extends Component {
       return (
         <div className="Review-error-wrapper">
           <p>{error.content}</p>
+        </div>
+      );
+    }
+
+    if (!ready) {
+      return (
+        <div className="form-review-loading">
+          <p>Loading...</p>
         </div>
       );
     }
@@ -204,12 +214,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onGetReview: (id) => {
-    dispatch(actionCreators.GET_REVIEW(id));
-  },
-  onDeleteReview: (id) => {
-    dispatch(actionCreators.DELETE_REVIEW(id));
-  },
+  onGetReview: (id) => dispatch(actionCreators.GET_REVIEW(id)),
+  onDeleteReview: (id) => dispatch(actionCreators.DELETE_REVIEW(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReviewDetail);

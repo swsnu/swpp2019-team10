@@ -30,6 +30,7 @@ class FormReview extends Component {
       /* open is variable for modal component,
         currently it's undecided if this will be converted to modal so it's left unused. */
       open: false,
+      ready: false,
     };
   }
 
@@ -49,7 +50,9 @@ class FormReview extends Component {
         error: null,
       });
     } else if (mode === 'EDIT') {
-      onGetReview(id);
+      onGetReview(id).then(() => {
+        this.setState({ ready: true });
+      });
     } else {
       this.setState({
         error: 'Unknown Form Type',
@@ -137,14 +140,16 @@ class FormReview extends Component {
           this.setState({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
+            ready: true,
           });
         },
 
         /* Error callback, default location to 0,0 */
         () => {
           this.setState({
-            lat: 0,
-            lng: 0,
+            lat: 37.450084,
+            lng: 126.952459,
+            ready: true,
           });
         },
       );
@@ -160,14 +165,12 @@ class FormReview extends Component {
 
   render() {
     const {
-      mode, id, review, fixed,
+      mode, fixed,
     } = this.props;
-    let ready = false;
 
-    if ((mode === 'ADD' && 'lat' in this.state && 'lng' in this.state)
-      || (mode === 'EDIT' && id === review.id && 'content' in this.state)) {
-      ready = true;
-    } else if (mode === 'EDIT') {
+    const { ready } = this.state;
+
+    if (mode === 'EDIT' && ready && !('content' in this.state)) {
       const { review: loadedReview } = this.props;
       const {
         rating, content, restaurant, menu, image,
@@ -177,13 +180,10 @@ class FormReview extends Component {
       });
     }
 
-
     const {
       rating, content, restaurant, menu,
       error, image, open,
     } = this.state;
-
-    const { lat, lng } = this.state;
 
     if (error != null) {
       return (
@@ -201,12 +201,14 @@ class FormReview extends Component {
       );
     }
 
+    const { lat, lng } = this.state;
+
     // https://www.npmjs.com/package/react-image-select-pv
     const imageField = mode === 'ADD' ? (
       <Form.Field>
         <ImageSelectPreview
           id="add-review-image-selector"
-          onChange={(data) => this.setState({ image: data[0].blob })}
+          onChange={(data) => this.setState({ image: data ? data[0].blob : null })}
           max={1}
         />
       </Form.Field>
@@ -368,15 +370,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onGetReview: (id) => {
-    dispatch(actionCreators.GET_REVIEW(id));
-  },
-  onPostReview: (post, img) => {
-    dispatch(actionCreators.POST_REVIEW(post, img));
-  },
-  onEditReview: (id, post) => {
-    dispatch(actionCreators.EDIT_REVIEW(id, post));
-  },
+  onGetReview: (id) => dispatch(actionCreators.GET_REVIEW(id)),
+  onPostReview: (post, img) => dispatch(actionCreators.POST_REVIEW(post, img)),
+  onEditReview: (id, post) => dispatch(actionCreators.EDIT_REVIEW(id, post)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(FormReview));

@@ -1,14 +1,11 @@
-// https://github.com/google-map-react/google-map-react-examples
-
 import ApiKey from 'ApiKey';
-import { Icon } from 'semantic-ui-react';
 import React, { Component } from 'react';
-import GoogleMapReact, { InfoWindow } from 'google-map-react';
+import GoogleMapReact from 'google-map-react';
+import InfoWindow from 'google-map-react';
+import Marker from 'google-map-react';
 import PropTypes from 'prop-types';
 
 import SearchBox from './SearchBox';
-
-const Marker = () => <div><Icon color="red" name="expand" size="big" /></div>;
 
 class GoogleMap extends Component {
   constructor(props) {
@@ -29,6 +26,8 @@ class GoogleMap extends Component {
       places: [],
       selected: null,
     };
+
+    // this.setPlace = this.setPlace.bind(this);
   }
 
   apiHasLoaded = (map, maps) => {
@@ -81,10 +80,16 @@ class GoogleMap extends Component {
               <Marker
                 key={place.id}
                 text={place.name}
-                lat={place.geometry.location.lat()}
-                lng={place.geometry.location.lng()}
+                position={{
+                  lat: place.geometry.location.lat(),
+                  lng: place.geometry.location.lng(),
+                }}
                 onClick={() => {
                   this.closeEvent();
+                }}
+                icon={{
+                  url: `https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png`,
+                  scaledSize: new window.google.maps.Size(25, 25)
                 }}
               />
             ))}
