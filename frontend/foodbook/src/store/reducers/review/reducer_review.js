@@ -38,6 +38,7 @@ const reducer = (state = initialState, action) => {
         date: action.date,
         image: action.image,
         tag: action.tag,
+        category: action.category,
       };
       return { ...state, reviewList: state.reviewList.concat(newReview) };
 
