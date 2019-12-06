@@ -3,38 +3,7 @@ import { Dropdown } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import ReviewList from 'containers/ReviewList';
 
-const categoryOptions = [
-  {
-    key: 'Chicken',
-    text: 'Chicken',
-    value: 'Chicken',
-  },
-  {
-    key: 'Korean',
-    text: 'Korean',
-    value: 'Korean',
-  },
-  {
-    key: 'Japenese',
-    text: 'Japenese',
-    value: 'Japenese',
-  },
-  {
-    key: 'Chinese',
-    text: 'Chinese',
-    value: 'Chinese',
-  },
-  {
-    key: 'Western',
-    text: 'Western',
-    value: 'Western',
-  },
-  {
-    key: 'Fast food',
-    text: 'Fast food',
-    value: 'Fast food',
-  },
-];
+
 export class Category extends Component {
   constructor() {
     super();
@@ -52,7 +21,14 @@ export class Category extends Component {
           placeholder="Select Category"
           fluid
           selection
-          options={categoryOptions}
+          options={
+            ['Chicken', 'Pizza', 'Korean', 'Chinese', 'Japanese',
+              'Western', 'Fastfood', 'Dessert', 'Snack', 'Asian'].map((str) => ({
+              key: str,
+              text: str,
+              value: str.toLowerCase(),
+            }))
+          }
           onChange={(event, data) => this.setState({ category: data.value })}
         />
         <h3 style={{ marginLeft: '25%' }}>
