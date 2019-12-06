@@ -118,7 +118,7 @@ class RecommendationTestCase(TestCase):
 
     def test_recomloc(self):
         '''
-            method that tests /api/review/<int:review_id>/recomloc/<str:coordinate_val/
+            method that tests /api/review/<int:review_id>/recomloc/<str:coordinate_val>/
         '''
         client = Client()
 
@@ -141,21 +141,44 @@ class RecommendationTestCase(TestCase):
 
     def test_recomtst(self):
         '''
-            method that tests /api/review/<int:review_id>/recomtst/
+            method that tests /api/review/<int:review_id>/recomtst/<str:coordinate_val>/
         '''
         client = Client()
 
         review1_id = Review.objects.get(content='TEST_CONTENT_R2').id
 
-        response = client.post('/api/review/' + str(review1_id) + '/recomtst/')
+        url = '/api/review/' + str(review1_id) + '/recomtst/' + 'c=37.5,126.95/'
+
+        response = client.post(url)
         self.assertEqual(response.status_code, 405)
 
-        response = client.get('/api/review/' + str(review1_id) + '/recomtst/')
+        response = client.get(url)
         self.assertEqual(response.status_code, 401)
 
         client.login(username='TEST_USER_R1',
                      email='TEST_EMAIL_R1', password='TEST_PW_R1')
 
-        response = client.get('/api/review/' + str(review1_id) + '/recomtst/')
+        response = client.get(url)
+        self.assertEqual(response.status_code, 200)
+        print(response.content.decode())
+
+    def test_recomifh(self):
+        '''
+            method that tests /api/recomifh/<str:coordinate_val>/
+        '''
+        client = Client()
+
+        url = '/api/recomifh/' + 'c=37.5,126.95/'
+
+        response = client.post(url)
+        self.assertEqual(response.status_code, 405)
+
+        response = client.get(url)
+        self.assertEqual(response.status_code, 401)
+
+        client.login(username='TEST_USER_R1',
+                     email='TEST_EMAIL_R1', password='TEST_PW_R1')
+
+        response = client.get(url)
         self.assertEqual(response.status_code, 200)
         print(response.content.decode())
