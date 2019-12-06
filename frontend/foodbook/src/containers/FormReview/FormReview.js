@@ -230,7 +230,7 @@ class FormReview extends Component {
 
     const contentHandler = mode === 'ADD' ? this.postContentHandler : this.editContentHandler;
 
-    const confirmDisabled = content === '' || restaurant === '' || menu === '' || rating === 0 || category == '';
+    const confirmDisabled = content === '' || restaurant === '' || menu === '' || rating === 0 || category === '';
 
     let triggarButton;
     switch (mode) {
