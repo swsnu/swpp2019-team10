@@ -55,6 +55,7 @@ def review_list(request):
             menu_name = req_data['menu_name']
             content = req_data['content']
             rating = req_data['rating']
+            category = req_data['category']
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
         try:
@@ -104,6 +105,7 @@ def review_list(request):
             menu=menu,
             content=content,
             rating=rating,
+            category=category
             )
         tags = Tagging(request.user.profile, menu, rating).tagging(content)
         for item in tags.keys():
@@ -115,7 +117,8 @@ def review_list(request):
             'menu': menu.name,
             'content': new_review.content,
             'rating': new_review.rating,
-            'date': new_review.date.strftime("%Y-%m-%d")
+            'date': new_review.date.strftime("%Y-%m-%d"),
+            'category': new_review.category
             }
         return JsonResponse(dict_new_review, status=201)
     #else:
@@ -155,6 +158,7 @@ def review_detail(request, review_id):
             'content': review.content,
             'rating': review.rating,
             'date': review.date.strftime("%Y-%m-%d"),
+            'category': review.category,
             'image': image_path,
             'tag': tag
         }
@@ -173,6 +177,7 @@ def review_detail(request, review_id):
             menu_name = req_data['menu_name']
             content = req_data['content']
             rating = req_data['rating']
+            category = req_data['category']
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
         restaurant = Restaurant.objects.get(name=restaurant_name)
@@ -181,6 +186,7 @@ def review_detail(request, review_id):
         review.menu = menu
         review.content = content
         review.rating = rating
+        review.category = category
         review.save()
         image_path = ""
         if review.review_img:
@@ -193,6 +199,7 @@ def review_detail(request, review_id):
             'content': review.content,
             'rating': review.rating,
             'date': review.date.strftime("%Y-%m-%d"),
+            'category': review.category,
             'image': image_path
         }
         return JsonResponse(dict_review)
@@ -284,6 +291,7 @@ def friend_review_detail(request, friend_id, review_id):
             'content': review.content,
             'rating': review.rating,
             'date': review.date.strftime("%Y-%m-%d"),
+            'category': review.category,
             'image': image_path
         }
         return JsonResponse(review_dict)
@@ -327,6 +335,7 @@ def review_image(request, review_id):
                 'content': review.content,
                 'rating': review.rating,
                 'date': review.date.strftime("%Y-%m-%d"),
+                'category': review.category,
                 'image': 'http://127.0.0.1:8000'+review.review_img.url,
                 'tag': tag
             }

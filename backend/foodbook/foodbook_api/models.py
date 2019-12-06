@@ -18,7 +18,8 @@ def my_default():
     '''
     method returns default tag with values
     '''
-    return {'sweet': 0.5, 'salty': 0.5, 'umami': 0.5, 'bitter': 0.5, 'sour': 0.5}
+    return {'sweet': 0.5, 'salty': 0.5, 'umami': 0.5, 'bitter': 0.5, 'sour': 0.5,
+            'crispy': 0.5, 'moist': 0.5, 'greasy': 0.5, 'tender': 0.5, 'cooked': 0.5}
 class Profile(models.Model):
     '''
     save user's information
@@ -113,6 +114,7 @@ class Review(models.Model):
     )
     review_img = models.ImageField(upload_to='review/images/', blank=True)
     date = models.DateTimeField(auto_now=True)
+    category = models.CharField(max_length=20, blank=True)
     tag = models.ManyToManyField(
         'Tag',
         default=default_tag

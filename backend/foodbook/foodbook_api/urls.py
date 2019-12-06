@@ -10,6 +10,7 @@ urlpatterns = [
     path('signup/<int:profile_id>/image/', user_views.profile_image, name='profile_image'),
     path('signin/', user_views.signin, name='signin'),
     path('signout/', user_views.signout, name='signout'),
+    path('search_user/<str:nickname>/', user_views.search_user, name='search_user'),
     path('friend/', user_views.friend, name='friend'),
     path('friend/<int:friend_id>/', user_views.friend_detail, name='friend_detail'),
     path('review/', review_views.review_list, name='review_list'),
@@ -25,6 +26,8 @@ urlpatterns = [
 
     path('review/<int:review_id>/recomloc/<str:coordinate_val>/',
          recommendation_views.recomloc, name='recomloc'),
-    path('review/<int:review_id>/recomtst/',
+    path('review/<int:review_id>/recomtst/<str:coordinate_val>/',
          recommendation_views.recomtst, name='recomtst'),
+    path('recomifh/<str:coordinate_val>/',
+         recommendation_views.recomifh, name='recomifh'),
 ]

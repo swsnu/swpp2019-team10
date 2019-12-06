@@ -10,6 +10,7 @@ from surprise.model_selection import cross_validate
 from random import *
 
 import math
+import random
 
 from ..models import Profile, Menu, Restaurant, Review
 
@@ -19,61 +20,95 @@ def size(x):
         res += x[item] * x[item]
     return math.sqrt(res)
 
+def cos_cal(x1, x2):
+    res = 0
+    size_x1 = 0
+    size_x2 = 0
+    for item in x1:
+        if item in x2:
+            res += x1[item] * x2[item]
+            size_x1 += x1[item] * x1[item]
+            size_x2 += x2[item] * x2[item]
+    size_x1 = math.sqrt(size_x1)
+    size_x2 = math.sqrt(size_x2)
+    return (res / size_x1 / size_x2)
+
 class Recommendation():
-    def recommendation(user_id, name, **kwargs):
+    def recommendation(user_id, **kwargs):
         review = []
         type = kwargs['type']
+        category = kwargs['category'] if 'category' in kwargs else None
         log = kwargs['log'] if 'log' in kwargs else None
         lat = kwargs['lat'] if 'lat' in kwargs else None
+        log_km = 1 / 88.74 # 1km for longitude
+        lat_km = 1 / 109.958489129649955 # 1km for latitude
         if type == 'loc':
             review = Review.objects.select_related(
-                'menu__restaurant', 'author__user').filter(menu__name=name)
-            review = review.select_related(
-                'menu__restaurant', 'author__user').filter(restaurant__longitude__gte=log-0.05)
-            review = review.select_related(
-                'menu__restaurant', 'author__user').filter(restaurant__longitude__lte=log+0.05)
-            review = review.select_related(
-                'menu__restaurant', 'author__user').filter(restaurant__latitude__gte=lat-0.05)
-            review = review.select_related(
-                'menu__restaurant', 'author__user').filter(restaurant__latitude__lte=lat+0.05)
+                'menu__restaurant', 'author__user').filter(category=category,
+                                                           restaurant__longitude__gte=log-log_km,
+                                                           restaurant__longitude__lte=log+log_km,
+                                                           restaurant__latitude__gte=lat-lat_km,
+                                                           restaurant__latitude__lte=lat+lat_km)
+            review_my = review.filter(author__id=user_id)
+            review_other = review.exclude(author__id=user_id)
+            review_my_good = review_my.filter(rating__gte=4)
+            review_my_bad = review_my.filter(rating__lte=2)
+            review_my_soso = review_my.filter(rating__lte=4, rating__gte=2)
+            review_soso = review_other.union(review_my_soso)
+
+            good_list = [(item.rating, item.restaurant) for item in review_my_good]
+            soso_list = [(item.rating, item.restaurant) for item in review_soso]
+            bad_list = [(item.rating, item.restaurant) for item in review_my_bad]
+
+            res_list = []
+            if good_list:
+                res_list += good_list
+            if soso_list:
+                res_list += soso_list
+            if bad_list:
+                res_list += bad_list
+            res = []
+            for item in res_list:
+                if random.random() < 0.8:
+                    res.append(item)
+
         else:
             review = Review.objects.select_related(
-                'menu__restaurant', 'author__user').filter(menu__name=name)
-        itemID = [item.menu.id for item in review]
-        userID = [item.author.id for item in review]
-        rating = []
-        for item in review:
-            x1 = item.menu.taste
-            x2 = item.author.taste
-            res = 0
-            res += x1['sweet'] * x2['sweet']
-            res += x1['sour'] * x2['sour']
-            res += x1['bitter'] * x2['bitter']
-            res += x1['salty'] * x2['salty']
-            res += x1['umami'] * x2['umami']
-            rating.append(res / size(x1) / size(x2))
+                'menu__restaurant', 'author__user').filter(restaurant__longitude__gte=log-10*log_km,
+                                                           restaurant__longitude__lte=log+10*log_km,
+                                                           restaurant__latitude__gte=lat-10*lat_km,
+                                                           restaurant__latitude__lte=lat+10*lat_km)
+            if type == 'tst':
+                review = review.filter(category=category)
+            itemID = [item.menu.id for item in review]
+            userID = [item.author.id for item in review]
+            rating = []
+            for item in review:
+                rating.append(cos_cal(item.menu.taste, item.author.taste))
 
-        ratings_dict = {'itemID': itemID,
-                        'userID': userID,
-                        'rating': rating}
-        df = pd.DataFrame(ratings_dict)
+            ratings_dict = {'itemID': itemID,
+                            'userID': userID,
+                            'rating': rating}
+            df = pd.DataFrame(ratings_dict)
 
-        # A reader is still needed but only the rating_scale param is requiered.
-        reader = Reader(rating_scale=(0, 1))
+            # A reader is still needed but only the rating_scale param is requiered.
+            reader = Reader(rating_scale=(0, 1))
 
-        # The columns must correspond to user id, item id and ratings (in that order).
-        data = Dataset.load_from_df(df[['userID', 'itemID', 'rating']], reader)
+            # The columns must correspond to user id, item id and ratings (in that order).
+            data = Dataset.load_from_df(df[['userID', 'itemID', 'rating']], reader)
 
-        trainset = data.build_full_trainset()
+            trainset = data.build_full_trainset()
 
-        algo = KNNBasic()
-        algo.fit(trainset)
+            algo = KNNBasic()
+            algo.fit(trainset)
 
-        res = []
-        for item in review:
-            pred = algo.predict(user_id, item.menu.id, verbose=True)
-            res.append((pred.est, item.restaurant))
-        res.sort(reverse=True, key=lambda x: x[0])
+            res = []
+            for item in review:
+                pred = algo.predict(user_id, item.menu.id, verbose=True)
+                res.append((pred.est, item.restaurant))
+            res.sort(reverse=True, key=lambda x: x[0])
+
+
 
         ret = []
         ret_dict = []

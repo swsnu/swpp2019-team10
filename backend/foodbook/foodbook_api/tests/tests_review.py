@@ -102,6 +102,7 @@ class ReviewTestCase(TestCase):
             menu=menu,
             content='TEST_CONTENT',
             rating=5,
+            category='CATEGORY1'
         )
         review.tag.add(tag1)
         review.tag.add(tag2)
@@ -113,7 +114,8 @@ class ReviewTestCase(TestCase):
             menu=menu,
             content='TEST_CONTENT2',
             rating=5,
-            review_img=make_image_file()[1]
+            review_img=make_image_file()[1],
+            category='CATEGORY2'
         )
 
         Review.objects.create(
@@ -121,7 +123,8 @@ class ReviewTestCase(TestCase):
             restaurant=restaurant,
             menu=menu,
             content='TEST_CONTENT3',
-            rating=5
+            rating=5,
+            category='CATEGORY3'
         )
 
         Review.objects.create(
@@ -130,7 +133,8 @@ class ReviewTestCase(TestCase):
             menu=menu,
             content='TEST_CONTENT4',
             rating=5,
-            review_img=make_image_file()[1]
+            review_img=make_image_file()[1],
+            category='CATEGORY4'
         )
 
     """
@@ -169,7 +173,8 @@ class ReviewTestCase(TestCase):
             'menu_name': 'TEST_MENU',
             'rating': 5,
             'longitude': 15.5,
-            'latitude': 15.5
+            'latitude': 15.5,
+            'category': 'NEW_CATEGORY',
         }), 'application/json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Review.objects.count(), 5)
@@ -179,6 +184,7 @@ class ReviewTestCase(TestCase):
             'restaurant_name': 'TEST_REST2',
             'menu_name': 'TEST_MENU2',
             'rating': 5,
+            'category': 'NEW_CATEGORY2',
         }), 'application/json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Review.objects.count(), 6)
@@ -189,7 +195,8 @@ class ReviewTestCase(TestCase):
             'menu_name': 'TEST_MENU3',
             'rating': 5,
             'longitude': 15.5,
-            'latitude': 15.5
+            'latitude': 15.5,
+            'category': 'NEW_CATEGORY3',
         }), 'application/json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Review.objects.count(), 7)
@@ -247,6 +254,7 @@ class ReviewTestCase(TestCase):
         self.assertEqual(bodys['content'], 'TEST_CONTENT')
         self.assertEqual(bodys['restaurant'], 'TEST_REST')
         self.assertEqual(bodys['menu'], 'TEST_MENU')
+        self.assertEqual(bodys['category'], 'CATEGORY1')
         self.assertEqual(bodys['rating'], 5)
         response = client.get('/api/review/'+str(review2_id)+'/')
         self.assertEqual(response.status_code, 200)
@@ -278,7 +286,8 @@ class ReviewTestCase(TestCase):
             'content': 'TEST_PUT_CONTENT',
             'restaurant_name': 'TEST_REST',
             'menu_name': 'TEST_MENU',
-            'rating': 3
+            'rating': 3,
+            'category': 'NEW_TEST_CATEGORY'
         }), 'application/json')
         self.assertEqual(response.status_code, 200)
         bodys = json.loads(response.content.decode())
@@ -287,12 +296,14 @@ class ReviewTestCase(TestCase):
         self.assertEqual(bodys['content'], 'TEST_PUT_CONTENT')
         self.assertEqual(bodys['restaurant'], 'TEST_REST')
         self.assertEqual(bodys['menu'], 'TEST_MENU')
+        self.assertEqual(bodys['category'], 'NEW_TEST_CATEGORY')
         self.assertEqual(bodys['rating'], 3)
         response = client.put('/api/review/'+str(review2_id)+'/', json.dumps({
             'content': 'TEST_PUT_CONTENT',
             'restaurant_name': 'TEST_REST',
             'menu_name': 'TEST_MENU',
-            'rating': 3
+            'rating': 3,
+            'category': 'NEW_TEST_CATEGORY'
         }), 'application/json')
         self.assertEqual(response.status_code, 200)
         bodys = json.loads(response.content.decode())
@@ -453,6 +464,7 @@ class ReviewTestCase(TestCase):
         self.assertEqual(bodys['content'], 'TEST_CONTENT')
         self.assertEqual(bodys['restaurant'], 'TEST_REST')
         self.assertEqual(bodys['menu'], 'TEST_MENU')
+        self.assertEqual(bodys['category'], 'CATEGORY1')
         self.assertEqual(bodys['rating'], 5)
         response = client.get('/api/friend/'+str(user1_id)+'/review/'+str(review2_id)+'/')
         self.assertEqual(response.status_code, 200)
