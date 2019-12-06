@@ -4,11 +4,7 @@
 // "id" is passed as props. Only used for "EDIT" mode.
 
 import {
-  Rating,
-  Button,
-  Form,
-  Image,
-  Modal,
+  Rating, Button, Form, Image, Modal,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 

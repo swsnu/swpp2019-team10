@@ -54,6 +54,7 @@ describe('<ReviewDetail />', () => {
     }));
 
   let reviewDetail;
+  let component;
 
   beforeEach(() => {
     reviewDetail = (
@@ -61,28 +62,39 @@ describe('<ReviewDetail />', () => {
         <ConnectedRouter history={history}>
           <ReviewDetail
             history={history}
-            match={{ params: { id: '1' } }}
+            id={1}
             review={initReview}
           />
         </ConnectedRouter>
       </Provider>
     );
+    component = mount(reviewDetail);
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
+  describe('on modal component', () =>{
+    it('should be opened without error', () => {
+      component.find('Button #detail-modal-trigger').simulate('click');
+      component.update();
+    });
+  });
+
   describe('on author mode', () => {
+    beforeEach(() => {
+      component.find('Button #detail-modal-trigger').simulate('click');
+      component.update();
+    });
+
     it('should render without errors', () => {
-      const component = mount(reviewDetail);
       const wrapper = component.find('Connect(ReviewDetail)');
       expect(wrapper.length).toBe(1);
     });
 
 
     it('delete button should work', () => {
-      const component = mount(reviewDetail);
       const detailWrapper = component.find('ReviewDetail');
 
       detailWrapper.setState({ ready: true });
@@ -95,7 +107,6 @@ describe('<ReviewDetail />', () => {
     });
 
     it('edit button should work', () => {
-      const component = mount(reviewDetail);
       const detailWrapper = component.find('ReviewDetail');
 
       detailWrapper.setState({ ready: true });
@@ -108,7 +119,6 @@ describe('<ReviewDetail />', () => {
     });
 
     it('back button should work', () => {
-      const component = mount(reviewDetail);
       const detailWrapper = component.find('ReviewDetail');
 
       detailWrapper.setState({ ready: true });
@@ -121,7 +131,6 @@ describe('<ReviewDetail />', () => {
     });
 
     it('error message should be shown up', () => {
-      const component = mount(reviewDetail);
       const detailWrapper = component.find('ReviewDetail');
 
       detailWrapper.setState({ ready: false, error: { response: 'Error' } });

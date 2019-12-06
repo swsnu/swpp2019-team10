@@ -1,7 +1,5 @@
 import {
-  Rating,
-  Button,
-  TextArea,
+  Rating, Button, TextArea, Modal,
 } from 'semantic-ui-react';
 import React, { Component } from 'react';
 import './ReviewDetail.css';
@@ -37,16 +35,14 @@ class ReviewDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      /* open is variable for modal component,
-        currently it's undecided if this will be converted to modal so it's left unused. */
       open: false,
       error: null,
     };
   }
 
   componentDidMount() {
-    const { match, onGetReview } = this.props;
-    onGetReview(match.params.id);
+    const { id, onGetReview } = this.props;
+    onGetReview(id);
   }
 
   open = () => this.setState({ open: true });
@@ -54,10 +50,9 @@ class ReviewDetail extends Component {
   close = () => this.setState({ open: false });
 
   deleteHandler() {
-    const { history, match, onDeleteReview } = this.props;
-    onDeleteReview(match.params.id);
-
-    history.push('/main');
+    const { id, onDeleteReview } = this.props;
+    onDeleteReview(id);
+    this.close();
   }
 
   render() {
@@ -65,7 +60,9 @@ class ReviewDetail extends Component {
       error, open,
     } = this.state;
 
-    const { history, match, review, fixed } = this.props;
+    const {
+      review, fixed,
+    } = this.props;
 
     const {
       content, restaurant, author, menu, image,
@@ -80,8 +77,6 @@ class ReviewDetail extends Component {
       );
     }
 
-    const reviewID = match.params.id;
-
     const triggerButton = (
       <Button id="detail-modal-triggar" className="ui medium image" inverted={!fixed} onClick={this.open}>
         <i className="edit outline black icon fluid massive center link" style={{ marginLeft: '85%' }} />
@@ -94,7 +89,7 @@ class ReviewDetail extends Component {
         <Button
           id="edit-review-button"
           type="submit"
-          onClick={() => history.push(`/main/${reviewID}/edit`)}
+          onClick={() => { /* open edit modal */ }}
         >
           Edit
         </Button>
@@ -121,65 +116,66 @@ class ReviewDetail extends Component {
           triggerButton
       )}
       >
-        <div className="ReviewDetail-wrapper">
-          <div className="ui special cards">
-            <div className="card" style={{ width: '630px' }}>
-              {open}
-              <div className="content">
-                <span className="header">{`${menu} ( ${restaurant} )`}</span>
-                <div className="meta">
-                  <span className="rating">
-                    Rating:
-                    <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
-                  </span>
-                  <span className="tag">{Array.isArray(tag) && parseTagName(tag)}</span>
+        <Modal.Header>
+          Review
+        </Modal.Header>
+        <Modal.Content>
+          <div className="ReviewDetail-wrapper">
+            <div className="ui special cards">
+              <div className="card" style={{ width: '630px' }}>
+                {open}
+                <div className="content">
+                  <span className="header">{`${menu} ( ${restaurant} )`}</span>
+                  <div className="meta">
+                    <span className="rating">
+                      Rating:
+                      <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
+                    </span>
+                    <span className="tag">{Array.isArray(tag) && parseTagName(tag)}</span>
+                  </div>
                 </div>
+                <div className="blurring dimmable image">
+                  <img src={image} alt="food img" />
+                </div>
+                <div className="google map">
+                  {googleMap}
+                </div>
+                {author}
+                <br />
+                {date}
+                <br />
+                <TextArea
+                  id="review-content-input"
+                  rows="4"
+                  type="text"
+                  value={content}
+                  readOnly
+                />
+                <div className="extra content">
+                  <Recommendation data={menu} />
+                </div>
+                {authorOnly}
+                <Button
+                  id="back-review-button"
+                  type="button"
+                  onClick={this.close()}
+                >
+                  Back
+                </Button>
               </div>
-              <div className="blurring dimmable image">
-                <img src={image} alt="food img" />
-              </div>
-              <div className="google map">
-                {googleMap}
-              </div>
-              {author}
-              <br />
-              {date}
-              <br />
-              <TextArea
-                id="review-content-input"
-                rows="4"
-                type="text"
-                value={content}
-                readOnly
-              />
-              <div className="extra content">
-                <Recommendation data={menu} />
-              </div>
-              {authorOnly}
-              <Button
-                id="back-review-button"
-                type="button"
-                onClick={this.close()}
-              >
-                Back
-              </Button>
             </div>
           </div>
-        </div>
+        </Modal.Content>
+        <Modal.Actions>
+
+        </Modal.Actions>
       </Modal>
     );
   }
 }
 
 ReviewDetail.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-    }),
-  }),
-  history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
+  id: PropTypes.number,
   onGetReview: PropTypes.func,
   onDeleteReview: PropTypes.func,
   review: PropTypes.shape({
@@ -197,17 +193,9 @@ ReviewDetail.propTypes = {
   }),
   fixed: PropTypes.bool,
 };
-};
 
 ReviewDetail.defaultProps = {
-  match: {
-    params: {
-      id: 0,
-    },
-  },
-  history: {
-    push: null,
-  },
+  id: 0,
   onGetReview: null,
   onDeleteReview: null,
   review: {
