@@ -4,11 +4,7 @@
 // "id" is passed as props. Only used for "EDIT" mode.
 
 import {
-  Rating,
-  Button,
-  Form,
-  Image,
-  Modal,
+  Rating, Button, Form, Image, Modal,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
@@ -27,8 +23,6 @@ class FormReview extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      /* open is variable for modal component,
-        currently it's undecided if this will be converted to modal so it's left unused. */
       open: false,
     };
   }
@@ -45,6 +39,7 @@ class FormReview extends Component {
         rating: 0,
         longitude: 0.0,
         latitude: 0.0,
+        category: '',
         image: null,
         error: null,
       });
@@ -108,6 +103,7 @@ class FormReview extends Component {
       longitude,
       latitude,
       image,
+      category,
     } = this.state;
 
     const reviewDict = {
@@ -117,6 +113,7 @@ class FormReview extends Component {
       rating,
       longitude,
       latitude,
+      category,
     };
 
     let fd = false;
@@ -158,6 +155,12 @@ class FormReview extends Component {
     });
   }
 
+  handleCategory = (e, { value }) => {
+    this.setState({
+      category: value,
+    });
+  };
+
   render() {
     const {
       mode, id, review, fixed,
@@ -179,7 +182,7 @@ class FormReview extends Component {
 
 
     const {
-      rating, content, restaurant, menu,
+      rating, content, restaurant, menu, category,
       error, image, open,
     } = this.state;
 
@@ -221,27 +224,27 @@ class FormReview extends Component {
 
     const contentHandler = mode === 'ADD' ? this.postContentHandler : this.editContentHandler;
 
-    const confirmDisabled = content === '' || restaurant === '' || menu === '' || rating === 0;
+    const confirmDisabled = content === '' || restaurant === '' || menu === '' || rating === 0 || category === '';
 
-    let triggarButton;
+    let triggerButton;
     switch (mode) {
       case 'ADD':
-        triggarButton = (
-          <Button id="review-modal-triggar" className="ui medium image" inverted={!fixed} onClick={this.open}>
+        triggerButton = (
+          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
             <i className="edit outline black icon fluid massive center link" style={{ marginLeft: '85%' }} />
           </Button>
         );
         break;
       case 'EDIT':
-        triggarButton = (
-          <Button id="review-modal-triggar" className="ui medium image" inverted={!fixed} onClick={this.open}>
+        triggerButton = (
+          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
             Edit
           </Button>
         );
         break;
       default:
-        triggarButton = (
-          <Button id="review-modal-triggar" className="ui medium image" inverted={!fixed} onClick={this.open}>
+        triggerButton = (
+          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
             Error
           </Button>
         );
@@ -253,7 +256,7 @@ class FormReview extends Component {
         onOpen={this.open}
         onClose={this.close}
         trigger={(
-          triggarButton
+          triggerButton
       )}
       >
         <Modal.Header>
@@ -276,6 +279,23 @@ class FormReview extends Component {
                 label="Restaurant"
                 value={restaurant}
                 onChange={(event) => this.setState({ restaurant: event.target.value })}
+              />
+              <Form.Dropdown
+                label="Category"
+                name="category"
+                placeholder="Food's category here"
+                fluid
+                selection
+                onChange={this.handleCategory}
+                options={
+                  ['Chicken', 'Pizza', 'Korean', 'Chinese', 'Japanese',
+                    'Western', 'Fastfood', 'Dessert', 'Snack', 'Asian'].map((str) => ({
+                    key: str,
+                    text: str,
+                    value: str.toLowerCase(),
+                  }))
+                }
+                className="category-input-wrapper"
               />
               <Form.TextArea
                 fluid
@@ -358,7 +378,7 @@ FormReview.defaultProps = {
   history: {
     push: null,
   },
-  mode: 'ADD',
+  mode: null,
   id: 0,
   review: {
     id: 0,
