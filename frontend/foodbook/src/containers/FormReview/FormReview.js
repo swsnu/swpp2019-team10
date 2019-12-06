@@ -98,6 +98,7 @@ class FormReview extends Component {
     };
 
     onEditReview(id, reviewDict);
+    this.close();
   }
 
   postContentHandler = () => {

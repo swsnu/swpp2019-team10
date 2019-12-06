@@ -94,6 +94,18 @@ class ReviewDetail extends Component {
 
     const reviewID = match.params.id;
 
+/*
+
+              <Grid.Row className="add-review">
+                <div className="ui special cards">
+                  <div className="card" style={{ width: '630px' }}>
+                    <div className="content">
+                      <FormReview fixed={false} mode="ADD" />
+                    </div>
+                  </div>
+                </div>
+              </Grid.Row>
+*/
     // const isUserAuthor = ;
     const authorOnly = /* isUserAuthor ? */(
       <div className="AuthorButtons">
