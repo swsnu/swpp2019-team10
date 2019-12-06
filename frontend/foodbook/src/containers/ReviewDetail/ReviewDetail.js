@@ -94,7 +94,7 @@ class ReviewDetail extends Component {
 
     const reviewID = match.params.id;
 
-/*
+    /*
 
               <Grid.Row className="add-review">
                 <div className="ui special cards">
@@ -105,7 +105,8 @@ class ReviewDetail extends Component {
                   </div>
                 </div>
               </Grid.Row>
-*/
+    */
+
     // const isUserAuthor = ;
     const authorOnly = /* isUserAuthor ? */(
       <div className="AuthorButtons">
