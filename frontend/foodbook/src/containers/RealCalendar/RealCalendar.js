@@ -8,7 +8,6 @@ import RawCalendar from 'components/RawCalendar/RawCalendar';
 
 const parseDate = (dateInfo) => {
   const dateParser = /^([A-Za-z]+) ([A-Za-z]+) (\d+) (\d+)/;
-
   const month = dateInfo.match(dateParser)[2];
   const date = dateInfo.match(dateParser)[3];
   const year = dateInfo.match(dateParser)[4];
@@ -34,6 +33,7 @@ const parseDate = (dateInfo) => {
 class RealCalendar extends Component {
   isDisable = ({ date }) => {
     const { review } = this.props;
+    console.log(date, review);
     return review.filter((r) => (r.date === parseDate(`${date}`))).length === 0;
   }
 
