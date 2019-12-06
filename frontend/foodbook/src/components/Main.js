@@ -13,6 +13,7 @@ import ReviewList from 'containers/ReviewList';
 import FormReview from 'containers/FormReview/FormReview';
 import Logout from 'containers/Logout';
 import Myinfo from 'components/Myinfo';
+import Category from 'components/Category/Category';
 
 
 export default class Main extends Component {
@@ -53,7 +54,11 @@ export default class Main extends Component {
         break;
 
       case 'type':
-        mainRenderer = (<div className="main-type-wrapper"> type </div>);
+        mainRenderer = (
+          <div className="main-type-wrapper">
+            <Category />
+          </div>
+        );
         break;
 
       case 'menu':
