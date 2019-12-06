@@ -75,7 +75,7 @@ describe('<ReviewDetail />', () => {
     jest.clearAllMocks();
   });
 
-  describe('on modal component', () =>{
+  describe('on modal component', () => {
     it('should be opened without error', () => {
       component.find('Button #detail-modal-trigger').simulate('click');
       component.update();

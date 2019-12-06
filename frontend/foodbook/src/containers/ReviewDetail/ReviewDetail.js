@@ -78,8 +78,8 @@ class ReviewDetail extends Component {
     }
 
     const triggerButton = (
-      <Button id="detail-modal-triggar" className="ui medium image" inverted={!fixed} onClick={this.open}>
-        <i className="edit outline black icon fluid massive center link" style={{ marginLeft: '85%' }} />
+      <Button id="detail-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
+        Read Detail & Get Recommendation!
       </Button>
     );
 
@@ -163,7 +163,7 @@ class ReviewDetail extends Component {
           <Button
             id="back-review-button"
             type="button"
-            onClick={this.close()}
+            onClick={this.close}
           >
             Back
           </Button>
