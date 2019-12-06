@@ -49,11 +49,9 @@ class ReviewDetail extends Component {
     onGetReview(match.params.id);
   }
 
-  /*
-  show = () => () => this.setState({ open: true });
+  open = () => this.setState({ open: true });
 
   close = () => this.setState({ open: false });
-  */
 
   deleteHandler() {
     const { history, match, onDeleteReview } = this.props;
@@ -67,7 +65,7 @@ class ReviewDetail extends Component {
       error, open,
     } = this.state;
 
-    const { history, match, review } = this.props;
+    const { history, match, review, fixed } = this.props;
 
     const {
       content, restaurant, author, menu, image,
@@ -83,6 +81,12 @@ class ReviewDetail extends Component {
     }
 
     const reviewID = match.params.id;
+
+    const triggerButton = (
+      <Button id="detail-modal-triggar" className="ui medium image" inverted={!fixed} onClick={this.open}>
+        <i className="edit outline black icon fluid massive center link" style={{ marginLeft: '85%' }} />
+      </Button>
+    );
 
     // const isUserAuthor = ;
     const authorOnly = /* isUserAuthor ? */(
@@ -108,51 +112,61 @@ class ReviewDetail extends Component {
     const googleMap = (<GoogleMap center={{ lat: latitude, lng: longitude }} />);
 
     return (
-      <div className="ReviewDetail-wrapper">
-        <div className="ui special cards">
-          <div className="card" style={{ width: '630px' }}>
-            {open}
-            <div className="content">
-              <span className="header">{`${menu} ( ${restaurant} )`}</span>
-              <div className="meta">
-                <span className="rating">
-                  Rating:
-                  <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
-                </span>
-                <span className="tag">{Array.isArray(tag) && parseTagName(tag)}</span>
+      <Modal
+        className="review-detail-modal"
+        open={open}
+        onOpen={this.open}
+        onClose={this.close}
+        trigger={(
+          triggerButton
+      )}
+      >
+        <div className="ReviewDetail-wrapper">
+          <div className="ui special cards">
+            <div className="card" style={{ width: '630px' }}>
+              {open}
+              <div className="content">
+                <span className="header">{`${menu} ( ${restaurant} )`}</span>
+                <div className="meta">
+                  <span className="rating">
+                    Rating:
+                    <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
+                  </span>
+                  <span className="tag">{Array.isArray(tag) && parseTagName(tag)}</span>
+                </div>
               </div>
+              <div className="blurring dimmable image">
+                <img src={image} alt="food img" />
+              </div>
+              <div className="google map">
+                {googleMap}
+              </div>
+              {author}
+              <br />
+              {date}
+              <br />
+              <TextArea
+                id="review-content-input"
+                rows="4"
+                type="text"
+                value={content}
+                readOnly
+              />
+              <div className="extra content">
+                <Recommendation data={menu} />
+              </div>
+              {authorOnly}
+              <Button
+                id="back-review-button"
+                type="button"
+                onClick={this.close()}
+              >
+                Back
+              </Button>
             </div>
-            <div className="blurring dimmable image">
-              <img src={image} alt="food img" />
-            </div>
-            <div className="google map">
-              {googleMap}
-            </div>
-            {author}
-            <br />
-            {date}
-            <br />
-            <TextArea
-              id="review-content-input"
-              rows="4"
-              type="text"
-              value={content}
-              readOnly
-            />
-            <div className="extra content">
-              <Recommendation data={menu} />
-            </div>
-            {authorOnly}
-            <Button
-              id="back-review-button"
-              type="button"
-              onClick={() => history.push('/main')}
-            >
-              Back
-            </Button>
           </div>
         </div>
-      </div>
+      </Modal>
     );
   }
 }
@@ -181,6 +195,8 @@ ReviewDetail.propTypes = {
     longitude: PropTypes.number,
     latitude: PropTypes.number,
   }),
+  fixed: PropTypes.bool,
+};
 };
 
 ReviewDetail.defaultProps = {
@@ -197,6 +213,7 @@ ReviewDetail.defaultProps = {
   review: {
     id: 0,
   },
+  fixed: false,
 };
 
 const mapStateToProps = (state) => ({

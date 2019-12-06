@@ -27,8 +27,6 @@ class FormReview extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      /* open is variable for modal component,
-        currently it's undecided if this will be converted to modal so it's left unused. */
       open: false,
     };
   }
@@ -232,25 +230,25 @@ class FormReview extends Component {
 
     const confirmDisabled = content === '' || restaurant === '' || menu === '' || rating === 0 || category === '';
 
-    let triggarButton;
+    let triggerButton;
     switch (mode) {
       case 'ADD':
-        triggarButton = (
-          <Button id="review-modal-triggar" className="ui medium image" inverted={!fixed} onClick={this.open}>
+        triggerButton = (
+          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
             <i className="edit outline black icon fluid massive center link" style={{ marginLeft: '85%' }} />
           </Button>
         );
         break;
       case 'EDIT':
-        triggarButton = (
-          <Button id="review-modal-triggar" className="ui medium image" inverted={!fixed} onClick={this.open}>
+        triggerButton = (
+          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
             Edit
           </Button>
         );
         break;
       default:
-        triggarButton = (
-          <Button id="review-modal-triggar" className="ui medium image" inverted={!fixed} onClick={this.open}>
+        triggerButton = (
+          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
             Error
           </Button>
         );
@@ -262,7 +260,7 @@ class FormReview extends Component {
         onOpen={this.open}
         onClose={this.close}
         trigger={(
-          triggarButton
+          triggerButton
       )}
       >
         <Modal.Header>

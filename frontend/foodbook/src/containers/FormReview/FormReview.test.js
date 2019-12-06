@@ -106,7 +106,7 @@ describe('<FormReview />', () => {
 
     it('should have textfields working', () => {
       const component = mount(addReview);
-      component.find('Button #review-modal-triggar').simulate('click');
+      component.find('Button #review-modal-trigger').simulate('click');
       component.update();
       component.find('TextArea #review-restaurant-input').simulate('change', { target: { value: 'restaurant' } });
       component.find('TextArea #review-menu-input').simulate('change', { target: { value: 'menu' } });
@@ -121,7 +121,7 @@ describe('<FormReview />', () => {
 
     it('should check category restriction', () => {
       const component = mount(addReview);
-      component.find('Button #review-modal-triggar').simulate('click');
+      component.find('Button #review-modal-trigger').simulate('click');
       component.update();
       const instance = component.find(FormReview.WrappedComponent).instance();
       const wrapperChicken = component.find('DropdownItem').at(0);
@@ -137,7 +137,7 @@ describe('<FormReview />', () => {
 
     it('should have image upload functioning', () => {
       const component = mount(addReview);
-      component.find('Button #review-modal-triggar').simulate('click');
+      component.find('Button #review-modal-trigger').simulate('click');
       component.update();
       const wrapper = component.find('FormReview');
       const imageWrapper = component.find('#add-review-image-selector').at(0);
@@ -148,7 +148,7 @@ describe('<FormReview />', () => {
 
     it('should have rating functioning', () => {
       const component = mount(addReview);
-      component.find('Button #review-modal-triggar').simulate('click');
+      component.find('Button #review-modal-trigger').simulate('click');
       component.update();
       const wrapper = component.find('FormReview');
 
@@ -160,7 +160,7 @@ describe('<FormReview />', () => {
 
     it('should have submit button working', () => {
       const component = mount(addReview);
-      component.find('Button #review-modal-triggar').simulate('click');
+      component.find('Button #review-modal-trigger').simulate('click');
       component.update();
       const event = { target: { value: 'sometext' } };
       component.update();
@@ -183,7 +183,7 @@ describe('<FormReview />', () => {
 
       addWrapper.setState({ image: 'blob' });
       component.update();
-      component.find('Button #review-modal-triggar').simulate('click');
+      component.find('Button #review-modal-trigger').simulate('click');
       component.update();
       component.find('TextArea #review-restaurant-input').simulate('change', event);
       component.find('TextArea #review-menu-input').simulate('change', event);
@@ -197,7 +197,7 @@ describe('<FormReview />', () => {
 
     it('should have back button working', () => {
       const component = mount(addReview);
-      component.find('Button #review-modal-triggar').simulate('click');
+      component.find('Button #review-modal-trigger').simulate('click');
       component.update();
       const submitButton = component.find('Button #back-review-button');
       submitButton.simulate('click');
@@ -217,7 +217,7 @@ describe('<FormReview />', () => {
 
     it('error message should be shown up', () => {
       const component = mount(addReview);
-      component.find('Button #review-modal-triggar').simulate('click');
+      component.find('Button #review-modal-trigger').simulate('click');
       component.update();
       const wrapper = component.find('FormReview');
       wrapper.setState({ ready: false, error: { response: 'Error' } });
@@ -240,7 +240,7 @@ describe('<FormReview />', () => {
   describe('mode: EDIT', () => {
     it('should render without crashing', () => {
       const component = mount(editReview);
-      component.find('Button #review-modal-triggar').simulate('click');
+      component.find('Button #review-modal-trigger').simulate('click');
       component.update();
       const wrapper = component.find('FormReview');
       expect(wrapper.length).toBe(1);
@@ -250,7 +250,7 @@ describe('<FormReview />', () => {
     it('should have textfields working', () => {
       const component = mount(editReview);
       expect(spyGet).toHaveBeenCalledTimes(1);
-      component.find('Button #review-modal-triggar').simulate('click');
+      component.find('Button #review-modal-trigger').simulate('click');
       component.update();
       expect(component.find('TextArea #review-restaurant-input').length).toBe(1);
       component.find('TextArea #review-restaurant-input').simulate('change', { target: { value: 'restaurant' } });
@@ -269,7 +269,7 @@ describe('<FormReview />', () => {
 
       const event = { target: { value: 'sometext' } };
       component.update();
-      component.find('Button #review-modal-triggar').simulate('click');
+      component.find('Button #review-modal-trigger').simulate('click');
       component.update();
       // text fields are tested already
       component.find('TextArea #review-restaurant-input').simulate('change', event);
