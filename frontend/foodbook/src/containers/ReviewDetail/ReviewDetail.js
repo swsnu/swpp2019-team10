@@ -154,20 +154,19 @@ class ReviewDetail extends Component {
                 <div className="extra content">
                   <Recommendation data={menu} />
                 </div>
-                {authorOnly}
-                <Button
-                  id="back-review-button"
-                  type="button"
-                  onClick={this.close()}
-                >
-                  Back
-                </Button>
               </div>
             </div>
           </div>
         </Modal.Content>
         <Modal.Actions>
-
+          {authorOnly}
+          <Button
+            id="back-review-button"
+            type="button"
+            onClick={this.close()}
+          >
+            Back
+          </Button>
         </Modal.Actions>
       </Modal>
     );
