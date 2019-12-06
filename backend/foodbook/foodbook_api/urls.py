@@ -26,6 +26,8 @@ urlpatterns = [
 
     path('review/<int:review_id>/recomloc/<str:coordinate_val>/',
          recommendation_views.recomloc, name='recomloc'),
-    path('review/<int:review_id>/recomtst/',
+    path('review/<int:review_id>/recomtst/<str:coordinate_val>/',
          recommendation_views.recomtst, name='recomtst'),
+    path('recomifh/<str:coordinate_val>/',
+         recommendation_views.recomifh, name='recomifh'),
 ]

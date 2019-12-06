@@ -12,8 +12,38 @@ class RecommendationTag extends Component {
   constructor(props) {
     super(props);
     this.state = { open: false };
-    const { onGetAll, match } = this.props;
-    onGetAll(match.params.id);
+  }
+
+  componentDidMount() {
+    this.getGeoLocation();
+  }
+
+  getGeoLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.setState({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+          const { onGetAll, match } = this.props;
+          const { lat, lng } = this.state;
+          onGetAll({
+            id: match.params.id,
+            lat,
+            log: lng,
+          });
+        },
+
+        /* Error callback, default location to 0,0 */
+        () => {
+          this.setState({
+            lat: 0,
+            lng: 0,
+          });
+        },
+      );
+    }
   }
 
   open = () => this.setState({ open: true })
@@ -23,6 +53,19 @@ class RecommendationTag extends Component {
   render() {
     const { open } = this.state;
     const { recoms, data } = this.props;
+
+    let ready = false;
+    if ('lat' in this.state && 'lng' in this.state) {
+      ready = true;
+    }
+
+    if (!ready) {
+      return (
+        <div className="form-recoms-loading">
+          <p>Loading...</p>
+        </div>
+      );
+    }
 
     const parseScore = (score) => ((score < 3) ? 'RED' : 'BLUE');
 
@@ -105,8 +148,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onGetAll: (id) => {
-    dispatch(actionCreators.GET_RECOMS_TST(id));
+  onGetAll: (data) => {
+    dispatch(actionCreators.GET_RECOMS_TST(data));
   },
 });
 
