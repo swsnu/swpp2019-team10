@@ -98,8 +98,7 @@ class FormReview extends Component {
       latitude,
     };
 
-    onEditReview(id, reviewDict);
-    this.close();
+    onEditReview(id, reviewDict).then(this.close());
   }
 
   postContentHandler = () => {
@@ -133,8 +132,7 @@ class FormReview extends Component {
       const file = new File([image], 'img.jpg');
       fd.append('image', file);
     }
-    onPostReview(reviewDict, fd);
-    this.close();
+    onPostReview(reviewDict, fd).then(this.close());
   }
 
   getGeoLocation = () => {
