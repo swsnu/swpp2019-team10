@@ -41,7 +41,7 @@ const ReviewPreview = (props) => {
             <div className="meta">
               <span className="rating">
                 Rating:
-                <Rating defaultRating={rating} maxRating="5" icon="star" />
+                <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
               </span>
               <span className="tag">{parseTagName(tag)}</span>
             </div>

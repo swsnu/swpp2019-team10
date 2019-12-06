@@ -236,7 +236,7 @@ class UserTestCase(TestCase):
         self.assertEqual(response.status_code, 204)
 
         response = client.get('/api/friend/')
-        self.assertEqual(response.json()['friends_list'], [[user3_id, 'user3']])
+        self.assertEqual(response.json(), [{'id': user3_id, 'nickname': 'user3'}])
 
     def test_friend_detail(self):
         '''
@@ -272,3 +272,24 @@ class UserTestCase(TestCase):
                                content_type='application/json')
         response = client.delete('/api/friend/'+str(user3_id)+'/')
         self.assertEqual(response.status_code, 200)
+
+    def test_search_user(self):
+        '''
+            method that tests /api/search_user/:nickname/
+        '''
+        client = Client()
+        user2_id = Profile.objects.get(nickname='user2').id
+        user3_id = Profile.objects.get(nickname='user3').id
+        response = client.get('/api/search_user/jaeho/')
+        self.assertEqual(response.status_code, 401)
+
+        login_user1(client)
+        response = client.put('/api/search_user/jaeho/')
+        self.assertEqual(response.status_code, 405)
+
+        response = client.post('/api/friend/', json.dumps({'id': user3_id}),
+                               content_type='application/json')
+        self.assertEqual(response.status_code, 204)
+
+        response = client.get('/api/search_user/u/')
+        self.assertEqual(response.json()[0]['id'], user2_id)

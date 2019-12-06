@@ -12,11 +12,12 @@ import RawCalendar from 'components/RawCalendar';
 import ReviewList from 'containers/ReviewList';
 import FormReview from 'containers/FormReview/FormReview';
 import Logout from 'containers/Logout';
+import Myinfo from 'components/Myinfo';
 
 
 export default class Main extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       activeItem: 'feed',
     };
@@ -78,6 +79,20 @@ export default class Main extends Component {
 
           <Grid.Row className="wrapper-friend">
             <Grid.Column width={4}>
+              <Grid.Row style={{ height: '50px' }}></Grid.Row>
+              <Grid.Row>
+                <div className="user-preview">
+                  <div className="ui special cards">
+                    <div className="card">
+                      <div className="content">
+                        <div className="header" style={{ textAlign: 'center' }}> My Info </div>
+                        <br />
+                        <Myinfo />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Grid.Row>
               <Grid.Row style={{ height: '50px' }}></Grid.Row>
               <Grid.Row><FriendList /></Grid.Row>
             </Grid.Column>
