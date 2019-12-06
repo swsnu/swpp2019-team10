@@ -1,9 +1,9 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import propTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
 import './ReviewPreview.css';
 import { Rating } from 'semantic-ui-react';
+import ReviewDetail from 'containers/ReviewDetail';
 
 const ReviewPreview = (props) => {
   const {
@@ -52,9 +52,7 @@ const ReviewPreview = (props) => {
 
           <div className="extra content">
             {isMine && (
-            <NavLink className="detail-wrapper" to={`/main/${id}`}>
-                        Read Detail & Get Recommendation!
-            </NavLink>
+              <ReviewDetail fixed={false} id={id} />
             )}
 
             {!isMine && (
