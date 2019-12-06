@@ -40,6 +40,10 @@ class ReviewTestCase(TestCase):
 
         test_image_success
         test_image_fail
+
+        test_get_restaurant_review_list_success
+        test_get_restaurant_review_list_fail
+        test_restaurant_review_list_other_method_not_allowed
     """
     def setUp(self):
         """
@@ -86,7 +90,7 @@ class ReviewTestCase(TestCase):
         )
         tag1 = Tag.objects.create(
             name='GOOD',
-            sentimental=0.5
+            sentimental=0.6
         )
         tag2 = Tag.objects.create(
             name='SOSO',
@@ -360,11 +364,20 @@ class ReviewTestCase(TestCase):
         """
         client = Client()
         review1_id = Review.objects.get(content='TEST_CONTENT').id
+        review2_id = Review.objects.get(content='TEST_CONTENT2').id
+        review3_id = Review.objects.get(content='TEST_CONTENT3').id
+        review4_id = Review.objects.get(content='TEST_CONTENT4').id
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
         response = client.delete('/api/review/'+str(review1_id)+'/')
+        response = client.delete('/api/review/'+str(review2_id)+'/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(Review.objects.count(), 3)
+        self.assertEqual(Review.objects.count(), 2)
+        client.login(username='TEST_USER_3',
+                     email='TEST_EMAIL_3', password='TEST_PW_3')
+        response = client.delete('/api/review/'+str(review3_id)+'/')
+        response = client.delete('/api/review/'+str(review4_id)+'/')
+        self.assertEqual(Review.objects.count(), 0)
     def test_delete_review_fail(self):
         """
         DELETE review detail should fail in rest of the cases
@@ -558,3 +571,38 @@ class ReviewTestCase(TestCase):
         response = client.post('/api/review/'+str(review1_id)+'/image/',
                                data={'image': img_and_file[0].tobytes()})
         self.assertEqual(response.status_code, 400)
+
+    def test_get_restaurant_review_list_success(self):
+        """
+        GET restaurant review list should success
+        """
+        client = Client()
+        res_id = Restaurant.objects.get(name='TEST_REST').id
+        client.login(username='TEST_USER_1',
+                     email='TEST_EMAIL_1', password='TEST_PW_1')
+        response = client.get('/api/restaurant/'+str(res_id)+'/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('TEST_CONTENT3', response.content.decode())
+        response = client.get('/api/restaurant/'+str(res_id+1)+'/')
+        self.assertEqual(response.json(), [])
+
+    def test_get_restaurant_review_list_fail(self):
+        """
+        GET restaurant review list should fail in rest of the cases
+        """
+        client = Client()
+        res_id = Restaurant.objects.get(name='TEST_REST').id
+        response = client.get('/api/restaurant/'+str(res_id)+'/')
+        self.assertEqual(response.status_code, 401)
+
+    def test_restaurant_review_list_other_method_not_allowed(self):
+        """
+        Other methods in restaurant review list are not allowed
+        """
+        client = Client()
+        res_id = Restaurant.objects.get(name='TEST_REST').id
+
+        client.login(username='TEST_USER_1',
+                     email='TEST_EMAIL_1', password='TEST_PW_1')
+        response = client.post('/api/restaurant/'+str(res_id)+'/')
+        self.assertEqual(response.status_code, 405)

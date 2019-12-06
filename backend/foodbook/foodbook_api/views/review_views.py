@@ -344,3 +344,42 @@ def review_image(request, review_id):
         return HttpResponseBadRequest(content="invalid form")
     #else:
     return HttpResponseNotAllowed(['POST'])
+
+@transaction.atomic
+def restaurant_review_list(request, restaurant_id):
+    """
+    restaurant review list
+    GET method are allowed
+    """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+    if request.method == 'GET':
+        review_all_list = []
+        restaurant_reviews = Review.objects.select_related(
+            'restaurant', 'menu').prefetch_related('tag').filter(restaurant__id=restaurant_id)
+        for review in restaurant_reviews:
+            image_path = ""
+            if review.review_img:
+                image_path = 'http://127.0.0.1:8000'+review.review_img.url
+            tag = []
+            for tag_item in review.tag.all():
+                pos = 0
+                if tag_item.sentimental >= 0.6:
+                    pos = 1
+                if tag_item.sentimental <= 0.4:
+                    pos = -1
+                tag.append({'name':tag_item.name, 'sentimental': pos})
+            dict_review = {
+                'id': review.id,
+                'author': request.user.username,
+                'restaurant': review.restaurant.name,
+                'menu': review.menu.name,
+                'content': review.content,
+                'rating': review.rating,
+                'image': image_path,
+                'date': review.date.strftime("%Y-%m-%d"),
+                'tag': tag
+                }
+            review_all_list.append(dict_review)
+        return JsonResponse(review_all_list, safe=False)
+    return HttpResponseNotAllowed(['GET'])

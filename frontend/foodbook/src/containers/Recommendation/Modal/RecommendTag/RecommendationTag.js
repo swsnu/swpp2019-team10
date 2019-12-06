@@ -7,6 +7,7 @@ import {
 } from 'semantic-ui-react';
 import './RecommendationTag.css';
 import * as actionCreators from 'store/actions/recom/action_recom';
+import RestaurantReview from 'containers/RestaurantReview';
 
 class RecommendationTag extends Component {
   constructor(props) {
@@ -18,6 +19,16 @@ class RecommendationTag extends Component {
     this.getGeoLocation();
   }
 
+  recomHandler = () => {
+    const { onGetAll, match } = this.props;
+    const { lat, lng } = this.state;
+    onGetAll({
+      id: match.params.id,
+      lat,
+      log: lng,
+    });
+  }
+
   getGeoLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -25,13 +36,6 @@ class RecommendationTag extends Component {
           this.setState({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-          });
-          const { onGetAll, match } = this.props;
-          const { lat, lng } = this.state;
-          onGetAll({
-            id: match.params.id,
-            lat,
-            log: lng,
           });
         },
 
@@ -90,6 +94,7 @@ class RecommendationTag extends Component {
             </span>
             <br />
             <br />
+            <RestaurantReview data={e} />
           </List.Description>
         </List.Content>
       </List.Item>
@@ -107,7 +112,7 @@ class RecommendationTag extends Component {
         onOpen={this.open}
         onClose={this.close}
         trigger={
-          <Button id="recom-tst-button" color="green" inverted> Recommend By Your Taste! </Button>
+          <Button id="recom-tst-button" color="green" onClick={() => this.recomHandler()} inverted> Recommend By Your Taste! </Button>
         }
       >
         <Modal.Header>
