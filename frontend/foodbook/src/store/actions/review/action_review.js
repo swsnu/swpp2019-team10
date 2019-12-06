@@ -43,7 +43,7 @@ export const GET_REVIEW = (id) => (dispatch) => {
 
 export const DELETE_REVIEW = (id) => (dispatch) => (
   axios.delete(`/api/review/${id}/`)
-    .then(() => {dispatch(GET_REVIEW_PRE()); dispatch(GET_USER_INFO()); dispatch(GET_REVIEWS())})
+    .then(() => { dispatch(GET_REVIEW_PRE()); dispatch(GET_USER_INFO()); dispatch(GET_REVIEWS()); })
 );
 
 export const EDIT_REVIEW = (id, review) => (dispatch) => (

@@ -51,7 +51,7 @@ class ReviewDetail extends Component {
   close = () => this.setState({ open: false });
 
   deleteHandler() {
-    const { id, onDeleteReview, onGetReviews } = this.props;
+    const { id, onDeleteReview } = this.props;
     onDeleteReview(id);
     this.close();
   }
@@ -62,7 +62,7 @@ class ReviewDetail extends Component {
     } = this.state;
 
     const {
-      review, fixed, id
+      review, fixed, id,
     } = this.props;
 
     const {
@@ -178,7 +178,6 @@ ReviewDetail.propTypes = {
   id: PropTypes.number,
   onGetReview: PropTypes.func,
   onDeleteReview: PropTypes.func,
-  onGetReviews: PropTypes.func,
   review: PropTypes.shape({
     id: PropTypes.number,
     content: PropTypes.string,
@@ -199,7 +198,6 @@ ReviewDetail.defaultProps = {
   id: 0,
   onGetReview: null,
   onDeleteReview: null,
-  onGetReviews: null,
   review: {
     id: 0,
   },
@@ -213,9 +211,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onGetReview: (id) => {
     dispatch(actionCreators.GET_REVIEW(id));
-  },
-  onGetReviews: () => {
-    dispatch(actionCreators.GET_REVIEWS());
   },
   onDeleteReview: (id) => {
     dispatch(actionCreators.DELETE_REVIEW(id));

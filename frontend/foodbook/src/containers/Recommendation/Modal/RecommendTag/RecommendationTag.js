@@ -136,7 +136,7 @@ RecommendationTag.propTypes = {
   recoms: propTypes.arrayOf(Object),
   onGetAll: propTypes.func.isRequired,
   data: propTypes.string,
-  id: propTypes.number,
+  id: propTypes.number.isRequired,
 };
 
 RecommendationTag.defaultProps = {
