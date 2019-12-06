@@ -119,6 +119,22 @@ describe('<FormReview />', () => {
       expect(wrapper.state('content')).toBe('content');
     });
 
+    it('should check category restriction', () => {
+      const component = mount(addReview);
+      component.find('Button #review-modal-triggar').simulate('click');
+      component.update();
+      const instance = component.find(FormReview.WrappedComponent).instance();
+      const wrapperChicken = component.find('DropdownItem').at(0);
+
+      expect(instance.state.category).toBe('');
+
+      component.find('DropdownMenu').simulate('click');
+
+      // category may change so test only one category, rest will be consistent
+      wrapperChicken.simulate('click');
+      expect(instance.state.category).toBe('Chicken');
+    });
+
     it('should have image upload functioning', () => {
       const component = mount(addReview);
       component.find('Button #review-modal-triggar').simulate('click');
@@ -154,6 +170,8 @@ describe('<FormReview />', () => {
       component.find('TextArea #review-menu-input').simulate('change', event);
       component.find('TextArea #review-content-input').simulate('change', event);
       component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });
+      component.find('DropdownMenu').simulate('click');
+      component.find('DropdownItem').at(0).simulate('click');
       component.update();
 
       const addWrapper = component.find('FormReview');
@@ -258,6 +276,8 @@ describe('<FormReview />', () => {
       component.find('TextArea #review-menu-input').simulate('change', event);
       component.find('TextArea #review-content-input').simulate('change', event);
       component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });
+      component.find('DropdownMenu').simulate('click');
+      component.find('DropdownItem').at(0).simulate('click');
       component.update();
 
       const submitButton = component.find('#submit-review-button').at(0);
