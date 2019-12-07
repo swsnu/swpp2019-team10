@@ -44,6 +44,8 @@ class FormReview extends Component {
         image: null,
         error: null,
       });
+    } else if (mode === 'EDIT') {
+      this.setState({ ready: true });
     } else {
       this.setState({
         error: 'Unknown Form Type',
@@ -51,25 +53,18 @@ class FormReview extends Component {
     }
   }
 
-  editLoader = () => {
-    const { review: loadedReview } = this.props;
-    const {
-      rating, content, restaurant, menu, image,
-    } = loadedReview;
-    this.setState({
-      rating, content, restaurant, menu, image,
-    });
-    this.open();
-  }
-
-  getHandler = () => {
-    const { id, onGetReview } = this.props;
-    onGetReview(id).then(this.editLoader());
-  }
-
-  open = () => this.setState({
-    open: true,
-  });
+  open = () => {
+    const { review: loadedReview, mode } = this.props;
+    if (mode === 'EDIT') {
+      const {
+        rating, content, restaurant, menu, image, category, longitude, latitude,
+      } = loadedReview;
+      this.setState({
+        rating, content, restaurant, menu, image, category, longitude, latitude,
+      });
+    }
+    this.setState({ open: true });
+  };
 
   close = () => this.setState({
     restaurant: '',
@@ -91,6 +86,7 @@ class FormReview extends Component {
       rating,
       longitude,
       latitude,
+      category,
     } = this.state;
 
     const { id, onEditReview } = this.props;
@@ -102,6 +98,7 @@ class FormReview extends Component {
       rating,
       longitude,
       latitude,
+      category,
     };
 
     onEditReview(id, reviewDict).then(this.close());
@@ -146,16 +143,16 @@ class FormReview extends Component {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           this.setState({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
             ready: true,
           });
         },
 
         () => {
           this.setState({
-            lat: 37.450084,
-            lng: 126.952459,
+            latitude: 37.450084,
+            longitude: 126.952459,
             ready: true,
           });
         },
@@ -203,9 +200,11 @@ class FormReview extends Component {
       );
     }
 
-    const { lat, lng } = this.state;
+    const { latitude, longitude } = this.state;
 
     // https://www.npmjs.com/package/react-image-select-pv
+    const imageHtml = image !== '' ? <Image src={image} alt="food img" /> : <div />;
+
     const imageField = mode === 'ADD' ? (
       <Form.Field>
         <ImageSelectPreview
@@ -215,13 +214,11 @@ class FormReview extends Component {
         />
       </Form.Field>
     )
-      : (
-        <Image src={image} alt="food img" />
-      );
+      : imageHtml;
 
     const googleMap = mode === 'ADD'
-      ? <GoogleMap center={{ lat, lng }} search getPos={this.getPos} />
-      : <GoogleMap center={{ lat, lng }} />;
+      ? <GoogleMap center={{ latitude, longitude }} search getPos={this.getPos} />
+      : <GoogleMap center={{ latitude, longitude }} />;
 
     const contentHandler = mode === 'ADD' ? this.postContentHandler : this.editContentHandler;
 
@@ -364,7 +361,6 @@ FormReview.propTypes = {
     id: PropTypes.number,
   }),
   onPostReview: PropTypes.func,
-  onGetReview: PropTypes.func,
   onEditReview: PropTypes.func,
   fixed: PropTypes.bool,
 };
@@ -379,7 +375,6 @@ FormReview.defaultProps = {
     id: 0,
   },
   onPostReview: null,
-  onGetReview: null,
   onEditReview: null,
   fixed: false,
 };
@@ -389,7 +384,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onGetReview: (id) => dispatch(actionCreators.GET_REVIEW(id)),
   onPostReview: (post, img) => dispatch(actionCreators.POST_REVIEW(post, img)),
   onEditReview: (id, post) => dispatch(actionCreators.EDIT_REVIEW(id, post)),
 });

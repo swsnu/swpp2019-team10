@@ -41,12 +41,10 @@ class ReviewDetail extends Component {
     };
   }
 
-  getHandler = () => {
+  open = () => {
     const { id, onGetReview } = this.props;
-    onGetReview(id).then(this.open());
+    onGetReview(id).then(this.setState({ open: true }));
   }
-
-  open = () => this.setState({ open: true });
 
   close = () => this.setState({ open: false });
 
@@ -65,7 +63,7 @@ class ReviewDetail extends Component {
     } = this.props;
 
     const {
-      content, restaurant, author, menu, image, id: reviewId,
+      content, restaurant, author, menu, image, id: reviewId, category,
       rating, date, tag, longitude, latitude,
     } = review;
 
@@ -82,7 +80,7 @@ class ReviewDetail extends Component {
     );
 
     const triggerButton = (
-      <Button id="detail-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.getHandler}>
+      <Button id="detail-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
         Read Detail & Get Recommendation!
       </Button>
     );
@@ -113,20 +111,20 @@ class ReviewDetail extends Component {
         </Button>
       </div>
     );
-    //  : <div />;
 
-    const googleMap = (<GoogleMap center={{ lat: latitude, lng: longitude }} />);
-
-    const img = image === undefined ? (
+    const imgArea = image !== '' ? (
       <div className="blurring dimmable image">
         <img src={image} alt="food img" />
       </div>
     )
       : <div />;
 
-    const modalContent = (
+    const googleMap = (<GoogleMap center={{ lat: latitude, lng: longitude }} />);
+
+    const modalContent = id === reviewId ? (
       <Modal.Content>
         <div className="ReviewDetail-wrapper">
+          {category}
           <div className="ui special cards">
             <div className="card" style={{ width: '630px' }}>
               <div className="content">
@@ -139,7 +137,7 @@ class ReviewDetail extends Component {
                   <span className="tag">{Array.isArray(tag) && parseTagName(tag)}</span>
                 </div>
               </div>
-              {img}
+              {imgArea}
               <div className="google map">
                 {googleMap}
               </div>
@@ -162,6 +160,7 @@ class ReviewDetail extends Component {
         </div>
       </Modal.Content>
     )
+      : loadContent;
 
     return (
       <Modal
@@ -176,7 +175,7 @@ class ReviewDetail extends Component {
         <Modal.Header>
           Review
         </Modal.Header>
-        {error ? errorContent : (id === reviewId ? modalContent : loadContent)}
+        {error ? errorContent : modalContent}
         <Modal.Actions>
           {authorOnly}
           <Button
