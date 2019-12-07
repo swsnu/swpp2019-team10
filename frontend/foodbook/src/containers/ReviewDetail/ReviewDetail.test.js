@@ -22,6 +22,7 @@ describe('<ReviewDetail />', () => {
     rating: 0.0,
     tag: [{ name: 'good', sentimental: 1 }, { name: 'bad', sentimental: -1 }, { name: 'netural', sentimental: 0 }],
     date: '1970-01-01',
+    id: 1,
   };
 
   const initReview = {
