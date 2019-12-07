@@ -209,7 +209,7 @@ class FormReview extends Component {
       <Form.Field>
         <ImageSelectPreview
           id="add-review-image-selector"
-          onChange={(data) => this.setState({ image: data ? data[0].blob : null })}
+          onChange={(data) => this.setState({ image: '0' in data ? data[0].blob : null })}
           max={1}
         />
       </Form.Field>
