@@ -132,7 +132,8 @@ class Recommendation():
                     my_rating /= my_count
                 if other_count > 0:
                     other_rating /= other_count
-                ret_dict.append({'name': restaurant.name,
+                ret_dict.append({'id': restaurant.id,
+                                 'name': restaurant.name,
                                  'longitude': restaurant.longitude,
                                  'latitude': restaurant.latitude,
                                  'rating': restaurant.rating,

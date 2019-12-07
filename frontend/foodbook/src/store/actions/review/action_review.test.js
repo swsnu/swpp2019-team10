@@ -114,4 +114,43 @@ describe('Review Action', () => {
       })
       .catch();
   });
+
+  it('should get all restaurant reviews when no error', (done) => {
+    const spy = jest.spyOn(axios, 'get')
+      .mockImplementation(() => new Promise((res) => {
+        const result = {
+          status: 200,
+          data: stubReviews,
+        };
+        res(result);
+      }));
+
+    store.dispatch(actionCreators.GET_RESTAURANT_REVIEWS(1))
+      .then(() => {
+        const newState = store.getState();
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(newState.review.reviewRestaurantList.length).toBe(2);
+        done();
+      })
+      .catch();
+  });
+
+  it('should not get restaurant reviews when error', (done) => {
+    const spy = jest.spyOn(axios, 'get')
+      .mockImplementation(() => new Promise((res, rej) => {
+        const result = {
+          status: 404,
+          data: stubReviews,
+        };
+        rej(result);
+      }));
+
+    store.dispatch(actionCreators.GET_RESTAURANT_REVIEWS(1))
+      .catch(() => {
+        const newState = store.getState();
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(newState.review.reviewRestaurantList.length).toBe(0);
+        done();
+      });
+  });
 });

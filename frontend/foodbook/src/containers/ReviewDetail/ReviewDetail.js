@@ -40,9 +40,10 @@ class ReviewDetail extends Component {
     };
   }
 
-  componentDidMount() {
+  getHandler = () => {
     const { id, onGetReview } = this.props;
     onGetReview(id);
+    this.open();
   }
 
   open = () => this.setState({ open: true });
@@ -61,7 +62,7 @@ class ReviewDetail extends Component {
     } = this.state;
 
     const {
-      review, fixed,
+      review, fixed, id,
     } = this.props;
 
     const {
@@ -78,7 +79,7 @@ class ReviewDetail extends Component {
     }
 
     const triggerButton = (
-      <Button id="detail-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
+      <Button id="detail-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.getHandler}>
         Read Detail & Get Recommendation!
       </Button>
     );
@@ -152,7 +153,7 @@ class ReviewDetail extends Component {
                   readOnly
                 />
                 <div className="extra content">
-                  <Recommendation data={menu} />
+                  <Recommendation data={menu} id={id} />
                 </div>
               </div>
             </div>

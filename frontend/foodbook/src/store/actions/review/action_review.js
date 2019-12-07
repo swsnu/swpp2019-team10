@@ -43,8 +43,7 @@ export const GET_REVIEW = (id) => (dispatch) => {
 
 export const DELETE_REVIEW = (id) => (dispatch) => (
   axios.delete(`/api/review/${id}/`)
-    .then(dispatch(GET_REVIEW_PRE()))
-    .then(dispatch(GET_USER_INFO()))
+    .then(() => { dispatch(GET_REVIEW_PRE()); dispatch(GET_USER_INFO()); dispatch(GET_REVIEWS()); })
 );
 
 export const EDIT_REVIEW = (id, review) => (dispatch) => (
@@ -66,3 +65,20 @@ export const POST_REVIEW = (review, image) => (dispatch) => (
         .then(() => dispatch(GET_USER_INFO())) : dispatch(POST_REVIEW_ADD(res.data))
     ))
 );
+
+export const GET_RESTAURANT_REVIEWS_PRE = () => ({
+  type: actionTypes.CLEAR_RESTAURANT_REVIEWS,
+});
+
+export const GET_RESTAURANT_REVIEWS_DEEP = (data) => ({
+  type: actionTypes.GET_RESTAURANT_REVIEWS,
+  data,
+});
+
+export const GET_RESTAURANT_REVIEWS = (id) => (dispatch) => {
+  dispatch(GET_RESTAURANT_REVIEWS_PRE());
+
+  return axios.get(`/api/restaurant/${id}/`)
+    .then((res) => dispatch(GET_RESTAURANT_REVIEWS_DEEP(res.data)))
+    .catch(dispatch(GET_RESTAURANT_REVIEWS_PRE()));
+};

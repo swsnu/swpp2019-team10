@@ -7,6 +7,7 @@ import {
 } from 'semantic-ui-react';
 import './RecommendationLocation.css';
 import * as actionCreators from 'store/actions/recom/action_recom';
+import RestaurantReview from 'containers/RestaurantReview';
 
 class RecommendationLocation extends Component {
   constructor(props) {
@@ -18,6 +19,16 @@ class RecommendationLocation extends Component {
     this.getGeoLocation();
   }
 
+  recomHandler = () => {
+    const { onGetAll, id } = this.props;
+    const { lat, lng } = this.state;
+    onGetAll({
+      id,
+      lat,
+      log: lng,
+    });
+  }
+
   getGeoLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -25,13 +36,6 @@ class RecommendationLocation extends Component {
           this.setState({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-          });
-          const { onGetAll, match } = this.props;
-          const { lat, lng } = this.state;
-          onGetAll({
-            id: match.params.id,
-            lat,
-            log: lng,
           });
         },
 
@@ -67,38 +71,7 @@ class RecommendationLocation extends Component {
       );
     }
 
-    /* const parseReason = (reason) => {
-      if (reason) {
-        if (reason.includes('HATE')) {
-          if (reason.includes('MY')) return 'BLUE';
-          return 'PURPLE';
-        } if (reason.includes('FAVORITE')) {
-          if (reason.includes('MY')) return 'RED';
-          return 'PINK';
-        }
-      }
-      return undefined;
-    }; */
-
     const parseScore = (score) => ((score < 3) ? 'RED' : 'BLUE');
-
-    /* let recommendList = recoms.map((e) => (
-      <List.Item key={e.id}>
-        <List.Icon name="marker" />
-        <List.Content>
-          <List.Header as="a" href={e.link} target="_blank" rel="noopener noreferrer">
-            {e.restaurant}
-          </List.Header>
-          {e.name}
-          <List.Description>
-            <div className={parseScore(e.rating)}>{e.rating !== undefined && `${e.rating}(Avg.) `}
-            </div>
-            <br />
-            <br />
-          </List.Description>
-        </List.Content>
-      </List.Item>
-    )); */
 
     let recommendList = recoms.length === 0 ? null : recoms.map((e) => (
       <List.Item key={e.name}>
@@ -121,6 +94,7 @@ class RecommendationLocation extends Component {
             </span>
             <br />
             <br />
+            <RestaurantReview data={e} />
           </List.Description>
         </List.Content>
       </List.Item>
@@ -139,7 +113,7 @@ class RecommendationLocation extends Component {
         onOpen={this.open}
         onClose={this.close}
         trigger={
-          <Button id="recom-loc-button" color="green" inverted> Recommend By Location! </Button>
+          <Button id="recom-loc-button" color="green" onClick={() => this.recomHandler()} inverted> Recommend By Location! </Button>
         }
       >
         <Modal.Header>
@@ -162,12 +136,8 @@ class RecommendationLocation extends Component {
 RecommendationLocation.propTypes = {
   recoms: propTypes.arrayOf(Object),
   onGetAll: propTypes.func.isRequired,
-  match: propTypes.shape({
-    params: propTypes.shape({
-      id: propTypes.string,
-    }),
-  }).isRequired,
   data: propTypes.string,
+  id: propTypes.number.isRequired,
 };
 
 RecommendationLocation.defaultProps = {

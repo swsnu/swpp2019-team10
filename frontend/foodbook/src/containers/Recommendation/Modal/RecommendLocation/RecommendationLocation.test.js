@@ -91,6 +91,11 @@ describe('<RecommendationLocation />', () => {
 
     it('should render when recoms.length == 0', () => {
       const component = mount(recommend);
+      component.find('RecommendationLocation').setState({
+        lat: 37.5,
+        lng: 126.95,
+      });
+      component.update();
       component.find('Button #recom-loc-button').simulate('click');
       component.update();
       const wrapper = component.find('List #recommendList');
@@ -99,6 +104,10 @@ describe('<RecommendationLocation />', () => {
 
     it('should render when recoms.length > 0', () => {
       const component = mount(recommend2);
+      component.find('RecommendationLocation').setState({
+        lat: 37.5,
+        lng: 126.95,
+      });
       component.find('Button #recom-loc-button').simulate('click');
       component.update();
       const wrapper = component.find('List #recommendList');
