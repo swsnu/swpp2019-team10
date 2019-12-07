@@ -20,16 +20,13 @@ class SearchBox extends Component {
 
   onPlacesChanged = ({ map, setplace } = this.props) => {
     const selected = this.searchBox.getPlaces();
-    if (selected.length !== 0) {
-      const { 0: place } = selected;
-
-      if (!place.geometry) return;
-      if (place.geometry.viewport) {
-        map.fitBounds(place.geometry.viewport);
-      } else {
-        map.setCenter(place.geometry.location);
-        map.setZoom(17);
-      }
+    const { 0: place } = selected;
+    if (!place.geometry) return;
+    if (place.geometry.viewport) {
+      map.fitBounds(place.geometry.viewport);
+    } else {
+      map.setCenter(place.geometry.location);
+      map.setZoom(17);
     }
 
     setplace(selected);
