@@ -91,6 +91,10 @@ describe('<RecommendationTag />', () => {
 
     it('should render when recoms.length == 0', () => {
       const component = mount(recommend);
+      component.find('RecommendationTag').setState({
+        lat: 37.5,
+        lng: 126.95,
+      });
       component.find('Button #recom-tst-button').simulate('click');
       component.update();
       const wrapper = component.find('List #recommendList');
@@ -99,6 +103,10 @@ describe('<RecommendationTag />', () => {
 
     it('should render when recoms.length > 0', () => {
       const component = mount(recommend2);
+      component.find('RecommendationTag').setState({
+        lat: 37.5,
+        lng: 126.95,
+      });
       component.find('Button #recom-tst-button').simulate('click');
       component.update();
       const wrapper = component.find('List #recommendList');

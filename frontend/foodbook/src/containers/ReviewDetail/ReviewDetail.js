@@ -1,7 +1,5 @@
 import {
-  Rating,
-  Button,
-  TextArea,
+  Rating, Button, TextArea, Modal,
 } from 'semantic-ui-react';
 import React, { Component } from 'react';
 import './ReviewDetail.css';
@@ -37,31 +35,24 @@ class ReviewDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      /* open is variable for modal component,
-        currently it's undecided if this will be converted to modal so it's left unused. */
       open: false,
       error: null,
     };
   }
 
-  componentDidMount() {
-    const { match, onGetReview } = this.props;
-    onGetReview(match.params.id).then(() => {
-      this.setState({ ready: true });
-    });
+  getHandler = () => {
+    const { id, onGetReview } = this.props;
+    onGetReview(id).then(this.open());
   }
 
-  /*
-  show = () => () => this.setState({ open: true });
+  open = () => this.setState({ open: true });
 
   close = () => this.setState({ open: false });
-  */
 
   deleteHandler() {
-    const { history, match, onDeleteReview } = this.props;
-    onDeleteReview(match.params.id);
-
-    history.push('/main');
+    const { id, onDeleteReview } = this.props;
+    onDeleteReview(id);
+    this.close();
   }
 
   render() {
@@ -69,7 +60,9 @@ class ReviewDetail extends Component {
       error, open, ready,
     } = this.state;
 
-    const { history, match, review } = this.props;
+    const {
+      review, fixed, id,
+    } = this.props;
 
     const {
       content, restaurant, author, menu, image,
@@ -84,15 +77,11 @@ class ReviewDetail extends Component {
       );
     }
 
-    if (!ready) {
-      return (
-        <div className="form-review-loading">
-          <p>Loading...</p>
-        </div>
-      );
-    }
-
-    const reviewID = match.params.id;
+    const triggerButton = (
+      <Button id="detail-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.getHandler}>
+        Read Detail & Get Recommendation!
+      </Button>
+    );
 
     /*
 
@@ -113,7 +102,7 @@ class ReviewDetail extends Component {
         <Button
           id="edit-review-button"
           type="submit"
-          onClick={() => history.push(`/main/${reviewID}/edit`)}
+          onClick={() => { /* open edit modal */ }}
         >
           Edit
         </Button>
@@ -131,64 +120,74 @@ class ReviewDetail extends Component {
     const googleMap = (<GoogleMap center={{ lat: latitude, lng: longitude }} />);
 
     return (
-      <div className="ReviewDetail-wrapper">
-        <div className="ui special cards">
-          <div className="card" style={{ width: '630px' }}>
-            {open}
-            <div className="content">
-              <span className="header">{`${menu} ( ${restaurant} )`}</span>
-              <div className="meta">
-                <span className="rating">
-                  Rating:
-                  <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
-                </span>
-                <span className="tag">{Array.isArray(tag) && parseTagName(tag)}</span>
+      <Modal
+        className="review-detail-modal"
+        open={open}
+        onOpen={this.open}
+        onClose={this.close}
+        trigger={(
+          triggerButton
+      )}
+      >
+        <Modal.Header>
+          Review
+        </Modal.Header>
+        <Modal.Content>
+          <div className="ReviewDetail-wrapper">
+            <div className="ui special cards">
+              <div className="card" style={{ width: '630px' }}>
+                {open}
+                <div className="content">
+                  <span className="header">{`${menu} ( ${restaurant} )`}</span>
+                  <div className="meta">
+                    <span className="rating">
+                      Rating:
+                      <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
+                    </span>
+                    <span className="tag">{Array.isArray(tag) && parseTagName(tag)}</span>
+                  </div>
+                </div>
+                <div className="blurring dimmable image">
+                  <img src={image} alt="food img" />
+                </div>
+                <div className="google map">
+                  {googleMap}
+                </div>
+                {author}
+                <br />
+                {date}
+                <br />
+                <TextArea
+                  id="review-content-input"
+                  rows="4"
+                  type="text"
+                  value={content}
+                  readOnly
+                />
+                <div className="extra content">
+                  <Recommendation data={menu} id={id} />
+                </div>
               </div>
             </div>
-            <div className="blurring dimmable image">
-              <img src={image} alt="food img" />
-            </div>
-            <div className="google map">
-              {googleMap}
-            </div>
-            {author}
-            <br />
-            {date}
-            <br />
-            <TextArea
-              id="review-content-input"
-              rows="4"
-              type="text"
-              value={content}
-              readOnly
-            />
-            <div className="extra content">
-              <Recommendation data={menu} />
-            </div>
-            {authorOnly}
-            <Button
-              id="back-review-button"
-              type="button"
-              onClick={() => history.push('/main')}
-            >
-              Back
-            </Button>
           </div>
-        </div>
-      </div>
+        </Modal.Content>
+        <Modal.Actions>
+          {authorOnly}
+          <Button
+            id="back-review-button"
+            type="button"
+            onClick={this.close}
+          >
+            Back
+          </Button>
+        </Modal.Actions>
+      </Modal>
     );
   }
 }
 
 ReviewDetail.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-    }),
-  }),
-  history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
+  id: PropTypes.number,
   onGetReview: PropTypes.func,
   onDeleteReview: PropTypes.func,
   review: PropTypes.shape({
@@ -204,22 +203,17 @@ ReviewDetail.propTypes = {
     longitude: PropTypes.number,
     latitude: PropTypes.number,
   }),
+  fixed: PropTypes.bool,
 };
 
 ReviewDetail.defaultProps = {
-  match: {
-    params: {
-      id: 0,
-    },
-  },
-  history: {
-    push: null,
-  },
+  id: 0,
   onGetReview: null,
   onDeleteReview: null,
   review: {
     id: 0,
   },
+  fixed: false,
 };
 
 const mapStateToProps = (state) => ({

@@ -25,7 +25,7 @@ export class Recommendation extends Component {
 
   render() {
     const { open } = this.state;
-    const { data } = this.props;
+    const { data, id } = this.props;
 
     return (
       <div className="Recommendation-wrapper">
@@ -42,10 +42,10 @@ export class Recommendation extends Component {
             <Modal.Description>
               <Header> Choose One:  </Header>
               <br />
-              <RecommendationLocation data={data} />
+              <RecommendationLocation data={data} id={id} />
               <br />
               <br />
-              <RecommendationTag data={data} />
+              <RecommendationTag data={data} id={id} />
               <br />
               <br />
             </Modal.Description>
@@ -64,6 +64,7 @@ export class Recommendation extends Component {
 
 Recommendation.propTypes = {
   data: propTypes.string,
+  id: propTypes.number.isRequired,
 };
 
 Recommendation.defaultProps = {

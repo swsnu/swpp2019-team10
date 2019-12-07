@@ -3,6 +3,7 @@ import * as actionTypes from 'store/actions/review/actionTypes_review';
 const initialState = {
   reviewList: [],
   reviewDetail: {},
+  reviewRestaurantList: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -41,6 +42,16 @@ const reducer = (state = initialState, action) => {
         category: action.category,
       };
       return { ...state, reviewList: state.reviewList.concat(newReview) };
+
+    case actionTypes.CLEAR_RESTAURANT_REVIEWS:
+      return { ...state, reviewRestaurantList: [] };
+
+    case actionTypes.GET_RESTAURANT_REVIEWS:
+      newState = {
+        ...state,
+        reviewRestaurantList: action.data,
+      };
+      return newState;
 
     default:
       break;
