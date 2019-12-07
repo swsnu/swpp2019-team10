@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import './ReviewDetail.css';
 import PropTypes from 'prop-types';
 import GoogleMap from 'components/GoogleMap';
+import FormReview from 'containers/FormReview/FormReview';
 
 import Recommendation from 'containers/Recommendation';
 import { connect } from 'react-redux';
@@ -51,8 +52,7 @@ class ReviewDetail extends Component {
 
   deleteHandler() {
     const { id, onDeleteReview } = this.props;
-    onDeleteReview(id);
-    this.close();
+    onDeleteReview(id).then(this.close());
   }
 
   render() {
@@ -65,17 +65,21 @@ class ReviewDetail extends Component {
     } = this.props;
 
     const {
-      content, restaurant, author, menu, image,
+      content, restaurant, author, menu, image, id: reviewId,
       rating, date, tag, longitude, latitude,
     } = review;
 
-    if (error != null) {
-      return (
-        <div className="Review-error-wrapper">
-          <p>{error.content}</p>
-        </div>
-      );
-    }
+    const errorContent = error ? (
+      <div className="Review-error-wrapper">
+        <p>{error.content}</p>
+      </div>
+    ) : null;
+
+    const loadContent = (
+      <div className="form-review-loading">
+        <p>Loading...</p>
+      </div>
+    );
 
     const triggerButton = (
       <Button id="detail-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.getHandler}>
@@ -99,13 +103,7 @@ class ReviewDetail extends Component {
     // const isUserAuthor = ;
     const authorOnly = /* isUserAuthor ? */(
       <div className="AuthorButtons">
-        <Button
-          id="edit-review-button"
-          type="submit"
-          onClick={() => { /* open edit modal */ }}
-        >
-          Edit
-        </Button>
+        <FormReview fixed={false} mode="EDIT" id={id} />
         <Button
           id="delete-review-button"
           type="submit"
@@ -118,6 +116,52 @@ class ReviewDetail extends Component {
     //  : <div />;
 
     const googleMap = (<GoogleMap center={{ lat: latitude, lng: longitude }} />);
+
+    const img = image === undefined ? (
+      <div className="blurring dimmable image">
+        <img src={image} alt="food img" />
+      </div>
+    )
+      : <div />;
+
+    const modalContent = (
+      <Modal.Content>
+        <div className="ReviewDetail-wrapper">
+          <div className="ui special cards">
+            <div className="card" style={{ width: '630px' }}>
+              <div className="content">
+                <span className="header">{`${menu} ( ${restaurant} )`}</span>
+                <div className="meta">
+                  <span className="rating">
+                    Rating:
+                    <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
+                  </span>
+                  <span className="tag">{Array.isArray(tag) && parseTagName(tag)}</span>
+                </div>
+              </div>
+              {img}
+              <div className="google map">
+                {googleMap}
+              </div>
+              {author}
+              <br />
+              {date}
+              <br />
+              <TextArea
+                id="review-content-input"
+                rows="4"
+                type="text"
+                value={content}
+                readOnly
+              />
+              <div className="extra content">
+                <Recommendation data={menu} id={id} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal.Content>
+    )
 
     return (
       <Modal
@@ -132,45 +176,7 @@ class ReviewDetail extends Component {
         <Modal.Header>
           Review
         </Modal.Header>
-        <Modal.Content>
-          <div className="ReviewDetail-wrapper">
-            <div className="ui special cards">
-              <div className="card" style={{ width: '630px' }}>
-                {open}
-                <div className="content">
-                  <span className="header">{`${menu} ( ${restaurant} )`}</span>
-                  <div className="meta">
-                    <span className="rating">
-                      Rating:
-                      <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
-                    </span>
-                    <span className="tag">{Array.isArray(tag) && parseTagName(tag)}</span>
-                  </div>
-                </div>
-                <div className="blurring dimmable image">
-                  <img src={image} alt="food img" />
-                </div>
-                <div className="google map">
-                  {googleMap}
-                </div>
-                {author}
-                <br />
-                {date}
-                <br />
-                <TextArea
-                  id="review-content-input"
-                  rows="4"
-                  type="text"
-                  value={content}
-                  readOnly
-                />
-                <div className="extra content">
-                  <Recommendation data={menu} id={id} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </Modal.Content>
+        {error ? errorContent : (id === reviewId ? modalContent : loadContent)}
         <Modal.Actions>
           {authorOnly}
           <Button

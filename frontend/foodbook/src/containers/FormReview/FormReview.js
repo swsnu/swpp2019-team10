@@ -30,7 +30,7 @@ class FormReview extends Component {
 
   componentDidMount() {
     this.getGeoLocation();
-    const { mode, id, onGetReview } = this.props;
+    const { mode } = this.props;
 
     if (mode === 'ADD') {
       this.setState({
@@ -44,15 +44,27 @@ class FormReview extends Component {
         image: null,
         error: null,
       });
-    } else if (mode === 'EDIT') {
-      onGetReview(id).then(() => {
-        this.setState({ ready: true });
-      });
     } else {
       this.setState({
         error: 'Unknown Form Type',
       });
     }
+  }
+
+  editLoader = () => {
+    const { review: loadedReview } = this.props;
+    const {
+      rating, content, restaurant, menu, image,
+    } = loadedReview;
+    this.setState({
+      rating, content, restaurant, menu, image,
+    });
+    this.open();
+  }
+
+  getHandler = () => {
+    const { id, onGetReview } = this.props;
+    onGetReview(id).then(this.editLoader());
   }
 
   open = () => this.setState({
@@ -140,7 +152,6 @@ class FormReview extends Component {
           });
         },
 
-        /* Error callback, default location to 0,0 */
         () => {
           this.setState({
             lat: 37.450084,
@@ -171,17 +182,6 @@ class FormReview extends Component {
     } = this.props;
 
     const { ready } = this.state;
-
-    if (mode === 'EDIT' && ready && !('content' in this.state)) {
-      const { review: loadedReview } = this.props;
-      const {
-        rating, content, restaurant, menu, image,
-      } = loadedReview;
-      this.setState({
-        rating, content, restaurant, menu, image,
-      });
-    }
-
     const {
       rating, content, restaurant, menu, category,
       error, image, open,
@@ -238,7 +238,7 @@ class FormReview extends Component {
         break;
       case 'EDIT':
         triggerButton = (
-          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
+          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.getHandler}>
             Edit
           </Button>
         );
