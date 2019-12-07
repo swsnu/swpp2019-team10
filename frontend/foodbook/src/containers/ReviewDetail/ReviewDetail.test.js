@@ -112,7 +112,7 @@ describe('<ReviewDetail />', () => {
       detailWrapper.setState({ ready: true });
       component.update();
 
-      const wrapper = component.find('#edit-review-button').at(0);
+      const wrapper = component.find('#review-modal-trigger').at(0);
 
       wrapper.simulate('click');
       component.update();
