@@ -110,6 +110,14 @@ def review_list(request):
         tags = Tagging(request.user.profile, menu, rating).tagging(content)
         for item in tags.keys():
             new_review.tag.add(Tag.objects.create(name=item, sentimental=tags[item]))
+        tag = []
+        for tag_item in new_review.tag.all():
+            pos = 0
+            if tag_item.sentimental >= 0.6:
+                pos = 1
+            if tag_item.sentimental <= 0.4:
+                pos = -1
+            tag.append({'name': tag_item.name, 'sentimental': pos})
         dict_new_review = {
             'id': new_review.id,
             'author': request.user.username,
@@ -118,6 +126,7 @@ def review_list(request):
             'content': new_review.content,
             'rating': new_review.rating,
             'date': new_review.date.strftime("%Y-%m-%d"),
+            'tag': tag,
             'category': new_review.category
             }
         return JsonResponse(dict_new_review, status=201)
@@ -180,8 +189,31 @@ def review_detail(request, review_id):
             category = req_data['category']
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
-        restaurant = Restaurant.objects.get(name=restaurant_name)
-        menu = Menu.objects.get(name=menu_name)
+        try:
+            longitude = req_data['longitude']
+            latitude = req_data['latitude']
+            is_location_exist = True
+        except (KeyError, JSONDecodeError):
+            is_location_exist = False
+        try:
+            restaurant = Restaurant.objects.get(name=restaurant_name)
+        except:
+            if is_location_exist:
+                restaurant = Restaurant.objects.create(
+                    name=restaurant_name,
+                    longitude=longitude,
+                    latitude=latitude,
+                    rating=rating,
+                )
+            else:
+                return HttpResponseBadRequest()
+        try:
+            menu = Menu.objects.get(name=menu_name)
+        except:
+            menu = Menu.objects.create(
+                name=menu_name,
+                restaurant=restaurant,
+            )
         review.restaurant = restaurant
         review.menu = menu
         review.content = content

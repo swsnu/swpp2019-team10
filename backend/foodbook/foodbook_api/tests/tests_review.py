@@ -313,6 +313,20 @@ class ReviewTestCase(TestCase):
         bodys = json.loads(response.content.decode())
         self.assertEqual(bodys['id'], review2_id)
         self.assertEqual(bodys['rating'], 3)
+        response = client.put('/api/review/'+str(review1_id)+'/', json.dumps({
+            'content': 'TEST_PUT_CONTENT',
+            'restaurant_name': 'TEST_REST_N',
+            'menu_name': 'TEST_MENU_N',
+            'rating': 3,
+            'longitude': 15.5,
+            'latitude': 15.5,
+            'category': 'NEW_TEST_CATEGORY'
+        }), 'application/json')
+        self.assertEqual(response.status_code, 200)
+        bodys = json.loads(response.content.decode())
+        self.assertEqual(bodys['id'], review1_id)
+        self.assertEqual(Restaurant.objects.count(), 2)
+        self.assertEqual(Menu.objects.count(), 2)
     def test_put_review_detail_fail(self):
         """
         PUT review detail should fail in rest of the cases
@@ -355,6 +369,14 @@ class ReviewTestCase(TestCase):
             'rating': 3
         }, 'application/json')
         self.assertEqual(response.status_code, 404)
+        response = client.put('/api/review/'+str(review1_id)+'/', json.dumps({
+            'content': 'TEST_PUT_CONTENT',
+            'restaurant_name': 'TEST_REST_N',
+            'menu_name': 'TEST_MENU_N',
+            'rating': 3,
+            'category': 'NEW_TEST_CATEGORY'
+        }), 'application/json')
+        self.assertEqual(response.status_code, 400)
     def test_delete_review_success(self):
         """
         DELETE review detail should only success in this case:
