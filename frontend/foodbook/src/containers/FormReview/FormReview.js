@@ -24,12 +24,13 @@ class FormReview extends Component {
     super(props);
     this.state = {
       open: false,
+      ready: false,
     };
   }
 
   componentDidMount() {
     this.getGeoLocation();
-    const { mode, id, onGetReview } = this.props;
+    const { mode } = this.props;
 
     if (mode === 'ADD') {
       this.setState({
@@ -37,14 +38,14 @@ class FormReview extends Component {
         menu: '',
         content: '',
         rating: 0,
-        lng: 0.0,
-        lat: 0.0,
+        longitude: 0.0,
+        latitude: 0.0,
         category: '',
         image: null,
         error: null,
       });
     } else if (mode === 'EDIT') {
-      onGetReview(id);
+      this.setState({ ready: true });
     } else {
       this.setState({
         error: 'Unknown Form Type',
@@ -52,9 +53,18 @@ class FormReview extends Component {
     }
   }
 
-  open = () => this.setState({
-    open: true,
-  });
+  open = () => {
+    const { review: loadedReview, mode } = this.props;
+    if (mode === 'EDIT') {
+      const {
+        rating, content, restaurant, menu, image, category, longitude, latitude,
+      } = loadedReview;
+      this.setState({
+        rating, content, restaurant, menu, image, category, longitude, latitude,
+      });
+    }
+    this.setState({ open: true });
+  };
 
   close = () => this.setState({
     restaurant: '',
@@ -72,8 +82,9 @@ class FormReview extends Component {
       menu,
       content,
       rating,
-      lat,
-      lng,
+      longitude,
+      latitude,
+      category,
     } = this.state;
 
     const { id, onEditReview } = this.props;
@@ -83,11 +94,12 @@ class FormReview extends Component {
       menu_name: menu,
       content,
       rating,
-      longitude: lng,
-      latitude: lat,
+      longitude,
+      latitude,
+      category,
     };
 
-    onEditReview(id, reviewDict);
+    onEditReview(id, reviewDict).then(this.close());
   }
 
   postContentHandler = () => {
@@ -121,8 +133,7 @@ class FormReview extends Component {
       const file = new File([image], 'img.jpg');
       fd.append('image', file);
     }
-    onPostReview(reviewDict, fd);
-    this.close();
+    onPostReview(reviewDict, fd).then(this.close());
   }
 
   getGeoLocation = () => {
@@ -130,16 +141,17 @@ class FormReview extends Component {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           this.setState({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            ready: true,
           });
         },
 
-        /* Error callback, default location to 0,0 */
         () => {
           this.setState({
-            lat: 0,
-            lng: 0,
+            latitude: 37.450084,
+            longitude: 126.952459,
+            ready: true,
           });
         },
       );
@@ -148,8 +160,8 @@ class FormReview extends Component {
 
   getPos = (lat, lng) => {
     this.setState({
-      lat,
-      lng,
+      latitude: lat,
+      longitude: lng,
     });
   }
 
@@ -161,30 +173,14 @@ class FormReview extends Component {
 
   render() {
     const {
-      mode, id, review, fixed,
+      mode, fixed,
     } = this.props;
-    let ready = false;
 
-    if ((mode === 'ADD' && 'lat' in this.state && 'lng' in this.state)
-      || (mode === 'EDIT' && id === review.id && 'content' in this.state)) {
-      ready = true;
-    } else if (mode === 'EDIT') {
-      const { review: loadedReview } = this.props;
-      const {
-        rating, content, restaurant, menu, image,
-      } = loadedReview;
-      this.setState({
-        rating, content, restaurant, menu, image,
-      });
-    }
-
-
+    const { ready } = this.state;
     const {
       rating, content, restaurant, menu, category,
       error, image, open,
     } = this.state;
-
-    const { lat, lng } = this.state;
 
     if (error != null) {
       return (
@@ -202,23 +198,25 @@ class FormReview extends Component {
       );
     }
 
+    const { latitude, longitude } = this.state;
+
     // https://www.npmjs.com/package/react-image-select-pv
+    const imageHtml = image !== '' ? <Image src={image} alt="food img" /> : <div />;
+
     const imageField = mode === 'ADD' ? (
       <Form.Field>
         <ImageSelectPreview
           id="add-review-image-selector"
-          onChange={(data) => this.setState({ image: data[0].blob })}
+          onChange={(data) => this.setState({ image: '0' in data ? data[0].blob : null })}
           max={1}
         />
       </Form.Field>
     )
-      : (
-        <Image src={image} alt="food img" />
-      );
+      : imageHtml;
 
     const googleMap = mode === 'ADD'
-      ? <GoogleMap center={{ lat, lng }} search getPos={this.getPos} />
-      : <GoogleMap center={{ lat, lng }} />;
+      ? <GoogleMap center={{ latitude, longitude }} search getPos={this.getPos} />
+      : <GoogleMap center={{ latitude, longitude }} />;
 
     const contentHandler = mode === 'ADD' ? this.postContentHandler : this.editContentHandler;
 
@@ -235,7 +233,7 @@ class FormReview extends Component {
         break;
       case 'EDIT':
         triggerButton = (
-          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
+          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.getHandler}>
             Edit
           </Button>
         );
@@ -262,12 +260,6 @@ class FormReview extends Component {
         </Modal.Header>
         <Modal.Content>
           <Form id="review-form" style={{ width: '1000px' }}>
-            <Form.Field className="content">
-              <span className="header">
-                Author
-                {open}
-              </span>
-            </Form.Field>
             <Form.Group widths="equal">
               <Form.TextArea
                 fluid
@@ -367,7 +359,6 @@ FormReview.propTypes = {
     id: PropTypes.number,
   }),
   onPostReview: PropTypes.func,
-  onGetReview: PropTypes.func,
   onEditReview: PropTypes.func,
   fixed: PropTypes.bool,
 };
@@ -382,7 +373,6 @@ FormReview.defaultProps = {
     id: 0,
   },
   onPostReview: null,
-  onGetReview: null,
   onEditReview: null,
   fixed: false,
 };
@@ -392,15 +382,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onGetReview: (id) => {
-    dispatch(actionCreators.GET_REVIEW(id));
-  },
-  onPostReview: (post, img) => {
-    dispatch(actionCreators.POST_REVIEW(post, img));
-  },
-  onEditReview: (id, post) => {
-    dispatch(actionCreators.EDIT_REVIEW(id, post));
-  },
+  onPostReview: (post, img) => dispatch(actionCreators.POST_REVIEW(post, img)),
+  onEditReview: (id, post) => dispatch(actionCreators.EDIT_REVIEW(id, post)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(FormReview));

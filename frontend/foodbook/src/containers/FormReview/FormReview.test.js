@@ -53,6 +53,7 @@ describe('<FormReview />', () => {
       });
     }));
 
+  /*
   const spyGet = jest.spyOn(axios, 'get')
     .mockImplementation(() => new Promise((res) => {
       res({
@@ -60,6 +61,7 @@ describe('<FormReview />', () => {
         data: resp,
       });
     }));
+  */
 
   const spyPut = jest.spyOn(axios, 'put')
     .mockImplementation(() => new Promise((res) => {
@@ -244,12 +246,10 @@ describe('<FormReview />', () => {
       component.update();
       const wrapper = component.find('FormReview');
       expect(wrapper.length).toBe(1);
-      expect(spyGet).toHaveBeenCalledTimes(1);
     });
 
     it('should have textfields working', () => {
       const component = mount(editReview);
-      expect(spyGet).toHaveBeenCalledTimes(1);
       component.find('Button #review-modal-trigger').simulate('click');
       component.update();
       expect(component.find('TextArea #review-restaurant-input').length).toBe(1);
