@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as actionTypes from './actionTypes_review';
+import { GET_USER_INFO } from '../user/action_user';
 
 /*
     ACTION-NAMES_PRE: executes before the action is dispatched
@@ -42,17 +43,42 @@ export const GET_REVIEW = (id) => (dispatch) => {
 
 export const DELETE_REVIEW = (id) => (dispatch) => (
   axios.delete(`/api/review/${id}/`)
-    .then(dispatch(GET_REVIEW_PRE()))
+    .then(() => { dispatch(GET_REVIEW_PRE()); dispatch(GET_USER_INFO()); dispatch(GET_REVIEWS()); })
 );
 
 export const EDIT_REVIEW = (id, review) => (dispatch) => (
   axios.put(`/api/review/${id}/`, review)
     .then(dispatch(GET_REVIEW_PRE()))
 );
-
+export const POST_REVIEW_ADD = (review) => ({
+  type: actionTypes.POST_REVIEW,
+  ...review,
+});
 export const POST_REVIEW = (review, image) => (dispatch) => (
   axios.post('/api/review/', review)
     .then((res) => (
-      image ? axios.post(`/api/review/${res.data.id}/image/`, image).then(dispatch(GET_REVIEW_PRE())) : {}
+      (image !== false) ? axios.post(`/api/review/${res.data.id}/image/`, image, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }).then((resp) => dispatch(POST_REVIEW_ADD(resp.data)))
+        .then(() => dispatch(GET_USER_INFO())) : dispatch(POST_REVIEW_ADD(res.data))
     ))
 );
+
+export const GET_RESTAURANT_REVIEWS_PRE = () => ({
+  type: actionTypes.CLEAR_RESTAURANT_REVIEWS,
+});
+
+export const GET_RESTAURANT_REVIEWS_DEEP = (data) => ({
+  type: actionTypes.GET_RESTAURANT_REVIEWS,
+  data,
+});
+
+export const GET_RESTAURANT_REVIEWS = (id) => (dispatch) => {
+  dispatch(GET_RESTAURANT_REVIEWS_PRE());
+
+  return axios.get(`/api/restaurant/${id}/`)
+    .then((res) => dispatch(GET_RESTAURANT_REVIEWS_DEEP(res.data)))
+    .catch(dispatch(GET_RESTAURANT_REVIEWS_PRE()));
+};

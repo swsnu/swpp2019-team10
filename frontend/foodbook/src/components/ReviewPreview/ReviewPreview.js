@@ -1,9 +1,9 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import propTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
 import './ReviewPreview.css';
 import { Rating } from 'semantic-ui-react';
+import ReviewDetail from 'containers/ReviewDetail';
 
 const ReviewPreview = (props) => {
   const {
@@ -41,7 +41,7 @@ const ReviewPreview = (props) => {
             <div className="meta">
               <span className="rating">
                 Rating:
-                <Rating defaultRating={rating} maxRating="5" icon="star" />
+                <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
               </span>
               <span className="tag">{parseTagName(tag)}</span>
             </div>
@@ -52,9 +52,7 @@ const ReviewPreview = (props) => {
 
           <div className="extra content">
             {isMine && (
-            <NavLink className="detail-wrapper" to={`/main/${id}`}>
-                        Read Detail & Get Recommendation!
-            </NavLink>
+              <ReviewDetail fixed={false} id={id} />
             )}
 
             {!isMine && (

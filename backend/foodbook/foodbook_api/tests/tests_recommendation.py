@@ -47,14 +47,14 @@ class RecommendationTestCase(TestCase):
         profile_user3.friend.add(profile_user1)
         restaurant1 = Restaurant.objects.create(
             name='TEST_REST1',
-            longitude=37.5,
-            latitude=126.95,
+            latitude=37.5,
+            longitude=126.95,
             rating=5
         )
         restaurant2 = Restaurant.objects.create(
             name='TEST_REST2',
-            longitude=37.8,
-            latitude=126.93,
+            latitude=37.8,
+            longitude=126.93,
             rating=3
         )
         menu1 = Menu.objects.create(
@@ -84,7 +84,8 @@ class RecommendationTestCase(TestCase):
             menu=menu1,
             content='TEST_CONTENT_R2',
             rating=1,
-            review_img=make_image_file()[1]
+            review_img=make_image_file()[1],
+            category='CATEGORY'
         )
 
         Review.objects.create(
@@ -92,7 +93,8 @@ class RecommendationTestCase(TestCase):
             restaurant=restaurant1,
             menu=menu2,
             content='TEST_CONTENT_R3',
-            rating=2
+            rating=2,
+            category='CATEGORY'
         )
 
         Review.objects.create(
@@ -101,7 +103,8 @@ class RecommendationTestCase(TestCase):
             menu=menu3,
             content='TEST_CONTENT_R4',
             rating=3,
-            review_img=make_image_file()[1]
+            review_img=make_image_file()[1],
+            category='CATEGORY'
         )
 
         Review.objects.create(
@@ -109,47 +112,73 @@ class RecommendationTestCase(TestCase):
             restaurant=restaurant2,
             menu=menu4,
             content='TEST_CONTENT_R1',
-            rating=4
+            rating=4,
+            category='CATEGORY'
         )
 
     def test_recomloc(self):
         '''
-            method that tests /api/review/<int:review_id>/recomloc/
+            method that tests /api/review/<int:review_id>/recomloc/<str:coordinate_val>/
         '''
         client = Client()
 
         review1_id = Review.objects.get(content='TEST_CONTENT_R2').id
 
-        response = client.post('/api/review/' + str(review1_id) + '/recomloc/')
+        url = '/api/review/' + str(review1_id) + '/recomloc/' + 'c=37.5,126.95/'
+
+        response = client.post(url)
         self.assertEqual(response.status_code, 405)
 
-        response = client.get('/api/review/' + str(review1_id) + '/recomloc/')
+        response = client.get(url)
         self.assertEqual(response.status_code, 401)
 
         client.login(username='TEST_USER_R1',
                      email='TEST_EMAIL_R1', password='TEST_PW_R1')
 
-        response = client.get('/api/review/' + str(review1_id) + '/recomloc/')
+        response = client.get(url)
         self.assertEqual(response.status_code, 200)
         print(response.content.decode())
 
     def test_recomtst(self):
         '''
-            method that tests /api/review/<int:review_id>/recomtst/
+            method that tests /api/review/<int:review_id>/recomtst/<str:coordinate_val>/
         '''
         client = Client()
 
         review1_id = Review.objects.get(content='TEST_CONTENT_R2').id
 
-        response = client.post('/api/review/' + str(review1_id) + '/recomtst/')
+        url = '/api/review/' + str(review1_id) + '/recomtst/' + 'c=37.5,126.95/'
+
+        response = client.post(url)
         self.assertEqual(response.status_code, 405)
 
-        response = client.get('/api/review/' + str(review1_id) + '/recomtst/')
+        response = client.get(url)
         self.assertEqual(response.status_code, 401)
 
         client.login(username='TEST_USER_R1',
                      email='TEST_EMAIL_R1', password='TEST_PW_R1')
 
-        response = client.get('/api/review/' + str(review1_id) + '/recomtst/')
+        response = client.get(url)
+        self.assertEqual(response.status_code, 200)
+        print(response.content.decode())
+
+    def test_recomifh(self):
+        '''
+            method that tests /api/recomifh/<str:coordinate_val>/
+        '''
+        client = Client()
+
+        url = '/api/recomifh/' + 'c=37.5,126.95/'
+
+        response = client.post(url)
+        self.assertEqual(response.status_code, 405)
+
+        response = client.get(url)
+        self.assertEqual(response.status_code, 401)
+
+        client.login(username='TEST_USER_R1',
+                     email='TEST_EMAIL_R1', password='TEST_PW_R1')
+
+        response = client.get(url)
         self.assertEqual(response.status_code, 200)
         print(response.content.decode())

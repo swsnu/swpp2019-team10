@@ -11,11 +11,27 @@ SYNONYMS = {
     'sweet': ['sweet', 'sugary', 'sugared', 'honeyed', 'candied', 'syrupy', 'treacly', 'cloying', 'bittersweet'],
     'salty': ['salty', 'salt', 'salted', 'saline', 'briny', 'brackish', 'piquant', 'tangy'],
     'umami': ['umami', 'meaty', 'savory'],
-    'bitter': ['bitter', 'sharp'],
-    'sour': ['sour', 'acid', 'acidy', 'acidic', 'sharp', 'acidulated']
+    'bitter': ['bitter', 'sharp', 'bittersweet'],
+    'sour': ['sour', 'acid', 'acidy', 'acidic', 'sharp', 'acidulated'],
+    'crispy': ['crispy', 'crunchy', 'crackling', 'crisp', 'crumbly', 'crusty'],
+    'moist': ['moist','watery', 'juicy'],
+    'greasy': ['greasy', 'oily'],
+    'tender': ['tender','soft', 'creamy', 'juicy'],
+    'cooked': ['cooked']
 }
-#nlp = stanfordnlp.Pipeline()
-
+ANTONYMS = {
+    'sweet': ['savoury'],
+    'salty': ['bland'],
+    'umami': [],
+    'bitter': [],
+    'sour': [],
+    'crispy': ['soggy'],
+    'moist': ['dry', 'tough'],
+    'greasy': [],
+    'tender': ['tough', 'dry'],
+    'cooked': ['raw']
+}
+NAGATION = ['not', 'less']
 class Tagging:
     def __init__(self, profile, menu, rating):
         self.profile = profile
@@ -83,14 +99,27 @@ class Tagging:
             "can not", "cannot")
         step6 = step5.replace(" ` ", " '")
         return step6.strip()
-    
+
     def update_models(self, tags):
-        ret = {'sweet': (0,0), 'salty': (0,0), 'umami': (0,0), 'bitter': (0,0), 'sour': (0,0)}
+        ret = {}
+        for i in SYNONYMS.keys():
+            ret[i]=[0,0]
         for adj in tags:
             for i in ret.keys():
                 if adj.name.lemma in SYNONYMS[i]:
-                    ret[i][0] += adj.sentiment / adj.count
-                    ret[i][1] += 1
+                    if adj.advmod.lemma in NAGATION:
+                        ret[i][0] += (1 - adj.sentiment / adj.count)
+                        ret[i][1] += 1
+                    else:
+                        ret[i][0] += adj.sentiment / adj.count
+                        ret[i][1] += 1
+                elif adj.name.lemma in ANTONYMS[i]:
+                    if adj.advmod.lemma in NAGATION:
+                        ret[i][0] += adj.sentiment / adj.count
+                        ret[i][1] += 1
+                    else:
+                        ret[i][0] += (1 - adj.sentiment / adj.count)
+                        ret[i][1] += 1
         res = {}
         for i in ret.keys():
             if ret[i][1] == 0:

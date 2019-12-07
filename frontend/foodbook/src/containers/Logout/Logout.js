@@ -1,26 +1,29 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { Button } from 'semantic-ui-react';
 import propTypes from 'prop-types';
+import { Button } from 'semantic-ui-react';
+import 'semantic-ui-css/semantic.min.css';
 
-import * as actionCreators from 'store/actions/user/action_user';
+import axios from 'axios';
 
 export const Logout = (props) => {
-  const { onLogout } = props;
+  const logoutHandler = () => {
+    const { history } = props;
+
+    axios.get('/api/signout/')
+      .then(() => {
+        history.push('/');
+      });
+  };
+
   return (
     <div className="logout">
-      <Button onClick={onLogout} primary> Logout </Button>
+      <Button onClick={logoutHandler}> Logout </Button>
     </div>
   );
 };
 
 Logout.propTypes = {
-  onLogout: propTypes.func.isRequired,
+  history: propTypes.objectOf(Object).isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  onLogout: () => dispatch(actionCreators.LOGOUT()),
-});
-
-export default connect(null, mapDispatchToProps)(withRouter(Logout));
+export default Logout;
