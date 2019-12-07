@@ -53,6 +53,7 @@ describe('<FormReview />', () => {
       });
     }));
 
+  /*
   const spyGet = jest.spyOn(axios, 'get')
     .mockImplementation(() => new Promise((res) => {
       res({
@@ -60,6 +61,7 @@ describe('<FormReview />', () => {
         data: resp,
       });
     }));
+  */
 
   const spyPut = jest.spyOn(axios, 'put')
     .mockImplementation(() => new Promise((res) => {

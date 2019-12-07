@@ -207,6 +207,7 @@ ReviewDetail.propTypes = {
     tag: PropTypes.any,
     longitude: PropTypes.number,
     latitude: PropTypes.number,
+    category: PropTypes.string,
   }),
   fixed: PropTypes.bool,
 };
