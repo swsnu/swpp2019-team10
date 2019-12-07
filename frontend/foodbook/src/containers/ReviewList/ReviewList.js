@@ -71,7 +71,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onGetAll: () => dispatch(actionCreators.GET_REVIEWS()),
+  onGetAll: () => {
+    dispatch(actionCreators.GET_REVIEWS());
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ReviewList));

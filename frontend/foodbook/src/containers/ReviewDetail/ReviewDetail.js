@@ -57,7 +57,7 @@ class ReviewDetail extends Component {
 
   render() {
     const {
-      error, open, ready,
+      error, open,
     } = this.state;
 
     const {
