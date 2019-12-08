@@ -79,7 +79,7 @@ describe('Recom Action', () => {
         res(result);
       }));
 
-    store.dispatch(actionCreators.GET_RECOMS_TST())
+    store.dispatch(actionCreators.GET_RECOMS_TST({ id: 1, lat: 37.5, log: 126.95 }))
       .then(() => {
         const newState = store.getState();
         expect(spy).toHaveBeenCalledTimes(1);
@@ -99,7 +99,7 @@ describe('Recom Action', () => {
         rej(result);
       }));
 
-    store.dispatch(actionCreators.GET_RECOMS_TST())
+    store.dispatch(actionCreators.GET_RECOMS_TST({ id: 1, lat: 37.5, log: 126.95 }))
       .catch(() => {
         const newState = store.getState();
         expect(spy).toHaveBeenCalledTimes(1);

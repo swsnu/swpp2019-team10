@@ -9,11 +9,30 @@ import * as actionCreators from 'store/actions/review/action_review';
 import ReviewPreview from 'components/ReviewPreview';
 import ReviewList from './ReviewList';
 
-const mockStore = getMockStore({}, {}, {});
+const stubCategoryReviews = {
+  reviewList: [
+    {
+      id: 0,
+      date: '0',
+      isMine: true,
+      category: 'pizza',
+    },
+    {
+      id: 1,
+      date: '1',
+      isMine: true,
+      category: 'chicken',
+    },
+  ],
+  reviewDetail: {},
+};
 
+const mockStore = getMockStore({}, {}, {});
+const mockCategoryStore = getMockStore({}, stubCategoryReviews, {});
 describe('ReviewList', () => {
   let reviewList;
   let dateUndefinedReviewList;
+  let categoryReviewList;
   const spyGetAll = jest.spyOn(actionCreators, 'GET_REVIEWS')
     .mockImplementation(() => ({ type: '' }));
 
@@ -33,6 +52,7 @@ describe('ReviewList', () => {
     />,
   ];
 
+
   beforeEach(() => {
     reviewList = (
       <Provider store={mockStore}>
@@ -46,6 +66,13 @@ describe('ReviewList', () => {
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
           <ReviewList reviews={stubReviews} />
+        </ConnectedRouter>
+      </Provider>
+    );
+    categoryReviewList = (
+      <Provider store={mockCategoryStore}>
+        <ConnectedRouter history={history}>
+          <ReviewList category="pizza" />
         </ConnectedRouter>
       </Provider>
     );
@@ -81,5 +108,11 @@ describe('ReviewList', () => {
     instance.forceUpdate();
     const wrapper = component.find('ReviewPreview');
     expect(wrapper.length).toBe(2);
+  });
+
+  it('should handle category', () => {
+    const component = mount(categoryReviewList);
+    const wrapper = component.find('ReviewPreview');
+    expect(wrapper.length).toBe(1);
   });
 });

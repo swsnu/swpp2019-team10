@@ -66,7 +66,8 @@ PrivateRoute.propTypes = {
   component: propTypes.func.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => ({ onLoad: () => dispatch(actionCreators.GET_USER_INFO()) }
-);
+const mapDispatchToProps = (dispatch) => ({
+  onLoad: () => dispatch(actionCreators.GET_USER_INFO()),
+});
 
 export default connect(null, mapDispatchToProps)(PrivateRoute);

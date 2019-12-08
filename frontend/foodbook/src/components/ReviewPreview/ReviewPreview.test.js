@@ -44,7 +44,7 @@ describe('ReviewPreview', () => {
 
   it('should render detail link when author is me', () => {
     const component = mount(reviewPreview);
-    const wrapper = component.find('NavLink');
+    const wrapper = component.find('ReviewDetail');
     expect(wrapper.length).toBe(1);
   });
 

@@ -75,3 +75,37 @@ export const LOGOUT = () => (dispatch) => axios.get('/api/signout/')
     dispatch(push('/'));
   })
   .catch();
+
+export const GET_FRIENDS_DEEP = (data) => ({
+  type: actionTypes.GET_FRIENDS,
+  data,
+});
+
+export const GET_FRIENDS = () => (dispatch) => axios.get('/api/friend/')
+  .then((res) => { dispatch(GET_FRIENDS_DEEP(res.data)); });
+
+export const SEARCH_USERS_PRE = () => ({
+  type: actionTypes.CLEAR_SEARCH_USERS,
+});
+
+export const SEARCH_USERS_DEEP = (data) => ({
+  type: actionTypes.SEARCH_USERS,
+  data,
+});
+
+export const SEARCH_USERS = (prefix) => (dispatch) => axios.get(`/api/search_user/${prefix}/`)
+  .then((res) => { dispatch(SEARCH_USERS_DEEP(res.data)); });
+
+export const ADD_FRIEND = (id) => (dispatch) => axios.post('/api/friend/', { id })
+  .then(() => {
+    dispatch(SEARCH_USERS_PRE());
+    dispatch(GET_FRIENDS());
+    dispatch(GET_USER_INFO());
+  });
+
+export const DELETE_FRIEND = (id) => (dispatch) => axios.delete(`/api/friend/${id}`)
+  .then(() => {
+    dispatch(SEARCH_USERS_PRE());
+    dispatch(GET_FRIENDS());
+    dispatch(GET_USER_INFO());
+  });

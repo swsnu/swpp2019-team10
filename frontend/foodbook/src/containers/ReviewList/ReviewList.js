@@ -16,10 +16,12 @@ class ReviewList extends Component {
 
 
   render() {
-    const { reviews, dateString } = this.props;
+    const { reviews, dateString, category } = this.props;
     let reviewsToRender = reviews;
     if (dateString) {
       reviewsToRender = reviewsToRender.filter((review) => review.date === dateString);
+    } else if (category) {
+      reviewsToRender = reviewsToRender.filter((review) => review.category === category);
     }
     reviewsToRender = reviewsToRender.map((review) => (
       <ReviewPreview
@@ -49,12 +51,14 @@ class ReviewList extends Component {
 
 ReviewList.propTypes = {
   dateString: propTypes.string,
+  category: propTypes.string,
   reviews: propTypes.arrayOf(Object),
   onGetAll: propTypes.func.isRequired,
 };
 
 ReviewList.defaultProps = {
   dateString: undefined,
+  category: undefined,
   reviews: [{ id: 0, isMine: true }, { id: 1, isMine: false }],
 };
 

@@ -8,15 +8,17 @@ import { NavLink } from 'react-router-dom';
 import propTypes from 'prop-types';
 
 import FriendList from 'containers/FriendList';
-import RawCalendar from 'components/RawCalendar';
+import RealCalendar from 'containers/RealCalendar/RealCalendar';
 import ReviewList from 'containers/ReviewList';
 import FormReview from 'containers/FormReview/FormReview';
 import Logout from 'containers/Logout';
+import Myinfo from 'components/Myinfo';
+import Category from 'components/Category/Category';
 
 
 export default class Main extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       activeItem: 'feed',
     };
@@ -42,7 +44,7 @@ export default class Main extends Component {
       case 'calendar':
         mainRenderer = (
           <div className="main-calendar-wrapper">
-            <RawCalendar />
+            <RealCalendar />
           </div>
         );
         break;
@@ -52,7 +54,11 @@ export default class Main extends Component {
         break;
 
       case 'type':
-        mainRenderer = (<div className="main-type-wrapper"> type </div>);
+        mainRenderer = (
+          <div className="main-type-wrapper">
+            <Category />
+          </div>
+        );
         break;
 
       case 'menu':
@@ -79,6 +85,20 @@ export default class Main extends Component {
           <Grid.Row className="wrapper-friend">
             <Grid.Column width={4}>
               <Grid.Row style={{ height: '50px' }}></Grid.Row>
+              <Grid.Row>
+                <div className="user-preview">
+                  <div className="ui special cards">
+                    <div className="card">
+                      <div className="content">
+                        <div className="header" style={{ textAlign: 'center' }}> My Info </div>
+                        <br />
+                        <Myinfo />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Grid.Row>
+              <Grid.Row style={{ height: '50px' }}></Grid.Row>
               <Grid.Row><FriendList /></Grid.Row>
             </Grid.Column>
             {/* Friend Region */}
@@ -99,7 +119,7 @@ export default class Main extends Component {
                 <div className="ui special cards">
                   <div className="card" style={{ width: '630px' }}>
                     <div className="content">
-                      <FormReview fixed={false} />
+                      <FormReview fixed={false} mode="ADD" />
                     </div>
                   </div>
                 </div>

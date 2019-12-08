@@ -28,10 +28,10 @@ export const GET_RECOMS_LOC = (data) => (dispatch) => {
     .catch(dispatch(GET_RECOMS_PRE()));
 };
 
-export const GET_RECOMS_TST = (id) => (dispatch) => {
+export const GET_RECOMS_TST = (data) => (dispatch) => {
   dispatch(GET_RECOMS_PRE());
 
-  return axios.get(`/api/review/${id}/recomtst/`)
+  return axios.get(`/api/review/${data.id}/recomtst/c=${data.lat},${data.log}/`, data)
     .then((res) => dispatch(GET_RECOMS_TST_DEEP(res.data)))
     .catch(dispatch(GET_RECOMS_PRE()));
 };

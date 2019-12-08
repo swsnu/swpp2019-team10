@@ -7,13 +7,47 @@ import {
 } from 'semantic-ui-react';
 import './RecommendationTag.css';
 import * as actionCreators from 'store/actions/recom/action_recom';
+import RestaurantReview from 'containers/RestaurantReview';
 
 class RecommendationTag extends Component {
   constructor(props) {
     super(props);
     this.state = { open: false };
-    const { onGetAll, match } = this.props;
-    onGetAll(match.params.id);
+  }
+
+  componentDidMount() {
+    this.getGeoLocation();
+  }
+
+  recomHandler = () => {
+    const { onGetAll, id } = this.props;
+    const { lat, lng } = this.state;
+    onGetAll({
+      id,
+      lat,
+      log: lng,
+    });
+  }
+
+  getGeoLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.setState({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+
+        /* Error callback, default location to 0,0 */
+        () => {
+          this.setState({
+            lat: 0,
+            lng: 0,
+          });
+        },
+      );
+    }
   }
 
   open = () => this.setState({ open: true })
@@ -23,6 +57,19 @@ class RecommendationTag extends Component {
   render() {
     const { open } = this.state;
     const { recoms, data } = this.props;
+
+    let ready = false;
+    if ('lat' in this.state && 'lng' in this.state) {
+      ready = true;
+    }
+
+    if (!ready) {
+      return (
+        <div className="form-recoms-loading">
+          <p>Loading...</p>
+        </div>
+      );
+    }
 
     const parseScore = (score) => ((score < 3) ? 'RED' : 'BLUE');
 
@@ -47,6 +94,7 @@ class RecommendationTag extends Component {
             </span>
             <br />
             <br />
+            <RestaurantReview data={e} />
           </List.Description>
         </List.Content>
       </List.Item>
@@ -64,7 +112,7 @@ class RecommendationTag extends Component {
         onOpen={this.open}
         onClose={this.close}
         trigger={
-          <Button id="recom-tst-button" color="green" inverted> Recommend By Your Taste! </Button>
+          <Button id="recom-tst-button" color="green" onClick={() => this.recomHandler()} inverted> Recommend By Your Taste! </Button>
         }
       >
         <Modal.Header>
@@ -87,12 +135,8 @@ class RecommendationTag extends Component {
 RecommendationTag.propTypes = {
   recoms: propTypes.arrayOf(Object),
   onGetAll: propTypes.func.isRequired,
-  match: propTypes.shape({
-    params: propTypes.shape({
-      id: propTypes.string,
-    }),
-  }).isRequired,
   data: propTypes.string,
+  id: propTypes.number.isRequired,
 };
 
 RecommendationTag.defaultProps = {
@@ -105,8 +149,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onGetAll: (id) => {
-    dispatch(actionCreators.GET_RECOMS_TST(id));
+  onGetAll: (data) => {
+    dispatch(actionCreators.GET_RECOMS_TST(data));
   },
 });
 

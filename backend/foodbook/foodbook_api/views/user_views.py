@@ -206,11 +206,9 @@ def friend(request):
         return HttpResponse(status=401)
     if request.method == 'GET':
         profile_of_user = request.user.profile
-        info_of_friends = {
-            'friends_list': [(friend['id'], friend['nickname']) \
-                            for friend in profile_of_user.friend.all().values('id', 'nickname')]
-        }
-        return JsonResponse(info_of_friends)
+        info_of_friends = [{'id': friend['id'], 'nickname': friend['nickname']} \
+                          for friend in profile_of_user.friend.all().values('id', 'nickname')]
+        return JsonResponse(info_of_friends, safe=False)
     if request.method == 'POST':
         try:
             req_data = json.loads(request.body.decode())
@@ -222,11 +220,9 @@ def friend(request):
         request.user.profile.count_friend += 1
         request.user.profile.save()
         profile_of_user = request.user.profile
-        info_of_friends = {
-            'friends_list': [friend['nickname'] \
+        info_of_friends = [{'nickname': friend['nickname']} \
                  for friend in profile_of_user.friend.all().values('nickname')]
-        }
-        return JsonResponse(info_of_friends, status=204)
+        return JsonResponse(info_of_friends, status=204, safe=False)
     return HttpResponseNotAllowed(['GET', 'POST'])
 
 
@@ -264,3 +260,21 @@ def friend_detail(request, friend_id):
         except Profile.DoesNotExist:
             return HttpResponseNotFound()
     return HttpResponseNotAllowed(['GET', 'DELETE'])
+
+def search_user(request, nickname):
+    '''
+        method to search user nicknames
+    '''
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+    if request.method == 'GET':
+        users = Profile.objects.filter(nickname__startswith=nickname)
+        info_of_users = []
+        for user_tmp in users:
+            if user_tmp.id == request.user.profile.id:
+                continue
+            if user_tmp in request.user.profile.friend.all():
+                continue
+            info_of_users.append({'id': user_tmp.id, 'nickname': user_tmp.nickname})
+        return JsonResponse(info_of_users, safe=False)
+    return HttpResponseNotAllowed(['GET'])

@@ -9,6 +9,16 @@ import Main from './Main';
 
 const mockStore = getMockStore({}, {}, {});
 
+const user = {
+  username: 'swpp2019',
+  phone_number: '',
+  age: 10,
+  gender: 'M',
+  number_of_reviews: 7,
+  number_of_friends: 1,
+  nickname: 'jaeho',
+};
+
 jest.mock('containers/ReviewList/ReviewList', () => jest.fn(() => (
   <div className="mockReviewList">
             this is mock
@@ -27,6 +37,13 @@ jest.mock('components/RawCalendar/RawCalendar', () => jest.fn(() => (
   </div>
 )));
 
+jest.mock('components/Myinfo/Myinfo', () => jest.fn(() => (
+  <div className="mockMyinfo">
+            this is mock
+  </div>
+)));
+
+
 describe('main', () => {
   let main;
 
@@ -34,7 +51,7 @@ describe('main', () => {
     main = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <Main history={history} />
+          <Main user={user} history={history} />
         </ConnectedRouter>
       </Provider>
     );

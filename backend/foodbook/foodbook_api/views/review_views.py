@@ -55,6 +55,7 @@ def review_list(request):
             menu_name = req_data['menu_name']
             content = req_data['content']
             rating = req_data['rating']
+            category = req_data['category']
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
         try:
@@ -104,10 +105,19 @@ def review_list(request):
             menu=menu,
             content=content,
             rating=rating,
+            category=category
             )
         tags = Tagging(request.user.profile, menu, rating).tagging(content)
         for item in tags.keys():
             new_review.tag.add(Tag.objects.create(name=item, sentimental=tags[item]))
+        tag = []
+        for tag_item in new_review.tag.all():
+            pos = 0
+            if tag_item.sentimental >= 0.6:
+                pos = 1
+            if tag_item.sentimental <= 0.4:
+                pos = -1
+            tag.append({'name': tag_item.name, 'sentimental': pos})
         dict_new_review = {
             'id': new_review.id,
             'author': request.user.username,
@@ -115,7 +125,9 @@ def review_list(request):
             'menu': menu.name,
             'content': new_review.content,
             'rating': new_review.rating,
-            'date': new_review.date.strftime("%Y-%m-%d")
+            'date': new_review.date.strftime("%Y-%m-%d"),
+            'tag': tag,
+            'category': new_review.category
             }
         return JsonResponse(dict_new_review, status=201)
     #else:
@@ -155,6 +167,7 @@ def review_detail(request, review_id):
             'content': review.content,
             'rating': review.rating,
             'date': review.date.strftime("%Y-%m-%d"),
+            'category': review.category,
             'image': image_path,
             'tag': tag
         }
@@ -173,14 +186,39 @@ def review_detail(request, review_id):
             menu_name = req_data['menu_name']
             content = req_data['content']
             rating = req_data['rating']
+            category = req_data['category']
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
-        restaurant = Restaurant.objects.get(name=restaurant_name)
-        menu = Menu.objects.get(name=menu_name)
+        try:
+            longitude = req_data['longitude']
+            latitude = req_data['latitude']
+            is_location_exist = True
+        except (KeyError, JSONDecodeError):
+            is_location_exist = False
+        try:
+            restaurant = Restaurant.objects.get(name=restaurant_name)
+        except:
+            if is_location_exist:
+                restaurant = Restaurant.objects.create(
+                    name=restaurant_name,
+                    longitude=longitude,
+                    latitude=latitude,
+                    rating=rating,
+                )
+            else:
+                return HttpResponseBadRequest()
+        try:
+            menu = Menu.objects.get(name=menu_name)
+        except:
+            menu = Menu.objects.create(
+                name=menu_name,
+                restaurant=restaurant,
+            )
         review.restaurant = restaurant
         review.menu = menu
         review.content = content
         review.rating = rating
+        review.category = category
         review.save()
         image_path = ""
         if review.review_img:
@@ -193,6 +231,7 @@ def review_detail(request, review_id):
             'content': review.content,
             'rating': review.rating,
             'date': review.date.strftime("%Y-%m-%d"),
+            'category': review.category,
             'image': image_path
         }
         return JsonResponse(dict_review)
@@ -284,6 +323,7 @@ def friend_review_detail(request, friend_id, review_id):
             'content': review.content,
             'rating': review.rating,
             'date': review.date.strftime("%Y-%m-%d"),
+            'category': review.category,
             'image': image_path
         }
         return JsonResponse(review_dict)
@@ -327,6 +367,7 @@ def review_image(request, review_id):
                 'content': review.content,
                 'rating': review.rating,
                 'date': review.date.strftime("%Y-%m-%d"),
+                'category': review.category,
                 'image': 'http://127.0.0.1:8000'+review.review_img.url,
                 'tag': tag
             }
@@ -335,3 +376,42 @@ def review_image(request, review_id):
         return HttpResponseBadRequest(content="invalid form")
     #else:
     return HttpResponseNotAllowed(['POST'])
+
+@transaction.atomic
+def restaurant_review_list(request, restaurant_id):
+    """
+    restaurant review list
+    GET method are allowed
+    """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+    if request.method == 'GET':
+        review_all_list = []
+        restaurant_reviews = Review.objects.select_related(
+            'restaurant', 'menu').prefetch_related('tag').filter(restaurant__id=restaurant_id)
+        for review in restaurant_reviews:
+            image_path = ""
+            if review.review_img:
+                image_path = 'http://127.0.0.1:8000'+review.review_img.url
+            tag = []
+            for tag_item in review.tag.all():
+                pos = 0
+                if tag_item.sentimental >= 0.6:
+                    pos = 1
+                if tag_item.sentimental <= 0.4:
+                    pos = -1
+                tag.append({'name':tag_item.name, 'sentimental': pos})
+            dict_review = {
+                'id': review.id,
+                'author': request.user.username,
+                'restaurant': review.restaurant.name,
+                'menu': review.menu.name,
+                'content': review.content,
+                'rating': review.rating,
+                'image': image_path,
+                'date': review.date.strftime("%Y-%m-%d"),
+                'tag': tag
+                }
+            review_all_list.append(dict_review)
+        return JsonResponse(review_all_list, safe=False)
+    return HttpResponseNotAllowed(['GET'])

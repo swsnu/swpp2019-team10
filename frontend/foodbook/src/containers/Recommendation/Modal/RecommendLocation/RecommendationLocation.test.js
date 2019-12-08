@@ -20,6 +20,10 @@ const mockGeolocation = {
     }))),
 };
 
+const mockFakeGeolocation = {
+  getCurrentPosition: jest.fn(),
+};
+
 global.navigator.geolocation = mockGeolocation;
 
 describe('<RecommendationLocation />', () => {
@@ -78,30 +82,35 @@ describe('<RecommendationLocation />', () => {
     });
 
     it('should render loading', () => {
+      global.navigator.geolocation = mockFakeGeolocation;
       const component = mount(recommend);
       const wrapper = component.find('.form-recoms-loading');
       expect(wrapper.length).toBe(1);
+      global.navigator.geolocation = mockGeolocation;
     });
 
     it('should render when recoms.length == 0', () => {
       const component = mount(recommend);
-      let wrapper = component.find('RecommendationLocation');
-      wrapper.setState({ lat: 37.5, lng: 126.95 });
-      wrapper.update();
+      component.find('RecommendationLocation').setState({
+        lat: 37.5,
+        lng: 126.95,
+      });
+      component.update();
       component.find('Button #recom-loc-button').simulate('click');
       component.update();
-      wrapper = component.find('List #recommendList');
+      const wrapper = component.find('List #recommendList');
       expect(wrapper.length).toBe(1);
     });
 
     it('should render when recoms.length > 0', () => {
       const component = mount(recommend2);
-      let wrapper = component.find('RecommendationLocation');
-      wrapper.setState({ lat: 37.5, lng: 126.95 });
-      wrapper.update();
+      component.find('RecommendationLocation').setState({
+        lat: 37.5,
+        lng: 126.95,
+      });
       component.find('Button #recom-loc-button').simulate('click');
       component.update();
-      wrapper = component.find('List #recommendList');
+      const wrapper = component.find('List #recommendList');
       expect(wrapper.length).toBe(1);
     });
   });
