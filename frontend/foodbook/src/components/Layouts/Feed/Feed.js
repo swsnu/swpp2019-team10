@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Card } from 'semantic-ui-react';
 
 import ReviewPreview from 'components/ReviewPreview/';
 import * as actionCreators from 'store/actions/review/action_review';
+import { Card } from 'semantic-ui-react';
 
-class ReviewList extends Component {
+class Feed extends Component {
   constructor(props) {
     super(props);
     const { onGetAll } = this.props;
@@ -38,22 +38,20 @@ class ReviewList extends Component {
     ));
 
     return (
-      <div className="ReviewList">
-        <Card.Group itemsPerRow={3}>
-          {reviewsToRender}
-        </Card.Group>
-      </div>
+      <Card.Group itemsPerRow={5} className="feed">
+        {reviewsToRender}
+      </Card.Group>
     );
   }
 }
 
-ReviewList.propTypes = {
+Feed.propTypes = {
   dateString: propTypes.string,
   reviews: propTypes.arrayOf(Object),
   onGetAll: propTypes.func.isRequired,
 };
 
-ReviewList.defaultProps = {
+Feed.defaultProps = {
   dateString: undefined,
   reviews: [{ id: 0, isMine: true }, { id: 1, isMine: false }],
 };
@@ -68,4 +66,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ReviewList));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Feed));

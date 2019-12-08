@@ -3,7 +3,9 @@ import 'semantic-ui-css/semantic.min.css';
 import propTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import './ReviewPreview.css';
-import { Rating } from 'semantic-ui-react';
+import {
+  Rating, Card, Image,
+} from 'semantic-ui-react';
 
 const ReviewPreview = (props) => {
   const {
@@ -19,53 +21,47 @@ const ReviewPreview = (props) => {
 
       return (
         <span key={`${t.name}Wrapper`} className={className}>
-          {t.name}
+          {`${t.name} `}
         </span>
       );
     });
 
     return (
-      <div className="tags-wrapper" style={{ display: 'inline' }}>
+      <span className="tags-wrapper">
         {parsed}
-      </div>
+      </span>
     );
   };
 
   return (
-    <div className="review-preview">
-      <div className="ui special cards">
-        <div className="card" style={{ width: '630px' }}>
-          <div className="content">
-            <span className="header">{ menu }</span>
-            <span className="date-wrapper">{ date }</span>
-            <div className="meta">
-              <span className="rating">
-                Rating:
-                <Rating defaultRating={rating} maxRating="5" icon="star" />
-              </span>
-              <span className="tag">{parseTagName(tag)}</span>
-            </div>
-          </div>
-          <div className="blurring dimmable image">
-            <img src={image} alt="food img" />
-          </div>
+    <Card className="review-preview">
+      <Image src={image} width="240px" height="160px" centered />
+      <Card.Content>
+        <Card.Header>{menu}</Card.Header>
+        <Card.Meta>
+          <span className="date">{date}</span>
+          <span className="rating">
+            <Rating defaultRating={rating} maxRating="5" icon="star" />
+          </span>
+        </Card.Meta>
+        <Card.Description>
+          <span className="tag">{parseTagName(tag) }</span>
+        </Card.Description>
+      </Card.Content>
+      <Card.Content extra>
+        {isMine && (
+          <NavLink className="detail-wrapper" to={`/main/${id}`}>
+                        Read Detail!
+          </NavLink>
+        )}
 
-          <div className="extra content">
-            {isMine && (
-            <NavLink className="detail-wrapper" to={`/main/${id}`}>
-                        Read Detail & Get Recommendation!
-            </NavLink>
-            )}
-
-            {!isMine && (
-            <span className="author-wrapper">
-              {`Created by ${author}`}
-            </span>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+        {!isMine && (
+          <span className="author-wrapper">
+            {`Created by ${author}`}
+          </span>
+        )}
+      </Card.Content>
+    </Card>
   );
 };
 
