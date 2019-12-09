@@ -31,7 +31,7 @@ export class Category extends Component {
           }
           onChange={(event, data) => this.setState({ category: data.value })}
         />
-        <h3 style={{ marginLeft: '25%' }}>
+        <h3>
           {`Your Food history of ${category}`}
         </h3>
         <ReviewList category={category} />
