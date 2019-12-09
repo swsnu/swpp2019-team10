@@ -22,6 +22,7 @@ describe('<ReviewDetail />', () => {
     rating: 0.0,
     tag: [{ name: 'good', sentimental: 1 }, { name: 'bad', sentimental: -1 }, { name: 'netural', sentimental: 0 }],
     date: '1970-01-01',
+    id: 1,
   };
 
   const initReview = {
@@ -112,7 +113,7 @@ describe('<ReviewDetail />', () => {
       detailWrapper.setState({ ready: true });
       component.update();
 
-      const wrapper = component.find('#edit-review-button').at(0);
+      const wrapper = component.find('#review-modal-trigger').at(0);
 
       wrapper.simulate('click');
       component.update();

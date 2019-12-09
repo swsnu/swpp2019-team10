@@ -46,14 +46,21 @@ export const DELETE_REVIEW = (id) => (dispatch) => (
     .then(() => { dispatch(GET_REVIEW_PRE()); dispatch(GET_USER_INFO()); dispatch(GET_REVIEWS()); })
 );
 
+export const EDIT_REVIEW_ADD = (review) => ({
+  type: actionTypes.EDIT_REVIEW,
+  ...review,
+});
+
 export const EDIT_REVIEW = (id, review) => (dispatch) => (
   axios.put(`/api/review/${id}/`, review)
-    .then(dispatch(GET_REVIEW_PRE()))
+    .then((resp) => dispatch(EDIT_REVIEW_ADD(resp.data)))
 );
+
 export const POST_REVIEW_ADD = (review) => ({
   type: actionTypes.POST_REVIEW,
   ...review,
 });
+
 export const POST_REVIEW = (review, image) => (dispatch) => (
   axios.post('/api/review/', review)
     .then((res) => (
