@@ -27,6 +27,10 @@ jest.mock('components/RawCalendar/RawCalendar', () => jest.fn(() => (
   </div>
 )));
 
+jest.mock('components/Myinfo/Myinfo', () => jest.fn(() => (
+  <div />
+)));
+
 describe('main', () => {
   let main;
 

@@ -7,6 +7,7 @@ import {
 
 import Calendar from 'containers/RealCalendar';
 import Category from 'components/Category';
+import Myinfo from 'components/Myinfo';
 import Feed from './Layouts/Feed';
 
 export class Main extends Component {
@@ -133,6 +134,7 @@ export class Main extends Component {
           </Menu.Menu>
         </Menu>
         {/*  Top Menu Region */}
+        <Myinfo />
         <Grid>
           <Grid.Row>
             <Grid.Column width={2} />

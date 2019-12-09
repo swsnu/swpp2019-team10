@@ -1,6 +1,6 @@
 import React from 'react';
 import propTypes from 'prop-types';
-
+import { Item, Statistic, Card } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 const Myinfo = (props) => {
@@ -10,38 +10,31 @@ const Myinfo = (props) => {
   const review = user.number_of_reviews;
 
   const num = (
-    <div className="ui statistics">
-      <div className="statistic mini">
-        <span>{friend}</span>
-        <span className="friendNumWrapper">{friend === 0 ? 'Friend' : 'Friends'}</span>
-      </div>
-      <div className="statistic mini">
-        <span>{review}</span>
-        <span className="reviewNumWrapper">{review === 0 ? 'Review' : 'Reviews'}</span>
-      </div>
-    </div>
+    <Statistic.Group size='small'>
+      <Statistic>
+        <Statistic.Value>{friend}</Statistic.Value>
+        <Statistic.Label className="friendNumWrapper">{friend === 1 ? 'Friend' : 'Friends'}</Statistic.Label>
+      </Statistic>
+      <Statistic>
+        <Statistic.Value>{review}</Statistic.Value>
+        <Statistic.Label className="reviewNumWrapper">{review === 1 ? 'Review' : 'Reviews'}</Statistic.Label>
+      </Statistic>
+    </Statistic.Group>
   );
 
   return (
-    <div className="Myinfo">
-      <div className="ui special cards">
-        <div className="card">
-          <div className="content">
-            <div className="ui items">
-              <div className="item">
-                <div className="middle aligned content">
-                  <div className="header">
-                    {user.nickname}
-                    <br />
-                  </div>
-                  {num}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Card style={{ width: '630px' }} centered>
+      <Item.Group className="Myinfo">
+        <Item>
+          <Item.Image size="small" src="https://image.flaticon.com/icons/svg/1662/1662439.svg" style={{ marginLeft: '-20px' }} />
+          <Item.Content verticalAlign="middle">
+            <Item.Header as="a">{user.nickname}</Item.Header>
+            <Item.Description>{num}</Item.Description>
+          </Item.Content>
+        </Item>
+      </Item.Group>
+    </Card>
+
   );
 };
 
