@@ -20,33 +20,22 @@ export class Main extends Component {
 
   render() {
     const handleItemClick = (e, { value }) => {
-      console.log('e', e);
-      console.log('value', value)
-    switch (value) {
-      case 'feed':
+      if (value === 'feed') {
         this.setState({
-          selectedView: <Feed />,
+          selectedView: <Feed className="feed" />,
         });
-        break;
-
-      case 'calendar':
-          this.setState({
-            selectedView: <Calendar />,
-          });
-        break;
-
-      // case 'location':
-      //   this.selectedView = <Location />;
-      //   break;
-
-      case 'category':
-          this.setState({
-            selectedView: <Category />,
-          });
-
-      default:
-        break;
-    } // TODO: change this function to work properly
+      } else if (value === 'calendar') {
+        this.setState({
+          selectedView: <Calendar className="calendar" />,
+        });
+      } else if (value === 'category') {
+        this.setState({
+          selectedView: <Category className="category" />,
+        });
+      } /* else {
+        this.setState({
+          selectedView: <Location className="location" />,
+        }); */
     };
 
     const friendOptions = [
@@ -100,7 +89,6 @@ export class Main extends Component {
       },
     ];
 
-    // TODO: Loading Friend List
     const { selectedView } = this.state;
 
     return (
@@ -151,7 +139,7 @@ export class Main extends Component {
             <Grid.Column width={12} className="content-wrapper">
               <center>
 
-              {selectedView}
+                {selectedView}
               </center>
             </Grid.Column>
             <Grid.Column width={2} />
