@@ -2,14 +2,10 @@ import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import propTypes from 'prop-types';
 import './ReviewPreview.css';
-<<<<<<< HEAD
 import {
   Rating, Card, Image,
 } from 'semantic-ui-react';
-=======
-import { Rating } from 'semantic-ui-react';
 import ReviewDetail from 'containers/ReviewDetail';
->>>>>>> dev
 
 const ReviewPreview = (props) => {
   const {
@@ -54,15 +50,13 @@ const ReviewPreview = (props) => {
       </Card.Content>
       <Card.Content extra>
         {isMine && (
-          <NavLink className="detail-wrapper" to={`/main/${id}`}>
-                        Read Detail!
-          </NavLink>
+        <ReviewDetail fixed={false} id={id} />
         )}
 
         {!isMine && (
-          <span className="author-wrapper">
-            {`Created by ${author}`}
-          </span>
+        <span className="author-wrapper">
+          {`Created by ${author}`}
+        </span>
         )}
       </Card.Content>
     </Card>

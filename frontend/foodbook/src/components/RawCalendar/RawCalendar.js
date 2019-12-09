@@ -29,7 +29,7 @@ export class RawCalendar extends Component {
     return (
       <div className="RawCalendar">
         <Calendar id="calendar" style={{ marginLeft: '50%' }} onChange={handleChange} value={date} tileDisabled={tileDisabled} />
-        <h3 style={{ marginLeft: '25%' }}>
+        <h3>
           {`Your Food history of ${dateString}`}
         </h3>
         <ReviewList dateString={dateString} />

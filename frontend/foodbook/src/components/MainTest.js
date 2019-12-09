@@ -5,34 +5,49 @@ import {
   Grid,
 } from 'semantic-ui-react';
 
+import Calendar from 'containers/RealCalendar';
+import Category from 'components/Category';
 import Feed from './Layouts/Feed';
 
 export class Main extends Component {
-  selectedView = <div />;
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      selectedView: <Feed />,
+    };
+  }
 
   render() {
-    // const handleItemClick = (e, { value }) => {
-    // switch (value) {
-    //   case 'feed':
-    //     this.selectedView = <Feed />;
-    //     break;
+    const handleItemClick = (e, { value }) => {
+      console.log('e', e);
+      console.log('value', value)
+    switch (value) {
+      case 'feed':
+        this.setState({
+          selectedView: <Feed />,
+        });
+        break;
 
-    //   case 'calendar':
-    //     this.selectedView = <RawCalendar />;
-    //     break;
+      case 'calendar':
+          this.setState({
+            selectedView: <Calendar />,
+          });
+        break;
 
-    //   case 'location':
-    //     this.selectedView = <Location />;
-    //     break;
+      // case 'location':
+      //   this.selectedView = <Location />;
+      //   break;
 
-    //   case 'category':
-    //     this.selectedView = <Category />
-    //     break;
+      case 'category':
+          this.setState({
+            selectedView: <Category />,
+          });
 
-    //   default:
-    //     break;
-    // } // TODO: change this function to work properly
-    // };
+      default:
+        break;
+    } // TODO: change this function to work properly
+    };
 
     const friendOptions = [
       {
@@ -86,6 +101,7 @@ export class Main extends Component {
     ];
 
     // TODO: Loading Friend List
+    const { selectedView } = this.state;
 
     return (
       <div className="main">
@@ -98,7 +114,7 @@ export class Main extends Component {
               options={viewOptions}
               placeholder="Change views"
               defaultValue={viewOptions[0].value}
-              onChange={this.handleItemClick}
+              onChange={handleItemClick}
             />
           </Menu.Item>
 
@@ -133,7 +149,10 @@ export class Main extends Component {
           <Grid.Row>
             <Grid.Column width={2} />
             <Grid.Column width={12} className="content-wrapper">
-              <Feed />
+              <center>
+
+              {selectedView}
+              </center>
             </Grid.Column>
             <Grid.Column width={2} />
           </Grid.Row>
