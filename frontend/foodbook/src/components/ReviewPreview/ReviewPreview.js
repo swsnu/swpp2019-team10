@@ -5,6 +5,7 @@ import './ReviewPreview.css';
 import {
   Rating, Card, Image,
 } from 'semantic-ui-react';
+
 import ReviewDetail from 'containers/ReviewDetail';
 
 const ReviewPreview = (props) => {

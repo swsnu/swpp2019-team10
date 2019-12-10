@@ -1,6 +1,6 @@
 import React from 'react';
 import propTypes from 'prop-types';
-import { Item, Statistic, Card } from 'semantic-ui-react';
+import { Item, Statistic } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 const Myinfo = (props) => {
@@ -10,7 +10,7 @@ const Myinfo = (props) => {
   const review = user.number_of_reviews;
 
   const num = (
-    <Statistic.Group size='small'>
+    <Statistic.Group size="small">
       <Statistic>
         <Statistic.Value>{friend}</Statistic.Value>
         <Statistic.Label className="friendNumWrapper">{friend === 1 ? 'Friend' : 'Friends'}</Statistic.Label>
@@ -23,17 +23,15 @@ const Myinfo = (props) => {
   );
 
   return (
-    <Card style={{ width: '630px' }} centered>
-      <Item.Group className="Myinfo">
-        <Item>
-          <Item.Image size="small" src="https://image.flaticon.com/icons/svg/1662/1662439.svg" style={{ marginLeft: '-20px' }} />
-          <Item.Content verticalAlign="middle">
-            <Item.Header as="a">{user.nickname}</Item.Header>
-            <Item.Description>{num}</Item.Description>
-          </Item.Content>
-        </Item>
-      </Item.Group>
-    </Card>
+    <Item.Group className="Myinfo">
+      <Item>
+        <Item.Image size="small" src="https://image.flaticon.com/icons/svg/1662/1662439.svg" style={{ marginLeft: '-20px' }} />
+        <Item.Content verticalAlign="middle">
+          <Item.Header as="a">{user.nickname}</Item.Header>
+          <Item.Description>{num}</Item.Description>
+        </Item.Content>
+      </Item>
+    </Item.Group>
 
   );
 };

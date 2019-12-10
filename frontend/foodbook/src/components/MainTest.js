@@ -3,11 +3,13 @@ import {
   Menu,
   Dropdown,
   Grid,
+  Container,
 } from 'semantic-ui-react';
 
 import Calendar from 'containers/RealCalendar';
 import Category from 'components/Category';
 import Myinfo from 'components/Myinfo';
+import FormReview from 'containers/FormReview';
 import Feed from './Layouts/Feed';
 
 export class Main extends Component {
@@ -134,13 +136,24 @@ export class Main extends Component {
           </Menu.Menu>
         </Menu>
         {/*  Top Menu Region */}
-        <Myinfo />
         <Grid>
+          <Grid.Row>
+            <Grid.Column width={14} style={{ marginLeft: '100px' }}>
+              <Container className="myinfo">
+                <Myinfo />
+              </Container>
+            </Grid.Column>
+            <Grid.Column width={2} style={{ marginLeft: '-800px' }}>
+              <FormReview mode="ADD" fixed={false} />
+
+            </Grid.Column>
+          </Grid.Row>
+
+
           <Grid.Row>
             <Grid.Column width={2} />
             <Grid.Column width={12} className="content-wrapper">
               <center>
-
                 {selectedView}
               </center>
             </Grid.Column>

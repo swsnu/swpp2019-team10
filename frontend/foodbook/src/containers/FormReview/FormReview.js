@@ -4,7 +4,7 @@
 // "id" is passed as props. Only used for "EDIT" mode.
 
 import {
-  Rating, Button, Form, Image, Modal,
+  Rating, Button, Form, Image, Modal, Popup,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
@@ -231,7 +231,7 @@ class FormReview extends Component {
       case 'ADD':
         triggerButton = (
           <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
-            <i className="edit outline black icon fluid massive center link" style={{ marginLeft: '85%' }} />
+            <i className="edit outline black icon fluid massive center link" />
           </Button>
         );
         break;
@@ -256,7 +256,12 @@ class FormReview extends Component {
         onOpen={this.open}
         onClose={this.close}
         trigger={(
-          triggerButton
+          <Popup
+            trigger={triggerButton}
+            content={mode === 'ADD' ? 'ADD Your Reivew!' : 'Edit this review!'}
+            position="right center"
+          />
+
       )}
       >
         <Modal.Header>

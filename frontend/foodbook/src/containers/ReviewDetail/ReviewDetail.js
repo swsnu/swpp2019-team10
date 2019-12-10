@@ -79,8 +79,8 @@ class ReviewDetail extends Component {
     }
 
     const triggerButton = (
-      <Button id="detail-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.getHandler}>
-        Read Detail & Get Recommendation!
+      <Button id="detail-modal-trigger" inverted={!fixed} onClick={this.getHandler}>
+        Go
       </Button>
     );
 
