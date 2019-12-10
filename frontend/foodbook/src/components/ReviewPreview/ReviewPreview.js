@@ -1,9 +1,8 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import propTypes from 'prop-types';
-import './ReviewPreview.css';
 import {
-  Rating, Card, Image,
+  Rating, Card, Image, Icon,
 } from 'semantic-ui-react';
 
 import ReviewDetail from 'containers/ReviewDetail';
@@ -14,22 +13,36 @@ const ReviewPreview = (props) => {
   } = props;
 
   const parseTagName = (tags) => {
-    const parsed = tags.map((t, i) => {
-      let className;
-      if (t.sentimental === 0) className = `neu ${i}`;
-      else if (t.sentimental === 1) className = `pos ${i}`;
-      else className = `neg ${i}`;
+    const positive = tags.filter((tagPositive) => tagPositive.sentimental === 1);
 
-      return (
-        <span key={`${t.name}Wrapper`} className={className}>
-          {`${t.name} `}
-        </span>
-      );
+    const netural = tags.filter((tagNetural) => tagNetural.sentimental === 0);
+
+    const negative = tags.filter((tagNegative) => {
+      const score = tagNegative.sentimental;
+      return score !== 0 && score !== 1;
     });
+
+    const positives = positive.map((tagPositives) => tagPositives.name).join(', ');
+    const negatives = negative.map((tagNegatives) => tagNegatives.name).join(', ');
+    const neturals = netural.map((tagNetural) => tagNetural.name).join(', ');
 
     return (
       <span className="tags-wrapper">
-        {parsed}
+        <Icon name="thumbs up" mini />
+        <span className="positive" style={{ color: 'red' }}>
+          { positives }
+        </span>
+        <br />
+        <Icon name="thumbs down" mini />
+        <span className="negative" style={{ color: 'blue' }}>
+          { negatives }
+        </span>
+        <br />
+        <Icon name="hand point right" mini />
+        <span className="neturals" style={{ color: 'grey' }}>
+          { neturals }
+        </span>
+        <br />
       </span>
     );
   };
