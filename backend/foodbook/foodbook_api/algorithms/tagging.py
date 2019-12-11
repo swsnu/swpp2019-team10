@@ -134,7 +134,7 @@ class Tagging:
                 res[i] = ret[i][0] / ret[i][1]
         for i in res.keys():
             self.profile.taste[i] = (
-                self.profile.taste[i] * self.profile.count_write + (res[i] * (2 * self.rating-1)-4)) / (self.profile.count_write + 1)
+                self.profile.taste[i] * self.profile.count_write + (res[i] * (2 * (self.rating-1))-4)) / (self.profile.count_write + 1)
             self.menu.taste[i] = (
                 self.menu.taste[i] * self.menu.num_of_review + cal_element[i]) / (self.menu.num_of_review + 1)
         self.profile.count_write += 1
