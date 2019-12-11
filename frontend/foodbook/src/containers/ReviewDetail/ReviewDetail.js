@@ -80,23 +80,10 @@ class ReviewDetail extends Component {
     );
 
     const triggerButton = (
-      <Button id="detail-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
+      <Button id="detail-modal-trigger" className="ui medium image" inverted={fixed} onClick={this.open}>
         Read Detail & Get Recommendation!
       </Button>
     );
-
-    /*
-
-              <Grid.Row className="add-review">
-                <div className="ui special cards">
-                  <div className="card" style={{ width: '630px' }}>
-                    <div className="content">
-                      <FormReview fixed={false} mode="ADD" />
-                    </div>
-                  </div>
-                </div>
-              </Grid.Row>
-    */
 
     // const isUserAuthor = ;
     const authorOnly = /* isUserAuthor ? */(

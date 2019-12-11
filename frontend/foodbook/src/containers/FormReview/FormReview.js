@@ -235,7 +235,7 @@ class FormReview extends Component {
         break;
       case 'EDIT':
         triggerButton = (
-          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.getHandler}>
+          <Button id="review-modal-trigger" className="ui medium image" inverted={fixed} onClick={this.getHandler}>
             Edit
           </Button>
         );
