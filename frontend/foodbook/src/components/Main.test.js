@@ -9,16 +9,6 @@ import Main from './Main';
 
 const mockStore = getMockStore({}, {}, {});
 
-const user = {
-  username: 'swpp2019',
-  phone_number: '',
-  age: 10,
-  gender: 'M',
-  number_of_reviews: 7,
-  number_of_friends: 1,
-  nickname: 'jaeho',
-};
-
 jest.mock('containers/ReviewList/ReviewList', () => jest.fn(() => (
   <div className="mockReviewList">
             this is mock
@@ -38,11 +28,8 @@ jest.mock('components/RawCalendar/RawCalendar', () => jest.fn(() => (
 )));
 
 jest.mock('components/Myinfo/Myinfo', () => jest.fn(() => (
-  <div className="mockMyinfo">
-            this is mock
-  </div>
+  <div />
 )));
-
 
 describe('main', () => {
   let main;
@@ -51,7 +38,7 @@ describe('main', () => {
     main = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <Main user={user} history={history} />
+          <Main history={history} />
         </ConnectedRouter>
       </Provider>
     );
@@ -67,52 +54,35 @@ describe('main', () => {
     expect(wrapper.length).toBe(1);
   });
 
-  it('should render article(review)s correctly', () => {
+  it('should change view well', () => {
     const component = mount(main);
-    const wrapper = component.find('.main-feed-wrapper');
-    expect(wrapper.length).toBe(1);
-  });
 
-  it('should handle unknown case', () => {
-    const component = mount(main);
-    const instance = component.find('Main').instance();
-    instance.setState({
-      activeItem: 'illegal',
-    });
-    expect(instance.state.activeItem).toEqual('illegal');
-    component.update();
-    expect(component.find('.main-error-wrapper').length).toBe(1);
-  });
+    const wrapperButton = component.find('DropdownMenu').at(0);
+    const wrapperFeed = component.find('DropdownItem').at(0);
+    const wrapperLocation = component.find('DropdownItem').at(1);
+    const wrapperCalendar = component.find('DropdownItem').at(2);
+    const wrapperCategory = component.find('DropdownItem').at(3);
 
-  it('should change state when calendar is clicked', () => {
-    const component = mount(main);
-    const wrapper = component.find('a').at(2);
-    wrapper.simulate('click');
-    const instance = component.find('Main').instance();
-    expect(instance.state.activeItem).toEqual('calendar');
-  });
+    const instance = component.find(Main).instance();
 
-  it('should change state when location is clicked', () => {
-    const component = mount(main);
-    const wrapper = component.find('a').at(3);
-    wrapper.simulate('click');
-    const instance = component.find('Main').instance();
-    expect(instance.state.activeItem).toEqual('location');
-  });
+    wrapperButton.simulate('click');
+    wrapperCalendar.simulate('click');
+    instance.forceUpdate();
+    expect(component.find('.calendar').length).not.toBe(0);
 
-  it('should change state when type is clicked', () => {
-    const component = mount(main);
-    const wrapper = component.find('a').at(4);
-    wrapper.simulate('click');
-    const instance = component.find('Main').instance();
-    expect(instance.state.activeItem).toEqual('type');
-  });
+    wrapperButton.simulate('click');
+    wrapperFeed.simulate('click');
+    instance.forceUpdate();
+    expect(component.find('.feed').length).not.toBe(0);
 
-  it('should change state when menu is clicked', () => {
-    const component = mount(main);
-    const wrapper = component.find('a').at(5);
-    wrapper.simulate('click');
-    const instance = component.find('Main').instance();
-    expect(instance.state.activeItem).toEqual('menu');
+    wrapperButton.simulate('click');
+    wrapperCategory.simulate('click');
+    instance.forceUpdate();
+    expect(component.find('.category').length).not.toBe(0);
+
+    wrapperButton.simulate('click');
+    wrapperLocation.simulate('click');
+    instance.forceUpdate();
+    // expect(component.find('.location').length).not.toBe(0); TODO: implement location
   });
 });
