@@ -281,7 +281,7 @@ describe('<FormReview />', () => {
         component.find('DropdownMenu').simulate('click');
         component.find('DropdownItem').at(0).simulate('click');
         component.update();
-  
+
         const submitButton = component.find('#submit-review-button').at(0);
         submitButton.simulate('click');
         component.update();
