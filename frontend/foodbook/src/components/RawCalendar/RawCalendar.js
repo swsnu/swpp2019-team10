@@ -2,7 +2,7 @@ import React, { Component } from 'react'; // useState lets functional component 
 import Calendar from 'react-calendar';
 import './RawCalendar.css';
 import PropTypes from 'prop-types';
-import ReviewList from 'containers/ReviewList';
+import ReviewList from 'components/Layouts/Feed/Feed';
 import parseDate from './parseDate';
 
 export class RawCalendar extends Component {
@@ -29,7 +29,7 @@ export class RawCalendar extends Component {
     return (
       <div className="RawCalendar">
         <Calendar id="calendar" style={{ marginLeft: '50%' }} onChange={handleChange} value={date} tileDisabled={tileDisabled} />
-        <h3 style={{ marginLeft: '25%' }}>
+        <h3>
           {`Your Food history of ${dateString}`}
         </h3>
         <ReviewList dateString={dateString} />

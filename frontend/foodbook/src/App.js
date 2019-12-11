@@ -24,7 +24,6 @@ const App = (props) => {
         <Switch>
           <Route path="/introduce" exact component={Introduce} />
           <PrivateRoute path="/main" exact component={Main} history={history} />
-          {/* <Route path="/main" exact component={Main} /> */}
           <Route path="/main/upload" exact component={FormReview} />
           <Route path="/main/:id" exact render={(propsIn) => <ReviewDetail store={propsIn.store} history={propsIn.history} match={propsIn.match} />} />
           <Redirect to="/main" />

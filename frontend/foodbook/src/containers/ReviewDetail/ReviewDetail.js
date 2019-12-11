@@ -80,10 +80,10 @@ class ReviewDetail extends Component {
     );
 
     const triggerButton = (
-      <Button id="detail-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
-        Read Detail & Get Recommendation!
+      <Button id="detail-modal-trigger" inverted={fixed} onClick={this.open} color="black">
+        Go
       </Button>
-    );
+    ); // conflict resolving
 
     /*
 
@@ -170,7 +170,7 @@ class ReviewDetail extends Component {
         onClose={this.close}
         trigger={(
           triggerButton
-      )}
+        )}
       >
         <Modal.Header>
           Review
