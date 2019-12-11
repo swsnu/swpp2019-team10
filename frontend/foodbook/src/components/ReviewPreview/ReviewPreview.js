@@ -60,18 +60,18 @@ const ReviewPreview = (props) => {
         </Card.Meta>
         <Card.Description>
           <span className="tag">{parseTagName(tag) }</span>
-        </Card.Description>
-      </Card.Content>
-      <Card.Content extra>
-        {isMine && (
-        <ReviewDetail fixed={false} id={id} />
-        )}
+          {' '}
+          <br />
+          {isMine && (
+          <ReviewDetail fixed={false} id={id} />
+          )}
 
-        {!isMine && (
-        <span className="author-wrapper">
-          {`Created by ${author}`}
-        </span>
-        )}
+          {!isMine && (
+          <span className="author-wrapper">
+            {`Created by ${author}`}
+          </span>
+          )}
+        </Card.Description>
       </Card.Content>
     </Card>
   );

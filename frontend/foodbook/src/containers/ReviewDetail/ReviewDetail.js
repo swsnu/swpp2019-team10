@@ -79,7 +79,7 @@ class ReviewDetail extends Component {
     }
 
     const triggerButton = (
-      <Button id="detail-modal-trigger" inverted={!fixed} onClick={this.getHandler}>
+      <Button id="detail-modal-trigger" inverted={fixed} onClick={this.getHandler} color="black">
         Go
       </Button>
     );
@@ -115,7 +115,7 @@ class ReviewDetail extends Component {
         onClose={this.close}
         trigger={(
           triggerButton
-      )}
+        )}
       >
         <Modal.Header>
           Review
