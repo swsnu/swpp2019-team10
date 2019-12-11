@@ -120,7 +120,7 @@ class ReviewDetail extends Component {
     )
       : <div />;
 
-    const googleMap = (<GoogleMap center={{ lat: latitude, lng: longitude }} />);
+    const googleMap = (<GoogleMap center={{ lat: latitude, lng: longitude }} marker />);
 
     const modalContent = id === reviewId ? (
       <Modal.Content>

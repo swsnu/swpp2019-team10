@@ -7,12 +7,13 @@ import { withRouter } from 'react-router';
 import GoogleMap from 'components/GoogleMap';
 
 import ReviewPreview from 'components/ReviewPreview/';
+// eslint-disable-next-line no-unused-vars
 import * as actionCreators from 'store/actions/review/action_review';
 
 class ReviewLocation extends Component {
   constructor(props) {
     super(props);
-    this.setState();
+    this.state = { ready: false };
   }
 
   componentDidMount() {
@@ -23,14 +24,15 @@ class ReviewLocation extends Component {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const onGetAll = this.props;
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
           this.setState({
             lat,
             lng,
+            ready: true,
           });
-          onGetAll(lng, lat);
+          // const onGetAll = this.props;
+          // onGetAll(lng, lat);
         },
 
         /* Error callback, default location to 0,0 */
@@ -38,13 +40,14 @@ class ReviewLocation extends Component {
           this.setState({
             lat: 0,
             lng: 0,
+            ready: true,
           });
         },
       );
     }
   }
 
-  getPos = (lat, lng) => {
+  getInfo = (placeid, restaurant, lat, lng) => {
     this.setState({
       lat,
       lng,
@@ -52,7 +55,7 @@ class ReviewLocation extends Component {
   }
 
   render() {
-    const ready = 'lat' in this.state && 'lng' in this.state;
+    const { ready } = this.state;
 
     if (!ready) {
       return (
@@ -62,14 +65,14 @@ class ReviewLocation extends Component {
       );
     }
 
-    const { reviews, dateString, onGetAll } = this.props;
+    const { reviews, dateString/* , onGetAll */ } = this.props;
     const { lng, lat } = this.state;
 
-    onGetAll(lng, lat);
+    // onGetAll(lng, lat);
 
     const googleMap = (
       <Form.Field>
-        <GoogleMap center={{ lat, lng }} search getPos={this.getPos} />
+        <GoogleMap center={{ lat, lng }} getInfo={this.getInfo} marker draggable />
       </Form.Field>
     );
 
@@ -112,7 +115,7 @@ class ReviewLocation extends Component {
 ReviewLocation.propTypes = {
   dateString: propTypes.string,
   reviews: propTypes.arrayOf(Object),
-  onGetAll: propTypes.func.isRequired,
+  // onGetAll: propTypes.func.isRequired,
 };
 
 ReviewLocation.defaultProps = {
@@ -125,9 +128,12 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  /*
   onGetAll: (lng, lat) => {
     dispatch(actionCreators.GET_REVIEW_LOCATION(lng, lat));
   },
+  */
+  dispatch,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ReviewLocation));

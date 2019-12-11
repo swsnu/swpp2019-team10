@@ -21,7 +21,9 @@ class SearchBox extends Component {
   }
 
   onPlacesChanged = ({ map, setplace, mapApi } = this.props) => {
-    const places = this.searchBox.getPlaces();
+    let places = this.searchBox.getPlaces();
+    places = places.filter((place) => (place.types.includes('restaurant') || place.types.includes('food')));
+
     if (places.length === 0) {
       return;
     }
@@ -31,27 +33,26 @@ class SearchBox extends Component {
     this.markers = [];
 
     // For each place, get the icon, name and location.
-    const bounds = new mapApi.maps.LatLngBounds();
+    const bounds = new mapApi.LatLngBounds();
     places.forEach((place) => {
       const icon = {
-        url: place.icon,
-        size: new mapApi.maps.Size(71, 71),
-        origin: new mapApi.maps.Point(0, 0),
-        anchor: new mapApi.maps.Point(17, 34),
-        scaledSize: new mapApi.maps.Size(25, 25),
+        url: 'https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png',
+        size: new mapApi.Size(71, 71),
+        origin: new mapApi.Point(0, 0),
+        anchor: new mapApi.Point(17, 34),
+        scaledSize: new mapApi.Size(25, 25),
       };
 
       // Create a marker for each place.
-
-      const marker = new mapApi.maps.Marker({
+      const marker = new mapApi.Marker({
         map,
         icon,
         title: place.name,
         position: place.geometry.location,
       });
 
-      marker.addListener('click', () => console.log(place.place_id, place.name, marker.getPosition()));
-      this.markers.push();
+      marker.addListener('click', () => setplace(place));
+      this.markers.push(marker);
 
       if (place.geometry.viewport) {
         // Only geocodes have viewport.
@@ -60,7 +61,7 @@ class SearchBox extends Component {
         bounds.extend(place.geometry.location);
       }
     });
-
+    map.fitBounds(bounds);
     this.searchInput.blur();
   };
 
@@ -76,7 +77,7 @@ class SearchBox extends Component {
         }}
         type="text"
         onFocus={this.clearSearchBox}
-        placeholder="Enter a location"
+        placeholder="Enter restaurant name"
       />
     );
   }

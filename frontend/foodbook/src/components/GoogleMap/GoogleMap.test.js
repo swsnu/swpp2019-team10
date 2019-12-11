@@ -5,7 +5,8 @@ import GoogleMap from './GoogleMap';
 describe('<GoogleMap />', () => {
   let googleMap;
 
-  const places = [{
+  const places = {
+    place_id: 'id',
     id: 1,
     name: 'restaurant',
     geometry: {
@@ -14,7 +15,7 @@ describe('<GoogleMap />', () => {
         lng: () => 0.0,
       },
     },
-  }];
+  };
 
   beforeEach(() => {
     googleMap = (
@@ -32,8 +33,7 @@ describe('<GoogleMap />', () => {
     const component = mount(googleMap);
     const wrapper = component.find('GoogleMap');
     wrapper.at(0).instance().setPlace(places);
-
-    expect(wrapper.at(0).state('places')).toBe(places);
+    // add test with jest fn getInfo
   });
 
   it('has apiHasLoaded functioning correctly', () => {

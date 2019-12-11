@@ -34,7 +34,8 @@ class FormReview extends Component {
 
     if (mode === 'ADD') {
       this.setState({
-        restaurant: '',
+        placeid: '',
+        restaurant: 'Select icon from Map',
         menu: '',
         content: '',
         rating: 0,
@@ -57,10 +58,10 @@ class FormReview extends Component {
     const { review: loadedReview, mode } = this.props;
     if (mode === 'EDIT') {
       const {
-        rating, content, restaurant, menu, image, category, longitude, latitude,
+        rating, content, restaurant, menu, image, category, longitude, latitude, placeid,
       } = loadedReview;
       this.setState({
-        rating, content, restaurant, menu, image, category, longitude, latitude,
+        rating, content, restaurant, menu, image, category, longitude, latitude, placeid,
       });
     }
     this.setState({ open: true });
@@ -114,6 +115,7 @@ class FormReview extends Component {
       latitude,
       image,
       category,
+      placeid,
     } = this.state;
 
     const reviewDict = {
@@ -124,6 +126,7 @@ class FormReview extends Component {
       longitude,
       latitude,
       category,
+      placeid,
     };
 
     let fd = false;
@@ -158,8 +161,10 @@ class FormReview extends Component {
     }
   }
 
-  getPos = (lat, lng) => {
+  getInfo = (placeid, restaurant, lat, lng) => {
     this.setState({
+      placeid,
+      restaurant,
       latitude: lat,
       longitude: lng,
     });
@@ -215,8 +220,8 @@ class FormReview extends Component {
       : imageHtml;
 
     const googleMap = mode === 'ADD'
-      ? <GoogleMap center={{ latitude, longitude }} search getPos={this.getPos} />
-      : <GoogleMap center={{ latitude, longitude }} />;
+      ? <GoogleMap center={{ lat: latitude, lng: longitude }} search getInfo={this.getInfo} />
+      : <GoogleMap center={{ lat: latitude, lng: longitude }} marker />;
 
     const contentHandler = mode === 'ADD' ? this.postContentHandler : this.editContentHandler;
 
@@ -268,7 +273,7 @@ class FormReview extends Component {
                 type="text"
                 label="Restaurant"
                 value={restaurant}
-                onChange={(event) => this.setState({ restaurant: event.target.value })}
+                readOnly
               />
               <Form.Dropdown
                 label="Category"

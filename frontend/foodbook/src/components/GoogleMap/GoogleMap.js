@@ -1,16 +1,15 @@
 // https://github.com/google-map-react/google-map-react-examples
 
 import ApiKey from 'ApiKey';
-import { Icon } from 'semantic-ui-react';
 import React, { Component } from 'react';
 import GoogleMapReact from 'google-map-react';
 import PropTypes from 'prop-types';
 
 import SearchBox from './SearchBox';
 
-const Marker = () => <div><Icon color="red" name="expand" size="big" /></div>;
-
 class GoogleMap extends Component {
+  markers = [];
+
   constructor(props) {
     super(props);
 
@@ -26,7 +25,6 @@ class GoogleMap extends Component {
       mapApiLoaded: false,
       mapInstance: null,
       mapApi: null,
-      places: [],
     };
   }
 
@@ -39,14 +37,17 @@ class GoogleMap extends Component {
   };
 
   setPlace = (place) => {
-    const { getPos } = this.props;
-    getPos(place[0].geometry.location.lat(), place[0].geometry.location.lng());
-    this.setState({ places: place });
+    const { getInfo } = this.props;
+    getInfo(
+      place.place_id,
+      place.name,
+      place.geometry.location.lat(),
+      place.geometry.location.lng(),
+    );
   };
 
   render() {
     const {
-      places,
       mapApiLoaded,
       mapInstance,
       mapApi,
@@ -54,7 +55,49 @@ class GoogleMap extends Component {
       zoom,
     } = this.state;
 
-    const { search } = this.props;
+    // eslint-disable-next-line no-unused-vars
+    const { search, marker, draggable } = this.props;
+
+    const location = {
+      lat: center.lat,
+      lng: center.lng,
+    };
+
+    if (marker && mapApiLoaded) {
+      const icon = {
+        url: 'https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png',
+        size: new mapApi.Size(71, 71),
+        origin: new mapApi.Point(0, 0),
+        anchor: new mapApi.Point(17, 34),
+        scaledSize: new mapApi.Size(25, 25),
+      };
+
+      // Create a marker for each place.
+
+      const markerDict = {
+        map: mapInstance,
+        icon,
+        title: '',
+        position: location,
+      };
+
+      if (draggable) markerDict.draggable = true;
+
+      const amarker = new mapApi.Marker(markerDict);
+      amarker.addListener('dragend', (evt) => {
+        // Clear out the old markers.
+        this.markers.forEach((onemarker) => onemarker.setMap(null));
+        this.markers = [];
+
+        this.setState({
+          center: {
+            lat: evt.latLng.lat(),
+            lng: evt.latLng.lng(),
+          },
+        });
+      });
+      this.markers.push(amarker);
+    }
 
     return (
       <div style={this.style}>
@@ -65,17 +108,7 @@ class GoogleMap extends Component {
           defaultCenter={center}
           defaultZoom={zoom}
           onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)}
-        >
-          {Array.isArray(places) && places.length > 0
-            && places.map((place) => (
-              <Marker
-                key={place.id}
-                text={place.name}
-                lat={place.geometry.location.lat()}
-                lng={place.geometry.location.lng()}
-              />
-            ))}
-        </GoogleMapReact>
+        />
       </div>
     );
   }
@@ -90,7 +123,9 @@ GoogleMap.propTypes = {
   width: PropTypes.string,
   zoom: PropTypes.number,
   search: PropTypes.bool,
-  getPos: PropTypes.func,
+  marker: PropTypes.bool,
+  draggable: PropTypes.bool,
+  getInfo: PropTypes.func,
 };
 
 GoogleMap.defaultProps = {
@@ -102,7 +137,9 @@ GoogleMap.defaultProps = {
   width: '100%',
   zoom: 17,
   search: false,
-  getPos: () => {},
+  marker: false,
+  draggable: false,
+  getInfo: () => {},
 };
 
 export default GoogleMap;

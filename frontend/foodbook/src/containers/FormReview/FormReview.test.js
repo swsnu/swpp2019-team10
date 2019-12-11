@@ -111,13 +111,11 @@ describe('<FormReview />', () => {
       const component = mount(addReview);
       component.find('Button #review-modal-trigger').simulate('click');
       component.update();
-      component.find('TextArea #review-restaurant-input').simulate('change', { target: { value: 'restaurant' } });
       component.find('TextArea #review-menu-input').simulate('change', { target: { value: 'menu' } });
       component.find('TextArea #review-content-input').simulate('change', { target: { value: 'content' } });
       component.update();
 
       const wrapper = component.find('FormReview');
-      expect(wrapper.state('restaurant')).toBe('restaurant');
       expect(wrapper.state('menu')).toBe('menu');
       expect(wrapper.state('content')).toBe('content');
     });
@@ -169,7 +167,6 @@ describe('<FormReview />', () => {
       component.update();
 
       // text fields are tested already
-      component.find('TextArea #review-restaurant-input').simulate('change', event);
       component.find('TextArea #review-menu-input').simulate('change', event);
       component.find('TextArea #review-content-input').simulate('change', event);
       component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });
@@ -188,7 +185,6 @@ describe('<FormReview />', () => {
       component.update();
       component.find('Button #review-modal-trigger').simulate('click');
       component.update();
-      component.find('TextArea #review-restaurant-input').simulate('change', event);
       component.find('TextArea #review-menu-input').simulate('change', event);
       component.find('TextArea #review-content-input').simulate('change', event);
       component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });
@@ -232,8 +228,10 @@ describe('<FormReview />', () => {
     it('has setPlace functioning correctly', () => {
       const component = mount(addReview);
       const wrapper = component.find('FormReview');
-      wrapper.at(0).instance().getPos(23.0, 9.0);
+      wrapper.at(0).instance().getInfo('id', 'name', 23.0, 9.0);
 
+      expect(wrapper.at(0).state('placeid')).toBe('id');
+      expect(wrapper.at(0).state('restaurant')).toBe('name');
       expect(wrapper.at(0).state('lng')).toBe(9.0);
       expect(wrapper.at(0).state('lat')).toBe(23.0);
     });
@@ -253,13 +251,11 @@ describe('<FormReview />', () => {
       component.find('Button #review-modal-trigger').simulate('click');
       component.update();
       expect(component.find('TextArea #review-restaurant-input').length).toBe(1);
-      component.find('TextArea #review-restaurant-input').simulate('change', { target: { value: 'restaurant' } });
       component.find('TextArea #review-menu-input').simulate('change', { target: { value: 'menu' } });
       component.find('TextArea #review-content-input').simulate('change', { target: { value: 'content' } });
       component.update();
 
       const wrapper = component.find('FormReview');
-      expect(wrapper.state('restaurant')).toBe('restaurant');
       expect(wrapper.state('menu')).toBe('menu');
       expect(wrapper.state('content')).toBe('content');
     });
@@ -272,7 +268,6 @@ describe('<FormReview />', () => {
       component.find('Button #review-modal-trigger').simulate('click');
       component.update();
       // text fields are tested already
-      component.find('TextArea #review-restaurant-input').simulate('change', event);
       component.find('TextArea #review-menu-input').simulate('change', event);
       component.find('TextArea #review-content-input').simulate('change', event);
       component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });

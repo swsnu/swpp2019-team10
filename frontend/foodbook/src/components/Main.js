@@ -10,6 +10,7 @@ import propTypes from 'prop-types';
 import FriendList from 'containers/FriendList';
 import RealCalendar from 'containers/RealCalendar/RealCalendar';
 import ReviewList from 'containers/ReviewList';
+import ReviewLocation from 'containers/ReviewLocation';
 import FormReview from 'containers/FormReview/FormReview';
 import Logout from 'containers/Logout';
 import Myinfo from 'components/Myinfo';
@@ -50,7 +51,11 @@ export default class Main extends Component {
         break;
 
       case 'location':
-        mainRenderer = (<div className="main-location-wrapper"> location </div>);
+        mainRenderer = (
+          <div className="main-location-wrapper">
+            <ReviewLocation />
+          </div>
+        );
         break;
 
       case 'type':
