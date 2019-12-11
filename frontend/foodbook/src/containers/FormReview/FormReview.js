@@ -228,21 +228,21 @@ class FormReview extends Component {
     switch (mode) {
       case 'ADD':
         triggerButton = (
-          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
+          <Button className="ui medium image" inverted={!fixed} onClick={this.open}>
             <i className="edit outline black icon fluid massive center link" />
           </Button>
         );
         break;
       case 'EDIT':
         triggerButton = (
-          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.getHandler}>
+          <Button className="ui medium image" inverted={!fixed} onClick={this.getHandler}>
             Edit
           </Button>
         );
         break;
       default:
         triggerButton = (
-          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
+          <Button className="ui medium image" inverted={!fixed} onClick={this.open}>
             Error
           </Button>
         );
@@ -255,11 +255,11 @@ class FormReview extends Component {
         onClose={this.close}
         trigger={(
           <Popup
+            id="review-modal-trigger"
             trigger={triggerButton}
             content={mode === 'ADD' ? 'ADD Your Reivew!' : 'Edit this review!'}
             position="right center"
           />
-
       )}
       >
         <Modal.Header>
