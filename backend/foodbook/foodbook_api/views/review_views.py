@@ -44,7 +44,8 @@ def review_list(request):
                 'rating': review.rating,
                 'image': image_path,
                 'date': review.date.strftime("%Y-%m-%d"),
-                'tag': tag
+                'tag': tag,
+                'category': review.category,
                 }
             review_all_list.append(dict_review)
         return JsonResponse(review_all_list, safe=False)
