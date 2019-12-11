@@ -181,13 +181,14 @@ describe('<FormReview />', () => {
       component.update();
       expect(spyPost).toHaveBeenCalledTimes(1);
 
-      addWrapper.setState({ image: 'blob' });
-      component.update();
       component.find('Button #review-modal-trigger').simulate('click');
       component.update();
+      addWrapper.setState({ image: 'blob' });
       component.find('TextArea #review-menu-input').simulate('change', event);
       component.find('TextArea #review-content-input').simulate('change', event);
       component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });
+      component.find('DropdownMenu').simulate('click');
+      component.find('DropdownItem').at(0).simulate('click');
       component.update();
       component.find('#submit-review-button').at(0).simulate('click');
       component.update();
@@ -232,8 +233,8 @@ describe('<FormReview />', () => {
 
       expect(wrapper.at(0).state('placeid')).toBe('id');
       expect(wrapper.at(0).state('restaurant')).toBe('name');
-      expect(wrapper.at(0).state('lng')).toBe(9.0);
-      expect(wrapper.at(0).state('lat')).toBe(23.0);
+      expect(wrapper.at(0).state('longitude')).toBe(9.0);
+      expect(wrapper.at(0).state('latitude')).toBe(23.0);
     });
   });
 
@@ -268,6 +269,7 @@ describe('<FormReview />', () => {
       component.find('Button #review-modal-trigger').simulate('click');
       component.update();
       // text fields are tested already
+
       component.find('TextArea #review-menu-input').simulate('change', event);
       component.find('TextArea #review-content-input').simulate('change', event);
       component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });

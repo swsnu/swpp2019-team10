@@ -68,10 +68,14 @@ class FormReview extends Component {
   };
 
   close = () => this.setState({
-    restaurant: '',
+    placeid: '',
+    restaurant: 'Select icon from Map',
     menu: '',
     content: '',
     rating: 0,
+    longitude: 0.0,
+    latitude: 0.0,
+    category: '',
     image: null,
     error: null,
     open: false,
