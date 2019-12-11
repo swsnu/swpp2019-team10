@@ -32,6 +32,7 @@ ANTONYMS = {
     'cooked': ['raw']
 }
 NAGATION = ['not', 'less']
+EMPHASIS = ['so', 'too', 'certainly', 'absolutely', 'completely']
 class Tagging:
     def __init__(self, profile, menu, rating):
         self.profile = profile
@@ -116,7 +117,7 @@ class Tagging:
                     else:
                         ret[i][0] += adj.sentiment / adj.count
                         ret[i][1] += 1
-                        cal_element[i] += 1
+                        cal_element[i] += (3 if i in EMPHASIS else 1)
                 elif adj.name.lemma in ANTONYMS[i]:
                     if adj.advmod.lemma in NAGATION:
                         ret[i][0] += adj.sentiment / adj.count
@@ -125,7 +126,7 @@ class Tagging:
                     else:
                         ret[i][0] += (1 - adj.sentiment / adj.count)
                         ret[i][1] += 1
-                        cal_element[i] -= 1
+                        cal_element[i] -= (3 if i in EMPHASIS else 1)
         res = {}
         for i in ret.keys():
             if ret[i][1] == 0:
