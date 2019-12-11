@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import {
   Rating, Button, TextArea, Modal,
 } from 'semantic-ui-react';
