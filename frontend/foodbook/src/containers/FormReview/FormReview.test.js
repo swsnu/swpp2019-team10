@@ -109,7 +109,7 @@ describe('<FormReview />', () => {
 
     it('should have textfields working', () => {
       const component = mount(addReview);
-      component.find('Button #review-modal-trigger').simulate('click');
+      component.find('#review-modal-trigger').simulate('click');
       component.update();
       component.find('TextArea #review-menu-input').simulate('change', { target: { value: 'menu' } });
       component.find('TextArea #review-content-input').simulate('change', { target: { value: 'content' } });
@@ -122,7 +122,7 @@ describe('<FormReview />', () => {
 
     it('should check category restriction', () => {
       const component = mount(addReview);
-      component.find('Button #review-modal-trigger').simulate('click');
+      component.find('#review-modal-trigger').simulate('click');
       component.update();
       const instance = component.find(FormReview.WrappedComponent).instance();
       const wrapperChicken = component.find('DropdownItem').at(0);
@@ -138,7 +138,7 @@ describe('<FormReview />', () => {
 
     it('should have image upload functioning', () => {
       const component = mount(addReview);
-      component.find('Button #review-modal-trigger').simulate('click');
+      component.find('#review-modal-trigger').simulate('click');
       component.update();
       const wrapper = component.find('FormReview');
       const imageWrapper = component.find('#add-review-image-selector').at(0);
@@ -149,7 +149,7 @@ describe('<FormReview />', () => {
 
     it('should have rating functioning', () => {
       const component = mount(addReview);
-      component.find('Button #review-modal-trigger').simulate('click');
+      component.find('#review-modal-trigger').simulate('click');
       component.update();
       const wrapper = component.find('FormReview');
 
@@ -161,7 +161,7 @@ describe('<FormReview />', () => {
 
     it('should have submit button working', () => {
       const component = mount(addReview);
-      component.find('Button #review-modal-trigger').simulate('click');
+      component.find('#review-modal-trigger').simulate('click');
       component.update();
       const event = { target: { value: 'sometext' } };
       component.update();
@@ -174,15 +174,15 @@ describe('<FormReview />', () => {
       component.find('DropdownItem').at(0).simulate('click');
       component.update();
 
-      const addWrapper = component.find('FormReview');
-
       const submitButton = component.find('#submit-review-button').at(0);
       submitButton.simulate('click');
       component.update();
       expect(spyPost).toHaveBeenCalledTimes(1);
 
-      component.find('Button #review-modal-trigger').simulate('click');
+      component.find('Popup #review-modal-trigger').simulate('click');
       component.update();
+
+      const addWrapper = component.find('FormReview');
       addWrapper.setState({ image: 'blob' });
       component.find('TextArea #review-menu-input').simulate('change', event);
       component.find('TextArea #review-content-input').simulate('change', event);
@@ -197,7 +197,7 @@ describe('<FormReview />', () => {
 
     it('should have back button working', () => {
       const component = mount(addReview);
-      component.find('Button #review-modal-trigger').simulate('click');
+      component.find('#review-modal-trigger').simulate('click');
       component.update();
       const submitButton = component.find('Button #back-review-button');
       submitButton.simulate('click');
@@ -216,7 +216,7 @@ describe('<FormReview />', () => {
 
     it('error message should be shown up', () => {
       const component = mount(addReview);
-      component.find('Button #review-modal-trigger').simulate('click');
+      component.find('#review-modal-trigger').simulate('click');
       component.update();
       const wrapper = component.find('FormReview');
       wrapper.setState({ ready: false, error: { response: 'Error' } });
@@ -241,7 +241,7 @@ describe('<FormReview />', () => {
   describe('mode: EDIT', () => {
     it('should render without crashing', () => {
       const component = mount(editReview);
-      component.find('Button #review-modal-trigger').simulate('click');
+      component.find('#review-modal-trigger').simulate('click');
       component.update();
       const wrapper = component.find('FormReview');
       expect(wrapper.length).toBe(1);
@@ -249,38 +249,43 @@ describe('<FormReview />', () => {
 
     it('should have textfields working', () => {
       const component = mount(editReview);
-      component.find('Button #review-modal-trigger').simulate('click');
-      component.update();
-      expect(component.find('TextArea #review-restaurant-input').length).toBe(1);
-      component.find('TextArea #review-menu-input').simulate('change', { target: { value: 'menu' } });
-      component.find('TextArea #review-content-input').simulate('change', { target: { value: 'content' } });
-      component.update();
+      setTimeout(() => {
+        component.find('Popup #review-modal-trigger').simulate('click');
+        component.update();
+        expect(component.find('TextArea #review-restaurant-input').length).toBe(1);
+        component.find('TextArea #review-menu-input').simulate('change', { target: { value: 'menu' } });
+        component.find('TextArea #review-content-input').simulate('change', { target: { value: 'content' } });
+        component.update();
 
-      const wrapper = component.find('FormReview');
-      expect(wrapper.state('menu')).toBe('menu');
-      expect(wrapper.state('content')).toBe('content');
+        const wrapper = component.find('FormReview');
+        expect(wrapper.state('menu')).toBe('menu');
+        expect(wrapper.state('content')).toBe('content');
+      }, 300);
     });
+
+    /* add testcase for marker select */
 
     it('should have submit button working', () => {
       const component = mount(editReview);
+      setTimeout(() => {
+        const event = { target: { value: 'sometext' } };
+        component.update();
+        component.find('#review-modal-trigger').simulate('click');
+        component.update();
+        // text fields are tested already
+        component.find('TextArea #review-restaurant-input').simulate('change', event);
+        component.find('TextArea #review-menu-input').simulate('change', event);
+        component.find('TextArea #review-content-input').simulate('change', event);
+        component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });
+        component.find('DropdownMenu').simulate('click');
+        component.find('DropdownItem').at(0).simulate('click');
+        component.update();
 
-      const event = { target: { value: 'sometext' } };
-      component.update();
-      component.find('Button #review-modal-trigger').simulate('click');
-      component.update();
-      // text fields are tested already
-
-      component.find('TextArea #review-menu-input').simulate('change', event);
-      component.find('TextArea #review-content-input').simulate('change', event);
-      component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });
-      component.find('DropdownMenu').simulate('click');
-      component.find('DropdownItem').at(0).simulate('click');
-      component.update();
-
-      const submitButton = component.find('#submit-review-button').at(0);
-      submitButton.simulate('click');
-      component.update();
-      expect(spyPut).toHaveBeenCalledTimes(1);
+        const submitButton = component.find('#submit-review-button').at(0);
+        submitButton.simulate('click');
+        component.update();
+        expect(spyPut).toHaveBeenCalledTimes(1);
+      }, 300);
     });
   });
 

@@ -4,7 +4,7 @@
 // "id" is passed as props. Only used for "EDIT" mode.
 
 import {
-  Rating, Button, Form, Image, Modal,
+  Rating, Button, Form, Image, Modal, Popup,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
@@ -235,21 +235,21 @@ class FormReview extends Component {
     switch (mode) {
       case 'ADD':
         triggerButton = (
-          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
-            <i className="edit outline black icon fluid massive center link" style={{ marginLeft: '85%' }} />
+          <Button className="ui medium image" inverted={!fixed} onClick={this.open}>
+            <i className="edit outline black icon fluid massive center link" />
           </Button>
         );
         break;
       case 'EDIT':
         triggerButton = (
-          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.getHandler}>
+          <Button className="ui medium image" inverted={!fixed} onClick={this.getHandler}>
             Edit
           </Button>
         );
         break;
       default:
         triggerButton = (
-          <Button id="review-modal-trigger" className="ui medium image" inverted={!fixed} onClick={this.open}>
+          <Button className="ui medium image" inverted={!fixed} onClick={this.open}>
             Error
           </Button>
         );
@@ -261,7 +261,12 @@ class FormReview extends Component {
         onOpen={this.open}
         onClose={this.close}
         trigger={(
-          triggerButton
+          <Popup
+            id="review-modal-trigger"
+            trigger={triggerButton}
+            content={mode === 'ADD' ? 'ADD Your Reivew!' : 'Edit this review!'}
+            position="right center"
+          />
       )}
       >
         <Modal.Header>

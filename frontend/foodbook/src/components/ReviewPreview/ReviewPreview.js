@@ -1,8 +1,10 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import propTypes from 'prop-types';
-import './ReviewPreview.css';
-import { Rating } from 'semantic-ui-react';
+import {
+  Rating, Card, Image, Icon,
+} from 'semantic-ui-react';
+
 import ReviewDetail from 'containers/ReviewDetail';
 
 const ReviewPreview = (props) => {
@@ -11,59 +13,67 @@ const ReviewPreview = (props) => {
   } = props;
 
   const parseTagName = (tags) => {
-    const parsed = tags.map((t, i) => {
-      let className;
-      if (t.sentimental === 0) className = `neu ${i}`;
-      else if (t.sentimental === 1) className = `pos ${i}`;
-      else className = `neg ${i}`;
+    const positive = tags.filter((tagPositive) => tagPositive.sentimental === 1);
 
-      return (
-        <span key={`${t.name}Wrapper`} className={className}>
-          {t.name}
-        </span>
-      );
+    const netural = tags.filter((tagNetural) => tagNetural.sentimental === 0);
+
+    const negative = tags.filter((tagNegative) => {
+      const score = tagNegative.sentimental;
+      return score !== 0 && score !== 1;
     });
 
+    const positives = positive.map((tagPositives) => tagPositives.name).join(', ');
+    const negatives = negative.map((tagNegatives) => tagNegatives.name).join(', ');
+    const neturals = netural.map((tagNetural) => tagNetural.name).join(', ');
+
     return (
-      <div className="tags-wrapper" style={{ display: 'inline' }}>
-        {parsed}
-      </div>
+      <span className="tags-wrapper">
+        <Icon name="thumbs up" mini />
+        <span className="positive" style={{ color: 'red' }}>
+          { positives }
+        </span>
+        <br />
+        <Icon name="thumbs down" mini />
+        <span className="negative" style={{ color: 'blue' }}>
+          { negatives }
+        </span>
+        <br />
+        <Icon name="hand point right" mini />
+        <span className="neturals" style={{ color: 'grey' }}>
+          { neturals }
+        </span>
+        <br />
+      </span>
     );
   };
 
   return (
-    <div className="review-preview">
-      <div className="ui special cards">
-        <div className="card" style={{ width: '630px' }}>
-          <div className="content">
-            <span className="header">{ menu }</span>
-            <span className="date-wrapper">{ date }</span>
-            <div className="meta">
-              <span className="rating">
-                Rating:
-                <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
-              </span>
-              <span className="tag">{parseTagName(tag)}</span>
-            </div>
-          </div>
-          <div className="blurring dimmable image">
-            <img src={image} alt="food img" />
-          </div>
+    <Card className="review-preview">
+      <Image src={image} width="240px" height="160px" centered />
+      <Card.Content>
+        <Card.Header>{menu}</Card.Header>
+        <Card.Meta>
+          <span className="date">{date}</span>
+          <span className="rating">
+            <Rating defaultRating={rating} maxRating="5" icon="star" />
+          </span>
+        </Card.Meta>
+        <Card.Description>
+          <span className="tag">{parseTagName(tag) }</span>
+          {' '}
+          <br />
+          {isMine && (
+          <ReviewDetail fixed={false} id={id} />
+          )}
 
-          <div className="extra content">
-            {isMine && (
-              <ReviewDetail fixed={false} id={id} />
-            )}
-
-            {!isMine && (
-            <span className="author-wrapper">
-              {`Created by ${author}`}
-            </span>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+          {!isMine && (
+          <span className="author-wrapper">
+            {`Created by ${author}`}
+          </span>
+          )}
+        </Card.Description>
+      </Card.Content>
+    </Card>
   );
 };
 

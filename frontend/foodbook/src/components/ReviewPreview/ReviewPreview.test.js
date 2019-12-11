@@ -39,7 +39,7 @@ describe('ReviewPreview', () => {
   it('should render without crash', () => {
     const component = mount(reviewPreview);
     const wrapper = component.find('.review-preview');
-    expect(wrapper.length).toBe(1);
+    expect(wrapper.length).not.toBe(0);
   });
 
   it('should render detail link when author is me', () => {
