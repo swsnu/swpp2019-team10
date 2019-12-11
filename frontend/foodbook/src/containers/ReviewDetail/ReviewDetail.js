@@ -1,5 +1,5 @@
 import {
-  Rating, Button, TextArea, Modal,
+  Rating, Button, Modal, Form, Image,
 } from 'semantic-ui-react';
 import React, { Component } from 'react';
 import './ReviewDetail.css';
@@ -113,9 +113,7 @@ class ReviewDetail extends Component {
     );
 
     const imgArea = image !== '' ? (
-      <div className="blurring dimmable image">
-        <img src={image} alt="food img" />
-      </div>
+      <Image fluid src={image} alt="food img" />
     )
       : <div />;
 
@@ -123,41 +121,71 @@ class ReviewDetail extends Component {
 
     const modalContent = id === reviewId ? (
       <Modal.Content>
-        <div className="ReviewDetail-wrapper">
-          {category}
-          <div className="ui special cards">
-            <div className="card" style={{ width: '630px' }}>
-              <div className="content">
-                <span className="header">{`${menu} ( ${restaurant} )`}</span>
-                <div className="meta">
-                  <span className="rating">
-                    Rating:
-                    <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
-                  </span>
-                  <span className="tag">{Array.isArray(tag) && parseTagName(tag)}</span>
-                </div>
-              </div>
-              {imgArea}
-              <div className="google map">
-                {googleMap}
-              </div>
+        <Form id="review-detail" style={{ width: '1000px' }}>
+          <Form.Group width="equal">
+            <Form.Field>
               {author}
-              <br />
+            </Form.Field>
+            <Form.Field>
               {date}
-              <br />
-              <TextArea
-                id="review-content-input"
-                rows="4"
-                type="text"
-                value={content}
-                readOnly
-              />
-              <div className="extra content">
-                <Recommendation data={menu} id={id} />
-              </div>
-            </div>
-          </div>
-        </div>
+            </Form.Field>
+          </Form.Group>
+          <Form.Group width="equal">
+            <Form.Field>
+              {imgArea}
+            </Form.Field>
+            <Form.Field>
+              {googleMap}
+            </Form.Field>
+          </Form.Group>
+          <Form.Group width="equal">
+            <Form.TextArea
+              fluid
+              id="review-restaurant"
+              rows="1"
+              type="text"
+              label="Restaurant"
+              value={restaurant}
+              readOnly
+            />
+            <Form.TextArea
+              fluid
+              id="review-category"
+              rows="1"
+              type="text"
+              label="Category"
+              value={category}
+              readOnly
+            />
+            <Form.TextArea
+              fluid
+              id="review-menu"
+              rows="1"
+              type="text"
+              label="Menu"
+              value={menu}
+              readOnly
+            />
+          </Form.Group>
+          <Form.Field>
+            {Array.isArray(tag) && parseTagName(tag)}
+          </Form.Field>
+          <Form.Field>
+            <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
+          </Form.Field>
+          <Form.TextArea
+            fluid
+            id="review-content"
+            rows="4"
+            type="text"
+            label="Content"
+            value={content}
+            readOnly
+          />
+          <Form.Field>
+            <Recommendation data={menu} id={id} />
+          </Form.Field>
+        </Form>
       </Modal.Content>
     )
       : loadContent;
