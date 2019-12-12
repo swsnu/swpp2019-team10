@@ -56,7 +56,9 @@ class GoogleMap extends Component {
     } = this.state;
 
     // eslint-disable-next-line no-unused-vars
-    const { search, marker, draggable } = this.props;
+    const {
+      search, marker, draggable, restaurants,
+    } = this.props;
 
     const location = {
       lat: center.lat,
@@ -64,39 +66,52 @@ class GoogleMap extends Component {
     };
 
     if (marker && mapApiLoaded) {
-      const icon = {
-        url: 'https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png',
-        size: new mapApi.Size(71, 71),
-        origin: new mapApi.Point(0, 0),
-        anchor: new mapApi.Point(17, 34),
-        scaledSize: new mapApi.Size(25, 25),
-      };
-
-      // Create a marker for each place.
-
-      const markerDict = {
-        map: mapInstance,
-        icon,
-        title: '',
-        position: location,
-      };
-
-      if (draggable) markerDict.draggable = true;
-
-      const amarker = new mapApi.Marker(markerDict);
-      amarker.addListener('dragend', (evt) => {
-        // Clear out the old markers.
-        this.markers.forEach((onemarker) => onemarker.setMap(null));
-        this.markers = [];
-
-        this.setState({
-          center: {
-            lat: evt.latLng.lat(),
-            lng: evt.latLng.lng(),
+      if (restaurants.length === 0) {
+        restaurants.concat({
+          map: mapInstance,
+          icon: {
+            url: 'https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png',
+            size: new mapApi.Size(71, 71),
+            origin: new mapApi.Point(0, 0),
+            anchor: new mapApi.Point(17, 34),
+            scaledSize: new mapApi.Size(25, 25),
           },
+          title: '',
+          position: location,
         });
+      }
+      restaurants.forEach((restaurant) => {
+        const icon = {
+          url: 'https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png',
+          size: new mapApi.Size(71, 71),
+          origin: new mapApi.Point(0, 0),
+          anchor: new mapApi.Point(17, 34),
+          scaledSize: new mapApi.Size(25, 25),
+        };
+
+        // Create a marker for each place.
+        const markerDict = {
+          map: mapInstance,
+          icon,
+          title: restaurant.name,
+          position: { lat: restaurant.latitude, lng: restaurant.longitude },
+        };
+        if (draggable) markerDict.draggable = true;
+        const amarker = new mapApi.Marker(markerDict);
+        amarker.addListener('dragend', (evt) => {
+          // Clear out the old markers.
+          this.markers.forEach((onemarker) => onemarker.setMap(null));
+          this.markers = [];
+
+          this.setState({
+            center: {
+              lat: evt.latLng.lat(),
+              lng: evt.latLng.lng(),
+            },
+          });
+        });
+        this.markers.push(marker);
       });
-      this.markers.push(amarker);
     }
 
     return (
@@ -126,6 +141,7 @@ GoogleMap.propTypes = {
   marker: PropTypes.bool,
   draggable: PropTypes.bool,
   getInfo: PropTypes.func,
+  restaurants: PropTypes.arrayOf(Object),
 };
 
 GoogleMap.defaultProps = {
@@ -140,6 +156,7 @@ GoogleMap.defaultProps = {
   marker: false,
   draggable: false,
   getInfo: () => {},
+  restaurants: [],
 };
 
 export default GoogleMap;

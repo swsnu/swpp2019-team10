@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import {
-  Rating, Button, Modal, Form, Image,
+  Rating, Button, Modal, Form, Image, Grid,
 } from 'semantic-ui-react';
 import React, { Component } from 'react';
 import './ReviewDetail.css';
@@ -60,7 +60,7 @@ class ReviewDetail extends Component {
     } = this.state;
 
     const {
-      review, fixed, id,
+      review, user, fixed, id,
     } = this.props;
 
     const {
@@ -84,20 +84,41 @@ class ReviewDetail extends Component {
       <Button id="detail-modal-trigger" className="ui medium image" inverted={fixed} onClick={this.open}>
         Go
       </Button>
-    ); // conflict resolving
+    );
 
-    // const isUserAuthor = ;
-    const authorOnly = /* isUserAuthor ? */(
-      <div className="AuthorButtons">
-        <FormReview fixed={false} mode="EDIT" id={id} />
-        <Button
-          id="delete-review-button"
-          type="submit"
-          onClick={() => this.deleteHandler()}
-        >
-          Delete
-        </Button>
-      </div>
+    const isAuthor = user.username === author;
+
+    const buttons = (
+      <Grid columns={7} stretched>
+        <Grid.Column />
+        <Grid.Column />
+        <Grid.Column />
+        <Grid.Column />
+        <Grid.Column>
+          {isAuthor ? <FormReview fixed={false} mode="EDIT" id={id} /> : <div />}
+        </Grid.Column>
+        <Grid.Column>
+          {isAuthor
+            ? (
+              <Button
+                id="delete-review-button"
+                type="submit"
+                onClick={() => this.deleteHandler()}
+              >
+              Delete
+              </Button>
+            ) : <div />}
+        </Grid.Column>
+        <Grid.Column>
+          <Button
+            id="back-review-button"
+            type="button"
+            onClick={this.close}
+          >
+            Back
+          </Button>
+        </Grid.Column>
+      </Grid>
     );
 
     const imgArea = image !== '' ? (
@@ -108,7 +129,7 @@ class ReviewDetail extends Component {
     const googleMap = (<GoogleMap center={{ lat: latitude, lng: longitude }} marker />);
 
     const modalContent = id === reviewId ? (
-      <Modal.Content>
+      <Modal.Content scrolling>
         <Form id="review-detail" style={{ width: '1000px' }}>
           <Form.Group width="equal">
             <Form.Field>
@@ -118,14 +139,12 @@ class ReviewDetail extends Component {
               {date}
             </Form.Field>
           </Form.Group>
-          <Form.Group width="equal">
-            <Form.Field>
-              {imgArea}
-            </Form.Field>
-            <Form.Field>
-              {googleMap}
-            </Form.Field>
-          </Form.Group>
+          <Form.Field>
+            {imgArea}
+          </Form.Field>
+          <Form.Field>
+            {googleMap}
+          </Form.Field>
           <Form.Group width="equal">
             <Form.TextArea
               fluid
@@ -193,14 +212,7 @@ class ReviewDetail extends Component {
         </Modal.Header>
         {error ? errorContent : modalContent}
         <Modal.Actions>
-          {authorOnly}
-          <Button
-            id="back-review-button"
-            type="button"
-            onClick={this.close}
-          >
-            Back
-          </Button>
+          {buttons}
         </Modal.Actions>
       </Modal>
     );
@@ -226,6 +238,9 @@ ReviewDetail.propTypes = {
     category: PropTypes.string,
   }),
   fixed: PropTypes.bool,
+  user: PropTypes.shape({
+    username: PropTypes.string,
+  }),
 };
 
 ReviewDetail.defaultProps = {
@@ -236,10 +251,12 @@ ReviewDetail.defaultProps = {
     id: 0,
   },
   fixed: false,
+  user: { username: '' },
 };
 
 const mapStateToProps = (state) => ({
   review: state.review.reviewDetail,
+  user: state.user.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({

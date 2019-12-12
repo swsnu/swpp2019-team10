@@ -20,6 +20,7 @@ const initialState = {
   gender: '',
   number_of_reviews: -1,
   number_of_friends: -1,
+  taste: {},
 };
 
 const mockSignUpUser = {
@@ -28,6 +29,16 @@ const mockSignUpUser = {
   phone_number: 'phone_number',
   age: 0,
   gender: 'gender',
+  nickname: 'nickname',
+};
+
+const mockSignUpUser2 = {
+  username: 'username',
+  password: 'password',
+  phone_number: 'phone_number',
+  age: '',
+  gender: 'gender',
+  nickname: 'nickname',
 };
 
 const mockUserWithoutAge = {
@@ -92,7 +103,8 @@ describe('User', () => {
         const result = {
           status: 204,
           data: {
-            id: 3,
+            id: -1,
+            id2: -1,
           },
         };
         resolve(result);
@@ -105,6 +117,10 @@ describe('User', () => {
     const newState = store.getState();
     expect(newState.user.user).toEqual(initialState);
     done();
+
+    store.dispatch(actionCreators.REGISTER(mockSignUpUser2)).then(() => {
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
   });
 
   it('should login correctly', (done) => {
@@ -227,7 +243,7 @@ describe('User', () => {
 
     store.dispatch(actionCreators.GET_FRIENDS()).then(() => {
       expect(spyGetFriends).toHaveBeenCalledTimes(1);
-      expect(store.getState().user.friend).toBe(friendList);
+      expect(store.getState().user.friends).toBe(friendList);
     });
     done();
   });
@@ -273,7 +289,7 @@ describe('User', () => {
     store.dispatch(actionCreators.ADD_FRIEND(1)).then(() => {
       expect(spyAddFriend).toHaveBeenCalledTimes(1);
       expect(spyGet).toHaveBeenCalledTimes(2);
-      expect(store.getState().user.friend).toBe(userList);
+      expect(store.getState().user.friends).toBe(userList);
     });
     done();
   });
@@ -301,7 +317,25 @@ describe('User', () => {
     store.dispatch(actionCreators.DELETE_FRIEND(1)).then(() => {
       expect(spyDeleteFriend).toHaveBeenCalledTimes(1);
       expect(spyGet).toHaveBeenCalledTimes(2);
-      expect(store.getState().user.friend).toBe(userList);
+      expect(store.getState().user.friends).toBe(userList);
+    });
+    done();
+  });
+
+  it('should get friend info', (done) => {
+    const friend = { id: 1, nickname: 'name' };
+    const spyGetFriend = jest.spyOn(axios, 'get')
+      .mockImplementation(() => new Promise((resolve) => {
+        const result = {
+          status: 200,
+          data: friend,
+        };
+        resolve(result);
+      }));
+
+    store.dispatch(actionCreators.GET_FRIEND_INFO()).then(() => {
+      expect(spyGetFriend).toHaveBeenCalledTimes(1);
+      expect(store.getState().user.friend).toBe(friend);
     });
     done();
   });

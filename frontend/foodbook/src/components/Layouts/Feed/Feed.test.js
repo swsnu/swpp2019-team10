@@ -17,6 +17,9 @@ describe('Feed', () => {
   const spyGetAll = jest.spyOn(actionCreators, 'GET_REVIEWS')
     .mockImplementation(() => ({ type: '' }));
 
+  const spyGetFriendAll = jest.spyOn(actionCreators, 'GET_FRIEND_REVIEWS')
+    .mockImplementation(() => ({ type: '' }));
+
   const stubReviews = [
     <ReviewPreview
       key="0"
@@ -65,6 +68,18 @@ describe('Feed', () => {
     const component = mount(feed);
     expect(component).not.toBe(null);
     expect(spyGetAll).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call onGetFriendAll on loading', () => {
+    const component = mount(
+      <Provider store={mockStore}>
+        <ConnectedRouter history={history}>
+          <Feed reviews={stubReviews} friendId={2} />
+        </ConnectedRouter>
+      </Provider>,
+    );
+    expect(component).not.toBe(null);
+    expect(spyGetFriendAll).toHaveBeenCalledTimes(1);
   });
 
   it('should handle dateString', () => {

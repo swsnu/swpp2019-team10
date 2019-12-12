@@ -24,10 +24,27 @@ const mockFakeGeolocation = {
   getCurrentPosition: jest.fn(),
 };
 
+jest.mock('@nivo/bar', () => ({
+  Bar: 'mockBar',
+}));
+
 global.navigator.geolocation = mockGeolocation;
 
+const initialUser = {
+  user: {
+    username: '',
+    phone_number: '',
+    age: -1,
+    gender: '',
+    number_of_reviews: -1,
+    number_of_friends: -1,
+    failed: false,
+    taste: {},
+  },
+};
+
 describe('<RecommendationTag />', () => {
-  const mockStore = getMockStore({}, {}, {});
+  const mockStore = getMockStore(initialUser, {}, {});
 
   const resp = [
     {
@@ -48,7 +65,7 @@ describe('<RecommendationTag />', () => {
     },
   ];
 
-  const mockStore2 = getMockStore({}, {}, { recomtstList: resp });
+  const mockStore2 = getMockStore(initialUser, {}, { recomtstList: resp });
 
   let recommend;
   let recommend2;

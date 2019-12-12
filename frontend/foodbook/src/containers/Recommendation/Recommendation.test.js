@@ -9,9 +9,21 @@ import { Provider } from 'react-redux';
 import Recommendation from './Recommendation';
 
 // https://jestjs.io/docs/en/mock-functions.html
+const initialUser = {
+  user: {
+    username: '',
+    phone_number: '',
+    age: -1,
+    gender: '',
+    number_of_reviews: -1,
+    number_of_friends: -1,
+    failed: false,
+    taste: {},
+  },
+};
 
 describe('<Recommendation />', () => {
-  const mockStore = getMockStore({}, {}, {});
+  const mockStore = getMockStore(initialUser, {}, {});
 
   let recommend;
 
