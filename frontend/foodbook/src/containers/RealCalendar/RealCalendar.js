@@ -15,9 +15,11 @@ class RealCalendar extends Component {
   }
 
   render() {
+    const { friendId } = this.props;
+
     return (
       <div className="RealCalendar">
-        <RawCalendar tileDisabled={this.isDisable} />
+        <RawCalendar friendId={friendId} tileDisabled={this.isDisable} />
       </div>
     );
   }
@@ -29,6 +31,11 @@ const mapStateToProps = (state) => ({
 
 RealCalendar.propTypes = {
   review: propTypes.arrayOf(Object).isRequired,
+  friendId: propTypes.number,
+};
+
+RealCalendar.defaultProps = {
+  friendId: -1,
 };
 
 export default connect(mapStateToProps, null)(withRouter(RealCalendar));
