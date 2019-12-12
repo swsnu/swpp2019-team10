@@ -64,7 +64,7 @@ class ReviewLocation extends Component {
       );
     }
 
-    const { reviews, dateString/* , onGetAll */ } = this.props;
+    const { reviews /* , onGetAll */ } = this.props;
     const { lng, lat } = this.state;
 
     // onGetAll(lng, lat);
@@ -76,9 +76,6 @@ class ReviewLocation extends Component {
     );
 
     let reviewsToRender = reviews;
-    if (dateString) {
-      reviewsToRender = reviewsToRender.filter((review) => review.date === dateString);
-    }
     reviewsToRender = reviewsToRender.map((review) => (
       <ReviewPreview
         key={`${review.id}`}
@@ -112,13 +109,11 @@ class ReviewLocation extends Component {
 }
 
 ReviewLocation.propTypes = {
-  dateString: propTypes.string,
   reviews: propTypes.arrayOf(Object),
   // onGetAll: propTypes.func.isRequired,
 };
 
 ReviewLocation.defaultProps = {
-  dateString: undefined,
   reviews: [{ id: 0, isMine: true }, { id: 1, isMine: false }],
 };
 
