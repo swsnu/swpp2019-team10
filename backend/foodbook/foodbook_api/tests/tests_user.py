@@ -121,16 +121,18 @@ class UserTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
         response = client.post('/api/signup_dupcheck/',
-                               json.dumps({'username': 'swpp1'}),
+                               json.dumps({'username': 'swpp1', \
+                                           'nickname': 'jaeho'}),
                                content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['id'], user1_id)
 
         response = client.post('/api/signup_dupcheck/',
-                               json.dumps({'username': 'swpp10'}),
+                               json.dumps({'username': 'swpp10', \
+                                           'nickname': 'user1'}),
                                content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()['id'], -1)
+        self.assertEqual(response.json()['id2'], user1_id)
 
     def test_signin(self):
         '''

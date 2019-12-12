@@ -103,7 +103,7 @@ export class Signup extends Component {
 
   render() {
     const { input, error } = this.state;
-    const { duplicated } = this.props;
+    const { duplicated, duplicated2 } = this.props;
 
     return (
       <div className="signup">
@@ -205,6 +205,12 @@ export class Signup extends Component {
                 <p>Your ID is duplicated! Please use another ID.</p>
               </Message>
             )}
+            {duplicated2 >= 0 && (
+              <Message negative className="duplicated-nick-error-wrapper">
+                <Message.Header>Signup Failed!</Message.Header>
+                <p>Your Nickname is duplicated! Please use another Nickname.</p>
+              </Message>
+            )}
           </Segment>
         </Form>
       </div>
@@ -216,10 +222,12 @@ Signup.propTypes = {
   onSignup: propTypes.func.isRequired,
   closeModal: propTypes.func.isRequired,
   duplicated: propTypes.number,
+  duplicated2: propTypes.number,
 };
 
 Signup.defaultProps = {
   duplicated: -2,
+  duplicated2: -2,
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -228,6 +236,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state) => ({
   duplicated: state.user.search,
+  duplicated2: state.user.search2,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Signup));

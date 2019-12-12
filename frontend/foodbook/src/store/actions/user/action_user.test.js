@@ -28,6 +28,16 @@ const mockSignUpUser = {
   phone_number: 'phone_number',
   age: 0,
   gender: 'gender',
+  nickname: 'nickname',
+};
+
+const mockSignUpUser2 = {
+  username: 'username',
+  password: 'password',
+  phone_number: 'phone_number',
+  age: '',
+  gender: 'gender',
+  nickname: 'nickname',
 };
 
 const mockUserWithoutAge = {
@@ -92,7 +102,8 @@ describe('User', () => {
         const result = {
           status: 204,
           data: {
-            id: 3,
+            id: -1,
+            id2: -1,
           },
         };
         resolve(result);
@@ -105,6 +116,10 @@ describe('User', () => {
     const newState = store.getState();
     expect(newState.user.user).toEqual(initialState);
     done();
+
+    store.dispatch(actionCreators.REGISTER(mockSignUpUser2)).then(() => {
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
   });
 
   it('should login correctly', (done) => {
