@@ -28,17 +28,17 @@ const ReviewPreview = (props) => {
 
     return (
       <span className="tags-wrapper">
-        <Icon name="thumbs up" mini />
+        <Icon name="thumbs up" size="small" />
         <span className="positive" style={{ color: 'blue' }}>
           { positives }
         </span>
         <br />
-        <Icon name="thumbs down" mini />
+        <Icon name="thumbs down" size="small" />
         <span className="negative" style={{ color: 'red' }}>
           { negatives }
         </span>
         <br />
-        <Icon name="hand point right" mini />
+        <Icon name="hand point right" size="small" />
         <span className="neturals" style={{ color: 'grey' }}>
           { neturals }
         </span>
@@ -58,9 +58,8 @@ const ReviewPreview = (props) => {
             <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
           </span>
         </Card.Meta>
-        <Card.Description>
+        <Card.Description textAlign="left">
           <span className="tag">{parseTagName(tag) }</span>
-          {' '}
           <br />
           {isMine && (
           <ReviewDetail fixed={false} id={id} />

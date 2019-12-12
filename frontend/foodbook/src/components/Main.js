@@ -82,7 +82,7 @@ export class Main extends Component {
             <Header as="h1"><NavLink to="/main">FoodBook</NavLink></Header>
           </Menu.Item>
           <Menu.Item>
-                  Change view:
+            <b>Change view:</b>
             <Dropdown
               scrolling
               options={viewOptions}
