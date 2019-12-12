@@ -7,8 +7,7 @@ import { withRouter } from 'react-router';
 import GoogleMap from 'components/GoogleMap';
 
 import ReviewPreview from 'components/ReviewPreview/';
-// eslint-disable-next-line no-unused-vars
-import * as actionCreators from 'store/actions/review/action_review';
+// import * as actionCreators from 'store/actions/review/action_review';
 
 class ReviewLocation extends Component {
   constructor(props) {
