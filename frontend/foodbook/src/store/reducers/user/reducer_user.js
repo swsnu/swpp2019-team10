@@ -9,16 +9,22 @@ const initialState = {
     number_of_reviews: -1,
     number_of_friends: -1,
     failed: false,
+    taste: {},
   }, // stores login information
 
   taste: {
     // TODO: implement this!
   },
 
-  friend: [{ id: 1, nickname: 'name' }],
+  friend: {
+
+  },
+
+  friends: [{ id: 1, nickname: 'name' }],
   searchUsers: [],
 
   search: undefined,
+  search2: undefined,
   logged_in: false,
 };
 
@@ -74,6 +80,7 @@ const reducer = (state = initialState, action) => {
       newState = {
         ...state,
         search: action.data.id,
+        search2: action.data.id2,
       };
 
       return newState;
@@ -84,7 +91,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.GET_FRIENDS:
       newState = {
         ...state,
-        friend: action.data,
+        friends: action.data,
       };
       return newState;
 
@@ -99,6 +106,13 @@ const reducer = (state = initialState, action) => {
       newState = {
         ...state,
         searchUsers: action.data,
+      };
+      return newState;
+
+    case actionTypes.GET_FRIEND_INFO:
+      newState = {
+        ...state,
+        friend: action.data,
       };
       return newState;
 

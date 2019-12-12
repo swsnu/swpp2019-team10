@@ -33,7 +33,7 @@ jest.mock('containers/FriendSearch/FriendSearch', () => jest.fn(() => (
   </div>
 )));
 
-jest.mock('components/Myinfo/Myinfo', () => jest.fn(() => (
+jest.mock('containers/Myinfo/Myinfo', () => jest.fn(() => (
   <div />
 )));
 
@@ -44,7 +44,12 @@ describe('main', () => {
     main = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <Main history={history} />
+          <Main
+            history={history}
+            match={{
+              params: { id: undefined }, isExact: true, path: '', url: '',
+            }}
+          />
         </ConnectedRouter>
       </Provider>
     );
@@ -54,8 +59,25 @@ describe('main', () => {
     jest.clearAllMocks();
   });
 
-  it('should redner without crashing', () => {
+  it('should render without crashing', () => {
     const component = mount(main);
+    const wrapper = component.find('.main');
+    expect(wrapper.length).toBe(1);
+  });
+
+  it('should render without crashing when friend main', () => {
+    const component = mount(
+      <Provider store={mockStore}>
+        <ConnectedRouter history={history}>
+          <Main
+            history={history}
+            match={{
+              params: { id: 2 }, isExact: true, path: '', url: '',
+            }}
+          />
+        </ConnectedRouter>
+      </Provider>,
+    );
     const wrapper = component.find('.main');
     expect(wrapper.length).toBe(1);
   });
