@@ -4,6 +4,8 @@ import GoogleMap from './GoogleMap';
 
 describe('<GoogleMap />', () => {
   let googleMap;
+  let googleMapMarker;
+  let googleMapDraggable;
 
   const places = {
     place_id: 'id',
@@ -21,10 +23,28 @@ describe('<GoogleMap />', () => {
     googleMap = (
       <GoogleMap />
     );
+    googleMapMarker = (
+      <GoogleMap center={{ lat: 0.0, lng: 0.0 }} marker />
+    );
+    googleMapDraggable = (
+      <GoogleMap center={{ lat: 0.0, lng: 0.0 }} marker draggable />
+    );
   });
 
   it('should render without crashing', () => {
     const component = mount(googleMap);
+    const wrapper = component.find('GoogleMap');
+    expect(wrapper.length).toBe(2);
+  });
+
+  it('should render without crashing with marker', () => {
+    const component = mount(googleMapMarker);
+    const wrapper = component.find('GoogleMap');
+    expect(wrapper.length).toBe(2);
+  });
+
+  it('should render without crashing with draggable marker', () => {
+    const component = mount(googleMapDraggable);
     const wrapper = component.find('GoogleMap');
     expect(wrapper.length).toBe(2);
   });
