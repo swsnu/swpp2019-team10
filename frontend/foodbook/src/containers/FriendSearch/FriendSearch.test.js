@@ -13,10 +13,6 @@ const mockStore = getMockStore({
   searchUsers: [{ id: 2, nickname: 'names' }],
 }, {}, {});
 
-const mockStore2 = getMockStore({
-  searchUsers: [],
-}, {}, {});
-
 describe('friendsearch', () => {
   let friendSearch;
 
@@ -63,7 +59,6 @@ describe('friendsearch', () => {
     component.update();
     component.find('DropdownItem').at(0).simulate('click');
     component.update();
-    console.log(component.debug());
     component.find('button').at(0).simulate('click');
     component.update();
     expect(spyPost).toHaveBeenCalledTimes(1);
