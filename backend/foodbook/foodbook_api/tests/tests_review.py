@@ -184,7 +184,7 @@ class ReviewTestCase(TestCase):
         }), 'application/json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Review.objects.count(), 5)
-        
+
         # retaurant should be distinguished by place id
         bodys = json.loads(response.content.decode())
         self.assertEqual(bodys['restaurant'], 'TEST_REST')
