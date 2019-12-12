@@ -27,6 +27,12 @@ jest.mock('components/RawCalendar/RawCalendar', () => jest.fn(() => (
   </div>
 )));
 
+jest.mock('containers/FriendSearch/FriendSearch', () => jest.fn(() => (
+  <div className="mockFriendSearch">
+            this is mock
+  </div>
+)));
+
 jest.mock('components/Myinfo/Myinfo', () => jest.fn(() => (
   <div />
 )));
