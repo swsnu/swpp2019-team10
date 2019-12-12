@@ -20,18 +20,12 @@ def size(x):
         res += x[item] * x[item]
     return math.sqrt(res)
 
-def cos_cal(x1, x2):
+def dot_product(x1, x2):
     res = 0
-    size_x1 = 0
-    size_x2 = 0
     for item in x1:
         if item in x2:
             res += x1[item] * x2[item]
-            size_x1 += x1[item] * x1[item]
-            size_x2 += x2[item] * x2[item]
-    size_x1 = math.sqrt(size_x1)
-    size_x2 = math.sqrt(size_x2)
-    return (res / size_x1 / size_x2)
+    return res
 
 class Recommendation():
     def recommendation(user_id, **kwargs):
@@ -80,32 +74,36 @@ class Recommendation():
                                                            restaurant__latitude__lte=lat+10*lat_km)
             if type == 'tst':
                 review = review.filter(category=category)
-            itemID = [item.menu.id for item in review]
-            userID = [item.author.id for item in review]
-            rating = []
-            for item in review:
-                rating.append(cos_cal(item.menu.taste, item.author.taste))
-
-            ratings_dict = {'itemID': itemID,
-                            'userID': userID,
-                            'rating': rating}
-            df = pd.DataFrame(ratings_dict)
-
-            # A reader is still needed but only the rating_scale param is requiered.
-            reader = Reader(rating_scale=(0, 1))
-
-            # The columns must correspond to user id, item id and ratings (in that order).
-            data = Dataset.load_from_df(df[['userID', 'itemID', 'rating']], reader)
-
-            trainset = data.build_full_trainset()
-
-            algo = KNNBasic()
-            algo.fit(trainset)
-
+            taste = Profile.objects.get(id=user_id).taste
+            itemID = []
             res = []
             for item in review:
-                pred = algo.predict(user_id, item.menu.id, verbose=True)
-                res.append((pred.est, item.restaurant))
+                id = item.menu.id
+                if id in itemID:
+                    continue
+                itemID.append(id)
+                res.append((dot_product(item.menu.taste, taste), item.restaurant))
+
+            # ratings_dict = {'itemID': itemID,
+            #                 'userID': userID,
+            #                 'rating': rating}
+            # df = pd.DataFrame(ratings_dict)
+            #
+            # # A reader is still needed but only the rating_scale param is requiered.
+            # reader = Reader(rating_scale=(0, 5))
+            #
+            # # The columns must correspond to user id, item id and ratings (in that order).
+            # data = Dataset.load_from_df(df[['userID', 'itemID', 'rating']], reader)
+            #
+            # trainset = data.build_full_trainset()
+            #
+            # algo = KNNBasic()
+            # algo.fit(trainset)
+            #
+            # res = []
+            # for item in review:
+            #     pred = algo.predict(user_id, item.menu.id, verbose=True)
+            #     res.append((pred.est, item.restaurant))
             res.sort(reverse=True, key=lambda x: x[0])
 
 
