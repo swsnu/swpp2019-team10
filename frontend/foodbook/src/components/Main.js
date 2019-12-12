@@ -11,7 +11,7 @@ import { NavLink } from 'react-router-dom';
 
 import Calendar from 'containers/RealCalendar';
 import Category from 'components/Category';
-import Myinfo from 'components/Myinfo';
+import Myinfo from 'containers/Myinfo';
 import FormReview from 'containers/FormReview';
 import Location from 'containers/ReviewLocation';
 import Logout from 'containers/Logout';
@@ -23,16 +23,24 @@ export class Main extends Component {
   constructor(props) {
     super(props);
 
+    const { match } = this.props;
+
+    const friendId = match.params.id ? match.params.id : -1;
+
     this.state = {
-      selectedView: <Feed />,
+      selectedView: <Feed friendId={friendId} />,
     };
   }
 
   render() {
+    const { match } = this.props;
+
+    const friendId = match.params.id ? match.params.id : -1;
+
     const handleItemClick = (e, { value }) => {
       if (value === 'feed') {
         this.setState({
-          selectedView: <Feed className="feed" />,
+          selectedView: <Feed friendId={friendId} className="feed" />,
         });
       } else if (value === 'calendar') {
         this.setState({
@@ -79,7 +87,9 @@ export class Main extends Component {
       <div className="main">
         <Menu color="teal" style={{ height: '50px' }}>
           <Menu.Item>
-            <Header as="h1"><NavLink to="/main">FoodBook</NavLink></Header>
+            {' '}
+            <Header as="h1"><NavLink to="/">FoodBook</NavLink></Header>
+            {' '}
           </Menu.Item>
           <Menu.Item>
                   Change view:
@@ -95,7 +105,7 @@ export class Main extends Component {
           <Menu.Menu position="right">
             <Menu.Item>
                 Go to friend&apos;s home:
-              <FriendList />
+              <FriendList history={history} />
             </Menu.Item>
             <Menu.Item>
               <FriendSearch />
@@ -111,7 +121,7 @@ export class Main extends Component {
             <Grid.Column width={2} />
             <Grid.Column width={6}>
               <Container className="myinfo">
-                <Myinfo />
+                <Myinfo friendId={friendId} />
               </Container>
             </Grid.Column>
             <Grid.Column width={2}>
@@ -140,6 +150,11 @@ export class Main extends Component {
 
 Main.propTypes = {
   history: propTypes.objectOf(Object).isRequired,
+  match: propTypes.shape({
+    params: propTypes.shape({
+      id: propTypes.number,
+    }),
+  }).isRequired,
 };
 
 export default Main;

@@ -6,7 +6,7 @@ describe('<GoogleMap />', () => {
   let googleMap;
   let googleMapMarker;
   let googleMapDraggable;
-
+  let googleMapRestaurants;
   const mapApi = {
     Marker: jest.fn(() => ({
       addListener: jest.fn(),
@@ -42,6 +42,24 @@ describe('<GoogleMap />', () => {
     },
   };
 
+  const stubRestaurants = [
+    {
+      name: 'REST_1',
+      latitude: 1,
+      longitude: 1,
+    },
+    {
+      name: 'REST_2',
+      latitude: 2,
+      longitude: 2,
+    },
+    {
+      name: 'REST_3',
+      latitude: 3,
+      longitude: 3,
+    },
+  ];
+
   beforeEach(() => {
     googleMap = (
       <GoogleMap />
@@ -51,6 +69,9 @@ describe('<GoogleMap />', () => {
     );
     googleMapDraggable = (
       <GoogleMap center={{ lat: 0.0, lng: 0.0 }} marker draggable />
+    );
+    googleMapRestaurants = (
+      <GoogleMap center={{ lat: 0.0, lng: 0.0 }} marker restaurants={stubRestaurants} />
     );
   });
 
@@ -87,5 +108,12 @@ describe('<GoogleMap />', () => {
     expect(wrapper.at(0).state('mapApiLoaded')).toBe(true);
     expect(wrapper.at(0).state('mapInstance')).toBe('map');
     expect(wrapper.at(0).state('mapApi')).toBe(mapApi);
+  });
+
+  it('have 3 markers', () => {
+    const component = mount(googleMapRestaurants);
+    const wrapper = component.find('GoogleMap');
+    wrapper.at(0).instance().apiHasLoaded('map', mapApi);
+    expect(wrapper.at(0).instance().markers.length).toBe(3);
   });
 });

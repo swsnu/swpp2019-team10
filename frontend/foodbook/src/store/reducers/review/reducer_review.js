@@ -4,6 +4,7 @@ const initialState = {
   reviewList: [],
   reviewDetail: {},
   reviewRestaurantList: [],
+  reviewFriendList: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -74,6 +75,16 @@ const reducer = (state = initialState, action) => {
       newState = {
         ...state,
         reviewRestaurantList: action.data,
+      };
+      return newState;
+
+    case actionTypes.CLEAR_FRIEND_REVIEWS:
+      return { ...state, reviewList: [] };
+
+    case actionTypes.GET_FRIEND_REVIEWS:
+      newState = {
+        ...state,
+        reviewList: action.data,
       };
       return newState;
 

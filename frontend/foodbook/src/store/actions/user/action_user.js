@@ -44,26 +44,28 @@ export const FIND_ID_DEEP = (data) => ({
   data,
 });
 
-export const FIND_ID = (username) => (dispatch) => axios.post('/api/signup_dupcheck/', { username })
+export const FIND_ID = (data) => (dispatch) => axios.post('/api/signup_dupcheck/', { username: data.username, nickname: data.nickname })
   .then((res) => dispatch(FIND_ID_DEEP(res.data)))
   .catch();
 
-export const REGISTER = (userData) => (dispatch) => dispatch(FIND_ID(userData.username))
-  .then((res) => {
-    if (res.data.id === -1) {
-      return axios.post('/api/signup/', {
-        username: userData.username,
-        password: userData.password,
-        phone_number: userData.phone_number,
-        age: userData.age === '' ? -1 : userData.age,
-        gender: userData.gender,
-        nickname: userData.nickname,
-      })
-        .then(() => dispatch(REGISTER_DEEP()))
-        .catch();
-    }
-    return undefined;
-  });
+export const REGISTER = (userData) => (dispatch) => dispatch(FIND_ID({
+  username: userData.username,
+  nickname: userData.nickname,
+})).then((res) => {
+  if (res.data.id === -1 && res.data.id2 === -1) {
+    return axios.post('/api/signup/', {
+      username: userData.username,
+      password: userData.password,
+      phone_number: userData.phone_number,
+      age: userData.age === '' ? -1 : userData.age,
+      gender: userData.gender,
+      nickname: userData.nickname,
+    })
+      .then(() => dispatch(REGISTER_DEEP()))
+      .catch();
+  }
+  return undefined;
+});
 
 export const LOGOUT_DEEP = () => ({
   type: actionTypes.LOGOUT,
@@ -109,3 +111,11 @@ export const DELETE_FRIEND = (id) => (dispatch) => axios.delete(`/api/friend/${i
     dispatch(GET_FRIENDS());
     dispatch(GET_USER_INFO());
   });
+
+export const GET_FRIEND_INFO_DEEP = (data) => ({
+  type: actionTypes.GET_FRIEND_INFO,
+  data,
+});
+
+export const GET_FRIEND_INFO = (id) => (dispatch) => axios.get(`/api/friend/${id}/`)
+  .then((res) => dispatch(GET_FRIEND_INFO_DEEP(res.data)));

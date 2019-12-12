@@ -16,7 +16,7 @@ axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
 
 const App = (props) => {
-  const { history } = props;
+  const { history, match } = props;
 
   return (
     <ConnectedRouter history={history}>
@@ -24,6 +24,7 @@ const App = (props) => {
         <Switch>
           <Route path="/introduce" exact component={Introduce} />
           <PrivateRoute path="/main" exact component={Main} history={history} />
+          <PrivateRoute path="/friend/:id" exact component={Main} history={history} match={match} />
           <Route path="/main/upload" exact component={FormReview} />
           <Route path="/main/:id" exact render={(propsIn) => <ReviewDetail store={propsIn.store} history={propsIn.history} match={propsIn.match} />} />
           <Redirect to="/main" />
@@ -35,6 +36,11 @@ const App = (props) => {
 
 App.propTypes = {
   history: propTypes.objectOf(Object).isRequired,
+  match: propTypes.shape({
+    params: propTypes.shape({
+      id: propTypes.string,
+    }),
+  }).isRequired,
 };
 
 export default App;

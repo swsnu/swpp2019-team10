@@ -69,14 +69,21 @@ def signup_dupcheck(request):
         try:
             req_data = json.loads(request.body.decode())
             username = req_data['username']
+            nickname = req_data['nickname']
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
         response_dict = {
-            'id': -1
+            'id': -1,
+            'id2': -1,
         }
         try:
             user_get = User.objects.select_related('profile').get(username=username)
             response_dict['id'] = user_get.profile.id
+        except ObjectDoesNotExist:
+            pass
+        try:
+            user_get = Profile.objects.get(nickname=nickname)
+            response_dict['id2'] = user_get.id
         except ObjectDoesNotExist:
             pass
         return JsonResponse(response_dict)
@@ -163,6 +170,7 @@ def user(request):
             'number_of_reviews': profile_of_user.count_write,
             'number_of_friends': profile_of_user.count_friend,
             'nickname': profile_of_user.nickname,
+            'taste': profile_of_user.taste
         }
         if profile_of_user.profile_pic:
             info_of_user['profile_pic'] = profile_of_user.profile_pic.path
@@ -190,6 +198,7 @@ def user(request):
             'number_of_reviews': profile_of_user.count_write,
             'number_of_friends': profile_of_user.count_friend,
             'nickname': profile_of_user.nickname,
+            'taste': profile_of_user.taste
         }
         if profile_of_user.profile_pic:
             info_of_user['profile_pic'] = profile_of_user.profile_pic.path

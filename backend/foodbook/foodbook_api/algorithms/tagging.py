@@ -110,7 +110,7 @@ class Tagging:
         for adj in tags:
             for i in ret.keys():
                 if adj.name.lemma in SYNONYMS[i]:
-                    if adj.advmod.lemma in NAGATION:
+                    if adj.advmod is not None and adj.advmod.lemma in NAGATION:
                         ret[i][0] += (1 - adj.sentiment / adj.count)
                         ret[i][1] += 1
                         cal_element[i] -= 1
@@ -119,7 +119,7 @@ class Tagging:
                         ret[i][1] += 1
                         cal_element[i] += (3 if i in EMPHASIS else 1)
                 elif adj.name.lemma in ANTONYMS[i]:
-                    if adj.advmod.lemma in NAGATION:
+                    if adj.advmod is not None and adj.advmod.lemma in NAGATION:
                         ret[i][0] += adj.sentiment / adj.count
                         ret[i][1] += 1
                         cal_element[i] += 1
