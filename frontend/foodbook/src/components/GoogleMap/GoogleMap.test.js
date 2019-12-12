@@ -7,6 +7,29 @@ describe('<GoogleMap />', () => {
   let googleMapMarker;
   let googleMapDraggable;
 
+  const mapApi = {
+    Marker: jest.fn(() => ({
+      addListener: jest.fn(),
+      setMap: jest.fn(),
+    })),
+    LatLngBounds: jest.fn(() => ({
+      union: jest.fn(),
+      extend: jest.fn(),
+    })),
+    Size: jest.fn(),
+    Point: jest.fn(),
+    places: {
+      SearchBox: jest.fn(() => ({
+        addListener: jest.fn(),
+        bindTo: jest.fn(),
+        getPlaces: jest.fn(),
+      })),
+    },
+    event: {
+      clearInstanceListeners: jest.fn(),
+    },
+  };
+
   const places = {
     place_id: 'id',
     id: 1,
@@ -57,12 +80,12 @@ describe('<GoogleMap />', () => {
   });
 
   it('has apiHasLoaded functioning correctly', () => {
-    const component = mount(googleMap);
+    const component = mount(googleMapDraggable);
     const wrapper = component.find('GoogleMap');
-    wrapper.at(0).instance().apiHasLoaded('map', 'maps');
+    wrapper.at(0).instance().apiHasLoaded('map', mapApi);
 
     expect(wrapper.at(0).state('mapApiLoaded')).toBe(true);
     expect(wrapper.at(0).state('mapInstance')).toBe('map');
-    expect(wrapper.at(0).state('mapApi')).toBe('maps');
+    expect(wrapper.at(0).state('mapApi')).toBe(mapApi);
   });
 });
