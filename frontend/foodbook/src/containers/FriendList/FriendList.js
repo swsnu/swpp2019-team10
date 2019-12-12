@@ -9,17 +9,30 @@ class FriendList extends Component {
     super(props);
     const { onGetFriends } = props;
     onGetFriends();
+    this.state = { value: '' };
+  }
+
+  handleChange = (e, { value }) => {
+    const { history } = this.props;
+    this.setState({ value });
+    if (value === -1) {
+      history.push('/');
+    } else {
+      history.push(`/friend/${value}`);
+      window.location.reload(false);
+    }
   }
 
   render() {
     const { friend } = this.props;
+    const { value } = this.state;
 
     const friendWithMe = friend.concat({ id: -1, nickname: 'me' });
 
     const newOptions = friendWithMe.reverse().map((f) => ({
       key: f.id,
       text: f.nickname,
-      value: f.nickname,
+      value: f.id,
     }));
 
     return (
@@ -27,8 +40,10 @@ class FriendList extends Component {
         <Dropdown
           inline
           options={newOptions}
+          onChange={this.handleChange}
           defaultValue={newOptions[0].value}
           style={{ marginLeft: '3px' }}
+          value={value}
         />
       </div>
     );
@@ -41,6 +56,7 @@ FriendList.propTypes = {
     nickname: propTypes.string,
   })),
   onGetFriends: propTypes.func.isRequired,
+  history: propTypes.objectOf(Object).isRequired,
 };
 
 FriendList.defaultProps = {
@@ -48,7 +64,7 @@ FriendList.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  friend: state.user.friend,
+  friend: state.user.friends,
 });
 
 const mapDispatchToProps = (dispatch) => ({

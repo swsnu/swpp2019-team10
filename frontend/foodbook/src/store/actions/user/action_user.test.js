@@ -227,7 +227,7 @@ describe('User', () => {
 
     store.dispatch(actionCreators.GET_FRIENDS()).then(() => {
       expect(spyGetFriends).toHaveBeenCalledTimes(1);
-      expect(store.getState().user.friend).toBe(friendList);
+      expect(store.getState().user.friends).toBe(friendList);
     });
     done();
   });
@@ -273,7 +273,7 @@ describe('User', () => {
     store.dispatch(actionCreators.ADD_FRIEND(1)).then(() => {
       expect(spyAddFriend).toHaveBeenCalledTimes(1);
       expect(spyGet).toHaveBeenCalledTimes(2);
-      expect(store.getState().user.friend).toBe(userList);
+      expect(store.getState().user.friends).toBe(userList);
     });
     done();
   });
@@ -301,7 +301,25 @@ describe('User', () => {
     store.dispatch(actionCreators.DELETE_FRIEND(1)).then(() => {
       expect(spyDeleteFriend).toHaveBeenCalledTimes(1);
       expect(spyGet).toHaveBeenCalledTimes(2);
-      expect(store.getState().user.friend).toBe(userList);
+      expect(store.getState().user.friends).toBe(userList);
+    });
+    done();
+  });
+
+  it('should get friend info', (done) => {
+    const friend = { id: 1, nickname: 'name' };
+    const spyGetFriend = jest.spyOn(axios, 'get')
+      .mockImplementation(() => new Promise((resolve) => {
+        const result = {
+          status: 200,
+          data: friend,
+        };
+        resolve(result);
+      }));
+
+    store.dispatch(actionCreators.GET_FRIEND_INFO()).then(() => {
+      expect(spyGetFriend).toHaveBeenCalledTimes(1);
+      expect(store.getState().user.friend).toBe(friend);
     });
     done();
   });

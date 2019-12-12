@@ -109,3 +109,11 @@ export const DELETE_FRIEND = (id) => (dispatch) => axios.delete(`/api/friend/${i
     dispatch(GET_FRIENDS());
     dispatch(GET_USER_INFO());
   });
+
+export const GET_FRIEND_INFO_DEEP = (data) => ({
+  type: actionTypes.GET_FRIEND_INFO,
+  data,
+});
+
+export const GET_FRIEND_INFO = (id) => (dispatch) => axios.get(`/api/friend/${id}/`)
+  .then((res) => dispatch(GET_FRIEND_INFO_DEEP(res.data)));
