@@ -79,9 +79,7 @@ export class Main extends Component {
       <div className="main">
         <Menu color="teal" style={{ height: '50px' }}>
           <Menu.Item>
-            {' '}
             <Header as="h1"><NavLink to="/main">FoodBook</NavLink></Header>
-            {' '}
           </Menu.Item>
           <Menu.Item>
                   Change view:
