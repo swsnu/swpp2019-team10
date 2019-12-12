@@ -27,7 +27,6 @@ const mockFakeGeolocation = {
 
 describe('ReviewLocation', () => {
   let reviewLocation;
-  let dateUndefinedReviewLocation;
   const spyGetAll = jest.spyOn(actionCreators, 'GET_REVIEWS')
     .mockImplementation(() => ({ type: '' }));
 
@@ -52,14 +51,6 @@ describe('ReviewLocation', () => {
     reviewLocation = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <ReviewLocation reviews={stubReviews} dateString="0" />
-        </ConnectedRouter>
-      </Provider>
-    );
-
-    dateUndefinedReviewLocation = (
-      <Provider store={mockStore}>
-        <ConnectedRouter history={history}>
           <ReviewLocation reviews={stubReviews} />
         </ConnectedRouter>
       </Provider>
@@ -81,22 +72,6 @@ describe('ReviewLocation', () => {
     expect(component).not.toBe(null);
     /* fix value after implementation */
     expect(spyGetAll).toHaveBeenCalledTimes(0);
-  });
-
-  it('should handle dateString', () => {
-    const component = mount(reviewLocation);
-    const instance = component.find(ReviewLocation.WrappedComponent).instance();
-    instance.forceUpdate();
-    const wrapper = component.find('.ReviewLocation');
-    expect(wrapper.length).toBe(1);
-  });
-
-  it('should render when dateString is undefined', () => {
-    const component = mount(dateUndefinedReviewLocation);
-    const instance = component.find(ReviewLocation.WrappedComponent).instance();
-    instance.forceUpdate();
-    const wrapper = component.find('ReviewPreview');
-    expect(wrapper.length).toBe(2);
   });
 
   it('loading message should be shown up', () => {
