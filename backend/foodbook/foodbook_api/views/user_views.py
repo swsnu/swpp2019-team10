@@ -163,6 +163,7 @@ def user(request):
             'number_of_reviews': profile_of_user.count_write,
             'number_of_friends': profile_of_user.count_friend,
             'nickname': profile_of_user.nickname,
+            'taste': profile_of_user.taste
         }
         if profile_of_user.profile_pic:
             info_of_user['profile_pic'] = profile_of_user.profile_pic.path
@@ -182,6 +183,7 @@ def user(request):
             request.user.profile.gender = req_data['gender']
         request.user.profile.save()
         profile_of_user = request.user.profile
+        print(profile_of_user.taste)
         info_of_user = {
             'username': request.user.username,
             'phone_number': profile_of_user.phone_number,
@@ -190,6 +192,7 @@ def user(request):
             'number_of_reviews': profile_of_user.count_write,
             'number_of_friends': profile_of_user.count_friend,
             'nickname': profile_of_user.nickname,
+            'taste': profile_of_user.taste
         }
         if profile_of_user.profile_pic:
             info_of_user['profile_pic'] = profile_of_user.profile_pic.path

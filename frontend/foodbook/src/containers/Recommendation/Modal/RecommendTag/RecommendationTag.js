@@ -3,8 +3,9 @@ import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  Button, Modal, Header, List,
+  Button, Modal, Header, List, Grid,
 } from 'semantic-ui-react';
+import { Bar } from '@nivo/bar';
 import './RecommendationTag.css';
 import * as actionCreators from 'store/actions/recom/action_recom';
 import RestaurantReview from 'containers/RestaurantReview';
@@ -42,8 +43,8 @@ class RecommendationTag extends Component {
         /* Error callback, default location to 0,0 */
         () => {
           this.setState({
-            lat: 0,
-            lng: 0,
+            lat: 37.450084,
+            lng: 126.952459,
           });
         },
       );
@@ -56,8 +57,15 @@ class RecommendationTag extends Component {
 
   render() {
     const { open } = this.state;
-    const { recoms, data } = this.props;
-
+    const { recoms, data, user } = this.props;
+    const aaa = [];
+    const keys = Object.keys(user.taste);
+    keys.forEach((key) => {
+      aaa.push({
+        taste: key,
+        value: user.taste[key].toFixed(2),
+      });
+    });
     let ready = false;
     if ('lat' in this.state && 'lng' in this.state) {
       ready = true;
@@ -105,7 +113,6 @@ class RecommendationTag extends Component {
         {recommendList}
       </List>
     );
-
     return (
       <Modal
         open={open}
@@ -121,7 +128,23 @@ class RecommendationTag extends Component {
         <Modal.Content scrolling>
           <Modal.Description>
             <Header> List Based on Your Experience </Header>
-            {recommendList}
+            <Grid columns={2} stackable>
+              <Grid.Row verticalAlign="top">
+                <Grid.Column>
+                  <Bar
+                    data={aaa}
+                    indexBy="taste"
+                    width={400}
+                    height={300}
+                    minValue={-4}
+                    maxValue={4}
+                  />
+                </Grid.Column>
+                <Grid.Column>
+                  {recommendList}
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>
@@ -137,15 +160,18 @@ RecommendationTag.propTypes = {
   onGetAll: propTypes.func.isRequired,
   data: propTypes.string,
   id: propTypes.number.isRequired,
+  user: propTypes.arrayOf(Object),
 };
 
 RecommendationTag.defaultProps = {
   recoms: [],
   data: 'menu',
+  user: [],
 };
 
 const mapStateToProps = (state) => ({
   recoms: state.recom.recomtstList,
+  user: state.user.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({

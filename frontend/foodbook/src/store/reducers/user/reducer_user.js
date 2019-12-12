@@ -9,6 +9,7 @@ const initialState = {
     number_of_reviews: -1,
     number_of_friends: -1,
     failed: false,
+    taste: {},
   }, // stores login information
 
   taste: {
