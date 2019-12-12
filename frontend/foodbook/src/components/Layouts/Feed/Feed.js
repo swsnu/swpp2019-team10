@@ -10,10 +10,13 @@ import { Card } from 'semantic-ui-react';
 class Feed extends Component {
   constructor(props) {
     super(props);
-    const { onGetAll } = this.props;
-    onGetAll();
+    const { onGetAll, friendId, onGetFriendAll } = this.props;
+    if (friendId === -1) {
+      onGetAll();
+    } else {
+      onGetFriendAll(friendId);
+    }
   }
-
 
   render() {
     const { reviews, dateString } = this.props;
@@ -49,11 +52,14 @@ Feed.propTypes = {
   dateString: propTypes.string,
   reviews: propTypes.arrayOf(Object),
   onGetAll: propTypes.func.isRequired,
+  onGetFriendAll: propTypes.func.isRequired,
+  friendId: propTypes.number,
 };
 
 Feed.defaultProps = {
   dateString: undefined,
   reviews: [{ id: 0, isMine: true }, { id: 1, isMine: false }],
+  friendId: -1,
 };
 
 const mapStateToProps = (state) => ({
@@ -63,6 +69,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onGetAll: () => {
     dispatch(actionCreators.GET_REVIEWS());
+  },
+  onGetFriendAll: (id) => {
+    dispatch(actionCreators.GET_FRIEND_REVIEWS(id));
   },
 });
 

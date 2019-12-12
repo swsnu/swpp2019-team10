@@ -155,4 +155,31 @@ describe('Review Action', () => {
         done();
       });
   });
+
+  it('should clear all reviews before getting friend reviews', () => {
+    store.dispatch(actionCreators.GET_FRIEND_REVIEWS_PRE());
+
+    const newState = store.getState();
+    expect(newState.review.reviewList.length).toBe(0);
+  });
+
+  it('should get all friend reviews when no error', (done) => {
+    const spy = jest.spyOn(axios, 'get')
+      .mockImplementation(() => new Promise((res) => {
+        const result = {
+          status: 200,
+          data: stubReviews,
+        };
+        res(result);
+      }));
+
+    store.dispatch(actionCreators.GET_FRIEND_REVIEWS())
+      .then(() => {
+        const newState = store.getState();
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(newState.review.reviewList.length).toBe(2);
+        done();
+      })
+      .catch();
+  });
 });

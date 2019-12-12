@@ -5,8 +5,8 @@ import { history } from 'store/store';
 import { ConnectedRouter } from 'connected-react-router';
 import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
+import * as actionCreators from 'store/actions/user/action_user';
 import Myinfo from './Myinfo';
-// import * as actionCreators from 'store/actions/user/action_user';
 
 const mockStore = getMockStore({
   user: {
@@ -17,6 +17,15 @@ const mockStore = getMockStore({
     number_of_reviews: 5,
     number_of_friends: 5,
     nickname: 'jaeho',
+  },
+  friend: {
+    username: 'jaeho2',
+    phone_number: '0001',
+    age: 22,
+    gender: 'Male',
+    number_of_reviews: 5,
+    number_of_friends: 5,
+    nickname: 'jaeho2',
   },
 }, {}, {});
 
@@ -30,10 +39,22 @@ const mockStore2 = getMockStore({
     number_of_friends: 1,
     nickname: 'jaeho',
   },
+  friend: {
+    username: 'jaeho2',
+    phone_number: '0001',
+    age: 22,
+    gender: 'Male',
+    number_of_reviews: 5,
+    number_of_friends: 5,
+    nickname: 'jaeho2',
+  },
 }, {}, {});
 
 describe('myinfo', () => {
   let myinfo;
+
+  const spyGetFriend = jest.spyOn(actionCreators, 'GET_FRIEND_INFO')
+    .mockImplementation(() => ({ type: '' }));
 
   beforeEach(() => {
     myinfo = (
@@ -53,6 +74,19 @@ describe('myinfo', () => {
     const component = mount(myinfo);
     const wrapper = component.find('.Myinfo');
     expect(wrapper.length).toBe(2);
+  });
+
+  it('should render without crash when friend', () => {
+    const component = mount(
+      <Provider store={mockStore}>
+        <ConnectedRouter history={history}>
+          <Myinfo friendId={2} />
+        </ConnectedRouter>
+      </Provider>,
+    );
+    const wrapper = component.find('.Myinfo');
+    expect(wrapper.length).toBe(2);
+    expect(spyGetFriend).toHaveBeenCalledTimes(1);
   });
 
   it('should render correctly when reviews and friends are more than two', () => {

@@ -95,3 +95,20 @@ export const GET_RESTAURANT_REVIEWS = (id) => (dispatch) => {
     .then((res) => dispatch(GET_RESTAURANT_REVIEWS_DEEP(res.data)))
     .catch(dispatch(GET_RESTAURANT_REVIEWS_PRE()));
 };
+
+export const GET_FRIEND_REVIEWS_PRE = () => ({
+  type: actionTypes.CLEAR_FRIEND_REVIEWS,
+});
+
+export const GET_FRIEND_REVIEWS_DEEP = (data) => ({
+  type: actionTypes.GET_FRIEND_REVIEWS,
+  data,
+});
+
+export const GET_FRIEND_REVIEWS = (id) => (dispatch) => {
+  dispatch(GET_FRIEND_REVIEWS_PRE());
+
+  return axios.get(`/api/friend/${id}/review/`)
+    .then((res) => dispatch(GET_FRIEND_REVIEWS_DEEP(res.data)))
+    .catch(dispatch(GET_FRIEND_REVIEWS_PRE()));
+};

@@ -15,7 +15,11 @@ const initialState = {
     // TODO: implement this!
   },
 
-  friend: [{ id: 1, nickname: 'name' }],
+  friend: {
+
+  },
+
+  friends: [{ id: 1, nickname: 'name' }],
   searchUsers: [],
 
   search: undefined,
@@ -84,7 +88,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.GET_FRIENDS:
       newState = {
         ...state,
-        friend: action.data,
+        friends: action.data,
       };
       return newState;
 
@@ -99,6 +103,13 @@ const reducer = (state = initialState, action) => {
       newState = {
         ...state,
         searchUsers: action.data,
+      };
+      return newState;
+
+    case actionTypes.GET_FRIEND_INFO:
+      newState = {
+        ...state,
+        friend: action.data,
       };
       return newState;
 
