@@ -26,7 +26,7 @@ class LoginModal extends Component {
         onOpen={this.open}
         onClose={this.close}
         trigger={(
-          <Button as="a" inverted={!fixed} onClick={this.open}>
+          <Button as="a" inverted={!fixed} onClick={this.open} style={{marginRight: "10px"}}>
             Log in
           </Button>
       )}

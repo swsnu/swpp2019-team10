@@ -49,7 +49,7 @@ const ReviewPreview = (props) => {
 
   return (
     <Card className="review-preview">
-      <Image src={image} width="240px" height="160px" centered />
+      <Image src={image} centered fluid />
       <Card.Content>
         <Card.Header>{menu}</Card.Header>
         <Card.Meta>

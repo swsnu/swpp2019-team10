@@ -38,7 +38,7 @@ const HomepageHeading = (props) => {
       <Header
         as="h1"
         content="FoodBook"
-        inverted
+        color="blue"
         style={{
           fontSize: mobile ? '2em' : '4em',
           fontWeight: 'normal',
@@ -119,7 +119,6 @@ class DesktopContainer extends Component {
             <HomepageHeading history={history} />
           </Segment>
         </Visibility>
-
         {children}
       </Responsive>
     );
@@ -249,7 +248,7 @@ export class Introduce extends Component {
               <Grid.Row>
                 <Grid.Column width={8}>
                   <br id="why-wrapper" />
-                  <Header as="h3" style={{ fontSize: '2em' }}>
+                  <Header as="h3" style={{ fontSize: '2em', marginTop: '3em' }}>
                 Here Should contain contents about how our service works.
                   </Header>
                   <p style={{ fontSize: '1.33em' }}>
