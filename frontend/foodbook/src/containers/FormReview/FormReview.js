@@ -272,8 +272,16 @@ class FormReview extends Component {
         <Modal.Header>
           Review
         </Modal.Header>
-        <Modal.Content>
+        <Modal.Content scrolling>
           <Form id="review-form" style={{ width: '1000px' }}>
+            <Form.Field className="image-field">
+              {imageField}
+            </Form.Field>
+            <Form.Field className="google-map">
+              {googleMap}
+            </Form.Field>
+            <br />
+            <br />
             <Form.Group widths="equal">
               <Form.TextArea
                 fluid
@@ -331,14 +339,6 @@ class FormReview extends Component {
               value={content}
               onChange={(event) => this.setState({ content: event.target.value })}
             />
-            <Form.Field className="image-field">
-              {imageField}
-            </Form.Field>
-            <Form.Field className="google-map">
-              {googleMap}
-            </Form.Field>
-            <br />
-            <br />
           </Form>
         </Modal.Content>
         <Modal.Actions>

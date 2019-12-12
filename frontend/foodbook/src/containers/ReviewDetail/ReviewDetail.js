@@ -108,7 +108,7 @@ class ReviewDetail extends Component {
     const googleMap = (<GoogleMap center={{ lat: latitude, lng: longitude }} marker />);
 
     const modalContent = id === reviewId ? (
-      <Modal.Content>
+      <Modal.Content scrolling>
         <Form id="review-detail" style={{ width: '1000px' }}>
           <Form.Group width="equal">
             <Form.Field>
@@ -118,14 +118,12 @@ class ReviewDetail extends Component {
               {date}
             </Form.Field>
           </Form.Group>
-          <Form.Group width="equal">
-            <Form.Field>
-              {imgArea}
-            </Form.Field>
-            <Form.Field>
-              {googleMap}
-            </Form.Field>
-          </Form.Group>
+          <Form.Field>
+            {imgArea}
+          </Form.Field>
+          <Form.Field>
+            {googleMap}
+          </Form.Field>
           <Form.Group width="equal">
             <Form.TextArea
               fluid
