@@ -90,6 +90,7 @@ class FormReview extends Component {
       longitude,
       latitude,
       category,
+      placeid,
     } = this.state;
 
     const { id, onEditReview } = this.props;
@@ -102,6 +103,7 @@ class FormReview extends Component {
       longitude,
       latitude,
       category,
+      placeid,
     };
 
     onEditReview(id, reviewDict).then(this.close());
