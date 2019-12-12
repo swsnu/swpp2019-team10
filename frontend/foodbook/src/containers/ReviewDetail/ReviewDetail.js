@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import {
-  Rating, Button, Modal, Form, Image,
+  Rating, Button, Modal, Form, Image, Grid,
 } from 'semantic-ui-react';
 import React, { Component } from 'react';
 import './ReviewDetail.css';
@@ -84,20 +84,34 @@ class ReviewDetail extends Component {
       <Button id="detail-modal-trigger" className="ui medium image" inverted={fixed} onClick={this.open}>
         Go
       </Button>
-    ); // conflict resolving
+    );
 
     // const isUserAuthor = ;
-    const authorOnly = /* isUserAuthor ? */(
-      <div className="AuthorButtons">
-        <FormReview fixed={false} mode="EDIT" id={id} />
-        <Button
-          id="delete-review-button"
-          type="submit"
-          onClick={() => this.deleteHandler()}
-        >
-          Delete
+
+    const buttons = (
+      <Grid columns={3} stretched stackable>
+        <Grid.Column>
+          <FormReview fixed={false} mode="EDIT" id={id} />
+        </Grid.Column>
+        <Grid.Column>
+          <Button
+            id="delete-review-button"
+            type="submit"
+            onClick={() => this.deleteHandler()}
+          >
+            Delete
+          </Button>
+        </Grid.Column>
+        <Grid.Column>
+          <Button
+            id="back-review-button"
+            type="button"
+            onClick={this.close}
+          >
+            Back
         </Button>
-      </div>
+        </Grid.Column>
+      </Grid>
     );
 
     const imgArea = image !== '' ? (
@@ -191,14 +205,7 @@ class ReviewDetail extends Component {
         </Modal.Header>
         {error ? errorContent : modalContent}
         <Modal.Actions>
-          {authorOnly}
-          <Button
-            id="back-review-button"
-            type="button"
-            onClick={this.close}
-          >
-            Back
-          </Button>
+          {buttons}
         </Modal.Actions>
       </Modal>
     );

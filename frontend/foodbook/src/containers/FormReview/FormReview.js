@@ -242,14 +242,14 @@ class FormReview extends Component {
         break;
       case 'EDIT':
         triggerButton = (
-          <Button className="ui medium image" inverted={!fixed} onClick={this.open}>
+          <Button inverted={fixed} onClick={this.open}>
             Edit
           </Button>
         );
         break;
       default:
         triggerButton = (
-          <Button className="ui medium image" inverted={!fixed} onClick={this.open}>
+          <Button inverted={fixed} onClick={this.open}>
             Error
           </Button>
         );
