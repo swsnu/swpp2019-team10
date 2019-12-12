@@ -72,6 +72,7 @@ describe('<FormReview />', () => {
     }));
 
   beforeEach(() => {
+    global.navigator.geolocation = mockGeolocation;
     addReview = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
@@ -110,13 +111,11 @@ describe('<FormReview />', () => {
       const component = mount(addReview);
       component.find('#review-modal-trigger').simulate('click');
       component.update();
-      component.find('TextArea #review-restaurant-input').simulate('change', { target: { value: 'restaurant' } });
       component.find('TextArea #review-menu-input').simulate('change', { target: { value: 'menu' } });
       component.find('TextArea #review-content-input').simulate('change', { target: { value: 'content' } });
       component.update();
 
       const wrapper = component.find('FormReview');
-      expect(wrapper.state('restaurant')).toBe('restaurant');
       expect(wrapper.state('menu')).toBe('menu');
       expect(wrapper.state('content')).toBe('content');
     });
@@ -168,7 +167,6 @@ describe('<FormReview />', () => {
       component.update();
 
       // text fields are tested already
-      component.find('TextArea #review-restaurant-input').simulate('change', event);
       component.find('TextArea #review-menu-input').simulate('change', event);
       component.find('TextArea #review-content-input').simulate('change', event);
       component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });
@@ -176,21 +174,21 @@ describe('<FormReview />', () => {
       component.find('DropdownItem').at(0).simulate('click');
       component.update();
 
-      const addWrapper = component.find('FormReview');
-
       const submitButton = component.find('#submit-review-button').at(0);
       submitButton.simulate('click');
       component.update();
       expect(spyPost).toHaveBeenCalledTimes(1);
 
-      addWrapper.setState({ image: 'blob' });
-      component.update();
       component.find('Popup #review-modal-trigger').simulate('click');
       component.update();
-      component.find('TextArea #review-restaurant-input').simulate('change', event);
+
+      const addWrapper = component.find('FormReview');
+      addWrapper.setState({ image: 'blob' });
       component.find('TextArea #review-menu-input').simulate('change', event);
       component.find('TextArea #review-content-input').simulate('change', event);
       component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });
+      component.find('DropdownMenu').simulate('click');
+      component.find('DropdownItem').at(0).simulate('click');
       component.update();
       component.find('#submit-review-button').at(0).simulate('click');
       component.update();
@@ -214,7 +212,6 @@ describe('<FormReview />', () => {
 
       const backWrapper = component.find('.form-review-loading');
       expect(backWrapper.length).toBe(1);
-      global.navigator.geolocation = mockGeolocation;
     });
 
     it('error message should be shown up', () => {
@@ -232,8 +229,10 @@ describe('<FormReview />', () => {
     it('has setPlace functioning correctly', () => {
       const component = mount(addReview);
       const wrapper = component.find('FormReview');
-      wrapper.at(0).instance().getPos(23.0, 9.0);
+      wrapper.at(0).instance().getInfo('id', 'name', 23.0, 9.0);
 
+      expect(wrapper.at(0).state('placeid')).toBe('id');
+      expect(wrapper.at(0).state('restaurant')).toBe('name');
       expect(wrapper.at(0).state('longitude')).toBe(9.0);
       expect(wrapper.at(0).state('latitude')).toBe(23.0);
     });
@@ -254,17 +253,17 @@ describe('<FormReview />', () => {
         component.find('Popup #review-modal-trigger').simulate('click');
         component.update();
         expect(component.find('TextArea #review-restaurant-input').length).toBe(1);
-        component.find('TextArea #review-restaurant-input').simulate('change', { target: { value: 'restaurant' } });
         component.find('TextArea #review-menu-input').simulate('change', { target: { value: 'menu' } });
         component.find('TextArea #review-content-input').simulate('change', { target: { value: 'content' } });
         component.update();
 
         const wrapper = component.find('FormReview');
-        expect(wrapper.state('restaurant')).toBe('restaurant');
         expect(wrapper.state('menu')).toBe('menu');
         expect(wrapper.state('content')).toBe('content');
       }, 300);
     });
+
+    /* add testcase for marker select */
 
     it('should have submit button working', () => {
       const component = mount(editReview);

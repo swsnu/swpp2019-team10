@@ -10,5 +10,7 @@ export const GET_TYPES = 'GET_TYPES'; // for type-menu view; refer to 7th pictur
 export const GET_MENU = 'GET_MENU_LIST'; // get menu list accroding to the type
 export const GET_REVIEW_MENU = 'GET_REVIEW_MENU'; // get reviews for selected menu
 
+export const GET_REVIEW_LOCATION = 'GET_REVIEW_LOCATION'; // get review for selected location
+
 export const CLEAR_RESTAURANT_REVIEWS = 'CLEAR_RESTAURANT_REVIEWS';
 export const GET_RESTAURANT_REVIEWS = 'GET_RESTAURANT_REVIEWS';

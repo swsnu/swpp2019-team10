@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import {
   Rating, Button, TextArea, Modal,
 } from 'semantic-ui-react';
@@ -119,7 +120,7 @@ class ReviewDetail extends Component {
     )
       : <div />;
 
-    const googleMap = (<GoogleMap center={{ lat: latitude, lng: longitude }} />);
+    const googleMap = (<GoogleMap center={{ lat: latitude, lng: longitude }} marker />);
 
     const modalContent = id === reviewId ? (
       <Modal.Content>

@@ -10,7 +10,9 @@ import Calendar from 'containers/RealCalendar';
 import Category from 'components/Category';
 import Myinfo from 'components/Myinfo';
 import FormReview from 'containers/FormReview';
+import Location from 'containers/ReviewLocation';
 import Feed from './Layouts/Feed';
+
 
 export class Main extends Component {
   constructor(props) {
@@ -35,10 +37,11 @@ export class Main extends Component {
         this.setState({
           selectedView: <Category className="category" />,
         });
-      } /* else {
+      } else {
         this.setState({
           selectedView: <Location className="location" />,
-        }); */
+        });
+      }
     };
 
     const friendOptions = [
