@@ -271,7 +271,7 @@ describe('<FormReview />', () => {
       setTimeout(() => {
         const event = { target: { value: 'sometext' } };
         component.update();
-        component.find('#review-modal-trigger').simulate('click');
+        component.find('Popup #review-modal-trigger').simulate('click');
         component.update();
         // text fields are tested already
         component.find('TextArea #review-restaurant-input').simulate('change', event);
