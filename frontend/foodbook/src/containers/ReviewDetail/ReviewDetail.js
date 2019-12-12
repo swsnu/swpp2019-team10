@@ -81,9 +81,9 @@ class ReviewDetail extends Component {
 
     const triggerButton = (
       <Button id="detail-modal-trigger" className="ui medium image" inverted={fixed} onClick={this.open}>
-        Read Detail & Get Recommendation!
+        Go
       </Button>
-    );
+    ); // conflict resolving
 
     // const isUserAuthor = ;
     const authorOnly = /* isUserAuthor ? */(
@@ -185,7 +185,7 @@ class ReviewDetail extends Component {
         onClose={this.close}
         trigger={(
           triggerButton
-      )}
+        )}
       >
         <Modal.Header>
           Review

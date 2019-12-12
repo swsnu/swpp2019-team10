@@ -26,8 +26,8 @@ const mockStore2 = getMockStore({
     phone_number: '000',
     age: 20,
     gender: 'Male',
-    number_of_reviews: 0,
-    number_of_friends: 0,
+    number_of_reviews: 1,
+    number_of_friends: 1,
     nickname: 'jaeho',
   },
 }, {}, {});
@@ -52,18 +52,18 @@ describe('myinfo', () => {
   it('should render without crash', () => {
     const component = mount(myinfo);
     const wrapper = component.find('.Myinfo');
-    expect(wrapper.length).toBe(1);
+    expect(wrapper.length).toBe(2);
   });
 
   it('should render correctly when reviews and friends are more than two', () => {
     const component = mount(myinfo);
-    const friendWrapper = component.find('.friendNumWrapper');
-    const reviewWrapper = component.find('.reviewNumWrapper');
+    const friendWrapper = component.find('.friendNumWrapper').at(0);
+    const reviewWrapper = component.find('.reviewNumWrapper').at(0);
     expect(friendWrapper.text()).toEqual('Friends');
     expect(reviewWrapper.text()).toEqual('Reviews');
   });
 
-  it('should handle zero reviews or friends', () => {
+  it('should handle one reviews or friends', () => {
     const component = mount(
       <Provider store={mockStore2}>
         <ConnectedRouter history={history}>
@@ -72,8 +72,8 @@ describe('myinfo', () => {
       </Provider>,
     );
 
-    const friendWrapper = component.find('.friendNumWrapper');
-    const reviewWrapper = component.find('.reviewNumWrapper');
+    const friendWrapper = component.find('.friendNumWrapper').at(0);
+    const reviewWrapper = component.find('.reviewNumWrapper').at(0);
     expect(friendWrapper.text()).toEqual('Friend');
     expect(reviewWrapper.text()).toEqual('Review');
   });

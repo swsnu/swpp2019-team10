@@ -32,6 +32,7 @@ ANTONYMS = {
     'cooked': ['raw']
 }
 NAGATION = ['not', 'less']
+EMPHASIS = ['so', 'too', 'certainly', 'absolutely', 'completely']
 class Tagging:
     def __init__(self, profile, menu, rating):
         self.profile = profile
@@ -102,24 +103,30 @@ class Tagging:
 
     def update_models(self, tags):
         ret = {}
+        cal_element = {}
         for i in SYNONYMS.keys():
             ret[i]=[0,0]
+            cal_element[i] = 0
         for adj in tags:
             for i in ret.keys():
                 if adj.name.lemma in SYNONYMS[i]:
                     if adj.advmod.lemma in NAGATION:
                         ret[i][0] += (1 - adj.sentiment / adj.count)
                         ret[i][1] += 1
+                        cal_element[i] -= 1
                     else:
                         ret[i][0] += adj.sentiment / adj.count
                         ret[i][1] += 1
+                        cal_element[i] += (3 if i in EMPHASIS else 1)
                 elif adj.name.lemma in ANTONYMS[i]:
                     if adj.advmod.lemma in NAGATION:
                         ret[i][0] += adj.sentiment / adj.count
                         ret[i][1] += 1
+                        cal_element[i] += 1
                     else:
                         ret[i][0] += (1 - adj.sentiment / adj.count)
                         ret[i][1] += 1
+                        cal_element[i] -= (3 if i in EMPHASIS else 1)
         res = {}
         for i in ret.keys():
             if ret[i][1] == 0:
@@ -128,9 +135,9 @@ class Tagging:
                 res[i] = ret[i][0] / ret[i][1]
         for i in res.keys():
             self.profile.taste[i] = (
-                self.profile.taste[i] * self.profile.count_write + res[i] * self.rating) / (self.profile.count_write + 1)
+                self.profile.taste[i] * self.profile.count_write + (res[i] * (2 * (self.rating-1))-4)) / (self.profile.count_write + 1)
             self.menu.taste[i] = (
-                self.menu.taste[i] * self.menu.num_of_review + res[i] * self.rating) / (self.menu.num_of_review + 1)
+                self.menu.taste[i] * self.menu.num_of_review + cal_element[i]) / (self.menu.num_of_review + 1)
         self.profile.count_write += 1
         self.menu.num_of_review += 1
         self.profile.save()

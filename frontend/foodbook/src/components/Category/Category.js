@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Dropdown } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-import ReviewList from 'containers/ReviewList';
+import ReviewList from 'components/Layouts/Feed/Feed';
 
 
 export class Category extends Component {
@@ -31,7 +31,7 @@ export class Category extends Component {
           }
           onChange={(event, data) => this.setState({ category: data.value })}
         />
-        <h3 style={{ marginLeft: '25%' }}>
+        <h3>
           {`Your Food history of ${category}`}
         </h3>
         <ReviewList category={category} />

@@ -5,8 +5,9 @@ import { withRouter } from 'react-router';
 
 import ReviewPreview from 'components/ReviewPreview/';
 import * as actionCreators from 'store/actions/review/action_review';
+import { Card } from 'semantic-ui-react';
 
-class ReviewList extends Component {
+class Feed extends Component {
   constructor(props) {
     super(props);
     const { onGetAll } = this.props;
@@ -15,12 +16,10 @@ class ReviewList extends Component {
 
 
   render() {
-    const { reviews, dateString, category } = this.props;
+    const { reviews, dateString } = this.props;
     let reviewsToRender = reviews;
     if (dateString) {
       reviewsToRender = reviewsToRender.filter((review) => review.date === dateString);
-    } else if (category) {
-      reviewsToRender = reviewsToRender.filter((review) => review.category === category);
     }
     reviewsToRender = reviewsToRender.map((review) => (
       <ReviewPreview
@@ -39,30 +38,21 @@ class ReviewList extends Component {
     ));
 
     return (
-      <div className="ReviewList">
-        <div className="ui special cards fluid">
-          <div className="card fluid" style={{ width: '630px' }}>
-            <div className="content">
-              <br />
-              {reviewsToRender}
-            </div>
-          </div>
-        </div>
-      </div>
+      <Card.Group itemsPerRow={5} className="feed">
+        {reviewsToRender}
+      </Card.Group>
     );
   }
 }
 
-ReviewList.propTypes = {
+Feed.propTypes = {
   dateString: propTypes.string,
-  category: propTypes.string,
   reviews: propTypes.arrayOf(Object),
   onGetAll: propTypes.func.isRequired,
 };
 
-ReviewList.defaultProps = {
+Feed.defaultProps = {
   dateString: undefined,
-  category: undefined,
   reviews: [{ id: 0, isMine: true }, { id: 1, isMine: false }],
 };
 
@@ -76,4 +66,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ReviewList));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Feed));
