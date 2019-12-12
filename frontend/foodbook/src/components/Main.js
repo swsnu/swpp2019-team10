@@ -42,10 +42,11 @@ export class Main extends Component {
         this.setState({
           selectedView: <Category className="category" />,
         });
-      } /* else {
+      } else {
         this.setState({
           selectedView: <Location className="location" />,
-        }); */
+        });
+      }
     };
 
     const viewOptions = [
