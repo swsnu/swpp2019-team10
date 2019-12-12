@@ -89,7 +89,11 @@ class ReviewDetail extends Component {
     // const isUserAuthor = ;
 
     const buttons = (
-      <Grid columns={3} stretched stackable>
+      <Grid columns={7} stretched>
+        <Grid.Column />
+        <Grid.Column />
+        <Grid.Column />
+        <Grid.Column />
         <Grid.Column>
           <FormReview fixed={false} mode="EDIT" id={id} />
         </Grid.Column>
@@ -109,7 +113,7 @@ class ReviewDetail extends Component {
             onClick={this.close}
           >
             Back
-        </Button>
+          </Button>
         </Grid.Column>
       </Grid>
     );
