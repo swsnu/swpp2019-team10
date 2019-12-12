@@ -134,9 +134,9 @@ class Recommendation():
                                  'name': restaurant.name,
                                  'longitude': restaurant.longitude,
                                  'latitude': restaurant.latitude,
-                                 'rating': restaurant.rating,
-                                 'my_rating': my_rating,
-                                 'other_rating': other_rating})
+                                 'rating': round(restaurant.rating, 2),
+                                 'my_rating': round(my_rating, 2),
+                                 'other_rating': round(other_rating, 2)})
                 if len(ret) == 10:
                     break
         return ret_dict

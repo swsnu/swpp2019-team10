@@ -45,15 +45,15 @@ export class Main extends Component {
         });
       } else if (value === 'calendar') {
         this.setState({
-          selectedView: <Calendar className="calendar" />,
+          selectedView: <Calendar friendId={friendId} className="calendar" />,
         });
       } else if (value === 'category') {
         this.setState({
-          selectedView: <Category className="category" />,
+          selectedView: <Category friendId={friendId} className="category" />,
         });
       } else {
         this.setState({
-          selectedView: <Location className="location" />,
+          selectedView: <Location friendId={friendId} className="location" />,
         });
       }
     };
