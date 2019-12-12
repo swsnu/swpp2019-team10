@@ -46,6 +46,9 @@ def review_list(request):
                 'date': review.date.strftime("%Y-%m-%d"),
                 'tag': tag,
                 'category': review.category,
+                'placeid': review.restaurant.place_id,
+                'longitude': review.restaurant.longitude,
+                'latitude': review.restaurant.latitude,
                 }
             review_all_list.append(dict_review)
         return JsonResponse(review_all_list, safe=False)
@@ -57,34 +60,21 @@ def review_list(request):
             content = req_data['content']
             rating = req_data['rating']
             category = req_data['category']
+            placeid = req_data['placeid']
+            longitude = req_data['longitude']
+            latitude = req_data['latitude']
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
         try:
-            longitude = req_data['longitude']
-            latitude = req_data['latitude']
-            is_location_exist = True
-        except (KeyError, JSONDecodeError):
-            is_location_exist = False
-        try:
-            restaurant = Restaurant.objects.get(name=restaurant_name)
-        except:
-            """
-            this is dummy!
-            """
-            if is_location_exist:
-                restaurant = Restaurant.objects.create(
-                    name=restaurant_name,
-                    longitude=longitude,
-                    latitude=latitude,
-                    rating=rating,
-                )
-            else:
-                restaurant = Restaurant.objects.create(
-                    name=restaurant_name,
-                    longitude=0,
-                    latitude=0,
-                    rating=rating,
-                )
+            restaurant = Restaurant.objects.get(place_id=placeid)
+        except ObjectDoesNotExist:
+            restaurant = Restaurant.objects.create(
+                name=restaurant_name,
+                longitude=longitude,
+                latitude=latitude,
+                rating=rating,
+                place_id=placeid,
+            )
         num_of_review = restaurant.review_list.all().count()
         restaurant.rating = (restaurant.rating * num_of_review + rating)
         restaurant.rating = restaurant.rating / (num_of_review + 1)
@@ -92,10 +82,7 @@ def review_list(request):
         try:
             menu = restaurant.menu_list.all()
             menu = menu.get(name=menu_name)
-        except:
-            """
-            this is dummy!
-            """
+        except ObjectDoesNotExist:
             menu = Menu.objects.create(
                 name=menu_name,
                 restaurant=restaurant,
@@ -128,7 +115,10 @@ def review_list(request):
             'rating': new_review.rating,
             'date': new_review.date.strftime("%Y-%m-%d"),
             'tag': tag,
-            'category': new_review.category
+            'category': new_review.category,
+            'placeid': placeid,
+            'longitude': restaurant.longitude,
+            'latitude': restaurant.latitude,
             }
         return JsonResponse(dict_new_review, status=201)
     #else:
@@ -170,7 +160,10 @@ def review_detail(request, review_id):
             'date': review.date.strftime("%Y-%m-%d"),
             'category': review.category,
             'image': image_path,
-            'tag': tag
+            'tag': tag,
+            'placeid': review.restaurant.place_id,
+            'longitude': review.restaurant.longitude,
+            'latitude': review.restaurant.latitude,
         }
         return JsonResponse(review_dict)
     if request.method == 'PUT':
@@ -188,29 +181,23 @@ def review_detail(request, review_id):
             content = req_data['content']
             rating = req_data['rating']
             category = req_data['category']
+            placeid = req_data['placeid']
+            longitude = req_data['longitude']
+            latitude = req_data['latitude']
         except (KeyError, JSONDecodeError) as err:
             return HttpResponseBadRequest(content=str(err))
         try:
-            longitude = req_data['longitude']
-            latitude = req_data['latitude']
-            is_location_exist = True
-        except (KeyError, JSONDecodeError):
-            is_location_exist = False
-        try:
-            restaurant = Restaurant.objects.get(name=restaurant_name)
-        except:
-            if is_location_exist:
-                restaurant = Restaurant.objects.create(
-                    name=restaurant_name,
-                    longitude=longitude,
-                    latitude=latitude,
-                    rating=rating,
-                )
-            else:
-                return HttpResponseBadRequest()
+            restaurant = Restaurant.objects.get(place_id=placeid)
+        except ObjectDoesNotExist:
+            restaurant = Restaurant.objects.create(
+                name=restaurant_name,
+                longitude=longitude,
+                latitude=latitude,
+                rating=rating,
+            )
         try:
             menu = Menu.objects.get(name=menu_name)
-        except:
+        except ObjectDoesNotExist:
             menu = Menu.objects.create(
                 name=menu_name,
                 restaurant=restaurant,
@@ -233,7 +220,10 @@ def review_detail(request, review_id):
             'rating': review.rating,
             'date': review.date.strftime("%Y-%m-%d"),
             'category': review.category,
-            'image': image_path
+            'image': image_path,
+            'placeid': placeid,
+            'longitude': restaurant.longitude,
+            'latitude': restaurant.latitude,
         }
         return JsonResponse(dict_review)
     if request.method == 'DELETE':
@@ -284,7 +274,10 @@ def friend_review_list(request, friend_id):
                 'content': review.content,
                 'rating': review.rating,
                 'image': image_path,
-                'date': review.date.strftime("%Y-%m-%d")
+                'date': review.date.strftime("%Y-%m-%d"),
+                'placeid': review.restaurant.place_id,
+                'longitude': review.restaurant.longitude,
+                'latitude': review.restaurant.latitude,
                 }
             review_all_list.append(dict_review)
         return JsonResponse(review_all_list, safe=False)
@@ -325,7 +318,10 @@ def friend_review_detail(request, friend_id, review_id):
             'rating': review.rating,
             'date': review.date.strftime("%Y-%m-%d"),
             'category': review.category,
-            'image': image_path
+            'image': image_path,
+            'placeid': review.restaurant.place_id,
+            'longitude': review.restaurant.longitude,
+            'latitude': review.restaurant.latitude,
         }
         return JsonResponse(review_dict)
     #else:
@@ -370,7 +366,10 @@ def review_image(request, review_id):
                 'date': review.date.strftime("%Y-%m-%d"),
                 'category': review.category,
                 'image': 'http://127.0.0.1:8000'+review.review_img.url,
-                'tag': tag
+                'tag': tag,
+                'placeid': review.restaurant.place_id,
+                'longitude': review.restaurant.longitude,
+                'latitude': review.restaurant.latitude,
             }
             return JsonResponse(dict_review)
         #else:
@@ -411,7 +410,10 @@ def restaurant_review_list(request, restaurant_id):
                 'rating': review.rating,
                 'image': image_path,
                 'date': review.date.strftime("%Y-%m-%d"),
-                'tag': tag
+                'tag': tag,
+                'placeid': review.restaurant.place_id,
+                'longitude': review.restaurant.longitude,
+                'latitude': review.restaurant.latitude,
                 }
             review_all_list.append(dict_review)
         return JsonResponse(review_all_list, safe=False)

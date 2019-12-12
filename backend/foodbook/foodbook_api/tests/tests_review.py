@@ -82,7 +82,8 @@ class ReviewTestCase(TestCase):
             name='TEST_REST',
             longitude=15,
             latitude=15,
-            rating=5
+            rating=5,
+            place_id='TEST_PLACE_ID',
         )
         menu = Menu.objects.create(
             name='TEST_MENU',
@@ -174,25 +175,24 @@ class ReviewTestCase(TestCase):
         response = client.post('/api/review/', json.dumps({
             'content': 'TEST_NEW_CONTENT. It was spicy.',
             'restaurant_name': 'TEST_REST',
+            'placeid': 'TEST_PLACE_ID',
             'menu_name': 'TEST_MENU',
             'rating': 5,
-            'longitude': 15.5,
-            'latitude': 15.5,
+            'longitude': 0,
+            'latitude': 0,
             'category': 'NEW_CATEGORY',
         }), 'application/json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Review.objects.count(), 5)
+        
+        # retaurant should be distinguished by place id
+        bodys = json.loads(response.content.decode())
+        self.assertEqual(bodys['restaurant'], 'TEST_REST')
+        self.assertEqual(bodys['longitude'], 15)
+        self.assertEqual(bodys['latitude'], 15)
+        self.assertEqual(bodys['placeid'], 'TEST_PLACE_ID')
+        self.assertEqual(Restaurant.objects.count(), 1)
         self.assertEqual(Profile.objects.get(nickname='user1').count_write, 1)
-        response = client.post('/api/review/', json.dumps({
-            'content': 'TEST_NEW_CONTENT2',
-            'restaurant_name': 'TEST_REST2',
-            'menu_name': 'TEST_MENU2',
-            'rating': 5,
-            'category': 'NEW_CATEGORY2',
-        }), 'application/json')
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(Review.objects.count(), 6)
-        self.assertEqual(Profile.objects.get(nickname='user1').count_write, 2)
         response = client.post('/api/review/', json.dumps({
             'content': 'TEST_NEW_CONTENT3',
             'restaurant_name': 'TEST_REST3',
@@ -200,10 +200,40 @@ class ReviewTestCase(TestCase):
             'rating': 5,
             'longitude': 15.5,
             'latitude': 15.5,
+            'placeid': 'TEST_PLACE_ID_3',
             'category': 'NEW_CATEGORY3',
         }), 'application/json')
         self.assertEqual(response.status_code, 201)
+        self.assertEqual(Review.objects.count(), 6)
+
+        bodys = json.loads(response.content.decode())
+        self.assertEqual(bodys['restaurant'], 'TEST_REST3')
+        self.assertEqual(bodys['longitude'], 15.5)
+        self.assertEqual(bodys['latitude'], 15.5)
+        self.assertEqual(bodys['placeid'], 'TEST_PLACE_ID_3')
+        self.assertEqual(Restaurant.objects.count(), 2)
+        self.assertEqual(Profile.objects.get(nickname='user1').count_write, 2)
+        # restaurant should not be added when name just changed
+        response = client.post('/api/review/', json.dumps({
+            'content': 'TEST_NEW_CONTENT. It was spicy.',
+            'restaurant_name': 'TEST_RESTAA',
+            'placeid': 'TEST_PLACE_ID',
+            'menu_name': 'TEST_MENU',
+            'rating': 5,
+            'longitude': 0,
+            'latitude': 0,
+            'category': 'NEW_CATEGORY',
+        }), 'application/json')
+        self.assertEqual(response.status_code, 201)
         self.assertEqual(Review.objects.count(), 7)
+
+        # retaurant should be distinguished by place id
+        bodys = json.loads(response.content.decode())
+        self.assertEqual(bodys['restaurant'], 'TEST_REST')
+        self.assertEqual(bodys['longitude'], 15)
+        self.assertEqual(bodys['latitude'], 15)
+        self.assertEqual(bodys['placeid'], 'TEST_PLACE_ID')
+        self.assertEqual(Restaurant.objects.count(), 2)
         self.assertEqual(Profile.objects.get(nickname='user1').count_write, 3)
     def test_post_review_list_fail(self):
         """
@@ -286,11 +316,15 @@ class ReviewTestCase(TestCase):
         review2_id = Review.objects.get(content='TEST_CONTENT2').id
         client.login(username='TEST_USER_1',
                      email='TEST_EMAIL_1', password='TEST_PW_1')
+        # restaurant should not be added when name just changed
         response = client.put('/api/review/'+str(review1_id)+'/', json.dumps({
             'content': 'TEST_PUT_CONTENT',
-            'restaurant_name': 'TEST_REST',
+            'restaurant_name': 'TEST_RESTA',
             'menu_name': 'TEST_MENU',
+            'placeid': 'TEST_PLACE_ID',
             'rating': 3,
+            'longitude': 0,
+            'latitude': 0,
             'category': 'NEW_TEST_CATEGORY'
         }), 'application/json')
         self.assertEqual(response.status_code, 200)
@@ -299,6 +333,7 @@ class ReviewTestCase(TestCase):
         self.assertEqual(bodys['author'], 'TEST_USER_1')
         self.assertEqual(bodys['content'], 'TEST_PUT_CONTENT')
         self.assertEqual(bodys['restaurant'], 'TEST_REST')
+        self.assertEqual(bodys['placeid'], 'TEST_PLACE_ID')
         self.assertEqual(bodys['menu'], 'TEST_MENU')
         self.assertEqual(bodys['category'], 'NEW_TEST_CATEGORY')
         self.assertEqual(bodys['rating'], 3)
@@ -306,17 +341,27 @@ class ReviewTestCase(TestCase):
             'content': 'TEST_PUT_CONTENT',
             'restaurant_name': 'TEST_REST',
             'menu_name': 'TEST_MENU',
+            'placeid': 'TEST_PLACE_ID',
             'rating': 3,
+            'longitude': 0,
+            'latitude': 0,
             'category': 'NEW_TEST_CATEGORY'
         }), 'application/json')
         self.assertEqual(response.status_code, 200)
         bodys = json.loads(response.content.decode())
         self.assertEqual(bodys['id'], review2_id)
+        self.assertEqual(bodys['author'], 'TEST_USER_1')
+        self.assertEqual(bodys['content'], 'TEST_PUT_CONTENT')
         self.assertEqual(bodys['rating'], 3)
+        self.assertEqual(bodys['restaurant'], 'TEST_REST')
+        self.assertEqual(bodys['placeid'], 'TEST_PLACE_ID')
+        self.assertEqual(bodys['menu'], 'TEST_MENU')
+        self.assertEqual(bodys['category'], 'NEW_TEST_CATEGORY')
         response = client.put('/api/review/'+str(review1_id)+'/', json.dumps({
             'content': 'TEST_PUT_CONTENT',
             'restaurant_name': 'TEST_REST_N',
             'menu_name': 'TEST_MENU_N',
+            'placeid': 'TEST_PLACE_ID_N',
             'rating': 3,
             'longitude': 15.5,
             'latitude': 15.5,
@@ -325,6 +370,14 @@ class ReviewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         bodys = json.loads(response.content.decode())
         self.assertEqual(bodys['id'], review1_id)
+        self.assertEqual(bodys['content'], 'TEST_PUT_CONTENT')
+        self.assertEqual(bodys['rating'], 3)
+        self.assertEqual(bodys['restaurant'], 'TEST_REST_N')
+        self.assertEqual(bodys['placeid'], 'TEST_PLACE_ID_N')
+        self.assertEqual(bodys['menu'], 'TEST_MENU_N')
+        self.assertEqual(bodys['category'], 'NEW_TEST_CATEGORY')
+        self.assertEqual(bodys['longitude'], 15.5)
+        self.assertEqual(bodys['latitude'], 15.5)
         self.assertEqual(Restaurant.objects.count(), 2)
         self.assertEqual(Menu.objects.count(), 2)
     def test_put_review_detail_fail(self):

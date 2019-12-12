@@ -60,6 +60,7 @@ class Restaurant(models.Model):
     longitude = models.FloatField()
     latitude = models.FloatField()
     rating = models.FloatField(default=0)
+    place_id = models.CharField(max_length=35)
 
 class Menu(models.Model):
     '''
