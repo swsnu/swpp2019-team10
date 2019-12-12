@@ -163,6 +163,7 @@ def user(request):
             'number_of_reviews': profile_of_user.count_write,
             'number_of_friends': profile_of_user.count_friend,
             'nickname': profile_of_user.nickname,
+            'taste': profile_of_user.taste
         }
         if profile_of_user.profile_pic:
             info_of_user['profile_pic'] = profile_of_user.profile_pic.path
@@ -190,6 +191,7 @@ def user(request):
             'number_of_reviews': profile_of_user.count_write,
             'number_of_friends': profile_of_user.count_friend,
             'nickname': profile_of_user.nickname,
+            'taste': profile_of_user.taste
         }
         if profile_of_user.profile_pic:
             info_of_user['profile_pic'] = profile_of_user.profile_pic.path

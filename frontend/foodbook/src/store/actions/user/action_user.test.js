@@ -20,6 +20,7 @@ const initialState = {
   gender: '',
   number_of_reviews: -1,
   number_of_friends: -1,
+  taste: {},
 };
 
 const mockSignUpUser = {

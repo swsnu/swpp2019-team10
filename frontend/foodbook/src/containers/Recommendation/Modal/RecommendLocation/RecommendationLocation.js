@@ -3,11 +3,12 @@ import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  Button, Modal, Header, List,
+  Button, Modal, Header, List, Grid,
 } from 'semantic-ui-react';
 import './RecommendationLocation.css';
 import * as actionCreators from 'store/actions/recom/action_recom';
 import RestaurantReview from 'containers/RestaurantReview';
+import GoogleMap from 'components/GoogleMap/GoogleMap';
 
 class RecommendationLocation extends Component {
   constructor(props) {
@@ -42,8 +43,8 @@ class RecommendationLocation extends Component {
         /* Error callback, default location to 0,0 */
         () => {
           this.setState({
-            lat: 0,
-            lng: 0,
+            lat: 37.450084,
+            lng: 126.952459,
           });
         },
       );
@@ -55,7 +56,7 @@ class RecommendationLocation extends Component {
   close = () => this.setState({ open: false })
 
   render() {
-    const { open } = this.state;
+    const { open, lat, lng } = this.state;
     const { recoms, data } = this.props;
 
     let ready = false;
@@ -122,7 +123,16 @@ class RecommendationLocation extends Component {
         <Modal.Content image scrolling>
           <Modal.Description>
             <Header> List Based on Your Experience </Header>
-            {recommendList}
+            <Grid columns={2} stackable>
+              <Grid.Row verticalAlign="top">
+                <Grid.Column>
+                  <GoogleMap center={{ lat, lng }} marker restaurants={recoms} zoom={14} />
+                </Grid.Column>
+                <Grid.Column>
+                  {recommendList}
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>
