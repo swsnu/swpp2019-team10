@@ -1,16 +1,22 @@
 import React, { Component } from 'react';
+import propTypes from 'prop-types';
 import {
   Menu,
   Dropdown,
   Grid,
+  Header,
   Container,
 } from 'semantic-ui-react';
+import { NavLink } from 'react-router-dom';
 
 import Calendar from 'containers/RealCalendar';
 import Category from 'components/Category';
 import Myinfo from 'components/Myinfo';
 import FormReview from 'containers/FormReview';
 import Location from 'containers/ReviewLocation';
+import Logout from 'containers/Logout';
+import FriendList from 'containers/FriendList';
+import FriendSearch from 'containers/FriendSearch';
 import Feed from './Layouts/Feed';
 
 
@@ -44,34 +50,6 @@ export class Main extends Component {
       }
     };
 
-    const friendOptions = [
-      {
-        key: 'Me',
-        text: 'Me',
-        value: 'Me',
-      },
-      {
-        key: 'Jenny Hess',
-        text: 'Jenny Hess',
-        value: 'Jenny Hess',
-      },
-      {
-        key: 'Elliot Fu',
-        text: 'Elliot Fu',
-        value: 'Elliot Fu',
-      },
-      {
-        key: 'Stevie Feliciano',
-        text: 'Stevie Feliciano',
-        value: 'Stevie Feliciano',
-      },
-      {
-        key: 'Christian',
-        text: 'Christian',
-        value: 'Christian',
-      },
-    ];
-
     const viewOptions = [
       {
         key: 'feed',
@@ -96,11 +74,16 @@ export class Main extends Component {
     ];
 
     const { selectedView } = this.state;
+    const { history } = this.props;
 
     return (
       <div className="main">
         <Menu color="teal" style={{ height: '50px' }}>
-          <Menu.Item> FoodBook </Menu.Item>
+          <Menu.Item>
+            {' '}
+            <Header as="h1"><NavLink to="/main">FoodBook</NavLink></Header>
+            {' '}
+          </Menu.Item>
           <Menu.Item>
                   Change view:
             <Dropdown
@@ -115,26 +98,13 @@ export class Main extends Component {
           <Menu.Menu position="right">
             <Menu.Item>
                 Go to friend&apos;s home:
-              <Dropdown
-                inline
-                options={friendOptions}
-                defaultValue={friendOptions[0].value}
-                style={{ marginLeft: '3px' }}
-              />
+              <FriendList />
             </Menu.Item>
             <Menu.Item>
-              <Dropdown
-                scrolling
-                selection
-                search
-                options={friendOptions}
-                placeholder="Add New Friends..."
-                style={{ width: '180px', height: '13px', marginTop: '5px' }}
-                icon="search"
-              />
+              <FriendSearch />
             </Menu.Item>
             <Menu.Item style={{ marginRight: '50px' }}>
-                     Logout
+              <Logout history={history} />
             </Menu.Item>
           </Menu.Menu>
         </Menu>
@@ -167,5 +137,9 @@ export class Main extends Component {
     );
   }
 }
+
+Main.propTypes = {
+  history: propTypes.objectOf(Object).isRequired,
+};
 
 export default Main;

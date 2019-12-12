@@ -29,12 +29,12 @@ const ReviewPreview = (props) => {
     return (
       <span className="tags-wrapper">
         <Icon name="thumbs up" mini />
-        <span className="positive" style={{ color: 'red' }}>
+        <span className="positive" style={{ color: 'blue' }}>
           { positives }
         </span>
         <br />
         <Icon name="thumbs down" mini />
-        <span className="negative" style={{ color: 'blue' }}>
+        <span className="negative" style={{ color: 'red' }}>
           { negatives }
         </span>
         <br />
@@ -55,7 +55,7 @@ const ReviewPreview = (props) => {
         <Card.Meta>
           <span className="date">{date}</span>
           <span className="rating">
-            <Rating defaultRating={rating} maxRating="5" icon="star" />
+            <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
           </span>
         </Card.Meta>
         <Card.Description>
