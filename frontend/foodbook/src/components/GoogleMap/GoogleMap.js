@@ -93,7 +93,7 @@ class GoogleMap extends Component {
         const markerDict = {
           map: mapInstance,
           icon,
-          title: '',
+          title: restaurant.name,
           position: { lat: restaurant.latitude, lng: restaurant.longitude },
         };
         if (draggable) markerDict.draggable = true;
