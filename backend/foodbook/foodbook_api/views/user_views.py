@@ -183,7 +183,6 @@ def user(request):
             request.user.profile.gender = req_data['gender']
         request.user.profile.save()
         profile_of_user = request.user.profile
-        print(profile_of_user.taste)
         info_of_user = {
             'username': request.user.username,
             'phone_number': profile_of_user.phone_number,
