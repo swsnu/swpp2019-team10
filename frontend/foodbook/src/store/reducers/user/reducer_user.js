@@ -24,6 +24,7 @@ const initialState = {
   searchUsers: [],
 
   search: undefined,
+  search2: undefined,
   logged_in: false,
 };
 
@@ -79,6 +80,7 @@ const reducer = (state = initialState, action) => {
       newState = {
         ...state,
         search: action.data.id,
+        search2: action.data.id2,
       };
 
       return newState;
