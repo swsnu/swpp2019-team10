@@ -34,6 +34,7 @@ const reducer = (state = initialState, action) => {
 
     case actionTypes.POST_REVIEW:
       newReview = {
+        id: action.id,
         placeid: action.placeid,
         restaurant: action.restaurant,
         menu: action.menu,
@@ -49,6 +50,7 @@ const reducer = (state = initialState, action) => {
 
     case actionTypes.EDIT_REVIEW:
       newReview = {
+        id: action.id,
         placeid: action.placeid,
         restaurant: action.restaurant,
         menu: action.menu,
