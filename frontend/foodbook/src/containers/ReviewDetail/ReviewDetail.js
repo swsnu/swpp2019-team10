@@ -60,7 +60,7 @@ class ReviewDetail extends Component {
     } = this.state;
 
     const {
-      review, fixed, id,
+      review, user, fixed, id,
     } = this.props;
 
     const {
@@ -86,7 +86,7 @@ class ReviewDetail extends Component {
       </Button>
     );
 
-    // const isUserAuthor = ;
+    const isAuthor = user.username === author;
 
     const buttons = (
       <Grid columns={7} stretched>
@@ -95,16 +95,19 @@ class ReviewDetail extends Component {
         <Grid.Column />
         <Grid.Column />
         <Grid.Column>
-          <FormReview fixed={false} mode="EDIT" id={id} />
+          {isAuthor ? <FormReview fixed={false} mode="EDIT" id={id} /> : <div />}
         </Grid.Column>
         <Grid.Column>
-          <Button
-            id="delete-review-button"
-            type="submit"
-            onClick={() => this.deleteHandler()}
-          >
-            Delete
-          </Button>
+          {isAuthor
+            ? (
+              <Button
+                id="delete-review-button"
+                type="submit"
+                onClick={() => this.deleteHandler()}
+              >
+              Delete
+              </Button>
+            ) : <div />}
         </Grid.Column>
         <Grid.Column>
           <Button
@@ -235,6 +238,9 @@ ReviewDetail.propTypes = {
     category: PropTypes.string,
   }),
   fixed: PropTypes.bool,
+  user: PropTypes.shape({
+    username: PropTypes.string,
+  }),
 };
 
 ReviewDetail.defaultProps = {
@@ -245,10 +251,12 @@ ReviewDetail.defaultProps = {
     id: 0,
   },
   fixed: false,
+  user: { username: '' },
 };
 
 const mapStateToProps = (state) => ({
   review: state.review.reviewDetail,
+  user: state.user.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({
