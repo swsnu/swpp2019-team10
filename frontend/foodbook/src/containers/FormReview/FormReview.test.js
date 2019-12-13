@@ -23,7 +23,7 @@ const mockGeolocation = {
 
 const mockFakeGeolocation = {
   getCurrentPosition: jest.fn()
-    .mockImplementation((success) => Promise.reject()),
+    .mockImplementation(() => Promise.reject()),
 };
 
 global.navigator.geolocation = mockGeolocation;
@@ -191,7 +191,7 @@ describe('<FormReview />', () => {
       expect(wrapper.length).toBe(0);
     });
 
-    it('loading message should be shown up', () => {
+    it('default location should be set', () => {
       global.navigator.geolocation = mockFakeGeolocation;
       const component = mount(addReview);
       const wrapper = component.find('FormReview');

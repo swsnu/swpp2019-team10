@@ -52,6 +52,8 @@ class ReviewLocation extends Component {
           this.setState({
             lat: 0,
             lng: 0,
+            searchLat: 0,
+            searchLng: 0,
             ready: true,
           });
         },
