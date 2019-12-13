@@ -137,11 +137,10 @@ class FormReview extends Component {
 
     let fd = false;
 
-    if (image != null) {
-      fd = new FormData();
-      const file = new File([image], 'img.jpg');
-      fd.append('image', file);
-    }
+    fd = new FormData();
+    const file = new File([image], 'img.jpg');
+    fd.append('image', file);
+
     onPostReview(reviewDict, fd).then(this.close());
   }
 
@@ -231,7 +230,7 @@ class FormReview extends Component {
 
     const contentHandler = mode === 'ADD' ? this.postContentHandler : this.editContentHandler;
 
-    const confirmDisabled = content === '' || restaurant === '' || menu === '' || rating === 0 || category === '';
+    const confirmDisabled = content === '' || restaurant === '' || menu === '' || rating === 0 || category === '' || image === null;
 
     let triggerButton;
     switch (mode) {
