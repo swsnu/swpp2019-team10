@@ -152,7 +152,7 @@ Main.propTypes = {
   history: propTypes.objectOf(Object).isRequired,
   match: propTypes.shape({
     params: propTypes.shape({
-      id: propTypes.number,
+      id: propTypes.string,
     }),
   }).isRequired,
 };
