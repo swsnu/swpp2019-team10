@@ -24,12 +24,6 @@ export const GET_REVIEWS = () => (dispatch) => {
     .catch(dispatch(GET_REVIEWS_PRE()));
 };
 
-/*
-export const GET_REVIEW_LOCATION = (lng, lat) => (dispatch) => (
-
-);
-*/
-
 export const GET_REVIEW_DEEP = (data) => ({
   type: actionTypes.GET_REVIEW,
   data,

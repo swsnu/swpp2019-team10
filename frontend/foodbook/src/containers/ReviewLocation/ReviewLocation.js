@@ -1,4 +1,4 @@
-import { Form } from 'semantic-ui-react';
+import { Form, Card } from 'semantic-ui-react';
 
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
@@ -7,7 +7,6 @@ import { withRouter } from 'react-router';
 import GoogleMap from 'components/GoogleMap';
 
 import ReviewPreview from 'components/ReviewPreview/';
-// import * as actionCreators from 'store/actions/review/action_review';
 
 const distance = (lat1, lng1, lat2, lng2) => {
   if ((lat1 === lat2) && (lng1 === lng2)) {
@@ -23,7 +22,7 @@ const distance = (lat1, lng1, lat2, lng2) => {
     dist = 1;
   }
   dist = Math.acos(dist);
-  dist = dist * 180 / Math.PI;
+  dist = (dist * 180) / Math.PI;
   dist = dist * 60 * 1.1515;
   dist *= 1.609344;
   return dist;
@@ -50,8 +49,6 @@ class ReviewLocation extends Component {
             lng,
             ready: true,
           });
-          // const onGetAll = this.props;
-          // onGetAll(lng, lat);
         },
 
         /* Error callback, default location to 0,0 */
@@ -84,10 +81,8 @@ class ReviewLocation extends Component {
       );
     }
 
-    const { reviews /* , onGetAll */ } = this.props;
+    const { reviews } = this.props;
     const { lng, lat } = this.state;
-
-    // onGetAll(lng, lat);
 
     const googleMap = (
       <Form.Field>
@@ -95,7 +90,7 @@ class ReviewLocation extends Component {
       </Form.Field>
     );
 
-    let reviewsToRender = reviews;
+    let reviewsToRender = reviews.filter((review) => distance(review.latitude, review.longitude, lng, lat) <= 1.0);
     reviewsToRender = reviewsToRender.map((review) => (
       <ReviewPreview
         key={`${review.id}`}
@@ -115,14 +110,9 @@ class ReviewLocation extends Component {
     return (
       <div className="ReviewLocation">
         {googleMap}
-        <div className="ui special cards fluid">
-          <div className="card fluid" style={{ width: '630px' }}>
-            <div className="content">
-              <br />
-              {reviewsToRender}
-            </div>
-          </div>
-        </div>
+        <Card.Group itemsPerRow={5} className="feed">
+          {reviewsToRender}
+        </Card.Group>
       </div>
     );
   }
@@ -130,11 +120,10 @@ class ReviewLocation extends Component {
 
 ReviewLocation.propTypes = {
   reviews: propTypes.arrayOf(Object),
-  // onGetAll: propTypes.func.isRequired,
 };
 
 ReviewLocation.defaultProps = {
-  reviews: [{ id: 0, isMine: true }, { id: 1, isMine: false }],
+  reviews: [],
 };
 
 const mapStateToProps = (state) => ({
@@ -142,11 +131,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  /*
-  onGetAll: (lng, lat) => {
-    dispatch(actionCreators.GET_REVIEW_LOCATION(lng, lat));
-  },
-  */
   dispatch,
 });
 
