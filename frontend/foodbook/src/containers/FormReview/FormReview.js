@@ -67,19 +67,24 @@ class FormReview extends Component {
     this.setState({ open: true });
   };
 
-  close = () => this.setState({
-    placeid: '',
-    restaurant: 'Select icon from Map',
-    menu: '',
-    content: '',
-    rating: 0,
-    longitude: 0.0,
-    latitude: 0.0,
-    category: '',
-    image: null,
-    error: null,
-    open: false,
-  });
+  close = () => {
+    this.setState({
+      placeid: '',
+      restaurant: 'Select icon from Map',
+      menu: '',
+      content: '',
+      rating: 0,
+      longitude: 0.0,
+      latitude: 0.0,
+      category: '',
+      image: null,
+      error: null,
+      open: false,
+    });
+
+    const { onClose } = this.props;
+    onClose();
+  };
 
   editContentHandler = () => {
     const {
@@ -371,6 +376,7 @@ FormReview.propTypes = {
   review: PropTypes.shape({
     id: PropTypes.number,
   }),
+  onClose: PropTypes.func,
   onPostReview: PropTypes.func,
   onEditReview: PropTypes.func,
   fixed: PropTypes.bool,
@@ -385,6 +391,7 @@ FormReview.defaultProps = {
   review: {
     id: 0,
   },
+  onClose: () => {},
   onPostReview: null,
   onEditReview: null,
   fixed: false,

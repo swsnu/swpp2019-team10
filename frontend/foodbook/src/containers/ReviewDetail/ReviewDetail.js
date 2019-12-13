@@ -61,9 +61,9 @@ class ReviewDetail extends Component {
   }
 
   loadReview = () => {
+    this.setState({ ready: false });
     const { id, onGetReview } = this.props;
     onGetReview(id).then(() => {
-      console.log('loaded');
       this.setState({ ready: true });
     });
   }
@@ -116,7 +116,7 @@ class ReviewDetail extends Component {
         <Grid.Column />
         <Grid.Column />
         <Grid.Column>
-          {isAuthor ? <FormReview fixed={false} mode="EDIT" id={id} /> : <div />}
+          {isAuthor ? <FormReview fixed={false} mode="EDIT" id={id} onClose={this.loadReview} /> : <div />}
         </Grid.Column>
         <Grid.Column>
           {isAuthor
@@ -211,7 +211,7 @@ class ReviewDetail extends Component {
             readOnly
           />
           <Form.Field>
-            <Recommendation data={menu} id={id} />
+            <Recommendation data={menu} id={id} onClose={this.loadReview} />
           </Form.Field>
         </Form>
       </Modal.Content>
