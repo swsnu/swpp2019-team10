@@ -307,6 +307,7 @@ def friend_review_list(request, friend_id):
                 'placeid': review.restaurant.place_id,
                 'longitude': review.restaurant.longitude,
                 'latitude': review.restaurant.latitude,
+                'category': review.category,
                 }
             review_all_list.append(dict_review)
         return JsonResponse(review_all_list, safe=False)

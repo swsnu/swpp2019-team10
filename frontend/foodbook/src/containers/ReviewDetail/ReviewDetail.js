@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import {
-  Rating, Button, Modal, Form, Image, Grid,
+  Rating, Button, Modal, Form, Image, Grid, Icon,
 } from 'semantic-ui-react';
 import React, { Component } from 'react';
 import './ReviewDetail.css';
@@ -13,23 +13,36 @@ import { connect } from 'react-redux';
 import * as actionCreators from 'store/actions/review/action_review';
 
 const parseTagName = (tags) => {
-  const parsed = tags.map((t, i) => {
-    let className;
-    if (t.sentimental === 0) className = `neu ${i}`;
-    else if (t.sentimental === 1) className = `pos ${i}`;
-    else className = `neg ${i}`;
+  const positive = tags.filter((tagPositive) => tagPositive.sentimental === 1);
 
-    return (
-      <span key={`${t.name}Wrapper`} className={className}>
-        {t.name}
-      </span>
-    );
+  const netural = tags.filter((tagNetural) => tagNetural.sentimental === 0);
+
+  const negative = tags.filter((tagNegative) => {
+    const score = tagNegative.sentimental;
+    return score !== 0 && score !== 1;
   });
 
+  const getName = (obj) => obj.name;
+  const positives = positive.map(getName).join(', ');
+  const negatives = negative.map(getName).join(', ');
+  const neturals = netural.map(getName).join(', ');
+
   return (
-    <div className="tags-wrapper" style={{ display: 'inline' }}>
-      {parsed}
-    </div>
+    <span className="tags-wrapper">
+      <Icon name="thumbs up" mini />
+      <span className="positive" style={{ color: 'blue' }}>
+        { positives }
+      </span>
+      <Icon name="thumbs down" mini />
+      <span className="negative" style={{ color: 'red' }}>
+        { negatives }
+      </span>
+      <Icon name="hand point right" mini />
+      <span className="neturals" style={{ color: 'grey' }}>
+        { neturals }
+      </span>
+      <br />
+    </span>
   );
 };
 
@@ -43,8 +56,15 @@ class ReviewDetail extends Component {
   }
 
   open = () => {
+    this.setState({ open: true });
+  }
+
+  loadReview = () => {
+    this.setState({ ready: false });
     const { id, onGetReview } = this.props;
-    onGetReview(id).then(this.setState({ open: true }));
+    onGetReview(id).then(() => {
+      this.setState({ ready: true });
+    });
   }
 
   close = () => this.setState({ open: false });
@@ -56,7 +76,7 @@ class ReviewDetail extends Component {
 
   render() {
     const {
-      error, open,
+      error, open, ready,
     } = this.state;
 
     const {
@@ -64,7 +84,7 @@ class ReviewDetail extends Component {
     } = this.props;
 
     const {
-      content, restaurant, author, menu, image, id: reviewId, category,
+      content, restaurant, author, menu, image, category,
       rating, date, tag, longitude, latitude,
     } = review;
 
@@ -95,7 +115,7 @@ class ReviewDetail extends Component {
         <Grid.Column />
         <Grid.Column />
         <Grid.Column>
-          {isAuthor ? <FormReview fixed={false} mode="EDIT" id={id} /> : <div />}
+          {isAuthor ? <FormReview fixed={false} mode="EDIT" id={id} onClose={this.loadReview} /> : <div />}
         </Grid.Column>
         <Grid.Column>
           {isAuthor
@@ -128,7 +148,7 @@ class ReviewDetail extends Component {
 
     const googleMap = (<GoogleMap center={{ lat: latitude, lng: longitude }} marker />);
 
-    const modalContent = id === reviewId ? (
+    const modalContent = ready ? (
       <Modal.Content scrolling>
         <Form id="review-detail" style={{ width: '1000px' }}>
           <Form.Group width="equal">
@@ -190,7 +210,7 @@ class ReviewDetail extends Component {
             readOnly
           />
           <Form.Field>
-            <Recommendation data={menu} id={id} />
+            <Recommendation data={menu} id={id} onClose={this.loadReview} />
           </Form.Field>
         </Form>
       </Modal.Content>
@@ -201,8 +221,7 @@ class ReviewDetail extends Component {
       <Modal
         className="review-detail-modal"
         open={open}
-        onOpen={this.open}
-        onClose={this.close}
+        onOpen={this.loadReview}
         trigger={(
           triggerButton
         )}

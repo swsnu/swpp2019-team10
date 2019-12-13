@@ -21,7 +21,10 @@ export class Recommendation extends Component {
 
   show = () => () => this.setState({ open: true })
 
-  close = () => this.setState({ open: false });
+  close = () => {
+    const { onClose } = this.props;
+    onClose();
+  }
 
   render() {
     const { open } = this.state;
@@ -65,10 +68,12 @@ export class Recommendation extends Component {
 Recommendation.propTypes = {
   data: propTypes.string,
   id: propTypes.number.isRequired,
+  onClose: propTypes.func,
 };
 
 Recommendation.defaultProps = {
   data: 'menu',
+  onClose: () => {},
 };
 
 export default Recommendation;

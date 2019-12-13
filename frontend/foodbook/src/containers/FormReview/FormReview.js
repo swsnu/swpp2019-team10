@@ -67,19 +67,24 @@ class FormReview extends Component {
     this.setState({ open: true });
   };
 
-  close = () => this.setState({
-    placeid: '',
-    restaurant: 'Select icon from Map',
-    menu: '',
-    content: '',
-    rating: 0,
-    longitude: 0.0,
-    latitude: 0.0,
-    category: '',
-    image: null,
-    error: null,
-    open: false,
-  });
+  close = () => {
+    this.setState({
+      placeid: '',
+      restaurant: 'Select icon from Map',
+      menu: '',
+      content: '',
+      rating: 0,
+      longitude: 0.0,
+      latitude: 0.0,
+      category: '',
+      image: null,
+      error: null,
+      open: false,
+    });
+
+    const { onClose } = this.props;
+    onClose();
+  };
 
   editContentHandler = () => {
     const {
@@ -137,11 +142,10 @@ class FormReview extends Component {
 
     let fd = false;
 
-    if (image != null) {
-      fd = new FormData();
-      const file = new File([image], 'img.jpg');
-      fd.append('image', file);
-    }
+    fd = new FormData();
+    const file = new File([image], 'img.jpg');
+    fd.append('image', file);
+
     onPostReview(reviewDict, fd).then(this.close());
   }
 
@@ -231,7 +235,7 @@ class FormReview extends Component {
 
     const contentHandler = mode === 'ADD' ? this.postContentHandler : this.editContentHandler;
 
-    const confirmDisabled = content === '' || restaurant === '' || menu === '' || rating === 0 || category === '';
+    const confirmDisabled = content === '' || restaurant === 'Select icon from Map' || menu === '' || rating === 0 || category === '' || image === null;
 
     let triggerButton;
     switch (mode) {
@@ -256,12 +260,18 @@ class FormReview extends Component {
           </Button>
         );
     }
+
+    const categoryList = ['Chicken', 'Pizza', 'Korean', 'Chinese', 'Japanese',
+      'Western', 'Fastfood', 'Dessert', 'Snack', 'Asian'].map((str) => ({
+      key: str,
+      text: str,
+      value: str.toLowerCase(),
+    }));
+
     return (
       <Modal
         className="form-review-modal"
         open={open}
-        onOpen={this.open}
-        onClose={this.close}
         trigger={(
           <Popup
             id="review-modal-trigger"
@@ -272,7 +282,7 @@ class FormReview extends Component {
       )}
       >
         <Modal.Header>
-          Review
+          {mode === 'ADD' ? 'Submit New Review' : 'Edit Review'}
         </Modal.Header>
         <Modal.Content scrolling>
           <Form id="review-form" style={{ width: '1000px' }}>
@@ -300,15 +310,9 @@ class FormReview extends Component {
                 placeholder="Food's category here"
                 fluid
                 selection
+                value={category}
                 onChange={this.handleCategory}
-                options={
-                  ['Chicken', 'Pizza', 'Korean', 'Chinese', 'Japanese',
-                    'Western', 'Fastfood', 'Dessert', 'Snack', 'Asian'].map((str) => ({
-                    key: str,
-                    text: str,
-                    value: str.toLowerCase(),
-                  }))
-                }
+                options={categoryList}
                 className="category-input-wrapper"
               />
               <Form.TextArea
@@ -374,6 +378,7 @@ FormReview.propTypes = {
   review: PropTypes.shape({
     id: PropTypes.number,
   }),
+  onClose: PropTypes.func,
   onPostReview: PropTypes.func,
   onEditReview: PropTypes.func,
   fixed: PropTypes.bool,
@@ -388,6 +393,7 @@ FormReview.defaultProps = {
   review: {
     id: 0,
   },
+  onClose: () => {},
   onPostReview: null,
   onEditReview: null,
   fixed: false,

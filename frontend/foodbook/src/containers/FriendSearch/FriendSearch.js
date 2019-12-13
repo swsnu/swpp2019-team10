@@ -36,7 +36,7 @@ class FriendSearch extends Component {
     }));
 
     const button = (
-      <Button onClick={() => onAddFriend(value)} disabled={value === ''}> Add </Button>
+      <Button onClick={() => onAddFriend(value)} disabled={value === ''} style={{ marginLeft: '10px' }}> Add </Button>
     );
 
     return (

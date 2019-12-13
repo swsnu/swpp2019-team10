@@ -166,24 +166,8 @@ describe('<FormReview />', () => {
       const event = { target: { value: 'sometext' } };
       component.update();
 
-      // text fields are tested already
-      component.find('TextArea #review-menu-input').simulate('change', event);
-      component.find('TextArea #review-content-input').simulate('change', event);
-      component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });
-      component.find('DropdownMenu').simulate('click');
-      component.find('DropdownItem').at(0).simulate('click');
-      component.update();
-
-      const submitButton = component.find('#submit-review-button').at(0);
-      submitButton.simulate('click');
-      component.update();
-      expect(spyPost).toHaveBeenCalledTimes(1);
-
-      component.find('Popup #review-modal-trigger').simulate('click');
-      component.update();
-
       const addWrapper = component.find('FormReview');
-      addWrapper.setState({ image: 'blob' });
+      addWrapper.setState({ image: 'blob', restaurant: 'restaurant' });
       component.find('TextArea #review-menu-input').simulate('change', event);
       component.find('TextArea #review-content-input').simulate('change', event);
       component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });
@@ -192,7 +176,7 @@ describe('<FormReview />', () => {
       component.update();
       component.find('#submit-review-button').at(0).simulate('click');
       component.update();
-      expect(spyPost).toHaveBeenCalledTimes(2);
+      expect(spyPost).toHaveBeenCalledTimes(1);
     });
 
     it('should have back button working', () => {
