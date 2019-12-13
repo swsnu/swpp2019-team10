@@ -73,10 +73,10 @@ describe('<RecommendationTag />', () => {
     .mockImplementation(() => ({
       type: '',
     }));
-  // const spyGetIFH = jest.spyOn(actionCreators, 'GET_RECOMS_IFH')
-  //   .mockImplementation(() => ({
-  //     type: '',
-  //   }));
+  const spyGetIFH = jest.spyOn(actionCreators, 'GET_RECOMS_IFH')
+    .mockImplementation(() => ({
+      type: '',
+    }));
 
   const mockStore2 = getMockStore(initialUser, {}, { recomtstList: resp });
 
@@ -148,6 +148,7 @@ describe('<RecommendationTag />', () => {
       });
       component.find('Button #recom-tst-button').simulate('click');
       component.update();
+      expect(spyGetAll).toHaveBeenCalledTimes(1);
       const wrapper = component.find('List #recommendList');
       expect(wrapper.length).toBe(1);
     });
@@ -161,6 +162,7 @@ describe('<RecommendationTag />', () => {
       expect(wrapper.text()).toBe('I feel hungry!');
       wrapper.simulate('click');
       component.update();
+      expect(spyGetIFH).toHaveBeenCalledTimes(1);
       const wrapper1 = component.find('List #recommendList');
       expect(wrapper1.length).toBe(1);
     });

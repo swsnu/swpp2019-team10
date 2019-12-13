@@ -96,7 +96,7 @@ class ReviewTestCase(TestCase):
             name='TEST_MENU',
             restaurant=restaurant
         )
-        menu_d = Menu.objects.create(
+        Menu.objects.create(
             name='TEST_MENU',
             restaurant=restaurant_dif
         )
