@@ -8,24 +8,19 @@ import GoogleMap from 'components/GoogleMap';
 
 import ReviewPreview from 'components/ReviewPreview/';
 
-const distance = (lat1, lng1, lat2, lng2) => {
-  if ((lat1 === lat2) && (lng1 === lng2)) {
-    return 0;
-  }
+// calculate distance in kilometers from latitudes and longitudes
+const getDistance = (lat1, lng1, lat2, lng2) => {
+  const deg2rad = (deg) => deg * (Math.PI / 180);
 
-  const radlat1 = (Math.PI * lat1) / 180;
-  const radlat2 = (Math.PI * lat2) / 180;
-  const theta = lng1 - lng2;
-  const radtheta = (Math.PI * theta) / 180;
-  let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-  if (dist > 1) {
-    dist = 1;
-  }
-  dist = Math.acos(dist);
-  dist = (dist * 180) / Math.PI;
-  dist = dist * 60 * 1.1515;
-  dist *= 1.609344;
-  return dist;
+  const R = 6371; // Radius of the earth in km
+  const dLat = deg2rad(lat2 - lat1);
+  const dLng = deg2rad(lng2 - lng1);
+  const stdDistance = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+    + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+  const angle = Math.atan2(Math.sqrt(stdDistance), Math.sqrt(1 - stdDistance));
+  const distance = R * angle * 2;
+
+  return distance;
 };
 
 class ReviewLocation extends Component {
@@ -90,7 +85,7 @@ class ReviewLocation extends Component {
       </Form.Field>
     );
 
-    let reviewsToRender = reviews.filter((review) => distance(review.latitude, review.longitude, lng, lat) <= 1.0);
+    let reviewsToRender = reviews.filter((review) => getDistance(review.latitude, review.longitude, lng, lat) <= 1.0);
     reviewsToRender = reviewsToRender.map((review) => (
       <ReviewPreview
         key={`${review.id}`}
