@@ -32,7 +32,7 @@ export class RawCalendar extends Component {
         <h3>
           {`Your Food history of ${dateString}`}
         </h3>
-        <ReviewList friendId={friendId} dateString={dateString} />
+        <ReviewList friendId={parseInt(friendId, 10)} dateString={dateString} />
       </div>
     );
   }

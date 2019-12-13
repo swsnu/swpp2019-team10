@@ -40,19 +40,19 @@ export class Main extends Component {
     const handleItemClick = (e, { value }) => {
       if (value === 'feed') {
         this.setState({
-          selectedView: <Feed friendId={friendId} className="feed" />,
+          selectedView: <Feed friendId={parseInt(friendId, 10)} className="feed" />,
         });
       } else if (value === 'calendar') {
         this.setState({
-          selectedView: <Calendar friendId={friendId} className="calendar" />,
+          selectedView: <Calendar friendId={parseInt(friendId, 10)} className="calendar" />,
         });
       } else if (value === 'category') {
         this.setState({
-          selectedView: <Category friendId={friendId} className="category" />,
+          selectedView: <Category friendId={parseInt(friendId, 10)} className="category" />,
         });
       } else {
         this.setState({
-          selectedView: <Location friendId={friendId} className="location" />,
+          selectedView: <Location friendId={parseInt(friendId, 10)} className="location" />,
         });
       }
     };
