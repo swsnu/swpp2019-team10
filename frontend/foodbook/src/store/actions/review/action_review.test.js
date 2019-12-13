@@ -80,6 +80,13 @@ describe('Review Action', () => {
       });
   });
 
+  it('should clear review detail before getting review', () => {
+    store.dispatch(actionCreators.GET_REVIEW_PRE());
+
+    const newState = store.getState();
+    expect(newState.review.reviewDetail).toStrictEqual({});
+  });
+
   it('should post review twice without error when image', (done) => {
     const spy = jest.spyOn(axios, 'post')
       .mockImplementation(() => new Promise((res) => {
@@ -108,6 +115,25 @@ describe('Review Action', () => {
         res(result);
       }));
     store.dispatch(actionCreators.POST_REVIEW(stubReviews[0], false))
+      .then(() => {
+        const newState = store.getState();
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(newState.review.reviewList.length).toBe(2);
+        done();
+      })
+      .catch();
+  });
+
+  it('should edit review without error', (done) => {
+    const spy = jest.spyOn(axios, 'put')
+      .mockImplementation(() => new Promise((res) => {
+        const result = {
+          status: 201,
+          data: stubReviews[0],
+        };
+        res(result);
+      }));
+    store.dispatch(actionCreators.EDIT_REVIEW(stubReviews[0], false))
       .then(() => {
         const newState = store.getState();
         expect(spy).toHaveBeenCalledTimes(1);
