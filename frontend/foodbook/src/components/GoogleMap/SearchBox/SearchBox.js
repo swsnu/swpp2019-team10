@@ -22,7 +22,7 @@ class SearchBox extends Component {
 
   onPlacesChanged = ({ map, setplace, mapApi } = this.props) => {
     let places = this.searchBox.getPlaces();
-    places = places.filter((place) => (place.types.includes('restaurant') || place.types.includes('food')));
+    places = places.filter((place) => 'types' in place && ((place.types.includes('restaurant') || place.types.includes('food'))));
 
     if (places.length === 0) {
       return;
