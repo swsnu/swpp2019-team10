@@ -40,7 +40,11 @@ App.propTypes = {
     params: propTypes.shape({
       id: propTypes.string,
     }),
-  }).isRequired,
+  }),
+};
+
+App.defaultProps = {
+  match: undefined,
 };
 
 export default App;
