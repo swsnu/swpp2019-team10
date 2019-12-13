@@ -167,7 +167,7 @@ describe('<FormReview />', () => {
       component.update();
 
       const addWrapper = component.find('FormReview');
-      addWrapper.setState({ image: 'blob' });
+      addWrapper.setState({ image: 'blob', restaurant: 'restaurant' });
       component.find('TextArea #review-menu-input').simulate('change', event);
       component.find('TextArea #review-content-input').simulate('change', event);
       component.find('#review-rating').at(0).props().onRate(null, { rating: 5.0 });

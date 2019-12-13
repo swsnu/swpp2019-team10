@@ -235,7 +235,7 @@ class FormReview extends Component {
 
     const contentHandler = mode === 'ADD' ? this.postContentHandler : this.editContentHandler;
 
-    const confirmDisabled = content === '' || restaurant === '' || menu === '' || rating === 0 || category === '' || image === null;
+    const confirmDisabled = content === '' || restaurant === 'Select icon from Map' || menu === '' || rating === 0 || category === '' || image === null;
 
     let triggerButton;
     switch (mode) {
