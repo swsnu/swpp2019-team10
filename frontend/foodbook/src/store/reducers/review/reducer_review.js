@@ -39,7 +39,9 @@ const reducer = (state = initialState, action) => {
 
     case actionTypes.EDIT_REVIEW:
       newReview = action.data;
-      newList = state.reviewList.map((review) => (review.id === action.data.id ? newReview : review));
+      newList = state.reviewList.map(
+        (review) => (review.id === action.data.id ? newReview : review),
+      );
 
       return { ...state, reviewList: newList, reviewDetail: newReview };
 
