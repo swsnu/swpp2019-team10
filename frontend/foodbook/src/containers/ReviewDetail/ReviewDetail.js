@@ -29,15 +29,15 @@ const parseTagName = (tags) => {
 
   return (
     <span className="tags-wrapper">
-      <Icon name="thumbs up" size="mini" />
+      <Icon name="thumbs up" size="small" />
       <span className="positive" style={{ color: 'blue' }}>
         { positives }
       </span>
-      <Icon name="thumbs down" size="mini" />
+      <Icon name="thumbs down" size="small" />
       <span className="negative" style={{ color: 'red' }}>
         { negatives }
       </span>
-      <Icon name="hand point right" size="mini" />
+      <Icon name="hand point right" size="small" />
       <span className="neturals" style={{ color: 'grey' }}>
         { neturals }
       </span>
