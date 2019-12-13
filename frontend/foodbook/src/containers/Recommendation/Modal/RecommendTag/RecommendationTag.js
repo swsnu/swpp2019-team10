@@ -21,13 +21,20 @@ class RecommendationTag extends Component {
   }
 
   recomHandler = () => {
-    const { onGetAll, id } = this.props;
+    const { onGetAll, onGetIFH, id } = this.props;
     const { lat, lng } = this.state;
-    onGetAll({
-      id,
-      lat,
-      log: lng,
-    });
+    if (id === -1) {
+      onGetIFH({
+        lat,
+        log: lng,
+      });
+    } else {
+      onGetAll({
+        id,
+        lat,
+        log: lng,
+      });
+    }
   }
 
   getGeoLocation = () => {
@@ -57,7 +64,9 @@ class RecommendationTag extends Component {
 
   render() {
     const { open } = this.state;
-    const { recoms, data, user } = this.props;
+    const {
+      recoms, data, user, id,
+    } = this.props;
     const aaa = [];
     const keys = Object.keys(user.taste);
     keys.forEach((key) => {
@@ -113,17 +122,28 @@ class RecommendationTag extends Component {
         {recommendList}
       </List>
     );
+    let st;
+    let buttonName;
+    if (id === -1) {
+      st = 'I feel hungry!';
+      buttonName = 'I feel hungry!';
+    } else {
+      st = `Recommendation for ${data}!`;
+      buttonName = 'Recommend By Taste!';
+    }
     return (
       <Modal
         open={open}
         onOpen={this.open}
         onClose={this.close}
-        trigger={
-          <Button id="recom-tst-button" color="green" onClick={() => this.recomHandler()} inverted> Recommend By Your Taste! </Button>
-        }
+        trigger={(
+          <Button id="recom-tst-button" color="green" onClick={() => this.recomHandler()} inverted>
+            { buttonName }
+          </Button>
+        )}
       >
         <Modal.Header>
-          {`Recommendation for ${data}!`}
+          {st}
         </Modal.Header>
         <Modal.Content scrolling>
           <Modal.Description>
@@ -134,10 +154,30 @@ class RecommendationTag extends Component {
                   <Bar
                     data={aaa}
                     indexBy="taste"
-                    width={400}
-                    height={300}
+                    margin={{
+                      top: 50, right: 130, bottom: 60, left: 60,
+                    }}
+                    width={500}
+                    height={400}
                     minValue={-4}
                     maxValue={4}
+                    colorBy="index"
+                    axisBottom={{
+                      tickSize: 5,
+                      tickPadding: 5,
+                      tickRotation: -90,
+                      legend: 'taste',
+                      legendPosition: 'middle',
+                      legendOffset: 50,
+                    }}
+                    axisLeft={{
+                      tickSize: 5,
+                      tickPadding: 5,
+                      tickRotation: 0,
+                      legend: 'like',
+                      legendPosition: 'middle',
+                      legendOffset: -40,
+                    }}
                   />
                 </Grid.Column>
                 <Grid.Column>
@@ -158,15 +198,16 @@ class RecommendationTag extends Component {
 RecommendationTag.propTypes = {
   recoms: propTypes.arrayOf(Object),
   onGetAll: propTypes.func.isRequired,
+  onGetIFH: propTypes.func.isRequired,
   data: propTypes.string,
   id: propTypes.number.isRequired,
-  user: propTypes.arrayOf(Object),
+  user: propTypes.objectOf(Object),
 };
 
 RecommendationTag.defaultProps = {
   recoms: [],
   data: 'menu',
-  user: [],
+  user: {},
 };
 
 const mapStateToProps = (state) => ({
@@ -177,6 +218,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onGetAll: (data) => {
     dispatch(actionCreators.GET_RECOMS_TST(data));
+  },
+  onGetIFH: (data) => {
+    dispatch(actionCreators.GET_RECOMS_IFH(data));
   },
 });
 

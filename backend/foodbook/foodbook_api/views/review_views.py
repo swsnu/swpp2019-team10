@@ -81,7 +81,10 @@ def review_list(request):
         restaurant.save()
         try:
             menu = restaurant.menu_list.all()
-            menu = menu.get(name=menu_name)
+            menu = menu.get(
+                name=menu_name,
+                restaurant=restaurant,
+            )
         except ObjectDoesNotExist:
             menu = Menu.objects.create(
                 name=menu_name,
@@ -169,7 +172,7 @@ def review_detail(request, review_id):
     if request.method == 'PUT':
         try:
             review = Review.objects.select_related(
-                'author__user', 'restaurant', 'menu').get(id=review_id)
+                'author__user', 'restaurant', 'menu').prefetch_related('tag').get(id=review_id)
         except ObjectDoesNotExist:
             return HttpResponseNotFound()
         if request.user.id != review.author.user.id:
@@ -196,7 +199,10 @@ def review_detail(request, review_id):
                 rating=rating,
             )
         try:
-            menu = Menu.objects.get(name=menu_name)
+            menu = Menu.objects.get(
+                name=menu_name,
+                restaurant=restaurant,
+            )
         except ObjectDoesNotExist:
             menu = Menu.objects.create(
                 name=menu_name,
@@ -207,10 +213,23 @@ def review_detail(request, review_id):
         review.content = content
         review.rating = rating
         review.category = category
-        review.save()
         image_path = ""
         if review.review_img:
             image_path = 'http://127.0.0.1:8000'+review.review_img.url
+        tags = Tagging(request.user.profile, menu, rating).tagging(content)
+        review.tag.clear()
+        for item in tags.keys():
+            review.tag.add(Tag.objects.create(
+                name=item, sentimental=tags[item]))
+        review.save()
+        tag = []
+        for tag_item in review.tag.all():
+            pos = 0
+            if tag_item.sentimental >= 0.6:
+                pos = 1
+            if tag_item.sentimental <= 0.4:
+                pos = -1
+            tag.append({'name': tag_item.name, 'sentimental': pos})
         dict_review = {
             'id': review.id,
             'author': review.author.user.username,
@@ -224,6 +243,7 @@ def review_detail(request, review_id):
             'placeid': placeid,
             'longitude': restaurant.longitude,
             'latitude': restaurant.latitude,
+            'tag': tag,
         }
         return JsonResponse(dict_review)
     if request.method == 'DELETE':
