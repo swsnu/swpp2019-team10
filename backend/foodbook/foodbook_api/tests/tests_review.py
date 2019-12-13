@@ -132,7 +132,7 @@ class ReviewTestCase(TestCase):
             category='CATEGORY3'
         )
 
-        Review.objects.create(
+        review4 = Review.objects.create(
             author=profile_user3,
             restaurant=restaurant,
             menu=menu,
@@ -141,6 +141,10 @@ class ReviewTestCase(TestCase):
             review_img=make_image_file()[1],
             category='CATEGORY4'
         )
+
+        review4.tag.add(tag1)
+        review4.tag.add(tag2)
+        review4.tag.add(tag3)
 
     """
     test review_list

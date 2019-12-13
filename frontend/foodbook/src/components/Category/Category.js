@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Dropdown } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
+import propTypes from 'prop-types';
 import ReviewList from 'components/Layouts/Feed/Feed';
 
 
@@ -14,6 +15,7 @@ export class Category extends Component {
 
   render() {
     const { category } = this.state;
+    const { friendId } = this.props;
 
     return (
       <div className="Category">
@@ -34,10 +36,18 @@ export class Category extends Component {
         <h3>
           {`Your Food history of ${category}`}
         </h3>
-        <ReviewList category={category} />
+        <ReviewList friendId={friendId} category={category} />
       </div>
     );
   }
 }
+
+Category.propTypes = {
+  friendId: propTypes.number,
+};
+
+Category.defaultProps = {
+  friendId: -1,
+};
 
 export default Category;

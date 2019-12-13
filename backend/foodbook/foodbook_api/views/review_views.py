@@ -266,6 +266,14 @@ def friend_review_list(request, friend_id):
             image_path = ""
             if review.review_img:
                 image_path = 'http://127.0.0.1:8000'+review.review_img.url
+            tag = []
+            for tag_item in review.tag.all():
+                pos = 0
+                if tag_item.sentimental >= 0.6:
+                    pos = 1
+                if tag_item.sentimental <= 0.4:
+                    pos = -1
+                tag.append({'name':tag_item.name, 'sentimental': pos})
             dict_review = {
                 'id': review.id,
                 'author': review.author.user.username,
@@ -275,6 +283,7 @@ def friend_review_list(request, friend_id):
                 'rating': review.rating,
                 'image': image_path,
                 'date': review.date.strftime("%Y-%m-%d"),
+                'tag': tag,
                 'placeid': review.restaurant.place_id,
                 'longitude': review.restaurant.longitude,
                 'latitude': review.restaurant.latitude,
@@ -309,6 +318,14 @@ def friend_review_detail(request, friend_id, review_id):
         image_path = ""
         if review.review_img:
             image_path = 'http://127.0.0.1:8000'+review.review_img.url
+        tag = []
+        for tag_item in review.tag.all():
+            pos = 0
+            if tag_item.sentimental >= 0.6:
+                pos = 1
+            if tag_item.sentimental <= 0.4:
+                pos = -1
+            tag.append({'name':tag_item.name, 'sentimental': pos})
         review_dict = {
             'id': review.id,
             'author': review.author.user.username,
@@ -319,6 +336,7 @@ def friend_review_detail(request, friend_id, review_id):
             'date': review.date.strftime("%Y-%m-%d"),
             'category': review.category,
             'image': image_path,
+            'tag': tag,
             'placeid': review.restaurant.place_id,
             'longitude': review.restaurant.longitude,
             'latitude': review.restaurant.latitude,
