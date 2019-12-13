@@ -271,7 +271,7 @@ class FormReview extends Component {
       )}
       >
         <Modal.Header>
-          Review
+          {mode === 'ADD' ? 'Submit New Review' : 'Edit Review'}
         </Modal.Header>
         <Modal.Content scrolling>
           <Form id="review-form" style={{ width: '1000px' }}>
