@@ -25,7 +25,8 @@ describe('ReviewLocation', () => {
   let reviewLocation;
 
   const stubReviews = [
-
+    { latitude: 51.1, longitude: 45.3 },
+    { latitude: 11.1, longitude: 45.0 },
   ];
 
   const mockStore = getMockStore({}, { reviews: stubReviews }, {});

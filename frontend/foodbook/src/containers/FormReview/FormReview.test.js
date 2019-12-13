@@ -22,7 +22,8 @@ const mockGeolocation = {
 };
 
 const mockFakeGeolocation = {
-  getCurrentPosition: jest.fn(),
+  getCurrentPosition: jest.fn()
+    .mockImplementation((success) => Promise.reject()),
 };
 
 global.navigator.geolocation = mockGeolocation;
@@ -193,9 +194,9 @@ describe('<FormReview />', () => {
     it('loading message should be shown up', () => {
       global.navigator.geolocation = mockFakeGeolocation;
       const component = mount(addReview);
-
-      const backWrapper = component.find('.form-review-loading');
-      expect(backWrapper.length).toBe(1);
+      const wrapper = component.find('FormReview');
+      expect(wrapper.at(0).state('longitude')).toBe(0.0);
+      expect(wrapper.at(0).state('latitude')).toBe(0.0);
     });
 
     it('error message should be shown up', () => {
