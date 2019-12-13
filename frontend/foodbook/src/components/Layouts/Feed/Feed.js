@@ -21,11 +21,16 @@ class Feed extends Component {
   render() {
     const { reviews, dateString, category } = this.props;
     let reviewsToRender = reviews;
+    console.log(reviews);
     if (dateString) {
       reviewsToRender = reviewsToRender.filter((review) => review.date === dateString);
-    } if (category) {
-      reviewsToRender = reviewsToRender.filter((review) => review.category === category);
     }
+
+    if (category) {
+      reviewsToRender = reviewsToRender
+        .filter((review) => review.category.toUpperCase() === category.toUpperCase());
+    }
+
     reviewsToRender = reviewsToRender.map((review) => (
       <ReviewPreview
         key={`${review.id}`}
