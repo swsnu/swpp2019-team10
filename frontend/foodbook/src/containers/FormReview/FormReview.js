@@ -242,7 +242,7 @@ class FormReview extends Component {
       case 'ADD':
         triggerButton = (
           <Button className="ui medium image" inverted={!fixed} onClick={this.open}>
-            <i className="edit outline black icon fluid massive center link" />
+            <i className="edit outline black icon massive center link" />
           </Button>
         );
         break;
@@ -288,7 +288,6 @@ class FormReview extends Component {
             <br />
             <Form.Group widths="equal">
               <Form.TextArea
-                fluid
                 id="review-restaurant-input"
                 rows="1"
                 type="text"
@@ -300,7 +299,6 @@ class FormReview extends Component {
                 label="Category"
                 name="category"
                 placeholder="Food's category here"
-                fluid
                 selection
                 onChange={this.handleCategory}
                 options={
@@ -314,7 +312,6 @@ class FormReview extends Component {
                 className="category-input-wrapper"
               />
               <Form.TextArea
-                fluid
                 id="review-menu-input"
                 rows="1"
                 type="text"
@@ -335,7 +332,6 @@ class FormReview extends Component {
               />
             </Form.Field>
             <Form.TextArea
-              fluid
               id="review-content-input"
               rows="4"
               type="text"

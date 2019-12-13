@@ -131,7 +131,6 @@ export class Main extends Component {
               <FormReview mode="ADD" fixed={false} />
             </Grid.Column>
             <Grid.Column width={2} />
-            {/* TODO: I Feel Hungry Button */}
             <Grid.Column width={4} />
           </Grid.Row>
 
