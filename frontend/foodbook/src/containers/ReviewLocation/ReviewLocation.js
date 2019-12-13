@@ -19,7 +19,7 @@ const getDistance = (lat1, lng1, lat2, lng2) => {
     + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
   const angle = Math.atan2(Math.sqrt(stdDistance), Math.sqrt(1 - stdDistance));
   const distance = R * angle * 2;
-
+  console.log(lat1, lng1, lat2, lng2, distance);
   return distance;
 };
 
@@ -42,6 +42,8 @@ class ReviewLocation extends Component {
           this.setState({
             lat,
             lng,
+            searchLat: lat,
+            searchLng: lng,
             ready: true,
           });
         },
@@ -60,8 +62,8 @@ class ReviewLocation extends Component {
 
   getInfo = (placeid, restaurant, lat, lng) => {
     this.setState({
-      lat,
-      lng,
+      searchLat: lat,
+      searchLng: lng,
     });
   }
 
@@ -77,7 +79,7 @@ class ReviewLocation extends Component {
     }
 
     const { reviews } = this.props;
-    const { lng, lat } = this.state;
+    const { searchLng, searchLat, lat, lng } = this.state;
 
     const googleMap = (
       <Form.Field>
@@ -85,7 +87,7 @@ class ReviewLocation extends Component {
       </Form.Field>
     );
 
-    let reviewsToRender = reviews.filter((review) => getDistance(review.latitude, review.longitude, lng, lat) <= 1.0);
+    let reviewsToRender = reviews.filter((review) => getDistance(review.latitude, review.longitude, searchLat, searchLng) <= 1.0);
     reviewsToRender = reviewsToRender.map((review) => (
       <ReviewPreview
         key={`${review.id}`}

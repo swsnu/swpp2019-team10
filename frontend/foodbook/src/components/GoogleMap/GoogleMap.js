@@ -9,6 +9,7 @@ import SearchBox from './SearchBox';
 
 class GoogleMap extends Component {
   markers = [];
+  posMarker = null;
 
   constructor(props) {
     super(props);
@@ -83,22 +84,26 @@ class GoogleMap extends Component {
       };
       if (draggable) markerDict.draggable = true;
 
+      const { getInfo } = this.props;
+
       const currMarker = new mapApi.Marker(markerDict);
+
+      if (this.posMarker !== null) this.posMarker.setMap(null);
       if (draggable) {
         currMarker.addListener('dragend', (evt) => {
           // Clear out the old markers.
-          this.marker.setMap(null);
-
+          const lat = evt.latLng.lat();
+          const lng = evt.latLng.lng();
           this.setState({
             center: {
-              lat: evt.latLng.lat(),
-              lng: evt.latLng.lng(),
+              lat,
+              lng,
             },
           });
+          getInfo('', '', lat, lng);
         });
       }
-
-      this.marker = currMarker;
+      this.posMarker = currMarker;
     }
     if (restaurants.length !== 0 && mapApiLoaded) {
       restaurants.forEach((restaurant) => {
@@ -128,7 +133,7 @@ class GoogleMap extends Component {
           && <SearchBox map={mapInstance} mapApi={mapApi} setplace={this.setPlace} />}
         <GoogleMapReact
           bootstrapURLKeys={{ key: ApiKey.googleApiKey, libraries: ['places', 'geometry'] }}
-          defaultCenter={center}
+          center={center}
           defaultZoom={zoom}
           onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)}
         />
