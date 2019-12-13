@@ -5,7 +5,7 @@ import { history } from 'store/store';
 import { ConnectedRouter } from 'connected-react-router';
 import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
-
+import * as actionCreators from 'store/actions/review/action_review';
 import RestaurantReview from './RestaurantReview';
 
 // https://jestjs.io/docs/en/mock-functions.html
@@ -46,6 +46,11 @@ describe('<RestaurantReview />', () => {
     user2,
   ];
 
+  const spyGetAll = jest.spyOn(actionCreators, 'GET_RESTAURANT_REVIEWS')
+    .mockImplementation(() => ({
+      type: '',
+    }));
+
   const mockStore2 = getMockStore({}, { reviewRestaurantList: resp }, {});
 
   let recommend;
@@ -85,6 +90,7 @@ describe('<RestaurantReview />', () => {
       component.update();
       const wrapper = component.find('.mockReviewList');
       expect(wrapper.length).toBe(0);
+      expect(spyGetAll).toHaveBeenCalledTimes(1);
     });
 
     it('should render when recoms.length > 0', () => {
@@ -93,6 +99,7 @@ describe('<RestaurantReview />', () => {
       component.update();
       const wrapper = component.find('.mockReviewList');
       expect(wrapper.length).toBe(2);
+      expect(spyGetAll).toHaveBeenCalledTimes(1);
     });
   });
 });

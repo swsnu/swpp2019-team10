@@ -36,10 +36,11 @@ ANTONYMS = {
 NAGATION = ['not', 'less']
 EMPHASIS = ['so', 'too', 'certainly', 'absolutely', 'completely']
 class Tagging:
-    def __init__(self, profile, menu, rating):
+    def __init__(self, profile, menu, rating, is_post):
         self.profile = profile
         self.menu = menu
         self.rating = rating
+        self.is_post = is_post
     def check_enviroment(self):
         key_var_name = 'TEXT_ANALYTICS_SUBSCRIPTION_KEY'
         # os.environ["TEXT_ANALYTICS_SUBSCRIPTION_KEY"] = config.api_key  #execute this if you want to set ennv variable
@@ -140,8 +141,9 @@ class Tagging:
                 self.profile.taste[i] * self.profile.count_write + (res[i] * (2 * (self.rating-1))-(self.rating-1))) / (self.profile.count_write + 1)
             self.menu.taste[i] = (
                 self.menu.taste[i] * self.menu.num_of_review + cal_element[i]) / (self.menu.num_of_review + 1)
-        self.profile.count_write += 1
-        self.menu.num_of_review += 1
+        if self.is_post:
+            self.profile.count_write += 1
+            self.menu.num_of_review += 1
         self.profile.save()
         self.menu.save()
 
