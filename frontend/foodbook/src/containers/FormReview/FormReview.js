@@ -259,8 +259,6 @@ class FormReview extends Component {
       <Modal
         className="form-review-modal"
         open={open}
-        onOpen={this.open}
-        onClose={this.close}
         trigger={(
           <Popup
             id="review-modal-trigger"
