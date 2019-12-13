@@ -78,15 +78,30 @@ class ReviewLocation extends Component {
     }
 
     const { reviews } = this.props;
-    const { searchLng, searchLat, lat, lng } = this.state;
+    const {
+      searchLng, searchLat, lat, lng,
+    } = this.state;
+
+    let reviewsToRender = reviews.filter(
+      (review) => getDistance(review.latitude, review.longitude, searchLat, searchLng) <= 1.0,
+    );
+
+    const placeMarker = reviewsToRender.map(
+      (obj) => ({ name: '', latitude: obj.latitude, longitude: obj.longitude }),
+    );
 
     const googleMap = (
       <Form.Field>
-        <GoogleMap center={{ lat, lng }} getInfo={this.getInfo} marker draggable />
+        <GoogleMap
+          center={{ lat, lng }}
+          getInfo={this.getInfo}
+          marker
+          draggable
+          restaurants={placeMarker}
+        />
       </Form.Field>
     );
 
-    let reviewsToRender = reviews.filter((review) => getDistance(review.latitude, review.longitude, searchLat, searchLng) <= 1.0);
     reviewsToRender = reviewsToRender.map((review) => (
       <ReviewPreview
         key={`${review.id}`}

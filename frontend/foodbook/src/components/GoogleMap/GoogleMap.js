@@ -9,6 +9,7 @@ import SearchBox from './SearchBox';
 
 class GoogleMap extends Component {
   markers = [];
+
   posMarker = null;
 
   constructor(props) {
@@ -105,6 +106,8 @@ class GoogleMap extends Component {
       }
       this.posMarker = currMarker;
     }
+
+    this.markers.map((mk) => mk.setMap(null));
     if (restaurants.length !== 0 && mapApiLoaded) {
       restaurants.forEach((restaurant) => {
         const icon = {
