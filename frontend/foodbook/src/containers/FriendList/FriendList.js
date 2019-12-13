@@ -41,7 +41,6 @@ class FriendList extends Component {
           inline
           options={newOptions}
           onChange={this.handleChange}
-          defaultValue={newOptions[0].value}
           style={{ marginLeft: '3px' }}
           value={value}
         />

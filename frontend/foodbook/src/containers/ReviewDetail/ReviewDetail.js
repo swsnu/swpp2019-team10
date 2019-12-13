@@ -29,15 +29,15 @@ const parseTagName = (tags) => {
 
   return (
     <span className="tags-wrapper">
-      <Icon name="thumbs up" mini />
+      <Icon name="thumbs up" size="small" />
       <span className="positive" style={{ color: 'blue' }}>
         { positives }
       </span>
-      <Icon name="thumbs down" mini />
+      <Icon name="thumbs down" size="small" />
       <span className="negative" style={{ color: 'red' }}>
         { negatives }
       </span>
-      <Icon name="hand point right" mini />
+      <Icon name="hand point right" size="small" />
       <span className="neturals" style={{ color: 'grey' }}>
         { neturals }
       </span>
@@ -167,7 +167,6 @@ class ReviewDetail extends Component {
           </Form.Field>
           <Form.Group width="equal">
             <Form.TextArea
-              fluid
               id="review-restaurant"
               rows="1"
               type="text"
@@ -176,7 +175,6 @@ class ReviewDetail extends Component {
               readOnly
             />
             <Form.TextArea
-              fluid
               id="review-category"
               rows="1"
               type="text"
@@ -185,7 +183,6 @@ class ReviewDetail extends Component {
               readOnly
             />
             <Form.TextArea
-              fluid
               id="review-menu"
               rows="1"
               type="text"
@@ -201,7 +198,6 @@ class ReviewDetail extends Component {
             <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
           </Form.Field>
           <Form.TextArea
-            fluid
             id="review-content"
             rows="4"
             type="text"

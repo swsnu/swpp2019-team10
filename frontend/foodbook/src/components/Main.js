@@ -29,7 +29,7 @@ export class Main extends Component {
     const friendId = match.params.id ? match.params.id : -1;
 
     this.state = {
-      selectedView: <Feed friendId={friendId} />,
+      selectedView: <Feed friendId={parseInt(friendId, 10)} />,
     };
   }
 
@@ -41,19 +41,19 @@ export class Main extends Component {
     const handleItemClick = (e, { value }) => {
       if (value === 'feed') {
         this.setState({
-          selectedView: <Feed friendId={friendId} className="feed" />,
+          selectedView: <Feed friendId={parseInt(friendId, 10)} className="feed" />,
         });
       } else if (value === 'calendar') {
         this.setState({
-          selectedView: <Calendar friendId={friendId} className="calendar" />,
+          selectedView: <Calendar friendId={parseInt(friendId, 10)} className="calendar" />,
         });
       } else if (value === 'category') {
         this.setState({
-          selectedView: <Category friendId={friendId} className="category" />,
+          selectedView: <Category friendId={parseInt(friendId, 10)} className="category" />,
         });
       } else {
         this.setState({
-          selectedView: <Location friendId={friendId} className="location" />,
+          selectedView: <Location friendId={parseInt(friendId, 10)} className="location" />,
         });
       }
     };
@@ -124,14 +124,13 @@ export class Main extends Component {
             <Grid.Column width={2} />
             <Grid.Column width={6}>
               <Container className="myinfo">
-                <Myinfo friendId={friendId} />
+                <Myinfo friendId={parseInt(friendId, 10)} />
               </Container>
             </Grid.Column>
             <Grid.Column width={2}>
               <FormReview mode="ADD" fixed={false} />
             </Grid.Column>
             <Grid.Column width={2} />
-            {/* TODO: I Feel Hungry Button */}
             <Grid.Column width={4} />
           </Grid.Row>
 
@@ -155,7 +154,7 @@ Main.propTypes = {
   history: propTypes.objectOf(Object).isRequired,
   match: propTypes.shape({
     params: propTypes.shape({
-      id: propTypes.number,
+      id: propTypes.string,
     }),
   }).isRequired,
 };

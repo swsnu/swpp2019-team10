@@ -72,7 +72,7 @@ class RecommendationTag extends Component {
     keys.forEach((key) => {
       aaa.push({
         taste: key,
-        value: user.taste[key].toFixed(2),
+        value: parseFloat(user.taste[key]).toFixed(2),
       });
     });
     let ready = false;
