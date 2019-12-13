@@ -21,7 +21,6 @@ class Feed extends Component {
   render() {
     const { reviews, dateString, category } = this.props;
     let reviewsToRender = reviews;
-    console.log(reviews);
     if (dateString) {
       reviewsToRender = reviewsToRender.filter((review) => review.date === dateString);
     }
