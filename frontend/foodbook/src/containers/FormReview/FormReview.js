@@ -29,7 +29,6 @@ class FormReview extends Component {
   }
 
   componentDidMount() {
-    this.getGeoLocation();
     const { mode } = this.props;
 
     if (mode === 'ADD') {
@@ -44,6 +43,7 @@ class FormReview extends Component {
         category: '',
         image: null,
         error: null,
+        ready: true,
       });
     } else if (mode === 'EDIT') {
       this.setState({ ready: true });
@@ -63,8 +63,9 @@ class FormReview extends Component {
       this.setState({
         rating, content, restaurant, menu, image, category, longitude, latitude, placeid,
       });
+      this.setState({ open: true });
     }
-    this.setState({ open: true });
+    this.getGeoLocation();
   };
 
   close = () => {
@@ -155,6 +156,7 @@ class FormReview extends Component {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
             ready: true,
+            open: true,
           });
         },
 
@@ -163,6 +165,7 @@ class FormReview extends Component {
             latitude: 37.450084,
             longitude: 126.952459,
             ready: true,
+            open: true,
           });
         },
       );
