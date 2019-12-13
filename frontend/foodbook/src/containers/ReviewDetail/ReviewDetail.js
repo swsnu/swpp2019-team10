@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import {
-  Rating, Button, Modal, Form, Image, Grid,
+  Rating, Button, Modal, Form, Image, Grid, Icon,
 } from 'semantic-ui-react';
 import React, { Component } from 'react';
 import './ReviewDetail.css';
@@ -13,23 +13,36 @@ import { connect } from 'react-redux';
 import * as actionCreators from 'store/actions/review/action_review';
 
 const parseTagName = (tags) => {
-  const parsed = tags.map((t, i) => {
-    let className;
-    if (t.sentimental === 0) className = `neu ${i}`;
-    else if (t.sentimental === 1) className = `pos ${i}`;
-    else className = `neg ${i}`;
+  const positive = tags.filter((tagPositive) => tagPositive.sentimental === 1);
 
-    return (
-      <span key={`${t.name}Wrapper`} className={className}>
-        {t.name}
-      </span>
-    );
+  const netural = tags.filter((tagNetural) => tagNetural.sentimental === 0);
+
+  const negative = tags.filter((tagNegative) => {
+    const score = tagNegative.sentimental;
+    return score !== 0 && score !== 1;
   });
 
+  const getName = (obj) => obj.name;
+  const positives = positive.map(getName).join(', ');
+  const negatives = negative.map(getName).join(', ');
+  const neturals = netural.map(getName).join(', ');
+
   return (
-    <div className="tags-wrapper" style={{ display: 'inline' }}>
-      {parsed}
-    </div>
+    <span className="tags-wrapper">
+      <Icon name="thumbs up" mini />
+      <span className="positive" style={{ color: 'blue' }}>
+        { positives }
+      </span>
+      <Icon name="thumbs down" mini />
+      <span className="negative" style={{ color: 'red' }}>
+        { negatives }
+      </span>
+      <Icon name="hand point right" mini />
+      <span className="neturals" style={{ color: 'grey' }}>
+        { neturals }
+      </span>
+      <br />
+    </span>
   );
 };
 
