@@ -98,7 +98,7 @@ def review_list(request):
             rating=rating,
             category=category
             )
-        tags = Tagging(request.user.profile, menu, rating).tagging(content)
+        tags = Tagging(request.user.profile, menu, rating, True).tagging(content)
         for item in tags.keys():
             new_review.tag.add(Tag.objects.create(name=item, sentimental=tags[item]))
         tag = []
@@ -216,7 +216,7 @@ def review_detail(request, review_id):
         image_path = ""
         if review.review_img:
             image_path = 'http://127.0.0.1:8000'+review.review_img.url
-        tags = Tagging(request.user.profile, menu, rating).tagging(content)
+        tags = Tagging(request.user.profile, menu, rating, False).tagging(content)
         review.tag.clear()
         for item in tags.keys():
             review.tag.add(Tag.objects.create(
