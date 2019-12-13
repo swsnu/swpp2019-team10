@@ -81,7 +81,10 @@ def review_list(request):
         restaurant.save()
         try:
             menu = restaurant.menu_list.all()
-            menu = menu.get(name=menu_name)
+            menu = menu.get(
+                name=menu_name,
+                restaurant=restaurant,
+            )
         except ObjectDoesNotExist:
             menu = Menu.objects.create(
                 name=menu_name,
@@ -196,7 +199,10 @@ def review_detail(request, review_id):
                 rating=rating,
             )
         try:
-            menu = Menu.objects.get(name=menu_name)
+            menu = Menu.objects.get(
+                name=menu_name,
+                restaurant=restaurant,
+            )
         except ObjectDoesNotExist:
             menu = Menu.objects.create(
                 name=menu_name,

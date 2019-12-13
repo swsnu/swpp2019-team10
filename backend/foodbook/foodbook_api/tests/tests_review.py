@@ -85,9 +85,20 @@ class ReviewTestCase(TestCase):
             rating=5,
             place_id='TEST_PLACE_ID',
         )
+        restaurant_dif = Restaurant.objects.create(
+            name='TEST_REST_D',
+            longitude=15,
+            latitude=15,
+            rating=5,
+            place_id='TEST_PLACE_ID_D',
+        )
         menu = Menu.objects.create(
             name='TEST_MENU',
             restaurant=restaurant
+        )
+        menu_d = Menu.objects.create(
+            name='TEST_MENU',
+            restaurant=restaurant_dif
         )
         tag1 = Tag.objects.create(
             name='GOOD',
@@ -195,7 +206,7 @@ class ReviewTestCase(TestCase):
         self.assertEqual(bodys['longitude'], 15)
         self.assertEqual(bodys['latitude'], 15)
         self.assertEqual(bodys['placeid'], 'TEST_PLACE_ID')
-        self.assertEqual(Restaurant.objects.count(), 1)
+        self.assertEqual(Restaurant.objects.count(), 2)
         self.assertEqual(Profile.objects.get(nickname='user1').count_write, 1)
         response = client.post('/api/review/', json.dumps({
             'content': 'TEST_NEW_CONTENT3',
@@ -215,7 +226,7 @@ class ReviewTestCase(TestCase):
         self.assertEqual(bodys['longitude'], 15.5)
         self.assertEqual(bodys['latitude'], 15.5)
         self.assertEqual(bodys['placeid'], 'TEST_PLACE_ID_3')
-        self.assertEqual(Restaurant.objects.count(), 2)
+        self.assertEqual(Restaurant.objects.count(), 3)
         self.assertEqual(Profile.objects.get(nickname='user1').count_write, 2)
         # restaurant should not be added when name just changed
         response = client.post('/api/review/', json.dumps({
@@ -237,8 +248,21 @@ class ReviewTestCase(TestCase):
         self.assertEqual(bodys['longitude'], 15)
         self.assertEqual(bodys['latitude'], 15)
         self.assertEqual(bodys['placeid'], 'TEST_PLACE_ID')
-        self.assertEqual(Restaurant.objects.count(), 2)
+        self.assertEqual(Restaurant.objects.count(), 3)
         self.assertEqual(Profile.objects.get(nickname='user1').count_write, 3)
+
+        #should not get error
+        response = client.post('/api/review/', json.dumps({
+            'content': 'TEST_NEW_CONTENT. It was spicy. Yeah',
+            'restaurant_name': 'TEST_REST_D',
+            'placeid': 'TEST_PLACE_ID_D',
+            'menu_name': 'TEST_MENU',
+            'rating': 5,
+            'longitude': 15,
+            'latitude': 15,
+            'category': 'NEW_CATEGORY',
+        }), 'application/json')
+        self.assertEqual(response.status_code, 201)
     def test_post_review_list_fail(self):
         """
         POST review list must fail in this case:
@@ -386,8 +410,8 @@ class ReviewTestCase(TestCase):
         self.assertEqual(bodys['category'], 'NEW_TEST_CATEGORY')
         self.assertEqual(bodys['longitude'], 15.5)
         self.assertEqual(bodys['latitude'], 15.5)
-        self.assertEqual(Restaurant.objects.count(), 2)
-        self.assertEqual(Menu.objects.count(), 2)
+        self.assertEqual(Restaurant.objects.count(), 3)
+        self.assertEqual(Menu.objects.count(), 3)
     def test_put_review_detail_fail(self):
         """
         PUT review detail should fail in rest of the cases
