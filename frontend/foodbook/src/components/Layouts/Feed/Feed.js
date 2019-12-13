@@ -44,7 +44,7 @@ class Feed extends Component {
         tag={review.tag}
         isMine={review.isMine}
       />
-    ));
+    )).reverse();
 
     return (
       <Card.Group itemsPerRow={5} className="feed">
