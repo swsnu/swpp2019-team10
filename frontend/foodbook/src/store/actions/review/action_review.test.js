@@ -29,6 +29,19 @@ const stubReviews = [
   },
 ];
 
+const stubReview = {
+  id: 1,
+  author: 'React',
+  restaurant: '301',
+  menu: 'ChickenMayo',
+  category: 'Chicken',
+  content: 'It sucks, yeah',
+  image: 'https://cdn.auth0.com/blog/react-js/react.png',
+  rating: 1,
+  date: '2019-11-05', // should be provided this form
+  tag: {}, // TODO: should decide first.
+};
+
 describe('Review Action', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -178,6 +191,42 @@ describe('Review Action', () => {
         const newState = store.getState();
         expect(spy).toHaveBeenCalledTimes(1);
         expect(newState.review.reviewList.length).toBe(2);
+        done();
+      })
+      .catch();
+  });
+
+  it('should post review twice without error when image', (done) => {
+    const spy = jest.spyOn(axios, 'get')
+      .mockImplementation(() => new Promise((res) => {
+        const result = {
+          status: 200,
+          data: stubReviews,
+        };
+        res(result);
+      }));
+
+    store.dispatch(actionCreators.GET_REVIEWS())
+      .then(() => {
+        const newState = store.getState();
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(newState.review.reviewList.length).toBe(2);
+        done();
+      })
+      .catch();
+    const spyput = jest.spyOn(axios, 'put')
+      .mockImplementation(() => new Promise((res) => {
+        const result = {
+          status: 200,
+          data: stubReview,
+        };
+        res(result);
+      }));
+    store.dispatch(actionCreators.EDIT_REVIEW(1, stubReview))
+      .then(() => {
+        const newState = store.getState();
+        expect(spyput).toHaveBeenCalledTimes(1);
+        expect(newState.review.reviewDetail.content).toEqual('It sucks, yeah');
         done();
       })
       .catch();

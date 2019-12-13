@@ -55,6 +55,7 @@ const reducer = (state = initialState, action) => {
         placeid: action.placeid,
         restaurant: action.restaurant,
         menu: action.menu,
+        content: action.content,
         rating: action.rating,
         date: action.date,
         image: action.image,

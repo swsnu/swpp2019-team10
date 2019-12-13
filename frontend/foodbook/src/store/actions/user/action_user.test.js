@@ -111,7 +111,9 @@ describe('User', () => {
       }));
 
     store.dispatch(actionCreators.REGISTER(mockSignUpUser)).then(() => {
-      expect(spy).toHaveBeenCalledTimes(1);
+      setTimeout(() => {
+        expect(spy).toHaveBeenCalledTimes(1);
+      }, 100);
     });
 
     const newState = store.getState();
@@ -119,7 +121,9 @@ describe('User', () => {
     done();
 
     store.dispatch(actionCreators.REGISTER(mockSignUpUser2)).then(() => {
-      expect(spy).toHaveBeenCalledTimes(2);
+      setTimeout(() => {
+        expect(spy).toHaveBeenCalledTimes(2);
+      }, 100);
     });
   });
 
