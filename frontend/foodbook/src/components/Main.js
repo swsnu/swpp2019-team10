@@ -19,7 +19,6 @@ import FriendList from 'containers/FriendList';
 import FriendSearch from 'containers/FriendSearch';
 import Feed from './Layouts/Feed';
 
-
 export class Main extends Component {
   constructor(props) {
     super(props);
@@ -93,7 +92,7 @@ export class Main extends Component {
             {' '}
           </Menu.Item>
           <Menu.Item>
-                  Change view:
+            <b>Change view:</b>
             <Dropdown
               scrolling
               options={viewOptions}
@@ -119,15 +118,18 @@ export class Main extends Component {
         {/*  Top Menu Region */}
         <Grid>
           <Grid.Row>
-            <Grid.Column width={14} style={{ marginLeft: '100px' }}>
+            <Grid.Column width={2} />
+            <Grid.Column width={6}>
               <Container className="myinfo">
                 <Myinfo friendId={friendId} />
               </Container>
             </Grid.Column>
-            <Grid.Column width={2} style={{ marginLeft: '-800px' }}>
+            <Grid.Column width={2}>
               <FormReview mode="ADD" fixed={false} />
-
             </Grid.Column>
+            <Grid.Column width={2} />
+            {/* TODO: I Feel Hungry Button */}
+            <Grid.Column width={4} />
           </Grid.Row>
 
 

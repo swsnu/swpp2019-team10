@@ -1,9 +1,8 @@
 /* eslint max-classes-per-file: ["error", 3] */
-
+/* eslint react/jsx-one-expression-per-line: 0 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import {
-  Button,
   Container,
   Divider,
   Grid,
@@ -38,7 +37,7 @@ const HomepageHeading = (props) => {
       <Header
         as="h1"
         content="FoodBook"
-        inverted
+        color="blue"
         style={{
           fontSize: mobile ? '2em' : '4em',
           fontWeight: 'normal',
@@ -119,7 +118,6 @@ class DesktopContainer extends Component {
             <HomepageHeading history={history} />
           </Segment>
         </Visibility>
-
         {children}
       </Responsive>
     );
@@ -244,34 +242,42 @@ export class Introduce extends Component {
     return (
       <div id="start-wrapper">
         <ResponsiveContainer history={history}>
-          <Segment style={{ padding: '8em 0em' }} vertical>
+          <Segment style={{ padding: '8em 3em' }} vertical>
             <Grid container stackable verticalAlign="middle">
               <Grid.Row>
-                <Grid.Column width={8}>
+                <Grid.Column width={10}>
                   <br id="why-wrapper" />
-                  <Header as="h3" style={{ fontSize: '2em' }}>
-                Here Should contain contents about how our service works.
+                  <Header as="h3" style={{ fontSize: '2em', marginTop: '3em' }}>
+                    Different Taste, Same Review on Same Place?
                   </Header>
                   <p style={{ fontSize: '1.33em' }}>
-                  Ea esse laborum quis dolor irure dolore aliqua.
-                  Laborum aliqua aliquip minim tempor ipsum exercitation culpa ullamco laboris.
-                  Aliquip adipisicing non id minim ut Lorem ullamco eu fugiat.
-                  Cillum nostrud irure enim officia sit mollit exercitation
-                  nisi occaecat adipisicing labore amet anim sit.
-                  Id commodo tempor ullamco nostrud adipisicing cillum cupidatat anim occaecat.
-                  Consectetur velit consectetur in ex ipsum. Labore et mollit aliquip cupidatat.
+                  Are you using one of the following applications to search for restaurants?
+                    <br />
+                    <b>Mango Plate, Instagram, Naver (Kakao, Google) Map, Naver Blog. </b>
+                    <br />
+                  If so, you are wrong! We know everyone&apos;s tastes are different.
+                    <br />
+                  Don&apos;t struggle to hash out the restaurant reviews
+                  that aren&apos;t relevant to <i>your tastes.</i>
+                    <br />
+                  Use our service, and get recommendations for restaurants
+                    <i>related to your own taste.</i>
                   </p>
                   <Header as="h3" style={{ fontSize: '2em' }}>
-                Here should contain our strength/novelty of our service.
+                    Are your food photos still sleeping in the album?
                   </Header>
                   <p style={{ fontSize: '1.33em' }}>
-                Sunt ad id officia in occaecat voluptate pariatur.
-                Sit reprehenderit Lorem tempor sunt ex Lorem irure nulla ullamco sunt ad.
-                Aliquip exercitation deserunt incididunt anim velit exerciation Lorem irure nostrud.
+                  Are you taking pictures of food habitually? So what do you do with those pictures?
+                    <br />
+                  The pictures are often posted once on social media and then simply forgotten.
+                    <br />
+                  Take advantage of the your <i>sleeping pictures of food!</i>
+                    <br />
+                  Take a simple record, and that will be one of the <i>history</i> of your taste.
                   </p>
                 </Grid.Column>
                 <Grid.Column floated="right" width={6}>
-                  <Image bordered rounded size="large" alt="Image should be here" />
+                  <Image bordered rounded size="large" alt="Image should be here" src="https://media.thetab.com/blogs.dir/4/files/2016/03/ginafood-1024x768.jpg" style={{ marginTop: '3em' }} />
                 </Grid.Column>
               </Grid.Row>
             </Grid>
@@ -283,16 +289,23 @@ export class Introduce extends Component {
                 <Grid.Row textAlign="center">
                   <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
                     <Header as="h3" style={{ fontSize: '2em' }}>
-                    How one
+                      Post your own reviews.
                     </Header>
-                    <p style={{ fontSize: '1.33em' }}>should contain how our service will work</p>
+                    <p style={{ fontSize: '1.33em' }}>
+                      Your comments <b>don&apos;t</b> have to <b>long or complex.</b> <br />
+                      Our <i>Tagging service</i> will automatically analysis your comments.
+                      <br />
+                      Figure out why you <i>liked or hated</i> that food.
+                    </p>
                   </Grid.Column>
                   <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
                     <Header as="h3" style={{ fontSize: '2em' }}>
-                    How two
+                      Get Recommendations.
                     </Header>
                     <p style={{ fontSize: '1.33em' }}>
-                    should contain how our service will work
+                      Our <i>Recommendation algorithm</i> will seek <b>your own taste.</b>
+                      <br />
+                      Find the appropriate restaurant/menu which <b>matches well with you!</b>
                     </p>
                   </Grid.Column>
                 </Grid.Row>
@@ -300,46 +313,97 @@ export class Introduce extends Component {
             </Segment>
           </div>
           <span id="what-wrapper" />
-          <Segment style={{ padding: '8em 0em' }} vertical>
+          <Segment vertical>
             <Container text>
-              <Header as="h3" style={{ fontSize: '2em' }}>
-              Here should be what our service has to serve.
+              <Divider
+                as="h4"
+                className="header"
+                horizontal
+                style={{ margin: '5em 0em', textTransform: 'uppercase' }}
+              >
+                <span>Feature #1</span>
+              </Divider>
+              <Header as="h3" style={{ fontSize: '2em', textAlign: 'center' }}>
+                Be a unique Reviewer!
               </Header>
-              <p style={{ fontSize: '1.33em' }}>
-            Anim elit nisi esse duis enim.
-            Ex consectetur pariatur tempor aute eiusmod irure est et anim
-            fugiat irure eiusmod ea nostrud.
-            Sint est ex aute minim et labore voluptate quis proident.
-            Do voluptate enim minim adipisicing velit.
-            Nisi cupidatat officia do aliquip fugiat est commodo laboris.
-            In irure nostrud sint ex deserunt duis aliquip tempor exercitation minim nisi ullamco.
+              <p style={{ fontSize: '1.33em', marginTop: '1.5em' }}>
+                Have you ever struggled to create a food reviewing blog and failed?
+                <br />
+                You don&apos;t have to try to be a <i>special reviewer.</i>
+                Just keep posting it <b>like a diary.</b>
+                <br />
+                You will have become a great reviewer already.
+                <br />
+                Each taste is unique, so are you!
+                <br />
               </p>
-              <Button as="a" size="large">
-            Preview
-              </Button>
+
               <Divider
                 as="h4"
                 className="header"
                 horizontal
                 style={{ margin: '3em 0em', textTransform: 'uppercase' }}
               >
-                <span>Feature #1</span>
+                <span>Feature #2</span>
               </Divider>
-              <Header as="h3" style={{ fontSize: '2em' }}>
-            Feature Title
+              <Header as="h3" style={{ fontSize: '2em', textAlign: 'center' }}>
+                Feel hungry?
               </Header>
-              <p style={{ fontSize: '1.33em' }}>
-            Voluptate aute ex esse duis excepteur nulla veniam incididunt cupidatat.
-            sit ipsum fugiat aliqua voluptate.
-            Voluptate excepteur mollit velit laborum est magna magna quis mollit fugiat aute.
-            Sint pariatur irure aliquip ut dolore excepteur ad minim cupidatat occaecat larum do.
-            Adipisicing in mollit aliqua dolor.
-            Laborum dolor sint do sint laborum esse qui ea laborum eiusmod.
-            Nostrud qui occaecat consectetur ad. Nisi consectetur excepteur excepteur in.
+              <p style={{ fontSize: '1.33em', marginTop: '1.5em' }}>
+              Hungry, but <i>haven&apos;t you decided</i> on the menu yet?
+                <br />
+              It is far more difficult to select the menu,
+               especially when you are within indecisive friends.
+                <br />
+              Our service will recommend the restaurant and menu
+              even when you don&apos;t know <i>what to eat.</i>
+                <br />
+              Of course, considering <b>your taste.</b>
               </p>
-              <Button as="a" size="large">
-            Preview
-              </Button>
+
+              <Divider
+                as="h4"
+                className="header"
+                horizontal
+                style={{ margin: '3em 0em', textTransform: 'uppercase' }}
+              >
+                <span>Feature #3</span>
+              </Divider>
+              <Header as="h3" style={{ fontSize: '2em', textAlign: 'center' }}>
+                Finding good restaurants nearby?
+              </Header>
+              <p style={{ fontSize: '1.33em', marginTop: '1.5em' }}>
+              Are you looking for a good restaurant in a strange place?
+                <br />
+              Get a recommendation for restaurants that <b>you</b> would like.
+                <br />
+              Stop searching
+                <i>&quot;Best 10 Restuarants&quot;,
+                </i> which other people than you may like.
+                <br />
+              </p>
+
+              <Divider
+                as="h4"
+                className="header"
+                horizontal
+                style={{ margin: '3em 0em', textTransform: 'uppercase' }}
+              >
+                <span>Feature #4</span>
+              </Divider>
+              <Header as="h3" style={{ fontSize: '2em', textAlign: 'center' }}>
+                Glance at other&apos;s taste.
+              </Header>
+              <p style={{ fontSize: '1.33em', marginTop: '1.5em' }}>
+              You are going on a <i>date</i>, but can&apos;t decide what to eat?
+                <br />
+              Do you want to know <b>what kind of food she likes?</b>
+                <br />
+              In fact, she is unlikely to know what she likes either :)
+                <br />
+              Add her as <i>friend.</i>
+                <b>Visit her feed.</b> You will find a choice you will never regret.
+              </p>
             </Container>
           </Segment>
         </ResponsiveContainer>
