@@ -17,7 +17,8 @@ SYNONYMS = {
     'moist': ['moist','watery', 'juicy'],
     'greasy': ['greasy', 'oily'],
     'tender': ['tender','soft', 'creamy', 'juicy'],
-    'cooked': ['cooked']
+    'cooked': ['cooked'],
+    'spicy': ['hot', 'piquant', 'tangy', 'peppery', 'picante', 'spiced', 'spice', 'seasoned'],
 }
 ANTONYMS = {
     'sweet': ['savoury'],
@@ -29,7 +30,8 @@ ANTONYMS = {
     'moist': ['dry', 'tough'],
     'greasy': [],
     'tender': ['tough', 'dry'],
-    'cooked': ['raw']
+    'cooked': ['raw'],
+    'spicy': ['bland'],
 }
 NAGATION = ['not', 'less']
 EMPHASIS = ['so', 'too', 'certainly', 'absolutely', 'completely']
