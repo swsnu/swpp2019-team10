@@ -17,7 +17,8 @@ SYNONYMS = {
     'moist': ['moist','watery', 'juicy'],
     'greasy': ['greasy', 'oily'],
     'tender': ['tender','soft', 'creamy', 'juicy'],
-    'cooked': ['cooked']
+    'cooked': ['cooked'],
+    'spicy': ['hot', 'piquant', 'tangy', 'peppery', 'picante', 'spiced', 'spice', 'seasoned'],
 }
 ANTONYMS = {
     'sweet': ['savoury'],
@@ -29,7 +30,8 @@ ANTONYMS = {
     'moist': ['dry', 'tough'],
     'greasy': [],
     'tender': ['tough', 'dry'],
-    'cooked': ['raw']
+    'cooked': ['raw'],
+    'spicy': ['bland'],
 }
 NAGATION = ['not', 'less']
 EMPHASIS = ['so', 'too', 'certainly', 'absolutely', 'completely']
@@ -135,7 +137,7 @@ class Tagging:
                 res[i] = ret[i][0] / ret[i][1]
         for i in res.keys():
             self.profile.taste[i] = (
-                self.profile.taste[i] * self.profile.count_write + (res[i] * (2 * (self.rating-1))-4)) / (self.profile.count_write + 1)
+                self.profile.taste[i] * self.profile.count_write + (res[i] * (2 * (self.rating-1))-(self.rating-1))) / (self.profile.count_write + 1)
             self.menu.taste[i] = (
                 self.menu.taste[i] * self.menu.num_of_review + cal_element[i]) / (self.menu.num_of_review + 1)
         self.profile.count_write += 1
@@ -208,6 +210,8 @@ class Adjative:
         self.count = 1
 
     def __eq__(self, value):
+        if self.advmod is None:
+            return self.name.lemma == value.name.lemma
         return self.name.lemma == value.name.lemma and self.advmod.lemma == value.advmod.lemma
 
     def set_advmod(self, advmod: Word):
