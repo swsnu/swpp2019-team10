@@ -67,17 +67,10 @@ class GoogleMap extends Component {
 
     if (marker && mapApiLoaded) {
       if (restaurants.length === 0) {
-        restaurants.concat({
-          map: mapInstance,
-          icon: {
-            url: 'https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png',
-            size: new mapApi.Size(71, 71),
-            origin: new mapApi.Point(0, 0),
-            anchor: new mapApi.Point(17, 34),
-            scaledSize: new mapApi.Size(25, 25),
-          },
-          title: '',
-          position: location,
+        restaurants.push({
+          name: '',
+          latitude: location.lat,
+          longitude: location.lng,
         });
       }
       restaurants.forEach((restaurant) => {
@@ -97,6 +90,7 @@ class GoogleMap extends Component {
           position: { lat: restaurant.latitude, lng: restaurant.longitude },
         };
         if (draggable) markerDict.draggable = true;
+
         const amarker = new mapApi.Marker(markerDict);
         amarker.addListener('dragend', (evt) => {
           // Clear out the old markers.
