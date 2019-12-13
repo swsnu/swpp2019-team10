@@ -325,7 +325,7 @@ class ReviewTestCase(TestCase):
                      email='TEST_EMAIL_1', password='TEST_PW_1')
         # restaurant should not be added when name just changed
         response = client.put('/api/review/'+str(review1_id)+'/', json.dumps({
-            'content': 'TEST_PUT_CONTENT',
+            'content': 'It was sweet',
             'restaurant_name': 'TEST_RESTA',
             'menu_name': 'TEST_MENU',
             'placeid': 'TEST_PLACE_ID',
@@ -338,12 +338,13 @@ class ReviewTestCase(TestCase):
         bodys = json.loads(response.content.decode())
         self.assertEqual(bodys['id'], review1_id)
         self.assertEqual(bodys['author'], 'TEST_USER_1')
-        self.assertEqual(bodys['content'], 'TEST_PUT_CONTENT')
+        self.assertEqual(bodys['content'], 'It was sweet')
         self.assertEqual(bodys['restaurant'], 'TEST_REST')
         self.assertEqual(bodys['placeid'], 'TEST_PLACE_ID')
         self.assertEqual(bodys['menu'], 'TEST_MENU')
         self.assertEqual(bodys['category'], 'NEW_TEST_CATEGORY')
         self.assertEqual(bodys['rating'], 3)
+        self.assertEqual(Review.objects.get(id=review1_id).tag.count(), 1)
         response = client.put('/api/review/'+str(review2_id)+'/', json.dumps({
             'content': 'TEST_PUT_CONTENT',
             'restaurant_name': 'TEST_REST',

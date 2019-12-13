@@ -21,7 +21,12 @@ const reducer = (state = initialState, action) => {
         recomtstList: action.data,
       };
       return newState;
-
+    case actionTypes.GET_RECOMS_IFH:
+      newState = {
+        ...state,
+        recomtstList: action.data,
+      };
+      return newState;
     case actionTypes.CLEAR_RECOMS:
       return { ...state, recomlocList: [], recomtstList: [] };
 

@@ -17,6 +17,7 @@ import Location from 'containers/ReviewLocation';
 import Logout from 'containers/Logout';
 import FriendList from 'containers/FriendList';
 import FriendSearch from 'containers/FriendSearch';
+import RecommendationTag from 'containers/Recommendation/Modal/RecommendTag';
 import Feed from './Layouts/Feed';
 
 
@@ -102,7 +103,9 @@ export class Main extends Component {
               onChange={handleItemClick}
             />
           </Menu.Item>
-
+          <Menu.Item>
+            <RecommendationTag id={-1} />
+          </Menu.Item>
           <Menu.Menu position="right">
             <Menu.Item>
                 Go to friend&apos;s home:

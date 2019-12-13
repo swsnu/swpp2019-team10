@@ -69,6 +69,7 @@ describe('<RecommendationTag />', () => {
 
   let recommend;
   let recommend2;
+  let recommend3;
 
   beforeEach(() => {
     recommend = (
@@ -82,6 +83,13 @@ describe('<RecommendationTag />', () => {
       <Provider store={mockStore2}>
         <ConnectedRouter history={history}>
           <RecommendationTag history={history} />
+        </ConnectedRouter>
+      </Provider>
+    );
+    recommend3 = (
+      <Provider store={mockStore2}>
+        <ConnectedRouter history={history}>
+          <RecommendationTag id={-1} history={history} />
         </ConnectedRouter>
       </Provider>
     );
@@ -128,6 +136,20 @@ describe('<RecommendationTag />', () => {
       component.update();
       const wrapper = component.find('List #recommendList');
       expect(wrapper.length).toBe(1);
+    });
+
+    it('should render when recoms.length > 0', () => {
+      const component = mount(recommend3);
+      component.find('RecommendationTag').setState({
+        lat: 37.5,
+        lng: 126.95,
+      });
+      const wrapper = component.find('Button #recom-tst-button');
+      expect(wrapper.text()).toBe('I feel hungry!');
+      wrapper.simulate('click');
+      component.update();
+      const wrapper1 = component.find('List #recommendList');
+      expect(wrapper1.length).toBe(1);
     });
   });
 });

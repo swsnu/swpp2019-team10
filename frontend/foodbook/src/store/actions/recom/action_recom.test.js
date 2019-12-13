@@ -107,4 +107,41 @@ describe('Recom Action', () => {
         done();
       });
   });
+  it('should get all recom_tsts when no error', (done) => {
+    const spy = jest.spyOn(axios, 'get')
+      .mockImplementation(() => new Promise((res) => {
+        const result = {
+          status: 200,
+          data: stubRecoms,
+        };
+        res(result);
+      }));
+
+    store.dispatch(actionCreators.GET_RECOMS_IFH({ lat: 37.5, log: 126.95 }))
+      .then(() => {
+        const newState = store.getState();
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(newState.recom.recomtstList.length).toBe(2);
+        done();
+      })
+      .catch();
+  });
+  it('should not get recom_tsts when error', (done) => {
+    const spy = jest.spyOn(axios, 'get')
+      .mockImplementation(() => new Promise((res, rej) => {
+        const result = {
+          status: 404,
+          data: stubRecoms,
+        };
+        rej(result);
+      }));
+
+    store.dispatch(actionCreators.GET_RECOMS_IFH({ lat: 37.5, log: 126.95 }))
+      .catch(() => {
+        const newState = store.getState();
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(newState.recom.recomtstList.length).toBe(0);
+        done();
+      });
+  });
 });
