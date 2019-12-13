@@ -19,7 +19,6 @@ const getDistance = (lat1, lng1, lat2, lng2) => {
     + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
   const angle = Math.atan2(Math.sqrt(stdDistance), Math.sqrt(1 - stdDistance));
   const distance = R * angle * 2;
-  console.log(lat1, lng1, lat2, lng2, distance);
   return distance;
 };
 
