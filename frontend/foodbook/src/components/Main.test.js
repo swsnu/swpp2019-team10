@@ -7,7 +7,20 @@ import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
 import Main from './Main';
 
-const mockStore = getMockStore({}, {}, {});
+const initialUser = {
+  user: {
+    username: '',
+    phone_number: '',
+    age: -1,
+    gender: '',
+    number_of_reviews: -1,
+    number_of_friends: -1,
+    failed: false,
+    taste: {},
+  },
+};
+
+const mockStore = getMockStore(initialUser, {}, {});
 
 jest.mock('components/Layouts/Feed/Feed', () => jest.fn(() => (
   <div className="mockReviewList">

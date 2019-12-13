@@ -20,6 +20,11 @@ export const GET_RECOMS_TST_DEEP = (data) => ({
   data,
 });
 
+export const GET_RECOMS_IFH_DEEP = (data) => ({
+  type: actionTypes.GET_RECOMS_IFH,
+  data,
+});
+
 export const GET_RECOMS_LOC = (data) => (dispatch) => {
   dispatch(GET_RECOMS_PRE());
 
@@ -33,5 +38,12 @@ export const GET_RECOMS_TST = (data) => (dispatch) => {
 
   return axios.get(`/api/review/${data.id}/recomtst/c=${data.lat},${data.log}/`, data)
     .then((res) => dispatch(GET_RECOMS_TST_DEEP(res.data)))
+    .catch(dispatch(GET_RECOMS_PRE()));
+};
+
+export const GET_RECOMS_IFH = (data) => (dispatch) => {
+  dispatch(GET_RECOMS_PRE());
+  return axios.get(`/api/recomifh/c=${data.lat},${data.log}/`, data)
+    .then((res) => dispatch(GET_RECOMS_IFH_DEEP(res.data)))
     .catch(dispatch(GET_RECOMS_PRE()));
 };

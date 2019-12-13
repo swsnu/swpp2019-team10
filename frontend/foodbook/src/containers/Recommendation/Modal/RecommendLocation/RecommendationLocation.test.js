@@ -5,7 +5,7 @@ import { history } from 'store/store';
 import { ConnectedRouter } from 'connected-react-router';
 import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
-
+import * as actionCreators from 'store/actions/recom/action_recom';
 import RecommendationLocation from './RecommendationLocation';
 
 // https://jestjs.io/docs/en/mock-functions.html
@@ -19,7 +19,16 @@ const mockGeolocation = {
       },
     }))),
 };
-
+jest.mock('containers/RestaurantReview', () => jest.fn(() => (
+  <div className="mockRestaurantReview">
+            this is mock
+  </div>
+)));
+jest.mock('components/GoogleMap/GoogleMap', () => jest.fn(() => (
+  <div className="mockGoogleMap">
+            this is mock
+  </div>
+)));
 const mockFakeGeolocation = {
   getCurrentPosition: jest.fn(),
 };
@@ -47,6 +56,11 @@ describe('<RecommendationLocation />', () => {
       other_rating: 0,
     },
   ];
+
+  const spyGetAll = jest.spyOn(actionCreators, 'GET_RECOMS_LOC')
+    .mockImplementation(() => ({
+      type: '',
+    }));
 
   const mockStore2 = getMockStore({}, {}, { recomlocList: resp });
 
@@ -98,6 +112,8 @@ describe('<RecommendationLocation />', () => {
       component.update();
       component.find('Button #recom-loc-button').simulate('click');
       component.update();
+      expect(spyGetAll).toHaveBeenCalledTimes(1);
+      expect(component.find('.mockGoogleMap').length).toBe(1);
       const wrapper = component.find('List #recommendList');
       expect(wrapper.length).toBe(1);
     });
@@ -110,6 +126,8 @@ describe('<RecommendationLocation />', () => {
       });
       component.find('Button #recom-loc-button').simulate('click');
       component.update();
+      expect(spyGetAll).toHaveBeenCalledTimes(1);
+      expect(component.find('.mockGoogleMap').length).toBe(1);
       const wrapper = component.find('List #recommendList');
       expect(wrapper.length).toBe(1);
     });
