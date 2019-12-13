@@ -74,8 +74,6 @@ class FormReview extends Component {
       menu: '',
       content: '',
       rating: 0,
-      longitude: 0.0,
-      latitude: 0.0,
       category: '',
       image: null,
       error: null,
