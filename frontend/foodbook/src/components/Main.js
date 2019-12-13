@@ -28,7 +28,7 @@ export class Main extends Component {
     const friendId = match.params.id ? match.params.id : -1;
 
     this.state = {
-      selectedView: <Feed friendId={friendId} />,
+      selectedView: <Feed friendId={parseInt(friendId, 10)} />,
     };
   }
 
@@ -121,7 +121,7 @@ export class Main extends Component {
             <Grid.Column width={2} />
             <Grid.Column width={6}>
               <Container className="myinfo">
-                <Myinfo friendId={friendId} />
+                <Myinfo friendId={parseInt(friendId, 10)} />
               </Container>
             </Grid.Column>
             <Grid.Column width={2}>
