@@ -201,13 +201,13 @@ RecommendationTag.propTypes = {
   onGetIFH: propTypes.func.isRequired,
   data: propTypes.string,
   id: propTypes.number.isRequired,
-  user: propTypes.arrayOf(Object),
+  user: propTypes.objectOf(Object),
 };
 
 RecommendationTag.defaultProps = {
   recoms: [],
   data: 'menu',
-  user: [],
+  user: {},
 };
 
 const mapStateToProps = (state) => ({

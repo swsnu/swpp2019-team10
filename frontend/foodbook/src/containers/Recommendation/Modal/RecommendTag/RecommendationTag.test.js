@@ -5,7 +5,7 @@ import { history } from 'store/store';
 import { ConnectedRouter } from 'connected-react-router';
 import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
-
+import * as actionCreators from 'store/actions/recom/action_recom';
 import RecommendationTag from './RecommendationTag';
 
 // https://jestjs.io/docs/en/mock-functions.html
@@ -25,7 +25,7 @@ const mockFakeGeolocation = {
 };
 
 jest.mock('@nivo/bar', () => ({
-  Bar: 'mockBar',
+  Bar: 'MockBar',
 }));
 
 global.navigator.geolocation = mockGeolocation;
@@ -43,6 +43,11 @@ const initialUser = {
   },
 };
 
+jest.mock('containers/RestaurantReview', () => jest.fn(() => (
+  <div className="mockRestaurantReview">
+            this is mock
+  </div>
+)));
 describe('<RecommendationTag />', () => {
   const mockStore = getMockStore(initialUser, {}, {});
 
@@ -64,6 +69,14 @@ describe('<RecommendationTag />', () => {
       other_rating: 0,
     },
   ];
+  const spyGetAll = jest.spyOn(actionCreators, 'GET_RECOMS_TST')
+    .mockImplementation(() => ({
+      type: '',
+    }));
+  // const spyGetIFH = jest.spyOn(actionCreators, 'GET_RECOMS_IFH')
+  //   .mockImplementation(() => ({
+  //     type: '',
+  //   }));
 
   const mockStore2 = getMockStore(initialUser, {}, { recomtstList: resp });
 
@@ -75,14 +88,14 @@ describe('<RecommendationTag />', () => {
     recommend = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <RecommendationTag history={history} />
+          <RecommendationTag id={0} history={history} />
         </ConnectedRouter>
       </Provider>
     );
     recommend2 = (
       <Provider store={mockStore2}>
         <ConnectedRouter history={history}>
-          <RecommendationTag history={history} />
+          <RecommendationTag id={0} history={history} />
         </ConnectedRouter>
       </Provider>
     );
@@ -122,6 +135,7 @@ describe('<RecommendationTag />', () => {
       });
       component.find('Button #recom-tst-button').simulate('click');
       component.update();
+      expect(spyGetAll).toHaveBeenCalledTimes(1);
       const wrapper = component.find('List #recommendList');
       expect(wrapper.length).toBe(1);
     });
@@ -137,7 +151,6 @@ describe('<RecommendationTag />', () => {
       const wrapper = component.find('List #recommendList');
       expect(wrapper.length).toBe(1);
     });
-
     it('should render when recoms.length > 0', () => {
       const component = mount(recommend3);
       component.find('RecommendationTag').setState({

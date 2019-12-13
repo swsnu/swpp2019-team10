@@ -85,8 +85,7 @@ describe('Recom Action', () => {
         expect(spy).toHaveBeenCalledTimes(1);
         expect(newState.recom.recomtstList.length).toBe(2);
         done();
-      })
-      .catch();
+      });
   });
 
   it('should not get recom_tsts when error', (done) => {
