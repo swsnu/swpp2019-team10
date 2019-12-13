@@ -52,9 +52,9 @@ export const DELETE_REVIEW = (id) => (dispatch) => (
     .then(() => { dispatch(GET_REVIEW_PRE()); dispatch(GET_USER_INFO()); dispatch(GET_REVIEWS()); })
 );
 
-export const EDIT_REVIEW_ADD = (review) => ({
+export const EDIT_REVIEW_ADD = (data) => ({
   type: actionTypes.EDIT_REVIEW,
-  ...review,
+  data,
 });
 
 export const EDIT_REVIEW = (id, review) => (dispatch) => (
@@ -62,9 +62,9 @@ export const EDIT_REVIEW = (id, review) => (dispatch) => (
     .then((resp) => dispatch(EDIT_REVIEW_ADD(resp.data)))
 );
 
-export const POST_REVIEW_ADD = (review) => ({
+export const POST_REVIEW_ADD = (data) => ({
   type: actionTypes.POST_REVIEW,
-  ...review,
+  data,
 });
 
 export const POST_REVIEW = (review, image) => (dispatch) => (
