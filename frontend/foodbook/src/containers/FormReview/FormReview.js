@@ -260,6 +260,14 @@ class FormReview extends Component {
           </Button>
         );
     }
+
+    const categoryList = ['Chicken', 'Pizza', 'Korean', 'Chinese', 'Japanese',
+      'Western', 'Fastfood', 'Dessert', 'Snack', 'Asian'].map((str) => ({
+      key: str,
+      text: str,
+      value: str.toLowerCase(),
+    }));
+
     return (
       <Modal
         className="form-review-modal"
@@ -302,15 +310,9 @@ class FormReview extends Component {
                 placeholder="Food's category here"
                 fluid
                 selection
+                value={category}
                 onChange={this.handleCategory}
-                options={
-                  ['Chicken', 'Pizza', 'Korean', 'Chinese', 'Japanese',
-                    'Western', 'Fastfood', 'Dessert', 'Snack', 'Asian'].map((str) => ({
-                    key: str,
-                    text: str,
-                    value: str.toLowerCase(),
-                  }))
-                }
+                options={categoryList}
                 className="category-input-wrapper"
               />
               <Form.TextArea
