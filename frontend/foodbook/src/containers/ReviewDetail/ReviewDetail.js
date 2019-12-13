@@ -56,7 +56,6 @@ class ReviewDetail extends Component {
   }
 
   open = () => {
-    console.log('opened');
     this.setState({ open: true });
   }
 

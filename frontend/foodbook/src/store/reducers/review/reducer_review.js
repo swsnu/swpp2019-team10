@@ -34,37 +34,14 @@ const reducer = (state = initialState, action) => {
       return { ...state, reviewDetail: {} };
 
     case actionTypes.POST_REVIEW:
-      newReview = {
-        id: action.id,
-        placeid: action.placeid,
-        restaurant: action.restaurant,
-        menu: action.menu,
-        rating: action.rating,
-        date: action.date,
-        image: action.image,
-        tag: action.tag,
-        longitude: action.longitude,
-        latitude: action.latitude,
-        category: action.category,
-      };
+      newReview = action.data;
       return { ...state, reviewList: state.reviewList.concat(newReview) };
 
     case actionTypes.EDIT_REVIEW:
-      newReview = {
-        id: action.id,
-        placeid: action.placeid,
-        restaurant: action.restaurant,
-        menu: action.menu,
-        rating: action.rating,
-        date: action.date,
-        image: action.image,
-        tag: action.tag,
-        longitude: action.longitude,
-        latitude: action.latitude,
-        category: action.category,
-      };
-
-      newList = state.reviewList.map((review) => (review.id === action.id ? newReview : review));
+      newReview = action.data;
+      newList = state.reviewList.map(
+        (review) => (review.id === action.data.id ? newReview : review),
+      );
 
       return { ...state, reviewList: newList, reviewDetail: newReview };
 
