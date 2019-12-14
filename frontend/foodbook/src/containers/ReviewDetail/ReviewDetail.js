@@ -162,9 +162,9 @@ class ReviewDetail extends Component {
             </Grid.Column>
             <Grid.Column textAlign="left">
               <Grid.Row>
-                <text style={{ fontWeight: 'bold', fontSize: 20 }}>
+                <span style={{ fontWeight: 'bold', fontSize: 20 }}>
                   {restaurant}
-                </text>
+                </span>
               </Grid.Row>
               <Grid.Row />
               <Grid.Row>

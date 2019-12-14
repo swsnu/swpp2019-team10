@@ -28,17 +28,17 @@ const ReviewPreview = (props) => {
 
     return (
       <span className="tags-wrapper">
-        <Icon name="thumbs up" size="small" />
+        {positives.length !== 0 ? <Icon name="thumbs up" size="small" /> : <span />}
         <span className="positive" style={{ color: 'blue' }}>
           { positives }
         </span>
         <br />
-        <Icon name="thumbs down" size="small" />
+        {negatives.length !== 0 ? <Icon name="thumbs down" size="small" /> : <span />}
         <span className="negative" style={{ color: 'red' }}>
           { negatives }
         </span>
         <br />
-        <Icon name="hand point right" size="small" />
+        {neturals.length !== 0 ? <Icon name="hand point right" size="small" /> : <span />}
         <span className="neturals" style={{ color: 'grey' }}>
           { neturals }
         </span>
