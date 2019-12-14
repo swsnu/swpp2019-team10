@@ -79,7 +79,7 @@ const ReviewPreview = (props) => {
           </span>
         </Card.Meta>
         <Card.Description textAlign="left">
-          <span className="tag">{parseTagName(tag) }</span>
+          <span className="tag">{ parseTagName(tag) }</span>
           <br />
           {isMine && (
           <ReviewDetail fixed={false} id={id} />
