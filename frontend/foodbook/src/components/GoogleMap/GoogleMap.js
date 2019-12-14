@@ -10,6 +10,8 @@ import SearchBox from './SearchBox';
 class GoogleMap extends Component {
   markers = [];
 
+  posMarker = null;
+
   constructor(props) {
     super(props);
 
@@ -66,20 +68,54 @@ class GoogleMap extends Component {
     };
 
     if (marker && mapApiLoaded) {
-      if (restaurants.length === 0) {
-        restaurants.push({
-          name: '',
-          latitude: location.lat,
-          longitude: location.lng,
+      const icon = {
+        url: 'https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png',
+        size: new mapApi.Size(71, 71),
+        origin: new mapApi.Point(0, 0),
+        anchor: new mapApi.Point(17, 34),
+        scaledSize: new mapApi.Size(40, 40),
+      };
+
+      // Create a marker for current position
+      const markerDict = {
+        map: mapInstance,
+        icon,
+        title: '',
+        position: { lat: location.lat, lng: location.lng },
+      };
+      if (draggable) markerDict.draggable = true;
+
+      const { getInfo } = this.props;
+
+      const currMarker = new mapApi.Marker(markerDict);
+
+      if (this.posMarker !== null) this.posMarker.setMap(null);
+      if (draggable) {
+        currMarker.addListener('dragend', (evt) => {
+          // Clear out the old markers.
+          const lat = evt.latLng.lat();
+          const lng = evt.latLng.lng();
+          this.setState({
+            center: {
+              lat,
+              lng,
+            },
+          });
+          getInfo('', '', lat, lng);
         });
       }
+      this.posMarker = currMarker;
+    }
+
+    this.markers.map((mk) => mk.setMap(null));
+    if (restaurants.length !== 0 && mapApiLoaded) {
       restaurants.forEach((restaurant) => {
         const icon = {
           url: 'https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png',
           size: new mapApi.Size(71, 71),
           origin: new mapApi.Point(0, 0),
           anchor: new mapApi.Point(17, 34),
-          scaledSize: new mapApi.Size(25, 25),
+          scaledSize: new mapApi.Size(20, 20),
         };
 
         // Create a marker for each place.
@@ -89,22 +125,8 @@ class GoogleMap extends Component {
           title: restaurant.name,
           position: { lat: restaurant.latitude, lng: restaurant.longitude },
         };
-        if (draggable) markerDict.draggable = true;
 
-        const amarker = new mapApi.Marker(markerDict);
-        amarker.addListener('dragend', (evt) => {
-          // Clear out the old markers.
-          this.markers.forEach((onemarker) => onemarker.setMap(null));
-          this.markers = [];
-
-          this.setState({
-            center: {
-              lat: evt.latLng.lat(),
-              lng: evt.latLng.lng(),
-            },
-          });
-        });
-        this.markers.push(marker);
+        this.markers.push(new mapApi.Marker(markerDict));
       });
     }
 
@@ -114,7 +136,7 @@ class GoogleMap extends Component {
           && <SearchBox map={mapInstance} mapApi={mapApi} setplace={this.setPlace} />}
         <GoogleMapReact
           bootstrapURLKeys={{ key: ApiKey.googleApiKey, libraries: ['places', 'geometry'] }}
-          defaultCenter={center}
+          center={center}
           defaultZoom={zoom}
           onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)}
         />

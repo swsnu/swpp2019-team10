@@ -5,11 +5,7 @@ import { history } from 'store/store';
 import { ConnectedRouter } from 'connected-react-router';
 import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
-import * as actionCreators from 'store/actions/review/action_review';
-import ReviewPreview from 'components/ReviewPreview';
 import ReviewLocation from './ReviewLocation';
-
-const mockStore = getMockStore({}, {}, {});
 
 const mockGeolocation = {
   getCurrentPosition: jest.fn()
@@ -21,37 +17,48 @@ const mockGeolocation = {
     }))),
 };
 
-const mockFakeGeolocation = {
+const mockNoResponseGeolocation = {
   getCurrentPosition: jest.fn(),
+};
+
+const mockFakeGeolocation = {
+  getCurrentPosition: jest.fn()
+    .mockImplementation((success, failure) => Promise.reject(failure())),
+};
+
+const stubReviews = {
+  reviewList: [
+    {
+      id: 0,
+      date: '0',
+      isMine: true,
+      category: 'pizza',
+      latitude: 51.1,
+      longitude: 45.3,
+    },
+    {
+      id: 1,
+      date: '1',
+      isMine: true,
+      category: 'chicken',
+      latitude: 11.1,
+      longitude: 45.3,
+    },
+  ],
+  reviewDetail: {},
 };
 
 describe('ReviewLocation', () => {
   let reviewLocation;
-  const spyGetAll = jest.spyOn(actionCreators, 'GET_REVIEWS')
-    .mockImplementation(() => ({ type: '' }));
 
-  const stubReviews = [
-    <ReviewPreview
-      key="0"
-      id={0}
-      date="0"
-      isMine
-    />,
-
-    <ReviewPreview
-      key="1"
-      id={1}
-      date="1"
-      isMine={false}
-    />,
-  ];
+  const mockStore = getMockStore({}, stubReviews, {});
 
   beforeEach(() => {
     global.navigator.geolocation = mockGeolocation;
     reviewLocation = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <ReviewLocation reviews={stubReviews} />
+          <ReviewLocation />
         </ConnectedRouter>
       </Provider>
     );
@@ -67,18 +74,20 @@ describe('ReviewLocation', () => {
     expect(wrapper.length).toBe(1);
   });
 
-  it('should call onGetAll on loading', () => {
-    const component = mount(reviewLocation);
-    expect(component).not.toBe(null);
-    /* fix value after implementation */
-    expect(spyGetAll).toHaveBeenCalledTimes(0);
-  });
-
   it('loading message should be shown up', () => {
-    global.navigator.geolocation = mockFakeGeolocation;
+    global.navigator.geolocation = mockNoResponseGeolocation;
     const component = mount(reviewLocation);
 
     const backWrapper = component.find('.review-location-loading');
     expect(backWrapper.length).toBe(1);
+  });
+
+  it('default location should be set', () => {
+    global.navigator.geolocation = mockFakeGeolocation;
+    const component = mount(reviewLocation);
+    const wrapper = component.find('ReviewLocation');
+    console.log(wrapper.at(0).state());
+    expect(wrapper.at(0).state('searchLng')).toBe(0);
+    expect(wrapper.at(0).state('searchLat')).toBe(0);
   });
 });

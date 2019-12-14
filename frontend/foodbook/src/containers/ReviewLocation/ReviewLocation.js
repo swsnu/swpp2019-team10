@@ -1,4 +1,4 @@
-import { Form } from 'semantic-ui-react';
+import { Form, Card } from 'semantic-ui-react';
 
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
@@ -7,7 +7,20 @@ import { withRouter } from 'react-router';
 import GoogleMap from 'components/GoogleMap';
 
 import ReviewPreview from 'components/ReviewPreview/';
-// import * as actionCreators from 'store/actions/review/action_review';
+
+// calculate distance in kilometers from latitudes and longitudes
+const getDistance = (lat1, lng1, lat2, lng2) => {
+  const deg2rad = (deg) => deg * (Math.PI / 180);
+
+  const R = 6371; // Radius of the earth in km
+  const dLat = deg2rad(lat2 - lat1);
+  const dLng = deg2rad(lng2 - lng1);
+  const stdDistance = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+    + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+  const angle = Math.atan2(Math.sqrt(stdDistance), Math.sqrt(1 - stdDistance));
+  const distance = R * angle * 2;
+  return distance;
+};
 
 class ReviewLocation extends Component {
   constructor(props) {
@@ -28,10 +41,10 @@ class ReviewLocation extends Component {
           this.setState({
             lat,
             lng,
+            searchLat: lat,
+            searchLng: lng,
             ready: true,
           });
-          // const onGetAll = this.props;
-          // onGetAll(lng, lat);
         },
 
         /* Error callback, default location to 0,0 */
@@ -39,6 +52,8 @@ class ReviewLocation extends Component {
           this.setState({
             lat: 0,
             lng: 0,
+            searchLat: 0,
+            searchLng: 0,
             ready: true,
           });
         },
@@ -48,8 +63,8 @@ class ReviewLocation extends Component {
 
   getInfo = (placeid, restaurant, lat, lng) => {
     this.setState({
-      lat,
-      lng,
+      searchLat: lat,
+      searchLng: lng,
     });
   }
 
@@ -64,18 +79,31 @@ class ReviewLocation extends Component {
       );
     }
 
-    const { reviews /* , onGetAll */ } = this.props;
-    const { lng, lat } = this.state;
+    const { reviews } = this.props;
+    const {
+      searchLng, searchLat, lat, lng,
+    } = this.state;
 
-    // onGetAll(lng, lat);
+    let reviewsToRender = reviews.filter(
+      (review) => getDistance(review.latitude, review.longitude, searchLat, searchLng) <= 1.0,
+    );
+
+    const placeMarker = reviewsToRender.map(
+      (obj) => ({ name: '', latitude: obj.latitude, longitude: obj.longitude }),
+    );
 
     const googleMap = (
       <Form.Field>
-        <GoogleMap center={{ lat, lng }} getInfo={this.getInfo} marker draggable />
+        <GoogleMap
+          center={{ lat, lng }}
+          getInfo={this.getInfo}
+          marker
+          draggable
+          restaurants={placeMarker}
+        />
       </Form.Field>
     );
 
-    let reviewsToRender = reviews;
     reviewsToRender = reviewsToRender.map((review) => (
       <ReviewPreview
         key={`${review.id}`}
@@ -95,14 +123,9 @@ class ReviewLocation extends Component {
     return (
       <div className="ReviewLocation">
         {googleMap}
-        <div className="ui special cards fluid">
-          <div className="card fluid" style={{ width: '630px' }}>
-            <div className="content">
-              <br />
-              {reviewsToRender}
-            </div>
-          </div>
-        </div>
+        <Card.Group itemsPerRow={5} className="feed">
+          {reviewsToRender}
+        </Card.Group>
       </div>
     );
   }
@@ -110,11 +133,10 @@ class ReviewLocation extends Component {
 
 ReviewLocation.propTypes = {
   reviews: propTypes.arrayOf(Object),
-  // onGetAll: propTypes.func.isRequired,
 };
 
 ReviewLocation.defaultProps = {
-  reviews: [{ id: 0, isMine: true }, { id: 1, isMine: false }],
+  reviews: [],
 };
 
 const mapStateToProps = (state) => ({
@@ -122,11 +144,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  /*
-  onGetAll: (lng, lat) => {
-    dispatch(actionCreators.GET_REVIEW_LOCATION(lng, lat));
-  },
-  */
   dispatch,
 });
 

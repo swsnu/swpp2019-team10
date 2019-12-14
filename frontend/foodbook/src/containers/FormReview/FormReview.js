@@ -24,12 +24,10 @@ class FormReview extends Component {
     super(props);
     this.state = {
       open: false,
-      ready: false,
     };
   }
 
   componentDidMount() {
-    this.getGeoLocation();
     const { mode } = this.props;
 
     if (mode === 'ADD') {
@@ -45,9 +43,7 @@ class FormReview extends Component {
         image: null,
         error: null,
       });
-    } else if (mode === 'EDIT') {
-      this.setState({ ready: true });
-    } else {
+    } else if (mode !== 'EDIT') {
       this.setState({
         error: 'Unknown Form Type',
       });
@@ -63,8 +59,9 @@ class FormReview extends Component {
       this.setState({
         rating, content, restaurant, menu, image, category, longitude, latitude, placeid,
       });
+      this.setState({ open: true });
     }
-    this.setState({ open: true });
+    this.getGeoLocation();
   };
 
   close = () => {
@@ -74,8 +71,6 @@ class FormReview extends Component {
       menu: '',
       content: '',
       rating: 0,
-      longitude: 0.0,
-      latitude: 0.0,
       category: '',
       image: null,
       error: null,
@@ -156,7 +151,7 @@ class FormReview extends Component {
           this.setState({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            ready: true,
+            open: true,
           });
         },
 
@@ -164,7 +159,7 @@ class FormReview extends Component {
           this.setState({
             latitude: 37.450084,
             longitude: 126.952459,
-            ready: true,
+            open: true,
           });
         },
       );
@@ -191,7 +186,6 @@ class FormReview extends Component {
       mode, fixed,
     } = this.props;
 
-    const { ready } = this.state;
     const {
       rating, content, restaurant, menu, category,
       error, image, open,
@@ -201,14 +195,6 @@ class FormReview extends Component {
       return (
         <div className="form-review-error">
           <p>{error.content}</p>
-        </div>
-      );
-    }
-
-    if (!ready) {
-      return (
-        <div className="form-review-loading">
-          <p>Loading...</p>
         </div>
       );
     }
