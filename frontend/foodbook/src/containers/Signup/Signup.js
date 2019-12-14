@@ -88,12 +88,19 @@ export class Signup extends Component {
       ...error,
     };
 
-    if (name === 'passwordConfirm' || name === 'password') {
+    if (name === 'passwordConfirm') {
       if (newInput.password !== newInput.passwordConfirm) {
         newError.passwordConfirm = this.restirction.passwordConfirm;
       } else newError.passwordConfirm = undefined;
-    } else if (!this.inputChecker(name, value)) newError[name] = this.restirction[name];
-    else newError[name] = undefined;
+    } else {
+      if (name === 'password') {
+        if (newInput.password !== newInput.passwordConfirm) {
+          newError.passwordConfirm = this.restirction.passwordConfirm;
+        } else newError.passwordConfirm = undefined;
+      }
+      if (!this.inputChecker(name, value)) newError[name] = this.restirction[name];
+      else newError[name] = undefined;
+    }
 
     this.setState({
       input: newInput,
