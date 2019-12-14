@@ -28,21 +28,41 @@ const ReviewPreview = (props) => {
 
     return (
       <span className="tags-wrapper">
-        {positives.length !== 0 ? <Icon name="thumbs up" size="small" /> : <span />}
-        <span className="positive" style={{ color: 'blue' }}>
-          { positives }
-        </span>
-        <br />
-        {negatives.length !== 0 ? <Icon name="thumbs down" size="small" /> : <span />}
-        <span className="negative" style={{ color: 'red' }}>
-          { negatives }
-        </span>
-        <br />
-        {neturals.length !== 0 ? <Icon name="hand point right" size="small" /> : <span />}
-        <span className="neturals" style={{ color: 'grey' }}>
-          { neturals }
-        </span>
-        <br />
+        {positives.length !== 0
+          ? (
+            <div className="positive-tag">
+              <Icon name="thumbs up" size="small" />
+              {' '}
+              <span className="positive" style={{ color: 'blue' }}>
+                { positives }
+              </span>
+            </div>
+          )
+          : <span />}
+
+        {negatives.length !== 0
+          ? (
+            <div className="negative-tag">
+              <Icon name="thumbs down" size="small" />
+              {' '}
+              <span className="negative" style={{ color: 'red' }}>
+                { negatives }
+              </span>
+            </div>
+          )
+          : <span />}
+
+        {neturals.length !== 0
+          ? (
+            <div className="positive-tag">
+              <Icon name="hand point right" size="small" />
+              {' '}
+              <span className="netural" style={{ color: 'grey' }}>
+                { neturals }
+              </span>
+            </div>
+          )
+          : <span />}
       </span>
     );
   };
