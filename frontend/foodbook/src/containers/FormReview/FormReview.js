@@ -284,7 +284,6 @@ class FormReview extends Component {
               <Form.TextArea
                 id="review-restaurant-input"
                 rows="1"
-                type="text"
                 label="Restaurant"
                 value={restaurant}
                 readOnly
@@ -302,7 +301,6 @@ class FormReview extends Component {
               <Form.TextArea
                 id="review-menu-input"
                 rows="1"
-                type="text"
                 label="Menu"
                 value={menu}
                 onChange={(event) => this.setState({ menu: event.target.value })}
@@ -322,7 +320,6 @@ class FormReview extends Component {
             <Form.TextArea
               id="review-content-input"
               rows="4"
-              type="text"
               label="Content"
               value={content}
               onChange={(event) => this.setState({ content: event.target.value })}
