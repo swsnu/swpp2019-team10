@@ -29,15 +29,17 @@ const parseTagName = (tags) => {
 
   return (
     <span className="tags-wrapper">
-      <Icon name="thumbs up" size="small" />
+      {positives.length !== 0 ? <Icon name="thumbs up" size="small" /> : <div />}
       <span className="positive" style={{ color: 'blue' }}>
         { positives }
       </span>
-      <Icon name="thumbs down" size="small" />
+      {' '}
+      {negatives.length !== 0 ? <Icon name="thumbs down" size="small" /> : <div />}
       <span className="negative" style={{ color: 'red' }}>
         { negatives }
       </span>
-      <Icon name="hand point right" size="small" />
+      {' '}
+      {neturals.length !== 0 ? <Icon name="hand point right" size="small" /> : <div />}
       <span className="neturals" style={{ color: 'grey' }}>
         { neturals }
       </span>
@@ -151,64 +153,35 @@ class ReviewDetail extends Component {
     const modalContent = ready ? (
       <Modal.Content scrolling>
         <Form id="review-detail" style={{ width: '1000px' }}>
-          <Form.Group width="equal">
-            <Form.Field>
-              {author}
-            </Form.Field>
-            <Form.Field>
-              {date}
-            </Form.Field>
-          </Form.Group>
-          <Form.Field>
-            {imgArea}
-          </Form.Field>
-          <Form.Field>
-            {googleMap}
-          </Form.Field>
-          <Form.Group width="equal">
-            <Form.TextArea
-              id="review-restaurant"
-              rows="1"
-              type="text"
-              label="Restaurant"
-              value={restaurant}
-              readOnly
-            />
-            <Form.TextArea
-              id="review-category"
-              rows="1"
-              type="text"
-              label="Category"
-              value={category}
-              readOnly
-            />
-            <Form.TextArea
-              id="review-menu"
-              rows="1"
-              type="text"
-              label="Menu"
-              value={menu}
-              readOnly
-            />
-          </Form.Group>
-          <Form.Field>
-            {Array.isArray(tag) && parseTagName(tag)}
-          </Form.Field>
-          <Form.Field>
-            <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
-          </Form.Field>
-          <Form.TextArea
-            id="review-content"
-            rows="4"
-            type="text"
-            label="Content"
-            value={content}
-            readOnly
-          />
-          <Form.Field>
-            <Recommendation data={menu} id={id} onClose={this.loadReview} />
-          </Form.Field>
+          <Grid columns={3}>
+            <Grid.Column textAlign="center">
+              {imgArea}
+            </Grid.Column>
+            <Grid.Column textAlign="center">
+              {googleMap}
+            </Grid.Column>
+            <Grid.Column textAlign="left">
+              <Grid.Row>
+                <text style={{ fontWeight: 'bold', fontSize: 20 }}>
+                  {restaurant}
+                </text>
+              </Grid.Row>
+              <Grid.Row />
+              <Grid.Row>
+                <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
+              </Grid.Row>
+              <Grid.Row>
+                {Array.isArray(tag) && parseTagName(tag)}
+              </Grid.Row>
+              <Grid.Row>
+                {content}
+              </Grid.Row>
+            </Grid.Column>
+          </Grid>
         </Form>
+        <Form.Field>
+          <Recommendation data={menu} id={id} onClose={this.loadReview} />
+        </Form.Field>
       </Modal.Content>
     )
       : loadContent;
@@ -223,7 +196,31 @@ class ReviewDetail extends Component {
         )}
       >
         <Modal.Header>
-          Review
+          <Grid columns={3}>
+            <Grid.Column>
+              Review
+            </Grid.Column>
+            <Grid.Column textAlign="center">
+              <text style={{ fontWeight: 'bold', fontSize: 20 }}>
+                {menu}
+              </text>
+              <text style={{ fontWeight: 'bold', fontSize: 15 }}>
+                {category !== undefined ? ` (${category})` : ''}
+              </text>
+            </Grid.Column>
+            <Grid.Column textAlign="left">
+              <text style={{ fontSize: 12 }}>
+                {author !== '' ? '  by ' : ''}
+              </text>
+              <text style={{ fontWeight: 'bold', fontSize: 15 }}>
+                {author}
+              </text>
+              <text style={{ fontSize: 12 }}>
+                {',  '}
+                {date}
+              </text>
+            </Grid.Column>
+          </Grid>
         </Modal.Header>
         {error ? errorContent : modalContent}
         <Modal.Actions>
@@ -264,6 +261,8 @@ ReviewDetail.defaultProps = {
   onDeleteReview: null,
   review: {
     id: 0,
+    category: '',
+    author: '',
   },
   fixed: false,
   user: { username: '' },
