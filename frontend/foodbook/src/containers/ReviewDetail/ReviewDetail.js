@@ -28,7 +28,7 @@ const parseTagName = (tags) => {
   const neturals = netural.map(getName).join(', ');
 
   return (
-    <span className="tags-wrapper">
+    <div className="tags-wrapper">
       {positives.length !== 0 ? <Icon name="thumbs up" size="small" /> : <div />}
       <span className="positive" style={{ color: 'blue' }}>
         { positives }
@@ -44,7 +44,8 @@ const parseTagName = (tags) => {
         { neturals }
       </span>
       <br />
-    </span>
+      <br />
+    </div>
   );
 };
 
@@ -162,9 +163,9 @@ class ReviewDetail extends Component {
             </Grid.Column>
             <Grid.Column textAlign="left">
               <Grid.Row>
-                <text style={{ fontWeight: 'bold', fontSize: 20 }}>
+                <span style={{ fontWeight: 'bold', fontSize: 20 }}>
                   {restaurant}
-                </text>
+                </span>
               </Grid.Row>
               <Grid.Row />
               <Grid.Row>
@@ -174,7 +175,9 @@ class ReviewDetail extends Component {
                 {Array.isArray(tag) && parseTagName(tag)}
               </Grid.Row>
               <Grid.Row>
-                {content}
+                <div className="content-wrapper">
+                  {content}
+                </div>
               </Grid.Row>
             </Grid.Column>
           </Grid>
@@ -201,24 +204,24 @@ class ReviewDetail extends Component {
               Review
             </Grid.Column>
             <Grid.Column textAlign="center">
-              <text style={{ fontWeight: 'bold', fontSize: 20 }}>
+              <span style={{ fontWeight: 'bold', fontSize: 20 }}>
                 {menu}
-              </text>
-              <text style={{ fontWeight: 'bold', fontSize: 15 }}>
+              </span>
+              <span style={{ fontWeight: 'bold', fontSize: 15 }}>
                 {category !== undefined ? ` (${category})` : ''}
-              </text>
+              </span>
             </Grid.Column>
             <Grid.Column textAlign="left">
-              <text style={{ fontSize: 12 }}>
+              <span style={{ fontSize: 12 }}>
                 {author !== '' ? '  by ' : ''}
-              </text>
-              <text style={{ fontWeight: 'bold', fontSize: 15 }}>
+              </span>
+              <span style={{ fontWeight: 'bold', fontSize: 15 }}>
                 {author}
-              </text>
-              <text style={{ fontSize: 12 }}>
+              </span>
+              <span style={{ fontSize: 12 }}>
                 {',  '}
                 {date}
-              </text>
+              </span>
             </Grid.Column>
           </Grid>
         </Modal.Header>

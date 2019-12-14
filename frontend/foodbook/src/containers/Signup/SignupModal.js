@@ -32,15 +32,15 @@ class SignupModal extends Component {
             </Button>
           )}
         >
-          <Header as="h2" color="teal" textAlign="center">
+          <Header as="h2" color="blue" textAlign="center">
                 Sign-up into Foodbook!
           </Header>
           <Modal.Content scrolling>
             <Signup closeModal={this.close} />
           </Modal.Content>
           <Modal.Actions>
-            <Button icon="check" color="teal" form="signup-form" type="submit" content="Join" className="signup-submit-button" />
-            <Button icon="x" color="teal" content="close" onClick={this.close} />
+            <Button icon="check" color="blue" form="signup-form" type="submit" content="Join" className="signup-submit-button" />
+            <Button icon="x" color="blue" content="close" onClick={this.close} />
           </Modal.Actions>
         </Modal>
       </div>

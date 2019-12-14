@@ -28,21 +28,41 @@ const ReviewPreview = (props) => {
 
     return (
       <span className="tags-wrapper">
-        <Icon name="thumbs up" size="small" />
-        <span className="positive" style={{ color: 'blue' }}>
-          { positives }
-        </span>
-        <br />
-        <Icon name="thumbs down" size="small" />
-        <span className="negative" style={{ color: 'red' }}>
-          { negatives }
-        </span>
-        <br />
-        <Icon name="hand point right" size="small" />
-        <span className="neturals" style={{ color: 'grey' }}>
-          { neturals }
-        </span>
-        <br />
+        {positives.length !== 0
+          ? (
+            <div className="positive-tag">
+              <Icon name="thumbs up" size="small" />
+              {' '}
+              <span className="positive" style={{ color: 'blue' }}>
+                { positives }
+              </span>
+            </div>
+          )
+          : <span />}
+
+        {negatives.length !== 0
+          ? (
+            <div className="negative-tag">
+              <Icon name="thumbs down" size="small" />
+              {' '}
+              <span className="negative" style={{ color: 'red' }}>
+                { negatives }
+              </span>
+            </div>
+          )
+          : <span />}
+
+        {neturals.length !== 0
+          ? (
+            <div className="positive-tag">
+              <Icon name="hand point right" size="small" />
+              {' '}
+              <span className="netural" style={{ color: 'grey' }}>
+                { neturals }
+              </span>
+            </div>
+          )
+          : <span />}
       </span>
     );
   };
@@ -59,7 +79,7 @@ const ReviewPreview = (props) => {
           </span>
         </Card.Meta>
         <Card.Description textAlign="left">
-          <span className="tag">{parseTagName(tag) }</span>
+          <span className="tag">{ parseTagName(tag) }</span>
           <br />
           {isMine && (
           <ReviewDetail fixed={false} id={id} />

@@ -34,7 +34,7 @@ export class Category extends Component {
           onChange={(event, data) => this.setState({ category: data.value })}
         />
         <h3>
-          {`Your Food history of ${category}`}
+          {`Food history of ${category}`}
         </h3>
         <ReviewList friendId={friendId} category={category} />
       </div>

@@ -12,6 +12,15 @@ export class RawCalendar extends Component {
       date: new Date(),
       dateString: parseDate(`${new Date()}`),
     };
+    this.handleDisable.bind(this);
+  }
+
+  componentDidMount() {
+    this.handleDisable();
+  }
+
+  handleDisable = () => {
+    document.getElementsByClassName('react-calendar__navigation__label')[0].disabled = true;
   }
 
   handleChange = (dateInfo) => {
@@ -30,7 +39,7 @@ export class RawCalendar extends Component {
       <div className="RawCalendar">
         <Calendar id="calendar" style={{ marginLeft: '50%' }} onChange={handleChange} value={date} tileDisabled={tileDisabled} />
         <h3>
-          {`Your Food history of ${dateString}`}
+          {`Food history of ${dateString}`}
         </h3>
         <ReviewList friendId={parseInt(friendId, 10)} dateString={dateString} />
       </div>

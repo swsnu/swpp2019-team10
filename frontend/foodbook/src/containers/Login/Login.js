@@ -3,7 +3,7 @@ import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  Button, Grid, Header, Form, Segment, Message,
+  Button, Grid, Header, Form, Message,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
@@ -47,56 +47,58 @@ class Login extends Component {
       <div className="login">
         <Grid textAlign="center">
           <Grid.Column style={{ maxWidth: 450 }}>
-            <Header as="h2" color="teal" textAlign="center">
+            <Header as="h2" color="blue" textAlign="center">
               Log-in to your account
             </Header>
             <Form size="large">
-              <Segment stacked>
-                <Form.Input
-                  fluid
-                  icon="user"
-                  iconPosition="left"
-                  placeholder="ID"
-                  value={input.username}
-                  onChange={(e, { value }) => {
-                    this.setState({
-                      input: {
-                        ...input,
-                        username: value,
-                      },
-                    });
-                  }}
-                />
 
-                <Form.Input
-                  fluid
-                  icon="lock"
-                  iconPosition="left"
-                  placeholder="Password"
-                  type="password"
-                  autoComplete="off"
-                  value={input.password}
-                  onChange={(e, { value }) => {
-                    this.setState({
-                      input: {
-                        ...input,
-                        password: value,
-                      },
-                    });
-                  }}
-                />
+              <Form.Input
+                fluid
+                style={{ color: '#87ceeb' }}
+                icon="user"
+                iconPosition="left"
+                placeholder="ID"
+                value={input.username}
+                onChange={(e, { value }) => {
+                  this.setState({
+                    input: {
+                      ...input,
+                      username: value,
+                    },
+                  });
+                }}
+              />
 
-                <Button color="teal" fluid size="large" className="login-button" onClick={loginHandler}>
+              <Form.Input
+                fluid
+                style={{ color: '#87ceeb' }}
+                icon="lock"
+                iconPosition="left"
+                placeholder="Password"
+                type="password"
+                autoComplete="off"
+                value={input.password}
+                onChange={(e, { value }) => {
+                  this.setState({
+                    input: {
+                      ...input,
+                      password: value,
+                    },
+                  });
+                }}
+              />
+
+              <Button color="blue" fluid size="large" className="login-button" onClick={loginHandler}>
                   Login
-                </Button>
+              </Button>
 
-                {failed && (
+              {failed && (
                 <Message negative className="login-error-wrapper">
                   <Message.Header>Login Failed!</Message.Header>
                   <p>Please check the ID or Password!</p>
                 </Message>
-                )}
-              </Segment>
+              )}
+
             </Form>
             <Message>
               <SignupModal history={history} color="blue" fixed />

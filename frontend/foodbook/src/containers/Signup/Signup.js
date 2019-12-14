@@ -89,11 +89,18 @@ export class Signup extends Component {
     };
 
     if (name === 'passwordConfirm') {
-      if (input.password !== newInput.passwordConfirm) {
+      if (newInput.password !== newInput.passwordConfirm) {
         newError.passwordConfirm = this.restirction.passwordConfirm;
       } else newError.passwordConfirm = undefined;
-    } else if (!this.inputChecker(name, value)) newError[name] = this.restirction[name];
-    else newError[name] = undefined;
+    } else {
+      if (name === 'password') {
+        if (newInput.password !== newInput.passwordConfirm) {
+          newError.passwordConfirm = this.restirction.passwordConfirm;
+        } else newError.passwordConfirm = undefined;
+      }
+      if (!this.inputChecker(name, value)) newError[name] = this.restirction[name];
+      else newError[name] = undefined;
+    }
 
     this.setState({
       input: newInput,
@@ -112,6 +119,7 @@ export class Signup extends Component {
             <Form.Input
               error={error.id}
               fluid
+              style={{ color: '#87ceeb' }}
               label="ID"
               name="id"
               placeholder={this.restirction.id}
@@ -124,6 +132,7 @@ export class Signup extends Component {
             <Form.Input
               error={error.password}
               fluid
+              style={{ color: '#87ceeb' }}
               label="Password"
               name="password"
               type="password"
@@ -138,6 +147,7 @@ export class Signup extends Component {
             <Form.Input
               error={error.passwordConfirm}
               fluid
+              style={{ color: '#87ceeb' }}
               label="Password Confirmation"
               name="passwordConfirm"
               type="password"
@@ -152,6 +162,7 @@ export class Signup extends Component {
             <Form.Input
               error={error.name}
               fluid
+              style={{ color: '#87ceeb' }}
               label="Nickname"
               name="name"
               placeholder={this.restirction.name}
@@ -164,6 +175,7 @@ export class Signup extends Component {
             <Form.Input
               error={error.age}
               fluid
+              style={{ color: '#87ceeb' }}
               label="Age"
               name="age"
               placeholder={this.restirction.age}

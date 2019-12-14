@@ -86,7 +86,6 @@ describe('ReviewLocation', () => {
     global.navigator.geolocation = mockFakeGeolocation;
     const component = mount(reviewLocation);
     const wrapper = component.find('ReviewLocation');
-    console.log(wrapper.at(0).state());
     expect(wrapper.at(0).state('searchLng')).toBe(0);
     expect(wrapper.at(0).state('searchLat')).toBe(0);
   });

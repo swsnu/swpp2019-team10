@@ -6,3 +6,7 @@ button:disabled,
 button[disabled] {
     color: #666666;
 }
+
+.react-calendar__navigation__label {
+    background-color: white !important;
+}
