@@ -126,7 +126,7 @@ export class Main extends Component {
               </Container>
             </Grid.Column>
             <Grid.Column width={2}>
-              <FormReview mode="ADD" fixed={false} />
+              {friendId === -1 ? <FormReview mode="ADD" fixed={false} /> : <div /> }
             </Grid.Column>
             <Grid.Column width={2} />
             <Grid.Column width={4} />
