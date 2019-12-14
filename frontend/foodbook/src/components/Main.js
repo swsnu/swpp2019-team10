@@ -86,11 +86,9 @@ export class Main extends Component {
 
     return (
       <div className="main">
-        <Menu color="teal" style={{ height: '50px' }}>
+        <Menu color="blue" style={{ height: '50px' }}>
           <Menu.Item>
-            {' '}
             <Header as="h1"><NavLink to="/">FoodBook</NavLink></Header>
-            {' '}
           </Menu.Item>
           <Menu.Item>
             <b>Change view:</b>
