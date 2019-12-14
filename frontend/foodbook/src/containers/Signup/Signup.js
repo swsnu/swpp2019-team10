@@ -112,6 +112,7 @@ export class Signup extends Component {
             <Form.Input
               error={error.id}
               fluid
+              style={{ color: '#87ceeb' }}
               label="ID"
               name="id"
               placeholder={this.restirction.id}
@@ -124,6 +125,7 @@ export class Signup extends Component {
             <Form.Input
               error={error.password}
               fluid
+              style={{ color: '#87ceeb' }}
               label="Password"
               name="password"
               type="password"
@@ -138,6 +140,7 @@ export class Signup extends Component {
             <Form.Input
               error={error.passwordConfirm}
               fluid
+              style={{ color: '#87ceeb' }}
               label="Password Confirmation"
               name="passwordConfirm"
               type="password"
@@ -152,6 +155,7 @@ export class Signup extends Component {
             <Form.Input
               error={error.name}
               fluid
+              style={{ color: '#87ceeb' }}
               label="Nickname"
               name="name"
               placeholder={this.restirction.name}
@@ -164,6 +168,7 @@ export class Signup extends Component {
             <Form.Input
               error={error.age}
               fluid
+              style={{ color: '#87ceeb' }}
               label="Age"
               name="age"
               placeholder={this.restirction.age}
@@ -177,6 +182,7 @@ export class Signup extends Component {
               name="gender"
               placeholder="Your gender here"
               fluid
+              style={{ color: '#87ceeb' }}
               selection
               onChange={this.handleChange}
               options={
