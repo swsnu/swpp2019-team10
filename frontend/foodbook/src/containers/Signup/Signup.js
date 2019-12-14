@@ -88,8 +88,8 @@ export class Signup extends Component {
       ...error,
     };
 
-    if (name === 'passwordConfirm') {
-      if (input.password !== newInput.passwordConfirm) {
+    if (name === 'passwordConfirm' || name === 'password') {
+      if (newInput.password !== newInput.passwordConfirm) {
         newError.passwordConfirm = this.restirction.passwordConfirm;
       } else newError.passwordConfirm = undefined;
     } else if (!this.inputChecker(name, value)) newError[name] = this.restirction[name];
@@ -182,7 +182,6 @@ export class Signup extends Component {
               name="gender"
               placeholder="Your gender here"
               fluid
-              style={{ color: '#87ceeb' }}
               selection
               onChange={this.handleChange}
               options={
