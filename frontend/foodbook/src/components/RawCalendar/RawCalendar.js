@@ -33,7 +33,7 @@ export class RawCalendar extends Component {
       <div className="RawCalendar">
         <Calendar id="calendar" style={{ marginLeft: '50%' }} onChange={handleChange} value={date} tileDisabled={tileDisabled} />
         <h3>
-          {`Your Food history of ${dateString}`}
+          {`Food history of ${dateString}`}
         </h3>
         <ReviewList friendId={parseInt(friendId, 10)} dateString={dateString} />
       </div>
