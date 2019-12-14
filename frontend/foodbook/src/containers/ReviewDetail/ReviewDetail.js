@@ -43,7 +43,8 @@ const parseTagName = (tags) => {
       <span className="neturals" style={{ color: 'grey' }}>
         { neturals }
       </span>
-      <br /> <br />
+      <br />
+      <br />
     </div>
   );
 };

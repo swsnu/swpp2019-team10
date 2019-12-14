@@ -28,27 +28,34 @@ class RestaurantReview extends Component {
     const { reviews, data } = this.props;
 
     let reviewList = reviews.map((review) => (
-      <ReviewPreview
-        key={`${review.id}`}
-        id={review.id}
-        author={review.author}
-        restaurant={review.restaurant}
-        menu={review.menu}
-        content={review.content}
-        image={review.image}
-        rating={review.rating}
-        date={review.date}
-        tag={review.tag}
-        isMine={review.isMine}
-      />
+      <List.Item key={`${review.id}`}>
+        <ReviewPreview
+          id={review.id}
+          author={review.author}
+          restaurant={review.restaurant}
+          menu={review.menu}
+          content={review.content}
+          image={review.image}
+          rating={review.rating}
+          date={review.date}
+          tag={review.tag}
+          isMine={review.isMine}
+        />
+      </List.Item>
     ));
 
-
     reviewList = (
-      <List id="reviewList">
+      <List horizontal id="reviewList">
         {reviewList}
       </List>
     );
+
+    const container = document.getElementById('modal-review-content');
+    if (container) {
+      document.addEventListener('wheel', (e) => {
+        container.scrollLeft += e.deltaY;
+      });
+    }
 
     return (
       <Modal
@@ -68,7 +75,7 @@ class RestaurantReview extends Component {
         <Modal.Header>
           {`Review for ${data.name}!`}
         </Modal.Header>
-        <Modal.Content image scrolling>
+        <Modal.Content image scrolling id="modal-review-content">
           <Modal.Description>
             <Header> Reviews </Header>
             {reviewList}
