@@ -28,7 +28,7 @@ const parseTagName = (tags) => {
   const neturals = netural.map(getName).join(', ');
 
   return (
-    <span className="tags-wrapper">
+    <div className="tags-wrapper">
       {positives.length !== 0 ? <Icon name="thumbs up" size="small" /> : <div />}
       <span className="positive" style={{ color: 'blue' }}>
         { positives }
@@ -43,8 +43,8 @@ const parseTagName = (tags) => {
       <span className="neturals" style={{ color: 'grey' }}>
         { neturals }
       </span>
-      <br />
-    </span>
+      <br /> <br />
+    </div>
   );
 };
 
@@ -174,7 +174,9 @@ class ReviewDetail extends Component {
                 {Array.isArray(tag) && parseTagName(tag)}
               </Grid.Row>
               <Grid.Row>
-                {content}
+                <div className="content-wrapper">
+                  {content}
+                </div>
               </Grid.Row>
             </Grid.Column>
           </Grid>
