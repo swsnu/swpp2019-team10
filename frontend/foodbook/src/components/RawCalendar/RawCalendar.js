@@ -12,6 +12,15 @@ export class RawCalendar extends Component {
       date: new Date(),
       dateString: parseDate(`${new Date()}`),
     };
+    this.handleDisable.bind(this);
+  }
+
+  componentDidMount() {
+    this.handleDisable();
+  }
+
+  handleDisable = () => {
+    document.getElementsByClassName('react-calendar__navigation__label')[0].disabled = true;
   }
 
   handleChange = (dateInfo) => {
@@ -25,9 +34,6 @@ export class RawCalendar extends Component {
     const { dateString, date } = this.state;
     const { tileDisabled, friendId } = this.props;
     const { handleChange } = this;
-    const label = document.getElementsByClassName('react-calendar__navigation__label')[0];
-
-    if (label) label.disabled = true;
 
     return (
       <div className="RawCalendar">
