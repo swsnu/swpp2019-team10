@@ -23,7 +23,8 @@ def review_list(request):
     if request.method == 'GET':
         review_all_list = []
         for review in Review.objects.select_related(
-                'author', 'restaurant', 'menu').prefetch_related('tag').filter(author=request.user.profile):
+                'author', 'restaurant', 'menu').prefetch_related(
+                    'tag').filter(author=request.user.profile):
             image_path = ""
             if review.review_img:
                 image_path = 'http://127.0.0.1:8000'+review.review_img.url
@@ -427,7 +428,8 @@ def restaurant_review_list(request, restaurant_id):
     if request.method == 'GET':
         review_all_list = []
         restaurant_reviews = Review.objects.select_related(
-            'author', 'restaurant', 'menu').prefetch_related('tag').filter(restaurant__id=restaurant_id)
+            'author', 'restaurant', 'menu').prefetch_related(
+                'tag').filter(restaurant__id=restaurant_id)
         for review in restaurant_reviews:
             image_path = ""
             if review.review_img:
