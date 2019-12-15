@@ -79,7 +79,7 @@ class Recommendation():
             res = []
             for item in review:
                 id = item.menu.id
-                if id in itemID:
+                if id in itemID or (item.author.id == user_id and item.rating < 3):
                     continue
                 itemID.append(id)
                 res.append((dot_product(item.menu.taste, taste), item.restaurant))
