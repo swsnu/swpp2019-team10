@@ -23,7 +23,8 @@ def review_list(request):
     if request.method == 'GET':
         review_all_list = []
         for review in Review.objects.select_related(
-                'restaurant', 'menu').prefetch_related('tag').filter(author=request.user.profile):
+                'author', 'restaurant', 'menu').prefetch_related(
+                    'tag').filter(author=request.user.profile):
             image_path = ""
             if review.review_img:
                 image_path = 'http://127.0.0.1:8000'+review.review_img.url
@@ -37,7 +38,7 @@ def review_list(request):
                 tag.append({'name':tag_item.name, 'sentimental': pos})
             dict_review = {
                 'id': review.id,
-                'author': request.user.username,
+                'author': review.author.nickname,
                 'restaurant': review.restaurant.name,
                 'menu': review.menu.name,
                 'content': review.content,
@@ -111,7 +112,7 @@ def review_list(request):
             tag.append({'name': tag_item.name, 'sentimental': pos})
         dict_new_review = {
             'id': new_review.id,
-            'author': request.user.username,
+            'author': request.user.profile.nickname,
             'restaurant': restaurant.name,
             'menu': menu.name,
             'content': new_review.content,
@@ -139,7 +140,7 @@ def review_detail(request, review_id):
     if request.method == 'GET':
         try:
             review = Review.objects.select_related(
-                'author__user', 'restaurant', 'menu').prefetch_related('tag').get(id=review_id)
+                'author', 'restaurant', 'menu').prefetch_related('tag').get(id=review_id)
         except ObjectDoesNotExist:
             return HttpResponseNotFound()
         image_path = ""
@@ -155,7 +156,7 @@ def review_detail(request, review_id):
             tag.append({'name':tag_item.name, 'sentimental': pos})
         review_dict = {
             'id': review.id,
-            'author': review.author.user.username,
+            'author': review.author.nickname,
             'restaurant': review.restaurant.name,
             'menu': review.menu.name,
             'content': review.content,
@@ -172,7 +173,7 @@ def review_detail(request, review_id):
     if request.method == 'PUT':
         try:
             review = Review.objects.select_related(
-                'author__user', 'restaurant', 'menu').prefetch_related('tag').get(id=review_id)
+                'author', 'restaurant', 'menu').prefetch_related('tag').get(id=review_id)
         except ObjectDoesNotExist:
             return HttpResponseNotFound()
         if request.user.id != review.author.user.id:
@@ -232,7 +233,7 @@ def review_detail(request, review_id):
             tag.append({'name': tag_item.name, 'sentimental': pos})
         dict_review = {
             'id': review.id,
-            'author': review.author.user.username,
+            'author': review.author.nickname,
             'restaurant': review.restaurant.name,
             'menu': review.menu.name,
             'content': review.content,
@@ -282,7 +283,7 @@ def friend_review_list(request, friend_id):
     if request.method == 'GET':
         review_all_list = []
         for review in Review.objects.select_related(
-                'author__user', 'restaurant', 'menu').filter(author=friend):
+                'author', 'restaurant', 'menu').filter(author=friend):
             image_path = ""
             if review.review_img:
                 image_path = 'http://127.0.0.1:8000'+review.review_img.url
@@ -296,7 +297,7 @@ def friend_review_list(request, friend_id):
                 tag.append({'name':tag_item.name, 'sentimental': pos})
             dict_review = {
                 'id': review.id,
-                'author': review.author.user.username,
+                'author': review.author.nickname,
                 'restaurant': review.restaurant.name,
                 'menu': review.menu.name,
                 'content': review.content,
@@ -349,7 +350,7 @@ def friend_review_detail(request, friend_id, review_id):
             tag.append({'name':tag_item.name, 'sentimental': pos})
         review_dict = {
             'id': review.id,
-            'author': review.author.user.username,
+            'author': review.author.nickname,
             'restaurant': review.restaurant.name,
             'menu': review.menu.name,
             'content': review.content,
@@ -377,7 +378,7 @@ def review_image(request, review_id):
         return HttpResponse(status=401)
     try:
         review = Review.objects.select_related(
-            'author__user', 'restaurant', 'menu').prefetch_related('tag').get(id=review_id)
+            'author', 'restaurant', 'menu').prefetch_related('tag').get(id=review_id)
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
     if request.user.profile.id != review.author.id:
@@ -397,7 +398,7 @@ def review_image(request, review_id):
                 tag.append({'name':tag_item.name, 'sentimental': pos})
             dict_review = {
                 'id': review.id,
-                'author': review.author.user.username,
+                'author': review.author.nickname,
                 'restaurant': review.restaurant.name,
                 'menu': review.menu.name,
                 'content': review.content,
@@ -427,7 +428,8 @@ def restaurant_review_list(request, restaurant_id):
     if request.method == 'GET':
         review_all_list = []
         restaurant_reviews = Review.objects.select_related(
-            'restaurant', 'menu').prefetch_related('tag').filter(restaurant__id=restaurant_id)
+            'author', 'restaurant', 'menu').prefetch_related(
+                'tag').filter(restaurant__id=restaurant_id)
         for review in restaurant_reviews:
             image_path = ""
             if review.review_img:
@@ -442,7 +444,7 @@ def restaurant_review_list(request, restaurant_id):
                 tag.append({'name':tag_item.name, 'sentimental': pos})
             dict_review = {
                 'id': review.id,
-                'author': request.user.username,
+                'author': review.author.nickname,
                 'restaurant': review.restaurant.name,
                 'menu': review.menu.name,
                 'content': review.content,

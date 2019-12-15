@@ -183,7 +183,7 @@ class ReviewDetail extends Component {
           </Grid>
         </Form>
         <Form.Field>
-          <Recommendation data={menu} id={id} onClose={this.loadReview} />
+          <Recommendation data={category} id={id} onClose={this.loadReview} />
         </Form.Field>
       </Modal.Content>
     )
