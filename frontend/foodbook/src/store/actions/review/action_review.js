@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { push } from 'connected-react-router';
 import * as actionTypes from './actionTypes_review';
 import { GET_USER_INFO } from '../user/action_user';
 
@@ -104,5 +105,5 @@ export const GET_FRIEND_REVIEWS = (id) => (dispatch) => {
 
   return axios.get(`/api/friend/${id}/review/`)
     .then((res) => dispatch(GET_FRIEND_REVIEWS_DEEP(res.data)))
-    .catch(dispatch(GET_FRIEND_REVIEWS_PRE()));
+    .catch(() => { dispatch(GET_FRIEND_REVIEWS_PRE()); dispatch(push('/')); });
 };
