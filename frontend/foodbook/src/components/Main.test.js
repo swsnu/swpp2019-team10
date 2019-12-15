@@ -20,7 +20,7 @@ const initialUser = {
   },
 };
 
-const mockStore = getMockStore(initialUser, {}, {});
+const mockStore = getMockStore(initialUser, { reviewList: [] }, {});
 
 jest.mock('components/Layouts/Feed/Feed', () => jest.fn(() => (
   <div className="mockReviewList">
@@ -85,7 +85,7 @@ describe('main', () => {
           <Main
             history={history}
             match={{
-              params: { id: 2 }, isExact: true, path: '', url: '',
+              params: { id: '2' }, isExact: true, path: '', url: '',
             }}
           />
         </ConnectedRouter>

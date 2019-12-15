@@ -31,7 +31,7 @@ describe('<Recommendation />', () => {
     recommend = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <Recommendation history={history} />
+          <Recommendation history={history} id={0} />
         </ConnectedRouter>
       </Provider>
     );

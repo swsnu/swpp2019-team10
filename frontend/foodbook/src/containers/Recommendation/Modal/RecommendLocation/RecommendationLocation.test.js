@@ -71,14 +71,14 @@ describe('<RecommendationLocation />', () => {
     recommend = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <RecommendationLocation history={history} />
+          <RecommendationLocation history={history} id={1} />
         </ConnectedRouter>
       </Provider>
     );
     recommend2 = (
       <Provider store={mockStore2}>
         <ConnectedRouter history={history}>
-          <RecommendationLocation history={history} />
+          <RecommendationLocation history={history} id={2} />
         </ConnectedRouter>
       </Provider>
     );
