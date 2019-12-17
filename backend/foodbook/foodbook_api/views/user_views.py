@@ -56,7 +56,7 @@ def signup(request):
             'nickname': profile_of_user.nickname,
             'friends': []
         }
-        return JsonResponse(response_dict, status=200)
+        return JsonResponse(response_dict, status=201)
     return HttpResponseNotAllowed(['POST'])
 
 

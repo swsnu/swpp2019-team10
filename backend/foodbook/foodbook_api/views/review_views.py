@@ -27,7 +27,7 @@ def review_list(request):
                     'tag').filter(author=request.user.profile):
             image_path = ""
             if review.review_img:
-                image_path = 'http://127.0.0.1:8000'+review.review_img.url
+                image_path = review.review_img.url
             tag = []
             for tag_item in review.tag.all():
                 pos = 0
@@ -145,7 +145,7 @@ def review_detail(request, review_id):
             return HttpResponseNotFound()
         image_path = ""
         if review.review_img:
-            image_path = 'http://127.0.0.1:8000'+review.review_img.url
+            image_path = review.review_img.url
         tag = []
         for tag_item in review.tag.all():
             pos = 0
@@ -216,7 +216,7 @@ def review_detail(request, review_id):
         review.category = category
         image_path = ""
         if review.review_img:
-            image_path = 'http://127.0.0.1:8000'+review.review_img.url
+            image_path = review.review_img.url
         tags = Tagging(request.user.profile, menu, rating, False).tagging(content)
         review.tag.clear()
         for item in tags.keys():
@@ -286,7 +286,7 @@ def friend_review_list(request, friend_id):
                 'author', 'restaurant', 'menu').filter(author=friend):
             image_path = ""
             if review.review_img:
-                image_path = 'http://127.0.0.1:8000'+review.review_img.url
+                image_path = review.review_img.url
             tag = []
             for tag_item in review.tag.all():
                 pos = 0
@@ -339,7 +339,7 @@ def friend_review_detail(request, friend_id, review_id):
             return HttpResponse(status=403)
         image_path = ""
         if review.review_img:
-            image_path = 'http://127.0.0.1:8000'+review.review_img.url
+            image_path = review.review_img.url
         tag = []
         for tag_item in review.tag.all():
             pos = 0
@@ -405,7 +405,7 @@ def review_image(request, review_id):
                 'rating': review.rating,
                 'date': review.date.strftime("%Y-%m-%d"),
                 'category': review.category,
-                'image': 'http://127.0.0.1:8000'+review.review_img.url,
+                'image': review.review_img.url,
                 'tag': tag,
                 'placeid': review.restaurant.place_id,
                 'longitude': review.restaurant.longitude,
@@ -433,7 +433,7 @@ def restaurant_review_list(request, restaurant_id):
         for review in restaurant_reviews:
             image_path = ""
             if review.review_img:
-                image_path = 'http://127.0.0.1:8000'+review.review_img.url
+                image_path = review.review_img.url
             tag = []
             for tag_item in review.tag.all():
                 pos = 0
