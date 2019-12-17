@@ -1,126 +1,160 @@
 import React, { Component } from 'react';
+import propTypes from 'prop-types';
 import {
-  Container,
+  Menu,
+  Dropdown,
   Grid,
   Header,
-  Menu,
-  Popup,
+  Container,
 } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 
+import Calendar from 'containers/RealCalendar';
+import Category from 'components/Category';
+import Myinfo from 'containers/Myinfo';
+import FormReview from 'containers/FormReview';
+import Location from 'containers/ReviewLocation';
+import Logout from 'containers/Logout';
 import FriendList from 'containers/FriendList';
-import RawCalendar from 'components/RawCalendar';
-import ReviewList from 'containers/ReviewList';
+import FriendSearch from 'containers/FriendSearch';
+import RecommendationTag from 'containers/Recommendation/Modal/RecommendTag';
+import Feed from './Layouts/Feed';
 
-const menuStyle = {
-  border: 'none',
-  borderRadius: 0,
-  boxShadow: 'none',
-  marginBottom: '1em',
-  marginTop: '4em',
-  transition: 'box-shadow 0.5s ease, padding 0.5s ease',
-};
+export class Main extends Component {
+  constructor(props) {
+    super(props);
 
-export default class Main extends Component {
-  constructor() {
-    super();
+    const { match } = this.props;
+
+    const friendId = match.params.id ? match.params.id : -1;
+
     this.state = {
-      activeItem: 'feed',
+      selectedView: <Feed friendId={parseInt(friendId, 10)} />,
     };
   }
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
-
   render() {
-    const { activeItem } = this.state;
+    const { match } = this.props;
 
-    let mainRenderer = <div />;
+    const friendId = match.params.id ? match.params.id : -1;
 
-    switch (activeItem) {
-      case 'feed':
-        mainRenderer = (
-          <div className="main-feed-wrapper">
-            <ReviewList />
-          </div>
-        );
-        break;
+    const handleItemClick = (e, { value }) => {
+      if (value === 'feed') {
+        this.setState({
+          selectedView: <Feed friendId={parseInt(friendId, 10)} className="feed" />,
+        });
+      } else if (value === 'calendar') {
+        this.setState({
+          selectedView: <Calendar friendId={parseInt(friendId, 10)} className="calendar" />,
+        });
+      } else if (value === 'category') {
+        this.setState({
+          selectedView: <Category friendId={parseInt(friendId, 10)} className="category" />,
+        });
+      } else {
+        this.setState({
+          selectedView: <Location friendId={parseInt(friendId, 10)} className="location" />,
+        });
+      }
+    };
 
-      case 'calendar':
-        mainRenderer = (
-          <div className="main-calendar-wrapper">
-            <RawCalendar />
-          </div>
-        );
-        break;
+    const viewOptions = [
+      {
+        key: 'feed',
+        text: 'Feed',
+        value: 'feed',
+      },
+      {
+        key: 'location',
+        text: 'Location',
+        value: 'location',
+      },
+      {
+        key: 'calendar',
+        text: 'Calendar',
+        value: 'calendar',
+      },
+      {
+        key: 'category',
+        text: 'Category',
+        value: 'category',
+      },
+    ];
 
-      case 'location':
-        mainRenderer = (<div className="main-location-wrapper"> location </div>);
-        break;
-
-      case 'type':
-        mainRenderer = (<div className="main-type-wrapper"> type </div>);
-        break;
-
-      case 'menu':
-        mainRenderer = (<div className="main-menu-wrapper"> menu </div>);
-        break;
-
-      default: // exceptional Case
-        mainRenderer = (<div className="main-error-wrapper"> error </div>);
-        break;
-    }
+    const { selectedView } = this.state;
+    const { history } = this.props;
 
     return (
       <div className="main">
-        <Container text style={{ marginTop: '2em' }}>
-          <Header as="h1"><NavLink to="/main">FoodBook</NavLink></Header>
-        </Container>
-        {/* Title Region */}
-
-        <Menu borderless style={menuStyle}>
-          <Container text className="menu">
-            <Menu.Item header>View:</Menu.Item>
-            <Menu.Item as="a" active={activeItem === 'feed'} name="feed" onClick={this.handleItemClick} id="button-feed">
-                Feed
+        <Menu color="blue" style={{ height: '50px' }}>
+          <Menu.Item>
+            <Header as="h1"><NavLink to="/">FoodBook</NavLink></Header>
+          </Menu.Item>
+          <Menu.Item>
+            <b>Change view:</b>
+            <Dropdown
+              scrolling
+              options={viewOptions}
+              placeholder="Change views"
+              defaultValue={viewOptions[0].value}
+              onChange={handleItemClick}
+            />
+          </Menu.Item>
+          <Menu.Item>
+            <RecommendationTag id={-1} />
+          </Menu.Item>
+          <Menu.Menu position="right">
+            <Menu.Item>
+                Go to friend&apos;s home:
+              <FriendList history={history} />
             </Menu.Item>
-            <Menu.Item as="a" active={activeItem === 'calendar'} name="calendar" onClick={this.handleItemClick} id="button-calendar">Calendar</Menu.Item>
-            <Menu.Item as="a" active={activeItem === 'location'} name="location" onClick={this.handleItemClick} id="button-location">Location</Menu.Item>
-            <Menu.Item as="a" active={activeItem === 'type'} name="type" onClick={this.handleItemClick} id="button-type">Type</Menu.Item>
-            <Menu.Item as="a" active={activeItem === 'menu'} name="menu" onClick={this.handleItemClick} id="button-menu">Menu</Menu.Item>
-          </Container>
+            <Menu.Item>
+              <FriendSearch />
+            </Menu.Item>
+            <Menu.Item style={{ marginRight: '50px' }}>
+              <Logout history={history} />
+            </Menu.Item>
+          </Menu.Menu>
         </Menu>
-        {/* view select region */}
-
-        <Grid columns={2} divided container stackable>
-          <Grid.Row className="wrapper-friend">
-            <Grid.Column width={4}>
-              <FriendList />
+        {/*  Top Menu Region */}
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={2} />
+            <Grid.Column width={6}>
+              <Container className="myinfo">
+                <Myinfo friendId={parseInt(friendId, 10)} />
+              </Container>
             </Grid.Column>
-            {/* Friend Region */}
-
-            <Grid.Column width={12} className="wrapper-reviews">
-              <Grid.Row className="add-review">
-                <div className="ui special cards">
-                  <div className="card" style={{ width: '630px' }}>
-                    <div className="content">
-                      <Popup
-                        trigger={(
-                          <NavLink to="/main/upload" className="ui medium image">
-                            <i className="edit outline black icon fluid massive center link" style={{ marginLeft: '85%' }} />
-                          </NavLink>
-                        )}
-                        content="Add new review!"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </Grid.Row>
-              <br />
-              {mainRenderer}
+            <Grid.Column width={2}>
+              {friendId === -1 ? <FormReview mode="ADD" fixed={false} /> : <div /> }
             </Grid.Column>
+            <Grid.Column width={2} />
+            <Grid.Column width={4} />
+          </Grid.Row>
+
+
+          <Grid.Row>
+            <Grid.Column width={2} />
+            <Grid.Column width={12} className="content-wrapper">
+              <center>
+                {selectedView}
+              </center>
+            </Grid.Column>
+            <Grid.Column width={2} />
           </Grid.Row>
         </Grid>
       </div>
     );
   }
 }
+
+Main.propTypes = {
+  history: propTypes.objectOf(Object).isRequired,
+  match: propTypes.shape({
+    params: propTypes.shape({
+      id: propTypes.string,
+    }),
+  }).isRequired,
+};
+
+export default Main;

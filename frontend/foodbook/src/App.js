@@ -1,40 +1,50 @@
 import React from 'react';
 import {
-  Route, Redirect, Switch,
+  Route, Switch, Redirect,
 } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import axios from 'axios';
 import propTypes from 'prop-types';
 
-import Login from 'containers/Login'; // because we exported Login.js at the index.js, importing just directory is OK.
-// also used the absolute path /src
 import Main from 'components/Main';
-import AddReview from 'containers/AddReview';
+import FormReview from 'containers/FormReview';
 import ReviewDetail from 'containers/ReviewDetail';
+import Introduce from 'components/Introduce';
+import PrivateRoute from 'Utils/PrivateRouter';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
 
-function App(props) {
-  const { history } = props;
+const App = (props) => {
+  const { history, match } = props;
 
   return (
     <ConnectedRouter history={history}>
       <div className="App">
         <Switch>
-          <Route path="/login" exact component={Login} />
-          <Route path="/main" exact component={Main} />
-          <Route path="/main/upload" exact component={AddReview} />
+          <Route path="/introduce" exact component={Introduce} />
+          <PrivateRoute path="/main" exact component={Main} history={history} />
+          <PrivateRoute path="/friend/:id" exact component={Main} history={history} match={match} />
+          <Route path="/main/upload" exact component={FormReview} />
           <Route path="/main/:id" exact render={(propsIn) => <ReviewDetail store={propsIn.store} history={propsIn.history} match={propsIn.match} />} />
-          <Redirect exact from="/" to="/login" />
+          <Redirect to="/main" />
         </Switch>
       </div>
     </ConnectedRouter>
   );
-}
+};
 
 App.propTypes = {
   history: propTypes.objectOf(Object).isRequired,
+  match: propTypes.shape({
+    params: propTypes.shape({
+      id: propTypes.string,
+    }),
+  }),
+};
+
+App.defaultProps = {
+  match: undefined,
 };
 
 export default App;

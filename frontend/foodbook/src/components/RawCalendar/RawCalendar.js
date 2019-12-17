@@ -1,34 +1,9 @@
 import React, { Component } from 'react'; // useState lets functional component have state.
 import Calendar from 'react-calendar';
 import './RawCalendar.css';
-
-import ReviewList from 'containers/ReviewList';
-
-const parseDate = (dateInfo) => {
-  const dateParser = /^([A-Za-z]+) ([A-Za-z]+) (\d+) (\d+)/;
-
-  const month = dateInfo.match(dateParser)[2];
-  const date = dateInfo.match(dateParser)[3];
-  const year = dateInfo.match(dateParser)[4];
-
-  const months = {
-    Jan: '01',
-    Feb: '02',
-    Mar: '03',
-    Apr: '04',
-    May: '05',
-    Jun: '06',
-    Jul: '07',
-    Aug: '08',
-    Sep: '09',
-    Oct: '10',
-    Nov: '11',
-    Dec: '12',
-  };
-
-  return `${year}-${months[month]}-${date}`;
-};
-
+import propTypes from 'prop-types';
+import ReviewList from 'components/Layouts/Feed/Feed';
+import parseDate from './parseDate';
 
 export class RawCalendar extends Component {
   constructor() {
@@ -37,6 +12,15 @@ export class RawCalendar extends Component {
       date: new Date(),
       dateString: parseDate(`${new Date()}`),
     };
+    this.handleDisable.bind(this);
+  }
+
+  componentDidMount() {
+    this.handleDisable();
+  }
+
+  handleDisable = () => {
+    document.getElementsByClassName('react-calendar__navigation__label')[0].disabled = true;
   }
 
   handleChange = (dateInfo) => {
@@ -48,17 +32,28 @@ export class RawCalendar extends Component {
 
   render() {
     const { dateString, date } = this.state;
+    const { tileDisabled, friendId } = this.props;
     const { handleChange } = this;
 
     return (
       <div className="RawCalendar">
-        <Calendar id="calendar" style={{ marginLeft: '50%' }} onChange={handleChange} value={date} />
-        <h3 style={{ marginLeft: '25%' }}>
-          {`Your Food history of ${dateString}`}
+        <Calendar id="calendar" style={{ marginLeft: '50%' }} onChange={handleChange} value={date} tileDisabled={tileDisabled} />
+        <h3>
+          {`Food history of ${dateString}`}
         </h3>
-        <ReviewList dateString={dateString} />
+        <ReviewList friendId={parseInt(friendId, 10)} dateString={dateString} />
       </div>
     );
   }
 }
+
+RawCalendar.propTypes = {
+  tileDisabled: propTypes.func.isRequired,
+  friendId: propTypes.number,
+};
+
+RawCalendar.defaultProps = {
+  friendId: -1,
+};
+
 export default RawCalendar;

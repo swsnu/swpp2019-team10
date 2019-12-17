@@ -5,26 +5,26 @@ import { history } from 'store/store';
 import { ConnectedRouter } from 'connected-react-router';
 import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
+import * as actionCreators from 'store/actions/user/action_user';
 import FriendList from './FriendList';
-// import * as actionCreators from 'store/actions/user/action_user';
 
-const mockStore = getMockStore({}, {}, {});
-
-jest.mock('../../components/Friend/Friend', () => jest.fn(() => (
-  <div className="spyFriend">
-            this is mock
-  </div>
-)));
+const mockStore = getMockStore({
+  friends: [{ id: 1, nickname: 'name' }],
+}, {}, {});
 
 describe('friendlist', () => {
   let friendList;
 
+  const spyGetFriends = jest.spyOn(actionCreators, 'GET_FRIENDS')
+    .mockImplementation(() => ({ type: '' }));
+
+  window.location.reload = jest.fn();
 
   beforeEach(() => {
     friendList = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <FriendList />
+          <FriendList history={history} />
         </ConnectedRouter>
       </Provider>
     );
@@ -36,13 +36,17 @@ describe('friendlist', () => {
 
   it('should render without errors', () => {
     const component = mount(friendList);
-    const wrapper = component.find('.friend-preview');
+    const wrapper = component.find('.friendList');
     expect(wrapper.length).toBe(1);
+    component.find('DropdownItem').at(0).simulate('click');
+    component.update();
+    expect(spyGetFriends).toHaveBeenCalledTimes(1);
   });
 
-  it('should render each Friend correctly', () => {
+  it('should click friend', () => {
     const component = mount(friendList);
-    const wrapper = component.find('.spyFriend');
-    expect(wrapper.length).toBe(2); // FIXME: should be modified after axios applyed
+    component.find('DropdownItem').at(1).simulate('click');
+    component.update();
+    expect(spyGetFriends).toHaveBeenCalledTimes(1);
   });
 });

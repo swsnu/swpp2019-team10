@@ -13,8 +13,6 @@ import ReviewDetail from './ReviewDetail';
 jest.mock('axios');
 
 describe('<ReviewDetail />', () => {
-  const mockStore = getMockStore({}, {}, {});
-
   const resp = {
     content: 'test',
     restaurant: 'rest',
@@ -22,13 +20,42 @@ describe('<ReviewDetail />', () => {
     menu: 'menu',
     image: '',
     rating: 0.0,
+    tag: [{ name: 'good', sentimental: 1 }, { name: 'bad', sentimental: -1 }, { name: 'netural', sentimental: 0 }],
     date: '1970-01-01',
+    id: 1,
   };
 
-  axios.get.mockResolvedValue(resp);
-  axios.delete.mockResolvedValue(resp);
+  const initReview = {
+    content: '',
+    restaurant: '',
+    author: '',
+    menu: '',
+    image: '',
+    rating: 5.0,
+    tag: [],
+    date: '',
+  };
+
+  const mockStore = getMockStore({ user: { nickname: 'author' } }, { reviewList: [], reviewDetail: resp }, {});
+
+  jest.spyOn(axios, 'get')
+    .mockImplementation(() => new Promise((res) => {
+      res({
+        status: 200,
+        data: resp,
+      });
+    }));
+
+  jest.spyOn(axios, 'delete')
+    .mockImplementation(() => new Promise((res) => {
+      res({
+        status: 200,
+        data: resp,
+      });
+    }));
 
   let reviewDetail;
+  let component;
 
   beforeEach(() => {
     reviewDetail = (
@@ -36,31 +63,44 @@ describe('<ReviewDetail />', () => {
         <ConnectedRouter history={history}>
           <ReviewDetail
             history={history}
-            match={{ params: { id: '1' } }}
+            id={1}
+            review={initReview}
           />
         </ConnectedRouter>
       </Provider>
     );
+    component = mount(reviewDetail);
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
+  describe('on modal component', () => {
+    it('should be opened without error', () => {
+      component.find('Button #detail-modal-trigger').simulate('click');
+      component.update();
+    });
+  });
+
   describe('on author mode', () => {
+    beforeEach(() => {
+      component.find('Button #detail-modal-trigger').simulate('click');
+      component.update();
+    });
+
     it('should render without errors', () => {
-      const component = mount(reviewDetail);
       const wrapper = component.find('Connect(ReviewDetail)');
       expect(wrapper.length).toBe(1);
     });
 
+
     it('delete button should work', () => {
-      const component = mount(reviewDetail);
       const detailWrapper = component.find('ReviewDetail');
 
       detailWrapper.setState({ ready: true });
       component.update();
-      const backWrapper = component.find('#back-review-button').at(0);
+      const backWrapper = component.find('#delete-review-button').at(0);
       expect(backWrapper.length).toBe(1);
 
       backWrapper.simulate('click');
@@ -68,38 +108,36 @@ describe('<ReviewDetail />', () => {
     });
 
     it('edit button should work', () => {
-      const component = mount(reviewDetail);
       const detailWrapper = component.find('ReviewDetail');
 
       detailWrapper.setState({ ready: true });
       component.update();
 
-      const wrapper = component.find('#edit-review-button').at(0);
+      const wrapper = component.find('#review-modal-trigger').at(0);
 
       wrapper.simulate('click');
       component.update();
     });
 
-    it('loading message should be shown up', () => {
-      const component = mount(reviewDetail);
-      const wrapper = component.find('ReviewDetail');
-      expect(wrapper.length).toBe(1);
+    it('back button should work', () => {
+      const detailWrapper = component.find('ReviewDetail');
 
-      wrapper.setState({ ready: false });
+      detailWrapper.setState({ ready: true });
       component.update();
 
-      const backWrapper = component.find('.ReviewDetailLoading');
-      expect(backWrapper.length).toBe(1);
+      const wrapper = component.find('#back-review-button').at(0);
+
+      wrapper.simulate('click');
+      component.update();
     });
 
     it('error message should be shown up', () => {
-      const component = mount(reviewDetail);
       const detailWrapper = component.find('ReviewDetail');
 
       detailWrapper.setState({ ready: false, error: { response: 'Error' } });
       component.update();
 
-      const backWrapper = component.find('.ReviewDetailError');
+      const backWrapper = component.find('.Review-error-wrapper');
       expect(backWrapper.length).toBe(1);
     });
   });

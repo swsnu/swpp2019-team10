@@ -1,9 +1,11 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import propTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
-import './ReviewPreview.css';
-import { Rating } from 'semantic-ui-react';
+import {
+  Rating, Card, Image, Icon,
+} from 'semantic-ui-react';
+
+import ReviewDetail from 'containers/ReviewDetail';
 
 const ReviewPreview = (props) => {
   const {
@@ -11,54 +13,86 @@ const ReviewPreview = (props) => {
   } = props;
 
   const parseTagName = (tags) => {
-    const parsed = tags.map((t, i) => (
-      <span key={`${t.name}Wrapper`} className={t.positive ? `pos ${i}` : `neg ${i}`}>
-        {t.name}
-      </span>
-    ));
+    const positive = tags.filter((tagPositive) => tagPositive.sentimental === 1);
+
+    const netural = tags.filter((tagNetural) => tagNetural.sentimental === 0);
+
+    const negative = tags.filter((tagNegative) => {
+      const score = tagNegative.sentimental;
+      return score !== 0 && score !== 1;
+    });
+
+    const positives = positive.map((tagPositives) => tagPositives.name).join(', ');
+    const negatives = negative.map((tagNegatives) => tagNegatives.name).join(', ');
+    const neturals = netural.map((tagNetural) => tagNetural.name).join(', ');
 
     return (
-      <div className="tags-wrapper" style={{ display: 'inline' }}>
-        {parsed}
-      </div>
+      <span className="tags-wrapper">
+        {positives.length !== 0
+          ? (
+            <div className="positive-tag">
+              <Icon name="thumbs up" size="small" />
+              {' '}
+              <span className="positive" style={{ color: 'blue' }}>
+                { positives }
+              </span>
+            </div>
+          )
+          : <span />}
+
+        {negatives.length !== 0
+          ? (
+            <div className="negative-tag">
+              <Icon name="thumbs down" size="small" />
+              {' '}
+              <span className="negative" style={{ color: 'red' }}>
+                { negatives }
+              </span>
+            </div>
+          )
+          : <span />}
+
+        {neturals.length !== 0
+          ? (
+            <div className="positive-tag">
+              <Icon name="hand point right" size="small" />
+              {' '}
+              <span className="netural" style={{ color: 'grey' }}>
+                { neturals }
+              </span>
+            </div>
+          )
+          : <span />}
+      </span>
     );
   };
 
   return (
-    <div className="review-preview">
-      <div className="ui special cards">
-        <div className="card" style={{ width: '630px' }}>
-          <div className="content">
-            <span className="header">{ menu }</span>
-            <span className="date-wrapper">{ date }</span>
-            <div className="meta">
-              <span className="rating">
-                Rating:
-                <Rating defaultRating={rating} maxRating="5" icon="star" />
-              </span>
-              <span className="tag">{parseTagName(tag)}</span>
-            </div>
-          </div>
-          <div className="blurring dimmable image">
-            <img src={image} alt="food img" />
-          </div>
+    <Card className="review-preview">
+      <Image src={image} centered fluid />
+      <Card.Content>
+        <Card.Header>{menu}</Card.Header>
+        <Card.Meta>
+          <span className="date">{date}</span>
+          <span className="rating">
+            <Rating defaultRating={rating} maxRating="5" icon="star" disabled />
+          </span>
+        </Card.Meta>
+        <Card.Description textAlign="left">
+          <span className="tag">{ parseTagName(tag) }</span>
+          <br />
+          {isMine && (
+          <ReviewDetail fixed={false} id={id} />
+          )}
 
-          <div className="extra content">
-            {isMine && (
-            <NavLink className="detail-wrapper" to={`/main/${id}`}>
-                        Read Detail & Get Recommendation!
-            </NavLink>
-            )}
-
-            {!isMine && (
-            <span className="author-wrapper">
-              {`Created by ${author}`}
-            </span>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+          {!isMine && (
+          <span className="author-wrapper">
+            {`Created by ${author}`}
+          </span>
+          )}
+        </Card.Description>
+      </Card.Content>
+    </Card>
   );
 };
 
@@ -81,7 +115,7 @@ ReviewPreview.defaultProps = {
   date: '2019-11-05',
   isMine: true,
   image: 'https://i.pinimg.com/474x/91/ec/7e/91ec7ec701884e2959643bf4b31d8ee8--cat-food-food-networktrisha.jpg',
-  tag: [{ name: 'good', positive: true }, { name: 'bad', positive: false }],
+  tag: [{ name: 'good', sentimental: 1 }, { name: 'bad', sentimental: -1 }, { name: 'netural', sentimental: 0 }],
 };
 
 export default ReviewPreview;

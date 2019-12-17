@@ -7,9 +7,22 @@ import { getMockStore } from 'test-utils/mock';
 import { Provider } from 'react-redux';
 import Main from './Main';
 
-const mockStore = getMockStore({}, {}, {});
+const initialUser = {
+  user: {
+    username: '',
+    phone_number: '',
+    age: -1,
+    gender: '',
+    number_of_reviews: -1,
+    number_of_friends: -1,
+    failed: false,
+    taste: {},
+  },
+};
 
-jest.mock('containers/ReviewList/ReviewList', () => jest.fn(() => (
+const mockStore = getMockStore(initialUser, { reviewList: [] }, {});
+
+jest.mock('components/Layouts/Feed/Feed', () => jest.fn(() => (
   <div className="mockReviewList">
             this is mock
   </div>
@@ -27,6 +40,16 @@ jest.mock('components/RawCalendar/RawCalendar', () => jest.fn(() => (
   </div>
 )));
 
+jest.mock('containers/FriendSearch/FriendSearch', () => jest.fn(() => (
+  <div className="mockFriendSearch">
+            this is mock
+  </div>
+)));
+
+jest.mock('containers/Myinfo/Myinfo', () => jest.fn(() => (
+  <div />
+)));
+
 describe('main', () => {
   let main;
 
@@ -34,7 +57,12 @@ describe('main', () => {
     main = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <Main />
+          <Main
+            history={history}
+            match={{
+              params: { id: undefined }, isExact: true, path: '', url: '',
+            }}
+          />
         </ConnectedRouter>
       </Provider>
     );
@@ -44,58 +72,58 @@ describe('main', () => {
     jest.clearAllMocks();
   });
 
-  it('should redner without crashing', () => {
+  it('should render without crashing', () => {
     const component = mount(main);
     const wrapper = component.find('.main');
     expect(wrapper.length).toBe(1);
   });
 
-  it('should render article(review)s correctly', () => {
-    const component = mount(main);
-    const wrapper = component.find('.main-feed-wrapper');
+  it('should render without crashing when friend main', () => {
+    const component = mount(
+      <Provider store={mockStore}>
+        <ConnectedRouter history={history}>
+          <Main
+            history={history}
+            match={{
+              params: { id: '2' }, isExact: true, path: '', url: '',
+            }}
+          />
+        </ConnectedRouter>
+      </Provider>,
+    );
+    const wrapper = component.find('.main');
     expect(wrapper.length).toBe(1);
   });
 
-  it('should handle unknown case', () => {
+  it('should change view well', () => {
     const component = mount(main);
-    const instance = component.find('Main').instance();
-    instance.setState({
-      activeItem: 'illegal',
-    });
-    expect(instance.state.activeItem).toEqual('illegal');
-    component.update();
-    expect(component.find('.main-error-wrapper').length).toBe(1);
-  });
 
-  it('should change state when calendar is clicked', () => {
-    const component = mount(main);
-    const wrapper = component.find('a').at(2);
-    wrapper.simulate('click');
-    const instance = component.find('Main').instance();
-    expect(instance.state.activeItem).toEqual('calendar');
-  });
+    const wrapperButton = component.find('DropdownMenu').at(0);
+    const wrapperFeed = component.find('DropdownItem').at(0);
+    const wrapperLocation = component.find('DropdownItem').at(1);
+    const wrapperCalendar = component.find('DropdownItem').at(2);
+    const wrapperCategory = component.find('DropdownItem').at(3);
 
-  it('should change state when location is clicked', () => {
-    const component = mount(main);
-    const wrapper = component.find('a').at(3);
-    wrapper.simulate('click');
-    const instance = component.find('Main').instance();
-    expect(instance.state.activeItem).toEqual('location');
-  });
+    const instance = component.find(Main).instance();
 
-  it('should change state when type is clicked', () => {
-    const component = mount(main);
-    const wrapper = component.find('a').at(4);
-    wrapper.simulate('click');
-    const instance = component.find('Main').instance();
-    expect(instance.state.activeItem).toEqual('type');
-  });
+    wrapperButton.simulate('click');
+    wrapperCalendar.simulate('click');
+    instance.forceUpdate();
+    expect(component.find('.calendar').length).not.toBe(0);
 
-  it('should change state when menu is clicked', () => {
-    const component = mount(main);
-    const wrapper = component.find('a').at(5);
-    wrapper.simulate('click');
-    const instance = component.find('Main').instance();
-    expect(instance.state.activeItem).toEqual('menu');
+    wrapperButton.simulate('click');
+    wrapperFeed.simulate('click');
+    instance.forceUpdate();
+    expect(component.find('.feed').length).not.toBe(0);
+
+    wrapperButton.simulate('click');
+    wrapperCategory.simulate('click');
+    instance.forceUpdate();
+    expect(component.find('.category').length).not.toBe(0);
+
+    wrapperButton.simulate('click');
+    wrapperLocation.simulate('click');
+    instance.forceUpdate();
+    // expect(component.find('.location').length).not.toBe(0); TODO: implement location
   });
 });

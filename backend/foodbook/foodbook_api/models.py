@@ -5,9 +5,21 @@ module
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ModelForm
+from django_mysql.models import JSONField
 # Create your models here.
 
+def default_tag():
+    '''
+    method returns default tag
+    '''
+    return []
 
+def my_default():
+    '''
+    method returns default tag with values
+    '''
+    return {'sweet': 0.5, 'salty': 0.5, 'umami': 0.5, 'bitter': 0.5, 'sour': 0.5,
+            'crispy': 0.5, 'moist': 0.5, 'greasy': 0.5, 'tender': 0.5, 'cooked': 0.5, 'spicy': 0.5}
 class Profile(models.Model):
     '''
     save user's information
@@ -23,10 +35,11 @@ class Profile(models.Model):
         friend: ManyToMany to self
     '''
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone_number = models.CharField(max_length=15)
-    age = models.IntegerField()
-    #taste=hasn't decide yet
-    gender = models.CharField(max_length=1)
+    phone_number = models.CharField(max_length=15, null=True)
+    age = models.IntegerField(null=True)
+    taste = JSONField(default=my_default)
+    gender = models.CharField(max_length=1, null=True)
+    nickname = models.CharField(max_length=100)
     profile_pic = models.ImageField(upload_to="user/profile_pic/", blank=True)
     count_write = models.IntegerField(default=0)
     count_friend = models.IntegerField(default=0)
@@ -47,6 +60,7 @@ class Restaurant(models.Model):
     longitude = models.FloatField()
     latitude = models.FloatField()
     rating = models.FloatField(default=0)
+    place_id = models.CharField(max_length=35)
 
 class Menu(models.Model):
     '''
@@ -61,7 +75,9 @@ class Menu(models.Model):
         related_name='menu_list',
         null=True
     )
-    #taste=hasn't decide yet
+    taste = JSONField(
+        default=my_default)
+    num_of_review = models.IntegerField(default=0)
 
 class Review(models.Model):
     '''
@@ -99,7 +115,22 @@ class Review(models.Model):
     )
     review_img = models.ImageField(upload_to='review/images/', blank=True)
     date = models.DateTimeField(auto_now=True)
+    category = models.CharField(max_length=20, blank=True)
+    tag = models.ManyToManyField(
+        'Tag',
+        default=default_tag
+    )
     #tag=hasn't decide yet!
+
+class Tag(models.Model):
+    '''
+    save tag information
+    fields:
+        name
+        sentimental
+    '''
+    name = models.CharField(max_length=30)
+    sentimental = models.FloatField()
 
 class ProfileForm(ModelForm):
     '''

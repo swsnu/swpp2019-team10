@@ -12,7 +12,7 @@ import Calendar from './RawCalendar';
 
 const mockStore = getMockStore({}, {}, {});
 
-jest.mock('containers/ReviewList/ReviewList', () => jest.fn(() => (
+jest.mock('components/Layouts/Feed/Feed', () => jest.fn(() => (
   <div className="mockReviewList">
             this is mock
   </div>
@@ -24,7 +24,7 @@ describe('Calendar', () => {
     calendar = (
       <Provider store={mockStore}>
         <ConnectedRouter history={history}>
-          <Calendar />
+          <Calendar tileDisabled={() => false} />
         </ConnectedRouter>
       </Provider>
     );
@@ -35,9 +35,11 @@ describe('Calendar', () => {
   });
 
   it('should render without errors', () => {
-    const component = mount(calendar);
+    const mockCDM = jest.spyOn(Calendar.prototype, 'componentDidMount').mockImplementation(() => {});
+    const component = mount(calendar, { lifecycleExperimental: true });
     const wrapper = component.find('.RawCalendar');
     expect(wrapper.length).toBe(1);
+    expect(mockCDM).toHaveBeenCalledTimes(1);
   });
 
   it('should change date when clicked', () => {
