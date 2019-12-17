@@ -66,7 +66,7 @@ class UserTestCase(TestCase):
                                            'phone_number': '01035961111', 'age': 22,
                                            'gender': 'M', 'nickname': 'j'}),
                                content_type='application/json')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json()['username'], 'swpp3')
         self.assertEqual(response.json()['gender'], 'M')
 
@@ -74,7 +74,7 @@ class UserTestCase(TestCase):
                                json.dumps({'username': 'swpp4', 'password': 'iluvswpp',
                                            'nickname': 'j'}),
                                content_type='application/json')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json()['username'], 'swpp4')
         self.assertEqual(response.json()['gender'], None)
 
@@ -273,7 +273,7 @@ class UserTestCase(TestCase):
         response = client.post('/api/friend/', json.dumps({'id': user3_id}),
                                content_type='application/json')
         response = client.delete('/api/friend/'+str(user3_id)+'/')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
 
     def test_search_user(self):
         '''

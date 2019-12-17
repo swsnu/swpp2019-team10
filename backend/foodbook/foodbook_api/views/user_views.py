@@ -53,8 +53,7 @@ def signup(request):
             'gender': profile_of_user.gender,
             'number_of_reviews': profile_of_user.count_write,
             'number_of_friends': profile_of_user.count_friend,
-            'nickname': profile_of_user.nickname,
-            'friends': []
+            'nickname': profile_of_user.nickname
         }
         return JsonResponse(response_dict, status=201)
     return HttpResponseNotAllowed(['POST'])
@@ -111,8 +110,7 @@ def profile_image(request, profile_id):
                 'gender': profile.gender,
                 'profile_pic': profile.profile_pic.path,
                 'number_of_reviews': profile.count_write,
-                'number_of_friends': profile.count_friend,
-                'friends': []
+                'number_of_friends': profile.count_friend
             }
             return JsonResponse(dict_profile, status=201)
         return HttpResponseBadRequest()
@@ -202,7 +200,7 @@ def user(request):
         }
         if profile_of_user.profile_pic:
             info_of_user['profile_pic'] = profile_of_user.profile_pic.path
-        return JsonResponse(info_of_user, status=200)
+        return JsonResponse(info_of_user, status=201)
     return HttpResponseNotAllowed(['GET', 'PUT'])
 
 
@@ -265,7 +263,7 @@ def friend_detail(request, friend_id):
             request.user.profile.friend.remove(friend_info)
             request.user.profile.count_friend -= 1
             request.user.profile.save()
-            return HttpResponse(status=200)
+            return HttpResponse(status=204)
         except Profile.DoesNotExist:
             return HttpResponseNotFound()
     return HttpResponseNotAllowed(['GET', 'DELETE'])

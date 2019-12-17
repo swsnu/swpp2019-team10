@@ -261,7 +261,7 @@ def review_detail(request, review_id):
         review.delete()
         request.user.profile.count_write -= 1
         request.user.profile.save()
-        return HttpResponse(status=200)
+        return HttpResponse(status=204)
     #else:
     return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
 
@@ -411,7 +411,7 @@ def review_image(request, review_id):
                 'longitude': review.restaurant.longitude,
                 'latitude': review.restaurant.latitude,
             }
-            return JsonResponse(dict_review)
+            return JsonResponse(dict_review, status=201)
         #else:
         return HttpResponseBadRequest(content="invalid form")
     #else:
