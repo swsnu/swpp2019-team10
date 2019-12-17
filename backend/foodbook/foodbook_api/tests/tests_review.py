@@ -230,7 +230,7 @@ class ReviewTestCase(TestCase):
         self.assertEqual(Profile.objects.get(nickname='user1').count_write, 2)
         # restaurant should not be added when name just changed
         response = client.post('/api/review/', json.dumps({
-            'content': 'TEST_NEW_CONTENT. It was spicy.',
+            'content': 'TEST_NEW_CONTENT. It was spicy. It was not spicy',
             'restaurant_name': 'TEST_RESTAA',
             'placeid': 'TEST_PLACE_ID',
             'menu_name': 'TEST_MENU',
@@ -248,6 +248,11 @@ class ReviewTestCase(TestCase):
         self.assertEqual(bodys['longitude'], 15)
         self.assertEqual(bodys['latitude'], 15)
         self.assertEqual(bodys['placeid'], 'TEST_PLACE_ID')
+        tag = []
+        for i in bodys['tag']:
+            tag.append(i['name'])
+        self.assertIn('spicy', tag)
+        self.assertIn('not spicy', tag)
         self.assertEqual(Restaurant.objects.count(), 3)
         self.assertEqual(Profile.objects.get(nickname='user1').count_write, 3)
 
