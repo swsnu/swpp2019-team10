@@ -214,6 +214,8 @@ class Adjative:
     def __eq__(self, value):
         if self.advmod is None:
             return self.name.lemma == value.name.lemma
+        if value.advmod is None:
+            return False
         return self.name.lemma == value.name.lemma and self.advmod.lemma == value.advmod.lemma
 
     def set_advmod(self, advmod: Word):
