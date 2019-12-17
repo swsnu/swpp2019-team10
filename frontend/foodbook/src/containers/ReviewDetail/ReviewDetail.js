@@ -109,7 +109,7 @@ class ReviewDetail extends Component {
       </Button>
     );
 
-    const isAuthor = user.username === author;
+    const isAuthor = user.nickname === author;
 
     const buttons = (
       <Grid columns={7} stretched>
@@ -254,7 +254,7 @@ ReviewDetail.propTypes = {
   }),
   fixed: PropTypes.bool,
   user: PropTypes.shape({
-    username: PropTypes.string,
+    nickname: PropTypes.string,
   }),
 };
 
@@ -268,7 +268,7 @@ ReviewDetail.defaultProps = {
     author: '',
   },
   fixed: false,
-  user: { username: '' },
+  user: { nickname: '' },
 };
 
 const mapStateToProps = (state) => ({

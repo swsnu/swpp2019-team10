@@ -483,7 +483,7 @@ class ReviewTestCase(TestCase):
                      email='TEST_EMAIL_1', password='TEST_PW_1')
         response = client.delete('/api/review/'+str(review1_id)+'/')
         response = client.delete('/api/review/'+str(review2_id)+'/')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
         self.assertEqual(Review.objects.count(), 2)
         client.login(username='TEST_USER_3',
                      email='TEST_EMAIL_3', password='TEST_PW_3')
@@ -654,7 +654,7 @@ class ReviewTestCase(TestCase):
 
         response = client.post('/api/review/'+str(review1_id)+'/image/',
                                data={'image': img_and_file[1]})
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
     def test_image_fail(self):
         """

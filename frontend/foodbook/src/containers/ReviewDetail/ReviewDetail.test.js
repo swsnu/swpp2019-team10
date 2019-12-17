@@ -36,7 +36,7 @@ describe('<ReviewDetail />', () => {
     date: '',
   };
 
-  const mockStore = getMockStore({ user: { username: 'author' } }, { reviewList: [], reviewDetail: resp }, {});
+  const mockStore = getMockStore({ user: { nickname: 'author' } }, { reviewList: [], reviewDetail: resp }, {});
 
   jest.spyOn(axios, 'get')
     .mockImplementation(() => new Promise((res) => {
