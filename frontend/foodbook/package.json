@@ -14,7 +14,7 @@
     "gulp": "^4.0.2",
     "history": "^4.10.1",
     "jquery": "^3.4.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
     "react": "^16.11.0",
     "react-alert": "^6.0.0",
